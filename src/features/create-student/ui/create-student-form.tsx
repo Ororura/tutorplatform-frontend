@@ -9,7 +9,7 @@ import { Button } from "@/shared/ui/button";
 import { useCreateStudentMutation } from "../api/create-student";
 import { createStudentSchema, type CreateStudentFormValues } from "../model/create-student-schema";
 
-export function CreateStudentForm() {
+export function CreateStudentForm({ onSuccess }: Readonly<{ onSuccess?: () => void }>) {
   const mutation = useCreateStudentMutation();
   const {
     register,
@@ -31,6 +31,7 @@ export function CreateStudentForm() {
         lastName: values.lastName || undefined,
       });
       reset();
+      onSuccess?.();
     } catch (error) {
       if (error instanceof ApiClientError) {
         for (const detail of error.body.details) {
@@ -50,6 +51,7 @@ export function CreateStudentForm() {
       <div className="space-y-2">
         <label className="block text-sm font-medium" htmlFor="create-student-first-name">Имя</label>
         <input
+          autoFocus
           id="create-student-first-name"
           className="h-10 w-full rounded-md border border-neutral-300 px-3 outline-none focus:ring-2 focus:ring-neutral-300"
           aria-invalid={Boolean(errors.firstName)}

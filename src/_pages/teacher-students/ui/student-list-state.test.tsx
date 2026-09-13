@@ -28,7 +28,12 @@ describe("StudentListState", () => {
 
   it("renders empty state", () => {
     render(<StudentListState isPending={false} isError={false} data={emptyPage} onRetry={vi.fn()} />);
-    expect(screen.getByText("Ученики не найдены.")).toBeInTheDocument();
+    expect(screen.getByText("У вас пока нет учеников")).toBeInTheDocument();
+  });
+
+  it("distinguishes an empty search result", () => {
+    render(<StudentListState isPending={false} isError={false} data={emptyPage} hasActiveFilters onRetry={vi.fn()} />);
+    expect(screen.getByText("Ученики не найдены")).toBeInTheDocument();
   });
 
   it("renders students with a detail link", () => {
@@ -57,5 +62,30 @@ describe("StudentListState", () => {
       "/teacher/students/student-1",
     );
     expect(screen.getByText("Приглашён")).toBeInTheDocument();
+  });
+
+  it("renders the registered account presentation separately from student status", () => {
+    render(
+      <StudentListState
+        isPending={false}
+        isError={false}
+        onRetry={vi.fn()}
+        data={{
+          ...emptyPage,
+          items: [{
+            id: "student-2",
+            firstName: "Алексей",
+            lastName: "Иванов",
+            status: "ACTIVE",
+            accountStatus: "REGISTERED",
+            createdAt: "2026-09-07T08:00:00Z",
+          }],
+          totalElements: 1,
+          totalPages: 1,
+        }}
+      />,
+    );
+    expect(screen.getByText("Зарегистрирован")).toBeInTheDocument();
+    expect(screen.getByText("Активен")).toBeInTheDocument();
   });
 });

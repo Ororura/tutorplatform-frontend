@@ -24,4 +24,19 @@ describe("StudentInviteHistory", () => {
     fireEvent.click(screen.getByRole("button", { name: "Отозвать" }));
     expect(onRevoke).toHaveBeenCalledWith("active");
   });
+
+  it("never renders raw invite data even if an unsafe runtime payload contains it", () => {
+    const unsafeInvite = {
+      id: "active",
+      email: "active@example.com",
+      status: "ACTIVE" as const,
+      expiresAt: "2026-09-10T08:00:00Z",
+      createdAt: "2026-09-07T08:00:00Z",
+      inviteUrl: "https://example.test/invite/raw-secret",
+      tokenHash: "hash-secret",
+    };
+    render(<StudentInviteHistory invites={[unsafeInvite]} onRevoke={vi.fn()} />);
+    expect(document.body).not.toHaveTextContent("raw-secret");
+    expect(document.body).not.toHaveTextContent("hash-secret");
+  });
 });

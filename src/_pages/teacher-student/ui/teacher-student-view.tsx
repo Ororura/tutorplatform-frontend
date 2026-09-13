@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { studentInviteQueries, StudentInviteHistory } from "@/entities/student-invite";
 import { studentQueries, StudentDetailsCard } from "@/entities/student";
-import { CreateStudentInviteForm } from "@/features/create-student-invite";
+import { CreateStudentInviteDialog } from "@/features/create-student-invite";
 import { EditStudentForm } from "@/features/edit-student";
 import { useRevokeStudentInviteMutation } from "@/features/revoke-student-invite";
 import { Button } from "@/shared/ui/button";
@@ -16,7 +16,10 @@ import { StudentDetailQueryState } from "./student-detail-query-state";
 export function TeacherStudentView({ studentId }: Readonly<{ studentId: string }>) {
   const [editing, setEditing] = useState(false);
   const student = useQuery(studentQueries.detail(studentId));
-  const invites = useQuery(studentInviteQueries.list(studentId));
+  const invites = useQuery({
+    ...studentInviteQueries.list(studentId),
+    enabled: student.isSuccess,
+  });
   const revokeInvite = useRevokeStudentInviteMutation(studentId);
 
   if (student.isPending || student.isError) {
@@ -25,12 +28,16 @@ export function TeacherStudentView({ studentId }: Readonly<{ studentId: string }
         <StudentDetailQueryState
           isPending={student.isPending}
           isError={student.isError}
+          error={student.error}
           onRetry={() => student.refetch()}
         />
         <p><Link className="underline underline-offset-4" href="/teacher/students">Вернуться к списку</Link></p>
       </main>
     );
   }
+
+  const hasActiveInvite = invites.data?.items.some((invite) => invite.status === "ACTIVE") ?? false;
+  const canCreateInvite = student.data.account.status !== "REGISTERED" && invites.isSuccess && !hasActiveInvite;
 
   return (
     <main className="mx-auto max-w-5xl space-y-8 px-6 py-12">
@@ -44,11 +51,15 @@ export function TeacherStudentView({ studentId }: Readonly<{ studentId: string }
 
       {editing ? <EditStudentForm student={student.data} onDone={() => setEditing(false)} /> : <StudentDetailsCard student={student.data} />}
 
+      <nav className="border-b border-neutral-200" aria-label="Разделы ученика">
+        <span className="inline-block border-b-2 border-neutral-900 px-1 pb-3 text-sm font-medium" aria-current="page">Обзор</span>
+      </nav>
+
       {student.data.account.status !== "REGISTERED" && (
-        <section className="space-y-4" aria-labelledby="create-invite-heading">
-          <h2 id="create-invite-heading" className="text-xl font-semibold">Пригласить ученика</h2>
-          <CreateStudentInviteForm studentId={studentId} />
-        </section>
+        <CreateStudentInviteDialog studentId={studentId} available={canCreateInvite} />
+      )}
+      {student.data.account.status !== "REGISTERED" && hasActiveInvite && (
+        <p className="text-sm text-neutral-600">У ученика уже есть активное приглашение.</p>
       )}
 
       <section className="space-y-4" aria-labelledby="invite-history-heading">
