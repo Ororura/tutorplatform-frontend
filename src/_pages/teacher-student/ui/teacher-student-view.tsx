@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { studentInviteQueries, StudentInviteHistory } from "@/entities/student-invite";
-import { studentQueries, StudentDetailsCard } from "@/entities/student";
+import { studentQueries, StudentDetailsCard, StudentProfileNav } from "@/entities/student";
 import { CreateStudentInviteDialog } from "@/features/create-student-invite";
 import { EditStudentForm } from "@/features/edit-student";
 import { useRevokeStudentInviteMutation } from "@/features/revoke-student-invite";
@@ -51,9 +51,7 @@ export function TeacherStudentView({ studentId }: Readonly<{ studentId: string }
 
       {editing ? <EditStudentForm student={student.data} onDone={() => setEditing(false)} /> : <StudentDetailsCard student={student.data} />}
 
-      <nav className="border-b border-neutral-200" aria-label="Разделы ученика">
-        <span className="inline-block border-b-2 border-neutral-900 px-1 pb-3 text-sm font-medium" aria-current="page">Обзор</span>
-      </nav>
+      <StudentProfileNav active="overview" studentId={studentId} />
 
       {student.data.account.status !== "REGISTERED" && (
         <CreateStudentInviteDialog studentId={studentId} available={canCreateInvite} />

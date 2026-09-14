@@ -8,6 +8,7 @@ vi.mock("next/link", () => ({ default: ({ children, href }: { children: React.Re
 vi.mock("@/entities/student", () => ({
   studentQueries: { detail: (id: string) => ({ queryKey: ["students", "detail", id] }) },
   StudentDetailsCard: () => <div>Данные ученика</div>,
+  StudentProfileNav: () => <nav>Обзор Программа</nav>,
 }));
 vi.mock("@/entities/student-invite", () => ({
   studentInviteQueries: { list: (id: string) => ({ queryKey: ["student-invites", "list", id] }) },

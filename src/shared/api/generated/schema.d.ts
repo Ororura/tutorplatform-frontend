@@ -565,6 +565,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/teacher/students/{studentId}/programs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List programs for a student owned by the current teacher */
+        get: operations["listTeacherStudentPrograms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a program structure for a student owned by the current teacher */
+        get: operations["getTeacherStudentProgram"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teacher/reports/{reportId}/pdf": {
         parameters: {
             query?: never;
@@ -1606,6 +1640,68 @@ export interface components {
             revokedAt?: string | null;
             /** Format: date-time */
             createdAt: string;
+        };
+        ProgramSubjectResponse: {
+            /** Format: uuid */
+            id: string;
+            code?: string;
+            name: string;
+        };
+        StudentProgramSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            learningProgramId: string;
+            title: string;
+            description?: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
+            /** Format: int32 */
+            reportIntervalMinutes: number;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            completedAt?: string;
+            subject: components["schemas"]["ProgramSubjectResponse"];
+        };
+        ProgramModuleResponse: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description?: string;
+            /** Format: int32 */
+            position: number;
+            topics: components["schemas"]["ProgramTopicResponse"][];
+        };
+        ProgramTopicResponse: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description?: string;
+            /** Format: int32 */
+            position: number;
+            /** @enum {string} */
+            topicStatus: "DRAFT" | "ACTIVE" | "ARCHIVED";
+            /** @enum {string} */
+            progressStatus?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED";
+        };
+        StudentProgramDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            learningProgramId: string;
+            title: string;
+            description?: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
+            /** Format: int32 */
+            reportIntervalMinutes: number;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            completedAt?: string;
+            subject: components["schemas"]["ProgramSubjectResponse"];
+            modules: components["schemas"]["ProgramModuleResponse"][];
         };
         StudentInviteListResponse: {
             items: components["schemas"]["StudentInviteSummaryResponse"][];
@@ -4878,6 +4974,105 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or student program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listTeacherStudentPrograms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student program summaries */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentProgramSummaryResponse"][];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getTeacherStudentProgram: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                studentProgramId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student program details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentProgramDetailsResponse"];
                 };
             };
             /** @description Authentication required */
