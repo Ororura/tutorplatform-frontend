@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 import { StudentProfileNav } from "@/entities/student";
 import { StudentProgramList, studentProgramQueries } from "@/entities/student-program";
+import { AssignLearningProgramDialog } from "@/features/program/assign";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -36,14 +37,26 @@ export function TeacherStudentProgramView({ studentId }: Readonly<{ studentId: s
         </div>
       )}
       {programs.data?.length === 0 && (
-        <div className="rounded-lg border border-dashed border-neutral-300 p-8 text-center">
+        <div className="space-y-4 rounded-lg border border-dashed border-neutral-300 p-8 text-center">
           <p className="font-medium">У ученика пока нет программы обучения</p>
+          <AssignLearningProgramDialog
+            studentId={studentId}
+            triggerLabel="Назначить программу"
+            onAssigned={(program) => router.push(`/teacher/students/${studentId}/programs/${program.id}`)}
+          />
         </div>
       )}
       {programs.data?.length === 1 && <p aria-busy="true">Открываем программу…</p>}
       {programs.data && programs.data.length > 1 && (
         <section className="space-y-4" aria-labelledby="program-selection-heading">
-          <h2 className="text-xl font-semibold" id="program-selection-heading">Выберите программу</h2>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <h2 className="text-xl font-semibold" id="program-selection-heading">Выберите программу</h2>
+            <AssignLearningProgramDialog
+              studentId={studentId}
+              triggerLabel="Назначить ещё программу"
+              onAssigned={(program) => router.push(`/teacher/students/${studentId}/programs/${program.id}`)}
+            />
+          </div>
           <StudentProgramList programs={programs.data} studentId={studentId} />
         </section>
       )}

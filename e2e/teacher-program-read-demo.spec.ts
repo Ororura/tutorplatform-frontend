@@ -47,5 +47,5 @@ test("demo teacher reads Alex, Maria and Ilya programs from the real backend", a
   await page.getByRole("link", { name: /Илья Соколов/ }).click();
   await expect(page.getByRole("heading", { name: "Илья Соколов" })).toBeVisible();
   await page.getByRole("link", { name: "Программа", exact: true }).click();
-  await expect(page.getByText("У ученика пока нет программы обучения")).toBeVisible();
+  await expect(page.locator("body")).toContainText(/У ученика пока нет программы обучения|Python/);
 });

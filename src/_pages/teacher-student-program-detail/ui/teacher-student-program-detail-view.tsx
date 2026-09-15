@@ -2,8 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { StudentProgramDetail, studentProgramQueries } from "@/entities/student-program";
+import { AssignLearningProgramDialog } from "@/features/program/assign";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -12,6 +14,7 @@ export function TeacherStudentProgramDetailView({
   studentProgramId,
 }: Readonly<{ studentId: string; studentProgramId: string }>) {
   const program = useQuery(studentProgramQueries.detail(studentId, studentProgramId));
+  const router = useRouter();
 
   return (
     <main className="mx-auto max-w-5xl space-y-8 px-6 py-12">
@@ -23,7 +26,18 @@ export function TeacherStudentProgramDetailView({
           {!(program.error instanceof ApiClientError && program.error.status === 404) && <Button type="button" onClick={() => program.refetch()}>Повторить</Button>}
         </div>
       )}
-      {program.data && <StudentProgramDetail program={program.data} studentId={studentId} />}
+      {program.data && (
+        <>
+          <div className="flex justify-end">
+            <AssignLearningProgramDialog
+              studentId={studentId}
+              triggerLabel="Назначить ещё программу"
+              onAssigned={(created) => router.push(`/teacher/students/${studentId}/programs/${created.id}`)}
+            />
+          </div>
+          <StudentProgramDetail program={program.data} studentId={studentId} />
+        </>
+      )}
     </main>
   );
 }

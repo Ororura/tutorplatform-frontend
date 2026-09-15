@@ -47,9 +47,10 @@ export const studentProgramQueries = {
       queryFn: () => getStudentPrograms(studentId),
     }),
   details: () => [...studentProgramQueries.all(), "detail"] as const,
+  studentDetails: (studentId: string) => [...studentProgramQueries.details(), studentId] as const,
   detail: (studentId: string, studentProgramId: string) =>
     queryOptions({
-      queryKey: [...studentProgramQueries.details(), studentId, studentProgramId] as const,
+      queryKey: [...studentProgramQueries.studentDetails(studentId), studentProgramId] as const,
       queryFn: () => getStudentProgram(studentId, studentProgramId),
     }),
 };

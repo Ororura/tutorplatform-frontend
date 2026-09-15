@@ -21,9 +21,11 @@ test("teacher and student complete the authentication and invitation flow", asyn
   await expect(page).toHaveURL(/\/teacher\/students$/);
   await expect(page.getByRole("heading", { name: "Ученики" })).toBeVisible();
 
-  await page.getByLabel("Имя", { exact: true }).fill("Андрей");
-  await page.getByLabel("Фамилия", { exact: true }).fill("Иванов");
   await page.getByRole("button", { name: "Добавить ученика" }).click();
+  const createStudentDialog = page.getByRole("dialog", { name: "Добавить ученика" });
+  await createStudentDialog.getByLabel("Имя", { exact: true }).fill("Андрей");
+  await createStudentDialog.getByLabel("Фамилия", { exact: true }).fill("Иванов");
+  await createStudentDialog.getByRole("button", { name: "Добавить ученика" }).click();
   await expect(page.getByRole("link", { name: /Андрей Иванов/ })).toBeVisible();
 
   await page.getByRole("link", { name: /Андрей Иванов/ }).click();
@@ -33,9 +35,11 @@ test("teacher and student complete the authentication and invitation flow", asyn
   await page.getByRole("button", { name: "Сохранить" }).click();
   await expect(page.getByRole("heading", { name: "Андрей Петров" })).toBeVisible();
 
-  await page.getByLabel("Email ученика").fill(studentEmail);
-  await page.getByRole("button", { name: "Создать приглашение" }).click();
-  const inviteUrl = await page.getByLabel("Ссылка-приглашение").inputValue();
+  await page.getByRole("button", { name: "Отправить приглашение" }).click();
+  const inviteDialog = page.getByRole("dialog", { name: "Отправить приглашение" });
+  await inviteDialog.getByLabel("Email ученика").fill(studentEmail);
+  await inviteDialog.getByRole("button", { name: "Создать приглашение" }).click();
+  const inviteUrl = await inviteDialog.getByLabel("Ссылка-приглашение").inputValue();
   expect(inviteUrl).toContain("/invite/student/");
 
   const studentContext = await browser.newContext();

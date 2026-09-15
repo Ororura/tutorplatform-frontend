@@ -5,6 +5,10 @@ const mocks = vi.hoisted(() => ({ useQuery: vi.fn() }));
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery, queryOptions: (options: unknown) => options }));
 vi.mock("next/link", () => ({ default: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a> }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+vi.mock("@/features/program/assign", () => ({
+  AssignLearningProgramDialog: ({ triggerLabel }: { triggerLabel: string }) => <button>{triggerLabel}</button>,
+}));
 
 import { ApiClientError } from "@/shared/api/client";
 

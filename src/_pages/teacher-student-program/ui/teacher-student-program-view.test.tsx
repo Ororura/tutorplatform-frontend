@@ -6,6 +6,9 @@ const mocks = vi.hoisted(() => ({ useQuery: vi.fn(), replace: vi.fn() }));
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery, queryOptions: (options: unknown) => options }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: mocks.replace }) }));
 vi.mock("next/link", () => ({ default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => <a href={href} {...props}>{children}</a> }));
+vi.mock("@/features/program/assign", () => ({
+  AssignLearningProgramDialog: ({ triggerLabel }: { triggerLabel: string }) => <button>{triggerLabel}</button>,
+}));
 
 import { TeacherStudentProgramView } from "./teacher-student-program-view";
 
@@ -40,6 +43,7 @@ describe("TeacherStudentProgramView", () => {
     mocks.useQuery.mockReturnValue(queryResult());
     render(<TeacherStudentProgramView studentId="student-1" />);
     expect(screen.getByText("У ученика пока нет программы обучения")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Назначить программу" })).toBeInTheDocument();
   });
 
   it("redirects one program to its explicit route", () => {
@@ -53,6 +57,7 @@ describe("TeacherStudentProgramView", () => {
     render(<TeacherStudentProgramView studentId="student-1" />);
     expect(screen.getByRole("heading", { name: "Выберите программу" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Алгоритмы/ })).toHaveAttribute("href", "/teacher/students/student-1/programs/program-2");
+    expect(screen.getByRole("button", { name: "Назначить ещё программу" })).toBeInTheDocument();
     expect(mocks.replace).not.toHaveBeenCalled();
   });
 
