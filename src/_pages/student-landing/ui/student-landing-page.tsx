@@ -1,4 +1,4 @@
-import { LogoutButton } from "@/features/logout";
+import { LogoutButton } from "@/features/auth/logout";
 
 export function StudentLandingPage() {
   return (

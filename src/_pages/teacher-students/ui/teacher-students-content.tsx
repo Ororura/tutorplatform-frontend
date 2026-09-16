@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type FormEvent, useCallback, useEffect, useState } from "react";
 
 import { type StudentAccountStatus, type StudentListParams, studentQueries } from "@/entities/student";
-import { CreateStudentDialog } from "@/features/create-student";
+import { CreateStudentDialog } from "@/features/student/create";
 
 import { StudentListState } from "./student-list-state";
 

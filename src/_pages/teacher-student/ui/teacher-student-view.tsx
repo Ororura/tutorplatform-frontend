@@ -6,9 +6,9 @@ import { useState } from "react";
 
 import { StudentInviteHistory, studentInviteQueries } from "@/entities/student-invite";
 import { StudentDetailsCard, StudentProfileNav, studentQueries } from "@/entities/student";
-import { CreateStudentInviteDialog } from "@/features/create-student-invite";
-import { EditStudentForm } from "@/features/edit-student";
-import { useRevokeStudentInviteMutation } from "@/features/revoke-student-invite";
+import { CreateStudentInviteDialog } from "@/features/student/invite/create";
+import { EditStudentForm } from "@/features/student/edit";
+import { useRevokeStudentInviteMutation } from "@/features/student/invite/revoke";
 import { Button } from "@/shared/ui/button";
 
 import { StudentDetailQueryState } from "./student-detail-query-state";

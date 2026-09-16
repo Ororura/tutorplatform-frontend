@@ -1,4 +1,4 @@
-import { RegisterTeacherForm } from "@/features/register-teacher";
+import { RegisterTeacherForm } from "@/features/auth/register-teacher";
 
 export function TeacherRegisterPage() {
   return (

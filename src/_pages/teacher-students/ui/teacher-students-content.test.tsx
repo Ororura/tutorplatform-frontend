@@ -28,7 +28,7 @@ vi.mock("@/entities/student", () => ({
   studentQueries: { list: mocks.list },
 }));
 
-vi.mock("@/features/create-student", () => ({
+vi.mock("@/features/student/create", () => ({
   CreateStudentDialog: () => <button type="button">Добавить ученика</button>,
 }));
 

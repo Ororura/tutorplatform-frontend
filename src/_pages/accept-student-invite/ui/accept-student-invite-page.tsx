@@ -7,7 +7,7 @@ import {
   PublicStudentInviteDetails,
   studentInviteQueries,
 } from "@/entities/student-invite";
-import { AcceptStudentInviteForm } from "@/features/accept-student-invite";
+import { AcceptStudentInviteForm } from "@/features/student/invite/accept";
 import { Button } from "@/shared/ui/button";
 
 export function AcceptStudentInvitePage({ token }: Readonly<{ token: string }>) {

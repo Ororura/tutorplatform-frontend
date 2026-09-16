@@ -17,12 +17,12 @@ vi.mock("@/entities/student-invite", () => ({
   studentInviteQueries: { list: (id: string) => ({ queryKey: ["student-invites", "list", id] }) },
   StudentInviteHistory: () => <div>Приглашения</div>,
 }));
-vi.mock("@/features/create-student-invite", () => ({
+vi.mock("@/features/student/invite/create", () => ({
   CreateStudentInviteDialog: ({ available }: { available: boolean }) =>
     available ? <button>Отправить приглашение</button> : null,
 }));
-vi.mock("@/features/edit-student", () => ({ EditStudentForm: () => <form>Редактирование</form> }));
-vi.mock("@/features/revoke-student-invite", () => ({ useRevokeStudentInviteMutation: () => mocks.revoke }));
+vi.mock("@/features/student/edit", () => ({ EditStudentForm: () => <form>Редактирование</form> }));
+vi.mock("@/features/student/invite/revoke", () => ({ useRevokeStudentInviteMutation: () => mocks.revoke }));
 
 const baseStudent = {
   id: "student-1",

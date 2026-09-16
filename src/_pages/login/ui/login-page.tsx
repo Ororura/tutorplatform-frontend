@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { LoginForm } from "@/features/auth-by-email";
+import { LoginForm } from "@/features/auth/login";
 import { GuestGuard } from "@/entities/user";
 
 export function LoginPage() {

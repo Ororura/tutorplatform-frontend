@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { LogoutButton } from "@/features/logout";
+import { LogoutButton } from "@/features/auth/logout";
 import Link from "next/link";
 
 import { TeacherStudentsContent } from "./teacher-students-content";
