@@ -1,1 +1,1 @@
-export { TeacherStudentSessionNewPage as default } from "@/_pages/teacher-student-session-new";
+export { TeacherStudentSessionNewPage as default } from "@/_pages/teacher/students/detail/sessions/new";

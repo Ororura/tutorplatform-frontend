@@ -1,1 +1,1 @@
-export { TeacherStudentHomeworksPage as default } from "@/_pages/teacher-student-homeworks";
+export { TeacherStudentHomeworksPage as default } from "@/_pages/teacher/students/detail/homeworks/list";

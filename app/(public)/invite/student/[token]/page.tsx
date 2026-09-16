@@ -1,4 +1,4 @@
-import { AcceptStudentInvitePage } from "@/_pages/accept-student-invite";
+import { AcceptStudentInvitePage } from "@/_pages/student/accept-invite";
 
 export default async function Page({ params }: Readonly<{ params: Promise<{ token: string }> }>) {
   const { token } = await params;

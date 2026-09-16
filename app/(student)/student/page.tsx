@@ -1,1 +1,1 @@
-export { StudentLandingPage as default } from "@/_pages/student-landing";
+export { StudentLandingPage as default } from "@/_pages/student/landing";

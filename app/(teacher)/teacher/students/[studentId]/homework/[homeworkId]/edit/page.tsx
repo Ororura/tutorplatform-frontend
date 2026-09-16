@@ -1,4 +1,4 @@
-import { TeacherStudentHomeworkEditPage } from "@/_pages/teacher-student-homework-edit";
+import { TeacherStudentHomeworkEditPage } from "@/_pages/teacher/students/detail/homeworks/edit";
 
 export default async function Page({
   params,

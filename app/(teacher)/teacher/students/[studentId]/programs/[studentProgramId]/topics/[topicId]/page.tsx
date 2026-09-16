@@ -1,1 +1,1 @@
-export { TeacherStudentTopicPage as default } from "@/_pages/teacher-student-topic";
+export { TeacherStudentTopicPage as default } from "@/_pages/teacher/students/detail/topic";

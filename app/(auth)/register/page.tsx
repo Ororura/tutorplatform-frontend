@@ -1,1 +1,1 @@
-export { TeacherRegisterPage as default } from "@/_pages/teacher-register";
+export { TeacherRegisterPage as default } from "@/_pages/auth/teacher-register";
