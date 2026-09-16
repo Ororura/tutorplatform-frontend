@@ -1,1 +1,5 @@
-export { StudentLandingPage as default } from "@/_pages/student/landing";
+import { redirect } from "next/navigation";
+
+export default function StudentPage() {
+  redirect("/student/homework");
+}

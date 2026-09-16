@@ -5,4 +5,5 @@ export { AppLoadingState } from "./ui/app-loading-state";
 export { AuthRedirect } from "./ui/auth-redirect";
 export { GuestGuard } from "./ui/guest-guard";
 export { StudentGuard } from "./ui/student-guard";
+export { StudentNavigation } from "./ui/student-navigation";
 export { TeacherGuard } from "./ui/teacher-guard";
