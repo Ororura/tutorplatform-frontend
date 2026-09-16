@@ -15,12 +15,20 @@ vi.mock("next/link", () => ({
 }));
 vi.mock("@/entities/homework", () => ({
   studentHomeworkQueries: { detail: (id: string) => ({ queryKey: ["student-homework", "detail", id] }) },
-  getStudentHomeworkPresentationState: (value: { status: string; overdue: boolean }) => (value.status === "ASSIGNED" && value.overdue ? "OVERDUE" : value.status),
-  studentHomeworkStatusPresentation: { ASSIGNED: "Нужно выполнить", OVERDUE: "Просрочено", COMPLETED: "Выполнено", CANCELLED: "Отменено" },
+  getStudentHomeworkPresentationState: (value: { status: string; overdue: boolean }) =>
+    value.status === "ASSIGNED" && value.overdue ? "OVERDUE" : value.status,
+  studentHomeworkStatusPresentation: {
+    ASSIGNED: "Нужно выполнить",
+    OVERDUE: "Просрочено",
+    COMPLETED: "Выполнено",
+    CANCELLED: "Отменено",
+  },
   formatHomeworkDate: () => "1 сентября 2026",
 }));
 vi.mock("./student-task-solution", () => ({
-  StudentTaskSolution: (props: { item: { task: { title: string } } }) => <div data-testid="solution">{props.item.task.title}</div>,
+  StudentTaskSolution: (props: { item: { task: { title: string } } }) => (
+    <div data-testid="solution">{props.item.task.title}</div>
+  ),
 }));
 
 const homework = {
@@ -40,7 +48,13 @@ const homework = {
       required: false,
       passed: true,
       latestSubmissionStatus: "PASSED" as const,
-      task: { id: "task-code", title: "Второе задание", descriptionMarkdown: "D", taskType: "CODE" as const, difficulty: "EASY" as const },
+      task: {
+        id: "task-code",
+        title: "Второе задание",
+        descriptionMarkdown: "D",
+        taskType: "CODE" as const,
+        difficulty: "EASY" as const,
+      },
     },
     {
       id: "first",
@@ -49,7 +63,13 @@ const homework = {
       required: true,
       passed: false,
       latestSubmissionStatus: "NEEDS_REVIEW" as const,
-      task: { id: "task-text", title: "Первое задание", descriptionMarkdown: "D", taskType: "TEXT" as const, difficulty: "EASY" as const },
+      task: {
+        id: "task-text",
+        title: "Первое задание",
+        descriptionMarkdown: "D",
+        taskType: "TEXT" as const,
+        difficulty: "EASY" as const,
+      },
     },
     {
       id: "unsupported",
@@ -57,7 +77,13 @@ const homework = {
       position: 2,
       required: false,
       passed: false,
-      task: { id: "task-file", title: "Файл", descriptionMarkdown: "D", taskType: "FILE_UPLOAD" as const, difficulty: "EASY" as const },
+      task: {
+        id: "task-file",
+        title: "Файл",
+        descriptionMarkdown: "D",
+        taskType: "FILE_UPLOAD" as const,
+        difficulty: "EASY" as const,
+      },
     },
   ],
 };
@@ -83,7 +109,13 @@ describe("StudentHomeworkDetailView", () => {
   });
 
   it("shows safe not-found state for an owned homework lookup", () => {
-    mocks.useQuery.mockReturnValue({ data: undefined, isPending: false, isError: true, error: { status: 404 }, refetch: vi.fn() });
+    mocks.useQuery.mockReturnValue({
+      data: undefined,
+      isPending: false,
+      isError: true,
+      error: { status: 404 },
+      refetch: vi.fn(),
+    });
     render(<StudentHomeworkDetailView homeworkId="missing" />);
     expect(screen.getByText("Домашнее задание не найдено")).toBeInTheDocument();
   });

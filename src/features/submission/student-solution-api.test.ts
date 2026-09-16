@@ -16,7 +16,11 @@ describe("student solution API", () => {
   beforeEach(() => postMock.mockReset());
 
   it("submits TEXT only through its dedicated endpoint and request shape", async () => {
-    postMock.mockResolvedValue({ data: { id: "submission-1", status: "NEEDS_REVIEW" } as never, error: undefined, response: new Response() });
+    postMock.mockResolvedValue({
+      data: { id: "submission-1", status: "NEEDS_REVIEW" } as never,
+      error: undefined,
+      response: new Response(),
+    });
 
     await submitTextAnswer({ taskId: "task-text", homeworkItemId: "item-text", textAnswer: "Мой ответ" });
 

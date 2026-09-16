@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { apiClient } from "@/shared/api/client";
-import { getCurrentStudentHomework, getCurrentStudentHomeworks, studentHomeworkQueries } from "./student-homework-queries";
+import {
+  getCurrentStudentHomework,
+  getCurrentStudentHomeworks,
+  studentHomeworkQueries,
+} from "./student-homework-queries";
 
 vi.mock("@/shared/api/client", () => ({
   ApiClientError: class extends Error {},
@@ -29,7 +33,11 @@ describe("studentHomeworkQueries", () => {
   });
 
   it("loads detail only by owned homework id", async () => {
-    getMock.mockResolvedValue({ data: { id: "homework-1", items: [] } as never, error: undefined, response: new Response() });
+    getMock.mockResolvedValue({
+      data: { id: "homework-1", items: [] } as never,
+      error: undefined,
+      response: new Response(),
+    });
 
     await getCurrentStudentHomework("homework-1");
 

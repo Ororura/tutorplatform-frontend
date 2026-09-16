@@ -10,7 +10,11 @@ export type SubmitTextAnswerInput = {
   textAnswer: string;
 };
 
-export async function submitTextAnswer({ taskId, homeworkItemId, textAnswer }: SubmitTextAnswerInput): Promise<StudentSubmission> {
+export async function submitTextAnswer({
+  taskId,
+  homeworkItemId,
+  textAnswer,
+}: SubmitTextAnswerInput): Promise<StudentSubmission> {
   const { data, error, response } = await apiClient.POST("/api/v1/student/tasks/{taskId}/submissions", {
     params: { path: { taskId } },
     body: { homeworkItemId, textAnswer },
@@ -27,7 +31,9 @@ export function useSubmitTextAnswerMutation(homeworkId: string) {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: studentHomeworkQueries.lists() }),
         queryClient.invalidateQueries({ queryKey: studentHomeworkQueries.detail(homeworkId).queryKey }),
-        queryClient.invalidateQueries({ queryKey: studentSubmissionQueries.list(input.taskId, input.homeworkItemId).queryKey }),
+        queryClient.invalidateQueries({
+          queryKey: studentSubmissionQueries.list(input.taskId, input.homeworkItemId).queryKey,
+        }),
       ]);
     },
   });

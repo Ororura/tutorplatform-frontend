@@ -1,7 +1,9 @@
 import type { components } from "@/shared/api/generated/schema";
 
 type SubmissionStatus = components["schemas"]["StudentSubmissionResponse"]["status"];
-type ExecutionStatus = components["schemas"]["ExecutionStatus"] | components["schemas"]["CodeSubmissionExecutionResponse"]["status"];
+type ExecutionStatus =
+  | components["schemas"]["ExecutionStatus"]
+  | components["schemas"]["CodeSubmissionExecutionResponse"]["status"];
 
 export const submissionStatusPresentation: Record<SubmissionStatus, string> = {
   SUBMITTED: "Отправлено",

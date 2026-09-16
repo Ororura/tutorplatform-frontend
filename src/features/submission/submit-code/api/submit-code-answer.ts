@@ -10,7 +10,11 @@ export type SubmitCodeAnswerInput = {
   sourceCode: string;
 };
 
-export async function submitCodeAnswer({ taskId, homeworkItemId, sourceCode }: SubmitCodeAnswerInput): Promise<StudentSubmission> {
+export async function submitCodeAnswer({
+  taskId,
+  homeworkItemId,
+  sourceCode,
+}: SubmitCodeAnswerInput): Promise<StudentSubmission> {
   const { data, error, response } = await apiClient.POST("/api/v1/student/tasks/{taskId}/code-submissions", {
     params: { path: { taskId } },
     body: { homeworkItemId, sourceCode },
@@ -27,7 +31,9 @@ export function useSubmitCodeAnswerMutation(homeworkId: string) {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: studentHomeworkQueries.lists() }),
         queryClient.invalidateQueries({ queryKey: studentHomeworkQueries.detail(homeworkId).queryKey }),
-        queryClient.invalidateQueries({ queryKey: studentSubmissionQueries.list(input.taskId, input.homeworkItemId).queryKey }),
+        queryClient.invalidateQueries({
+          queryKey: studentSubmissionQueries.list(input.taskId, input.homeworkItemId).queryKey,
+        }),
       ]);
     },
   });

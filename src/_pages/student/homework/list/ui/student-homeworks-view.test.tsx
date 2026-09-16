@@ -86,7 +86,12 @@ describe("StudentHomeworksView", () => {
   });
 
   it("renders empty state without teacher actions", () => {
-    mocks.useQuery.mockReturnValue({ data: { ...page, items: [] }, isPending: false, isError: false, refetch: vi.fn() });
+    mocks.useQuery.mockReturnValue({
+      data: { ...page, items: [] },
+      isPending: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
     render(<StudentHomeworksView />);
     expect(screen.getByText("Домашних заданий пока нет")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /назначить/i })).not.toBeInTheDocument();

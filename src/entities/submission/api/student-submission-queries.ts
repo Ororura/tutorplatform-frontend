@@ -6,7 +6,10 @@ import type { components } from "@/shared/api/generated/schema";
 export type StudentSubmission = components["schemas"]["StudentSubmissionResponse"];
 export type StudentSubmissionPage = components["schemas"]["StudentSubmissionPageResponse"];
 
-export async function getStudentTaskSubmissions(taskId: string, homeworkItemId: string): Promise<StudentSubmissionPage> {
+export async function getStudentTaskSubmissions(
+  taskId: string,
+  homeworkItemId: string,
+): Promise<StudentSubmissionPage> {
   const { data, error, response } = await apiClient.GET("/api/v1/student/tasks/{taskId}/submissions", {
     params: { path: { taskId }, query: { homeworkItemId, page: 0, size: 20 } },
   });

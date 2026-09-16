@@ -12,7 +12,9 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery, queryOptions: (value: unknown) => value }));
 vi.mock("@/entities/submission", () => ({
-  studentSubmissionQueries: { list: (taskId: string, itemId: string) => ({ queryKey: ["student-submissions", taskId, itemId] }) },
+  studentSubmissionQueries: {
+    list: (taskId: string, itemId: string) => ({ queryKey: ["student-submissions", taskId, itemId] }),
+  },
   submissionStatusPresentation: {
     NEEDS_REVIEW: "Ожидает проверки",
     PASSED: "Выполнено",
@@ -51,7 +53,10 @@ const base = {
 describe("StudentTaskSolution", () => {
   beforeEach(() => {
     mocks.useQuery.mockReset();
-    mocks.useQuery.mockReturnValue({ data: { items: [], page: 0, size: 20, totalElements: 0, totalPages: 0 }, isPending: false });
+    mocks.useQuery.mockReturnValue({
+      data: { items: [], page: 0, size: 20, totalElements: 0, totalPages: 0 },
+      isPending: false,
+    });
     Object.values(mocks).forEach((value) => {
       if (typeof value === "object" && value && "mutate" in value) {
         value.mutate.mockReset();
@@ -64,7 +69,11 @@ describe("StudentTaskSolution", () => {
 
   it("submits TEXT answer without code or student-controlled submission fields", () => {
     render(
-      <StudentTaskSolution homeworkId="homework-1" homeworkStatus="ASSIGNED" item={{ ...base, task: { ...base.task, taskType: "TEXT" } }} />,
+      <StudentTaskSolution
+        homeworkId="homework-1"
+        homeworkStatus="ASSIGNED"
+        item={{ ...base, task: { ...base.task, taskType: "TEXT" } }}
+      />,
     );
     fireEvent.change(screen.getByLabelText("Ваш ответ"), { target: { value: "Мой ответ" } });
     fireEvent.click(screen.getByRole("button", { name: "Отправить" }));
@@ -79,12 +88,25 @@ describe("StudentTaskSolution", () => {
   it("shows NEEDS_REVIEW from persisted attempts", () => {
     mocks.useQuery.mockReturnValue({
       data: {
-        items: [{ id: "submission-1", taskId: "task-1", homeworkItemId: "item-1", attemptNo: 1, status: "NEEDS_REVIEW", submittedAt: "2026-09-01T10:00:00Z" }],
+        items: [
+          {
+            id: "submission-1",
+            taskId: "task-1",
+            homeworkItemId: "item-1",
+            attemptNo: 1,
+            status: "NEEDS_REVIEW",
+            submittedAt: "2026-09-01T10:00:00Z",
+          },
+        ],
       },
       isPending: false,
     });
     render(
-      <StudentTaskSolution homeworkId="homework-1" homeworkStatus="ASSIGNED" item={{ ...base, task: { ...base.task, taskType: "TEXT" } }} />,
+      <StudentTaskSolution
+        homeworkId="homework-1"
+        homeworkStatus="ASSIGNED"
+        item={{ ...base, task: { ...base.task, taskType: "TEXT" } }}
+      />,
     );
     expect(screen.getByText(/Ожидает проверки/)).toBeInTheDocument();
   });
@@ -99,7 +121,13 @@ describe("StudentTaskSolution", () => {
           task: {
             ...base.task,
             taskType: "CODE",
-            codeExecution: { language: "PYTHON", starterCode: "print('start')", executionEnabled: true, timeLimitMs: 1000, memoryLimitMb: 128 },
+            codeExecution: {
+              language: "PYTHON",
+              starterCode: "print('start')",
+              executionEnabled: true,
+              timeLimitMs: 1000,
+              memoryLimitMb: 128,
+            },
           },
         }}
       />,
@@ -109,8 +137,16 @@ describe("StudentTaskSolution", () => {
     fireEvent.change(editor, { target: { value: "print(1)" } });
     fireEvent.click(screen.getByRole("button", { name: "Запустить" }));
     fireEvent.click(screen.getByRole("button", { name: "Отправить решение" }));
-    expect(mocks.runCode.mutate).toHaveBeenCalledWith({ taskId: "task-1", homeworkItemId: "item-1", sourceCode: "print(1)" });
-    expect(mocks.submitCode.mutate).toHaveBeenCalledWith({ taskId: "task-1", homeworkItemId: "item-1", sourceCode: "print(1)" });
+    expect(mocks.runCode.mutate).toHaveBeenCalledWith({
+      taskId: "task-1",
+      homeworkItemId: "item-1",
+      sourceCode: "print(1)",
+    });
+    expect(mocks.submitCode.mutate).toHaveBeenCalledWith({
+      taskId: "task-1",
+      homeworkItemId: "item-1",
+      sourceCode: "print(1)",
+    });
   });
 
   it.each([
@@ -131,7 +167,14 @@ describe("StudentTaskSolution", () => {
       <StudentTaskSolution
         homeworkId="homework-1"
         homeworkStatus="ASSIGNED"
-        item={{ ...base, task: { ...base.task, taskType: "CODE", codeExecution: { language: "PYTHON", executionEnabled: true, timeLimitMs: 1000, memoryLimitMb: 128 } } }}
+        item={{
+          ...base,
+          task: {
+            ...base.task,
+            taskType: "CODE",
+            codeExecution: { language: "PYTHON", executionEnabled: true, timeLimitMs: 1000, memoryLimitMb: 128 },
+          },
+        }}
       />,
     );
     expect(screen.getByText(label)).toBeInTheDocument();
@@ -142,7 +185,11 @@ describe("StudentTaskSolution", () => {
   it("disables only the pending submit action to prevent double submit", () => {
     mocks.submitText.isPending = true;
     render(
-      <StudentTaskSolution homeworkId="homework-1" homeworkStatus="ASSIGNED" item={{ ...base, task: { ...base.task, taskType: "TEXT" } }} />,
+      <StudentTaskSolution
+        homeworkId="homework-1"
+        homeworkStatus="ASSIGNED"
+        item={{ ...base, task: { ...base.task, taskType: "TEXT" } }}
+      />,
     );
     expect(screen.getByRole("button", { name: "Отправляем…" })).toBeDisabled();
   });

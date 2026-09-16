@@ -11,7 +11,11 @@ export type RunStudentCodeInput = {
 
 export type StudentRunResult = components["schemas"]["RunCodeResponse"];
 
-export async function runStudentCode({ taskId, homeworkItemId, sourceCode }: RunStudentCodeInput): Promise<StudentRunResult> {
+export async function runStudentCode({
+  taskId,
+  homeworkItemId,
+  sourceCode,
+}: RunStudentCodeInput): Promise<StudentRunResult> {
   const { data, error, response } = await apiClient.POST("/api/v1/student/tasks/{taskId}/run", {
     params: { path: { taskId } },
     body: { homeworkItemId, sourceCode },

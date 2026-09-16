@@ -58,7 +58,11 @@ export function StudentTaskSolution({
   );
 }
 
-function TextSolution({ homeworkId, item, disabled }: Readonly<{ homeworkId: string; item: StudentHomeworkItem; disabled: boolean }>) {
+function TextSolution({
+  homeworkId,
+  item,
+  disabled,
+}: Readonly<{ homeworkId: string; item: StudentHomeworkItem; disabled: boolean }>) {
   const [textAnswer, setTextAnswer] = useState("");
   const submit = useSubmitTextAnswerMutation(homeworkId);
 
@@ -81,7 +85,11 @@ function TextSolution({ homeworkId, item, disabled }: Readonly<{ homeworkId: str
           value={textAnswer}
         />
       </label>
-      {submit.isError && <p className="text-sm text-red-700" role="alert">Не удалось отправить ответ. Попробуйте ещё раз.</p>}
+      {submit.isError && (
+        <p className="text-sm text-red-700" role="alert">
+          Не удалось отправить ответ. Попробуйте ещё раз.
+        </p>
+      )}
       {submit.data && <SubmissionSummary submission={submit.data} />}
       <Button disabled={disabled || submit.isPending || !textAnswer.trim()} type="submit">
         {submit.isPending ? "Отправляем…" : "Отправить"}
@@ -90,19 +98,28 @@ function TextSolution({ homeworkId, item, disabled }: Readonly<{ homeworkId: str
   );
 }
 
-function CodeSolution({ homeworkId, item, disabled }: Readonly<{ homeworkId: string; item: StudentHomeworkItem; disabled: boolean }>) {
+function CodeSolution({
+  homeworkId,
+  item,
+  disabled,
+}: Readonly<{ homeworkId: string; item: StudentHomeworkItem; disabled: boolean }>) {
   const config = item.task.codeExecution;
   const [sourceCode, setSourceCode] = useState(config?.starterCode ?? "");
   const run = useRunStudentCodeMutation();
   const submit = useSubmitCodeAnswerMutation(homeworkId);
 
-  if (!config) return <p className="rounded-md bg-red-50 p-3 text-sm text-red-800">Для задания недоступна конфигурация запуска.</p>;
+  if (!config)
+    return (
+      <p className="rounded-md bg-red-50 p-3 text-sm text-red-800">Для задания недоступна конфигурация запуска.</p>
+    );
 
   const executionDisabled = disabled || !config.executionEnabled;
   return (
     <div className="space-y-4">
       <p className="text-sm text-neutral-600">Язык: {languagePresentation[config.language] ?? config.language}</p>
-      {!config.executionEnabled && <p className="text-sm text-neutral-600">Запуск и отправка кода сейчас недоступны.</p>}
+      {!config.executionEnabled && (
+        <p className="text-sm text-neutral-600">Запуск и отправка кода сейчас недоступны.</p>
+      )}
       <label className="block space-y-2" htmlFor={`source-${item.id}`}>
         <span className="font-medium">Код решения</span>
         <textarea
@@ -140,8 +157,16 @@ function CodeSolution({ homeworkId, item, disabled }: Readonly<{ homeworkId: str
           {submit.isPending ? "Отправляем…" : "Отправить решение"}
         </Button>
       </div>
-      {run.isError && <p className="text-sm text-red-700" role="alert">Не удалось запустить код. Попробуйте ещё раз.</p>}
-      {submit.isError && <p className="text-sm text-red-700" role="alert">Не удалось отправить решение. Попробуйте ещё раз.</p>}
+      {run.isError && (
+        <p className="text-sm text-red-700" role="alert">
+          Не удалось запустить код. Попробуйте ещё раз.
+        </p>
+      )}
+      {submit.isError && (
+        <p className="text-sm text-red-700" role="alert">
+          Не удалось отправить решение. Попробуйте ещё раз.
+        </p>
+      )}
       {run.data && <RunResult result={run.data} />}
       {submit.data && <SubmissionSummary submission={submit.data} />}
     </div>
@@ -153,7 +178,11 @@ function RunResult({ result }: Readonly<{ result: ReturnType<typeof useRunStuden
   return (
     <section className="space-y-3 rounded-md border border-neutral-200 p-4" aria-label="Результат запуска">
       <p className="font-medium">{executionStatusPresentation[result.status]}</p>
-      {result.passedTests !== undefined && result.totalTests !== undefined && <p>Тесты: {result.passedTests} из {result.totalTests}</p>}
+      {result.passedTests !== undefined && result.totalTests !== undefined && (
+        <p>
+          Тесты: {result.passedTests} из {result.totalTests}
+        </p>
+      )}
       {result.executionTimeMs !== undefined && <p>Время выполнения: {result.executionTimeMs} мс</p>}
       {result.tests && result.tests.length > 0 && (
         <ul className="space-y-1 text-sm">
@@ -201,7 +230,9 @@ function Output({ label, value }: Readonly<{ label: string; value: string | unde
   return (
     <div>
       <p className="mb-1 text-sm font-medium">{label}</p>
-      <pre className="max-h-48 overflow-auto rounded bg-neutral-950 p-3 text-sm text-neutral-100 whitespace-pre-wrap">{value}</pre>
+      <pre className="max-h-48 overflow-auto rounded bg-neutral-950 p-3 text-sm text-neutral-100 whitespace-pre-wrap">
+        {value}
+      </pre>
     </div>
   );
 }
