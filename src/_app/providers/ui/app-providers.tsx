@@ -1,28 +1,27 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { usePathname, useRouter } from "next/navigation";
+import { QueryClient, QueryClientConfig, QueryClientProvider } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { currentUserQueryKey } from "@/entities/user";
 import { getCsrfToken, setUnauthorizedHandler, shouldRetryApiError } from "@/shared/api/client";
 
+const queryClientConfig: QueryClientConfig = {
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      refetchOnWindowFocus: false,
+      retry: shouldRetryApiError,
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+};
+
 export function AppProviders({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 30_000,
-            refetchOnWindowFocus: false,
-            retry: shouldRetryApiError,
-          },
-          mutations: {
-            retry: false,
-          },
-        },
-      }),
-  );
+  const [queryClient] = useState(() => new QueryClient(queryClientConfig));
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -32,25 +31,32 @@ export function AppProviders({ children }: Readonly<{ children: React.ReactNode 
 }
 
 function ApiLifecycle({ children, queryClient }: Readonly<{ children: React.ReactNode; queryClient: QueryClient }>) {
-  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    void getCsrfToken().catch(() => {
-      // Unsafe requests will retry CSRF initialization and expose a typed error to their feature.
-    });
+    void getCsrfToken().catch(() => undefined);
   }, []);
 
   useEffect(() => {
     setUnauthorizedHandler(() => {
+      const pathname = window.location.pathname;
+
+      void queryClient.cancelQueries();
+
+      queryClient.clear();
       queryClient.setQueryData(currentUserQueryKey, null);
+
       if (!isPublicPath(pathname)) {
-        router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+        return;
       }
+
+      const next = window.location.pathname + window.location.search + window.location.hash;
+
+      router.replace(`/login?next=${encodeURIComponent(next)}`);
     });
 
     return () => setUnauthorizedHandler(null);
-  }, [pathname, queryClient, router]);
+  }, [queryClient, router]);
 
   return children;
 }
