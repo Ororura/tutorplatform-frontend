@@ -5,7 +5,10 @@ import { cn } from "@/shared/lib/cn";
 export function StudentProfileNav({
   active,
   studentId,
-}: Readonly<{ active: "overview" | "program" | "sessions" | "homework"; studentId: string }>) {
+}: Readonly<{
+  active: "overview" | "program" | "sessions" | "homework";
+  studentId: string;
+}>) {
   const itemClass = "inline-block border-b-2 px-1 pb-3 text-sm font-medium";
 
   return (

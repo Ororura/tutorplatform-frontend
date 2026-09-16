@@ -2,15 +2,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { CreateStudentInviteForm } from "./create-student-invite-form";
 
 const mocks = vi.hoisted(() => ({ post: vi.fn(), writeText: vi.fn() }));
 
 vi.mock("@/shared/api/client", async (importOriginal) => ({
-  ...await importOriginal<typeof import("@/shared/api/client")>(),
+  ...(await importOriginal<typeof import("@/shared/api/client")>()),
   apiClient: { POST: mocks.post },
 }));
-
-import { CreateStudentInviteForm } from "./create-student-invite-form";
 
 function setup() {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
@@ -32,7 +31,14 @@ describe("CreateStudentInviteForm", () => {
   it("creates an invitation, shows the one-time URL, and copies it", async () => {
     const inviteUrl = "http://localhost:3000/invite/student/raw-secret";
     mocks.post.mockResolvedValue({
-      data: { id: "invite-1", studentId: "student-1", email: "ilya@example.com", inviteUrl, expiresAt: "2026-09-20T00:00:00Z", createdAt: "2026-09-13T00:00:00Z" },
+      data: {
+        id: "invite-1",
+        studentId: "student-1",
+        email: "ilya@example.com",
+        inviteUrl,
+        expiresAt: "2026-09-20T00:00:00Z",
+        createdAt: "2026-09-13T00:00:00Z",
+      },
       response: { status: 201 },
     });
     const { invalidate } = setup();
@@ -40,10 +46,10 @@ describe("CreateStudentInviteForm", () => {
     fireEvent.click(screen.getByRole("button", { name: "Создать приглашение" }));
 
     expect(await screen.findByDisplayValue(inviteUrl)).toBeInTheDocument();
-    expect(mocks.post).toHaveBeenCalledWith(
-      "/api/v1/teacher/students/{studentId}/invites",
-      { params: { path: { studentId: "student-1" } }, body: { email: "ilya@example.com" } },
-    );
+    expect(mocks.post).toHaveBeenCalledWith("/api/v1/teacher/students/{studentId}/invites", {
+      params: { path: { studentId: "student-1" } },
+      body: { email: "ilya@example.com" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Копировать" }));
     await waitFor(() => expect(mocks.writeText).toHaveBeenCalledWith(inviteUrl));
     expect(await screen.findByRole("button", { name: "Скопировано" })).toBeInTheDocument();
@@ -61,7 +67,13 @@ describe("CreateStudentInviteForm", () => {
 
   it("shows a readable conflict error", async () => {
     mocks.post.mockResolvedValue({
-      error: { code: "EMAIL_ALREADY_REGISTERED", message: "Conflict", timestamp: "2026-09-13T00:00:00Z", traceId: "trace", details: [] },
+      error: {
+        code: "EMAIL_ALREADY_REGISTERED",
+        message: "Conflict",
+        timestamp: "2026-09-13T00:00:00Z",
+        traceId: "trace",
+        details: [],
+      },
       response: { status: 409 },
     });
     setup();

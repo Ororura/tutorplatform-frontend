@@ -7,7 +7,7 @@ import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
 import { useCreateStudentMutation } from "../api/create-student";
-import { createStudentSchema, type CreateStudentFormValues } from "../model/create-student-schema";
+import { type CreateStudentFormValues, createStudentSchema } from "../model/create-student-schema";
 
 export function CreateStudentForm({ onSuccess }: Readonly<{ onSuccess?: () => void }>) {
   const mutation = useCreateStudentMutation();
@@ -47,9 +47,15 @@ export function CreateStudentForm({ onSuccess }: Readonly<{ onSuccess?: () => vo
   });
 
   return (
-    <form className="grid gap-4 rounded-lg border border-neutral-200 bg-white p-5 sm:grid-cols-2" onSubmit={onSubmit} noValidate>
+    <form
+      className="grid gap-4 rounded-lg border border-neutral-200 bg-white p-5 sm:grid-cols-2"
+      onSubmit={onSubmit}
+      noValidate
+    >
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="create-student-first-name">Имя</label>
+        <label className="block text-sm font-medium" htmlFor="create-student-first-name">
+          Имя
+        </label>
         <input
           autoFocus
           id="create-student-first-name"
@@ -58,10 +64,16 @@ export function CreateStudentForm({ onSuccess }: Readonly<{ onSuccess?: () => vo
           aria-describedby={errors.firstName ? "create-student-first-name-error" : undefined}
           {...register("firstName")}
         />
-        {errors.firstName && <p id="create-student-first-name-error" className="text-sm text-red-700">{errors.firstName.message}</p>}
+        {errors.firstName && (
+          <p id="create-student-first-name-error" className="text-sm text-red-700">
+            {errors.firstName.message}
+          </p>
+        )}
       </div>
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="create-student-last-name">Фамилия</label>
+        <label className="block text-sm font-medium" htmlFor="create-student-last-name">
+          Фамилия
+        </label>
         <input
           id="create-student-last-name"
           className="h-10 w-full rounded-md border border-neutral-300 px-3 outline-none focus:ring-2 focus:ring-neutral-300"
@@ -69,10 +81,22 @@ export function CreateStudentForm({ onSuccess }: Readonly<{ onSuccess?: () => vo
           aria-describedby={errors.lastName ? "create-student-last-name-error" : undefined}
           {...register("lastName")}
         />
-        {errors.lastName && <p id="create-student-last-name-error" className="text-sm text-red-700">{errors.lastName.message}</p>}
+        {errors.lastName && (
+          <p id="create-student-last-name-error" className="text-sm text-red-700">
+            {errors.lastName.message}
+          </p>
+        )}
       </div>
-      {errors.root?.server && <p className="text-sm text-red-700 sm:col-span-2" role="alert">{errors.root.server.message}</p>}
-      {mutation.isSuccess && <p className="text-sm text-green-700 sm:col-span-2" role="status">Ученик создан.</p>}
+      {errors.root?.server && (
+        <p className="text-sm text-red-700 sm:col-span-2" role="alert">
+          {errors.root.server.message}
+        </p>
+      )}
+      {mutation.isSuccess && (
+        <p className="text-sm text-green-700 sm:col-span-2" role="status">
+          Ученик создан.
+        </p>
+      )}
       <div className="sm:col-span-2">
         <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? "Создаём…" : "Добавить ученика"}

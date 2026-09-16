@@ -15,8 +15,20 @@ describe("StudentInviteHistory", () => {
       <StudentInviteHistory
         onRevoke={onRevoke}
         invites={[
-          { id: "active", email: "active@example.com", status: "ACTIVE", expiresAt: "2026-09-10T08:00:00Z", createdAt: "2026-09-07T08:00:00Z" },
-          { id: "accepted", email: "accepted@example.com", status: "ACCEPTED", expiresAt: "2026-09-10T08:00:00Z", createdAt: "2026-09-06T08:00:00Z" },
+          {
+            id: "active",
+            email: "active@example.com",
+            status: "ACTIVE",
+            expiresAt: "2026-09-10T08:00:00Z",
+            createdAt: "2026-09-07T08:00:00Z",
+          },
+          {
+            id: "accepted",
+            email: "accepted@example.com",
+            status: "ACCEPTED",
+            expiresAt: "2026-09-10T08:00:00Z",
+            createdAt: "2026-09-06T08:00:00Z",
+          },
         ]}
       />,
     );

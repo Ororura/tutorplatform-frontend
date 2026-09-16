@@ -10,7 +10,7 @@ import { Button } from "@/shared/ui/button";
 
 import { useLoginMutation } from "../api/login";
 import { getPostLoginRoute } from "../model/login-routing";
-import { loginSchema, type LoginFormValues } from "../model/login-schema";
+import { type LoginFormValues, loginSchema } from "../model/login-schema";
 import { DemoAccountHelper } from "./demo-account-helper";
 
 export function LoginForm() {
@@ -44,10 +44,7 @@ export function LoginForm() {
           }
         }
         setError("root.server", {
-          message:
-            error.body.code === "AUTH_INVALID_CREDENTIALS"
-              ? "Неверный email или пароль"
-              : error.body.message,
+          message: error.body.code === "AUTH_INVALID_CREDENTIALS" ? "Неверный email или пароль" : error.body.message,
         });
         return;
       }

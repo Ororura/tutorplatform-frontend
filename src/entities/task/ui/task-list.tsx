@@ -12,10 +12,16 @@ export function TaskList({ tasks, subjects }: Readonly<{ tasks: Task[]; subjects
           <Link className="block space-y-2 p-4 transition hover:bg-neutral-50" href={`/teacher/tasks/${task.id}`}>
             <span className="font-medium">{task.title}</span>
             <span className="flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-800">{taskTypePresentation[task.taskType]}</span>
-              <span className="rounded-full bg-neutral-100 px-2.5 py-1">{taskDifficultyPresentation[task.difficulty]}</span>
+              <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-800">
+                {taskTypePresentation[task.taskType]}
+              </span>
+              <span className="rounded-full bg-neutral-100 px-2.5 py-1">
+                {taskDifficultyPresentation[task.difficulty]}
+              </span>
               <span className="rounded-full bg-neutral-100 px-2.5 py-1">{taskStatusPresentation[task.status]}</span>
-              {subjectNames.get(task.subjectId) && <span className="rounded-full bg-neutral-100 px-2.5 py-1">{subjectNames.get(task.subjectId)}</span>}
+              {subjectNames.get(task.subjectId) && (
+                <span className="rounded-full bg-neutral-100 px-2.5 py-1">{subjectNames.get(task.subjectId)}</span>
+              )}
             </span>
           </Link>
         </li>

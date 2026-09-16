@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components, operations } from "@/shared/api/generated/schema";
 
 export type Task = components["schemas"]["TaskResponse"];
@@ -39,17 +39,20 @@ export async function getTeacherSubjects(): Promise<Subject[]> {
 export const taskQueries = {
   all: () => ["teacher-tasks"] as const,
   lists: () => [...taskQueries.all(), "list"] as const,
-  list: (params: TaskListParams) => queryOptions({
-    queryKey: [...taskQueries.lists(), params] as const,
-    queryFn: () => getTeacherTasks(params),
-  }),
+  list: (params: TaskListParams) =>
+    queryOptions({
+      queryKey: [...taskQueries.lists(), params] as const,
+      queryFn: () => getTeacherTasks(params),
+    }),
   details: () => [...taskQueries.all(), "detail"] as const,
-  detail: (taskId: string) => queryOptions({
-    queryKey: [...taskQueries.details(), taskId] as const,
-    queryFn: () => getTeacherTask(taskId),
-  }),
-  subjects: () => queryOptions({
-    queryKey: [...taskQueries.all(), "subjects"] as const,
-    queryFn: getTeacherSubjects,
-  }),
+  detail: (taskId: string) =>
+    queryOptions({
+      queryKey: [...taskQueries.details(), taskId] as const,
+      queryFn: () => getTeacherTask(taskId),
+    }),
+  subjects: () =>
+    queryOptions({
+      queryKey: [...taskQueries.all(), "subjects"] as const,
+      queryFn: getTeacherSubjects,
+    }),
 };

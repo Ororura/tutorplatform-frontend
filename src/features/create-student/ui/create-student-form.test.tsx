@@ -2,15 +2,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { CreateStudentForm } from "./create-student-form";
 
 const mocks = vi.hoisted(() => ({ post: vi.fn() }));
 
 vi.mock("@/shared/api/client", async (importOriginal) => ({
-  ...await importOriginal<typeof import("@/shared/api/client")>(),
+  ...(await importOriginal<typeof import("@/shared/api/client")>()),
   apiClient: { POST: mocks.post },
 }));
-
-import { CreateStudentForm } from "./create-student-form";
 
 function setup() {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
@@ -35,7 +34,13 @@ describe("CreateStudentForm", () => {
 
   it("creates using the generated contract and invalidates the student list", async () => {
     mocks.post.mockResolvedValue({
-      data: { id: "student-1", firstName: "Илья", status: "ACTIVE", accountStatus: "UNREGISTERED", createdAt: "2026-09-13T00:00:00Z" },
+      data: {
+        id: "student-1",
+        firstName: "Илья",
+        status: "ACTIVE",
+        accountStatus: "UNREGISTERED",
+        createdAt: "2026-09-13T00:00:00Z",
+      },
       response: { status: 201 },
     });
     const { invalidate, onSuccess } = setup();
@@ -43,10 +48,11 @@ describe("CreateStudentForm", () => {
     fireEvent.change(screen.getByLabelText("Фамилия"), { target: { value: "Соколов" } });
     fireEvent.click(screen.getByRole("button", { name: "Добавить ученика" }));
 
-    await waitFor(() => expect(mocks.post).toHaveBeenCalledWith(
-      "/api/v1/teacher/students",
-      { body: { firstName: "Илья", lastName: "Соколов" } },
-    ));
+    await waitFor(() =>
+      expect(mocks.post).toHaveBeenCalledWith("/api/v1/teacher/students", {
+        body: { firstName: "Илья", lastName: "Соколов" },
+      }),
+    );
     await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ["students", "list"] }));
     expect(onSuccess).toHaveBeenCalledOnce();
   });
@@ -71,7 +77,11 @@ describe("CreateStudentForm", () => {
 
   it("blocks a second submit while the mutation is pending", async () => {
     let finish!: (value: unknown) => void;
-    mocks.post.mockReturnValue(new Promise((resolve) => { finish = resolve; }));
+    mocks.post.mockReturnValue(
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+    );
     setup();
     fireEvent.change(screen.getByLabelText("Имя"), { target: { value: "Илья" } });
     const submit = screen.getByRole("button", { name: "Добавить ученика" });
@@ -80,7 +90,13 @@ describe("CreateStudentForm", () => {
     fireEvent.click(screen.getByRole("button", { name: "Создаём…" }));
     expect(mocks.post).toHaveBeenCalledOnce();
     finish({
-      data: { id: "student-1", firstName: "Илья", status: "ACTIVE", accountStatus: "UNREGISTERED", createdAt: "2026-09-13T00:00:00Z" },
+      data: {
+        id: "student-1",
+        firstName: "Илья",
+        status: "ACTIVE",
+        accountStatus: "UNREGISTERED",
+        createdAt: "2026-09-13T00:00:00Z",
+      },
       response: { status: 201 },
     });
     await waitFor(() => expect(screen.getByRole("button", { name: "Добавить ученика" })).toBeEnabled());

@@ -40,9 +40,7 @@ export function AcceptStudentInvitePage({ token }: Readonly<{ token: string }>) 
       <div className="space-y-3">
         <p className="text-sm font-medium text-neutral-500">Tutor Learning Platform</p>
         <h1 className="text-3xl font-semibold tracking-tight">Принять приглашение</h1>
-        <p className="text-neutral-600">
-          Проверьте данные и создайте пароль для аккаунта ученика.
-        </p>
+        <p className="text-neutral-600">Проверьте данные и создайте пароль для аккаунта ученика.</p>
       </div>
       <div className="mt-8 space-y-8">
         <PublicStudentInviteDetails invite={invitation.data} />

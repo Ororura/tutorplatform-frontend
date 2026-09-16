@@ -112,7 +112,9 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
 
   return (
     <>
-      <Button ref={triggerRef} type="button" onClick={openDialog}>{triggerLabel}</Button>
+      <Button ref={triggerRef} type="button" onClick={openDialog}>
+        {triggerLabel}
+      </Button>
       <dialog
         ref={dialogRef}
         aria-labelledby={titleId}
@@ -122,21 +124,44 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
         <div className="p-5 sm:p-6">
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
-              <h2 id={titleId} className="text-xl font-semibold">Назначить программу</h2>
+              <h2 id={titleId} className="text-xl font-semibold">
+                Назначить программу
+              </h2>
               <p className="mt-1 text-sm text-neutral-600">Выберите активную программу и интервал отчёта.</p>
             </div>
-            <button className="rounded px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100" type="button" onClick={close} aria-label="Закрыть">Закрыть</button>
+            <button
+              className="rounded px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100"
+              type="button"
+              onClick={close}
+              aria-label="Закрыть"
+            >
+              Закрыть
+            </button>
           </div>
 
-          {loading && <p className="rounded-lg border border-neutral-200 p-5 text-neutral-600" aria-busy="true">Загружаем доступные программы…</p>}
+          {loading && (
+            <p className="rounded-lg border border-neutral-200 p-5 text-neutral-600" aria-busy="true">
+              Загружаем доступные программы…
+            </p>
+          )}
           {loadError && (
             <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-4" role="alert">
               <p>Не удалось загрузить программы для назначения.</p>
-              <Button type="button" onClick={() => { void templates.refetch(); void assignments.refetch(); }}>Повторить</Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  void templates.refetch();
+                  void assignments.refetch();
+                }}
+              >
+                Повторить
+              </Button>
             </div>
           )}
           {!loading && !loadError && templates.data?.length === 0 && (
-            <p className="rounded-lg border border-dashed border-neutral-300 p-5">Нет программ, доступных для назначения</p>
+            <p className="rounded-lg border border-dashed border-neutral-300 p-5">
+              Нет программ, доступных для назначения
+            </p>
           )}
           {!loading && !loadError && templates.data && templates.data.length > 0 && (
             <form className="space-y-5" onSubmit={submit} noValidate>
@@ -145,29 +170,43 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
                 {templates.data.map((template) => {
                   const alreadyAssigned = assignedProgramIds.has(template.id);
                   return (
-                    <label key={template.id} className="flex cursor-pointer gap-3 rounded-lg border border-neutral-200 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:bg-neutral-100">
+                    <label
+                      key={template.id}
+                      className="flex cursor-pointer gap-3 rounded-lg border border-neutral-200 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:bg-neutral-100"
+                    >
                       <input
                         type="radio"
                         name="learningProgram"
                         value={template.id}
                         checked={selectedProgramId === template.id}
                         disabled={alreadyAssigned}
-                        onChange={() => { setSelectedProgramId(template.id); setProgramError(undefined); }}
+                        onChange={() => {
+                          setSelectedProgramId(template.id);
+                          setProgramError(undefined);
+                        }}
                       />
                       <span className="min-w-0">
                         <span className="block font-medium">{template.title}</span>
                         <span className="mt-1 block text-sm text-neutral-600">{template.subject.name} · Активна</span>
-                        {template.description && <span className="mt-1 block text-sm text-neutral-700">{template.description}</span>}
-                        {alreadyAssigned && <span className="mt-2 block text-sm font-medium text-neutral-700">Уже назначена</span>}
+                        {template.description && (
+                          <span className="mt-1 block text-sm text-neutral-700">{template.description}</span>
+                        )}
+                        {alreadyAssigned && (
+                          <span className="mt-2 block text-sm font-medium text-neutral-700">Уже назначена</span>
+                        )}
                       </span>
                     </label>
                   );
                 })}
               </fieldset>
               {programError && <p className="text-sm text-red-700">{programError}</p>}
-              {!hasAssignableTemplate && <p className="text-sm text-neutral-700">Нет программ, доступных для назначения</p>}
+              {!hasAssignableTemplate && (
+                <p className="text-sm text-neutral-700">Нет программ, доступных для назначения</p>
+              )}
               <div className="space-y-2">
-                <label className="block text-sm font-medium" htmlFor="assign-report-hours">Интервал отчёта, часов</label>
+                <label className="block text-sm font-medium" htmlFor="assign-report-hours">
+                  Интервал отчёта, часов
+                </label>
                 <input
                   id="assign-report-hours"
                   className="h-10 w-full rounded-md border border-neutral-300 px-3 outline-none focus:ring-2 focus:ring-neutral-300"
@@ -175,14 +214,27 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
                   min="0.5"
                   step="0.5"
                   value={reportHours}
-                  onChange={(event) => { setReportHours(event.target.value); setIntervalError(undefined); }}
+                  onChange={(event) => {
+                    setReportHours(event.target.value);
+                    setIntervalError(undefined);
+                  }}
                   aria-invalid={Boolean(intervalError)}
                   aria-describedby={intervalError ? "assign-report-error" : "assign-report-help"}
                 />
-                <p id="assign-report-help" className="text-xs text-neutral-500">Можно указать половину часа, например 1,5 часа = 90 минут.</p>
-                {intervalError && <p id="assign-report-error" className="text-sm text-red-700">{intervalError}</p>}
+                <p id="assign-report-help" className="text-xs text-neutral-500">
+                  Можно указать половину часа, например 1,5 часа = 90 минут.
+                </p>
+                {intervalError && (
+                  <p id="assign-report-error" className="text-sm text-red-700">
+                    {intervalError}
+                  </p>
+                )}
               </div>
-              {submitError && <p className="text-sm text-red-700" role="alert">{submitError}</p>}
+              {submitError && (
+                <p className="text-sm text-red-700" role="alert">
+                  {submitError}
+                </p>
+              )}
               <Button type="submit" disabled={mutation.isPending || !hasAssignableTemplate}>
                 {mutation.isPending ? "Назначаем…" : "Назначить"}
               </Button>

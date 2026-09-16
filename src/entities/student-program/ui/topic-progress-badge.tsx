@@ -14,7 +14,12 @@ export function TopicProgressBadge({ status }: Readonly<{ status?: TopicProgress
 
   const presentation = topicProgressPresentation[status];
   return (
-    <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium", presentation.className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
+        presentation.className,
+      )}
+    >
       <span aria-hidden="true">{presentation.icon}</span> {presentation.label}
     </span>
   );

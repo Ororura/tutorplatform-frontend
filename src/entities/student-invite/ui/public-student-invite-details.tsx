@@ -1,11 +1,7 @@
 import type { PublicStudentInvite } from "../api/student-invite-queries";
 
-export function PublicStudentInviteDetails({
-  invite,
-}: Readonly<{ invite: PublicStudentInvite }>) {
-  const studentName = [invite.student.firstName, invite.student.lastName]
-    .filter(Boolean)
-    .join(" ");
+export function PublicStudentInviteDetails({ invite }: Readonly<{ invite: PublicStudentInvite }>) {
+  const studentName = [invite.student.firstName, invite.student.lastName].filter(Boolean).join(" ");
   const expiration = new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "long",
     timeStyle: "short",

@@ -15,7 +15,9 @@ type Props = {
 
 export function StudentInviteHistory({ invites, revokingInviteId, onRevoke }: Readonly<Props>) {
   if (invites.length === 0) {
-    return <p className="rounded-lg border border-dashed border-neutral-300 p-5 text-neutral-600">Приглашений ещё нет.</p>;
+    return (
+      <p className="rounded-lg border border-dashed border-neutral-300 p-5 text-neutral-600">Приглашений ещё нет.</p>
+    );
   }
 
   return (

@@ -9,10 +9,7 @@ import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
 import { useRegisterTeacherMutation } from "../api/register-teacher";
-import {
-  registerTeacherSchema,
-  type RegisterTeacherFormValues,
-} from "../model/register-teacher-schema";
+import { type RegisterTeacherFormValues, registerTeacherSchema } from "../model/register-teacher-schema";
 
 const fields = [
   { name: "displayName", label: "Имя", type: "text", autoComplete: "name" },
@@ -105,12 +102,7 @@ export function RegisterTeacherForm() {
         </p>
       )}
 
-      <Button
-        className="w-full"
-        type="submit"
-        disabled={registration.isPending}
-        aria-busy={registration.isPending}
-      >
+      <Button className="w-full" type="submit" disabled={registration.isPending} aria-busy={registration.isPending}>
         {registration.isPending ? "Создаём аккаунт…" : "Зарегистрироваться"}
       </Button>
 

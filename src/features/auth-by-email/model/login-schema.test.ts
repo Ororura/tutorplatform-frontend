@@ -4,9 +4,10 @@ import { loginSchema } from "./login-schema";
 
 describe("loginSchema", () => {
   it("accepts valid credentials and trims email", () => {
-    expect(
-      loginSchema.parse({ email: " teacher@example.com ", password: "long-password" }),
-    ).toEqual({ email: "teacher@example.com", password: "long-password" });
+    expect(loginSchema.parse({ email: " teacher@example.com ", password: "long-password" })).toEqual({
+      email: "teacher@example.com",
+      password: "long-password",
+    });
   });
 
   it("rejects malformed email and short password", () => {

@@ -3,7 +3,11 @@ import { MaterialRenderer } from "./material-renderer";
 
 export function MaterialList({ materials }: Readonly<{ materials: LessonMaterial[] }>) {
   if (materials.length === 0) {
-    return <p className="rounded-lg border border-dashed border-neutral-300 p-6 text-neutral-600">Для этой темы пока нет материалов.</p>;
+    return (
+      <p className="rounded-lg border border-dashed border-neutral-300 p-6 text-neutral-600">
+        Для этой темы пока нет материалов.
+      </p>
+    );
   }
 
   return (

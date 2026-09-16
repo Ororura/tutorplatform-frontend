@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { TeacherStudentsContent } from "./teacher-students-content";
 
 const mocks = vi.hoisted(() => ({
   replace: vi.fn(),
@@ -33,8 +34,6 @@ vi.mock("@/features/create-student", () => ({
 
 vi.mock("./student-list-state", () => ({ StudentListState: () => <div>Список</div> }));
 
-import { TeacherStudentsContent } from "./teacher-students-content";
-
 describe("TeacherStudentsContent", () => {
   beforeEach(() => {
     mocks.replace.mockReset();
@@ -64,10 +63,9 @@ describe("TeacherStudentsContent", () => {
     fireEvent.change(screen.getByLabelText("Поиск ученика"), { target: { value: "Алекс" } });
     expect(mocks.replace).not.toHaveBeenCalled();
     act(() => vi.advanceTimersByTime(400));
-    expect(mocks.replace).toHaveBeenCalledWith(
-      "/teacher/students?size=20&search=%D0%90%D0%BB%D0%B5%D0%BA%D1%81",
-      { scroll: false },
-    );
+    expect(mocks.replace).toHaveBeenCalledWith("/teacher/students?size=20&search=%D0%90%D0%BB%D0%B5%D0%BA%D1%81", {
+      scroll: false,
+    });
     vi.useRealTimers();
   });
 
@@ -80,9 +78,6 @@ describe("TeacherStudentsContent", () => {
   it("resets page when account filter changes", () => {
     render(<TeacherStudentsContent />);
     fireEvent.change(screen.getByLabelText("Статус аккаунта"), { target: { value: "REGISTERED" } });
-    expect(mocks.replace).toHaveBeenCalledWith(
-      "/teacher/students?size=20&accountStatus=REGISTERED",
-      { scroll: false },
-    );
+    expect(mocks.replace).toHaveBeenCalledWith("/teacher/students?size=20&accountStatus=REGISTERED", { scroll: false });
   });
 });

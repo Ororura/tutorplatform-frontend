@@ -1,19 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { currentUserQueryKey, type CurrentUser } from "@/entities/user";
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { type CurrentUser, currentUserQueryKey } from "@/entities/user";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components } from "@/shared/api/generated/schema";
 
 export type AcceptStudentInviteRequest = components["schemas"]["AcceptStudentInviteRequest"];
 
-async function acceptStudentInvite(
-  token: string,
-  body: AcceptStudentInviteRequest,
-): Promise<CurrentUser> {
-  const { data, error, response } = await apiClient.POST(
-    "/api/v1/public/student-invitations/{token}/accept",
-    { params: { path: { token } }, body },
-  );
+async function acceptStudentInvite(token: string, body: AcceptStudentInviteRequest): Promise<CurrentUser> {
+  const { data, error, response } = await apiClient.POST("/api/v1/public/student-invitations/{token}/accept", {
+    params: { path: { token } },
+    body,
+  });
 
   if (error) {
     throw new ApiClientError(response.status, error);

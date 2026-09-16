@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { StudentProgramDetails } from "../api/student-program-queries";
 import { StudentProgramDetail } from "./student-program-detail";
 
-vi.mock("next/link", () => ({ default: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a> }));
+vi.mock("next/link", () => ({
+  default: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
+}));
 
 const details: StudentProgramDetails = {
   id: "program-1",
@@ -21,8 +23,20 @@ const details: StudentProgramDetails = {
       title: "Второй по API",
       position: 20,
       topics: [
-        { id: "topic-2", title: "Вторая тема по API", position: 20, topicStatus: "ACTIVE", progressStatus: "IN_PROGRESS" },
-        { id: "topic-1", title: "Первая тема по API", position: 10, topicStatus: "ACTIVE", progressStatus: "COMPLETED" },
+        {
+          id: "topic-2",
+          title: "Вторая тема по API",
+          position: 20,
+          topicStatus: "ACTIVE",
+          progressStatus: "IN_PROGRESS",
+        },
+        {
+          id: "topic-1",
+          title: "Первая тема по API",
+          position: 10,
+          topicStatus: "ACTIVE",
+          progressStatus: "COMPLETED",
+        },
       ],
     },
     {
@@ -49,16 +63,13 @@ describe("StudentProgramDetail", () => {
     expect(text.indexOf("Вторая тема по API")).toBeLessThan(text.indexOf("Первая тема по API"));
   });
 
-  it.each([
-    ["Пройдена"],
-    ["В процессе"],
-    ["Доступна"],
-    ["Заблокирована"],
-    ["Статус не задан"],
-  ])("renders the centralized progress mapping: %s", (label) => {
-    render(<StudentProgramDetail program={details} studentId="student-1" />);
-    expect(screen.getByText(label)).toBeInTheDocument();
-  });
+  it.each([["Пройдена"], ["В процессе"], ["Доступна"], ["Заблокирована"], ["Статус не задан"]])(
+    "renders the centralized progress mapping: %s",
+    (label) => {
+      render(<StudentProgramDetail program={details} studentId="student-1" />);
+      expect(screen.getByText(label)).toBeInTheDocument();
+    },
+  );
 
   it("opens a topic with complete student and program context", () => {
     render(<StudentProgramDetail program={details} studentId="student-1" />);

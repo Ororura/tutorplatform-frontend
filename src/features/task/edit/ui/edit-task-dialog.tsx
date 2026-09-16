@@ -2,17 +2,132 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { taskDifficultyPresentation, taskStatusPresentation, type Task, type TaskDifficulty, type TaskStatus } from "@/entities/task";
+import {
+  type Task,
+  type TaskDifficulty,
+  taskDifficultyPresentation,
+  type TaskStatus,
+  taskStatusPresentation,
+} from "@/entities/task";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
 import { useUpdateTaskMutation } from "../api/update-task";
 
 export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
-  const dialogRef = useRef<HTMLDialogElement>(null); const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState(task.title); const [description, setDescription] = useState(task.descriptionMarkdown); const [difficulty, setDifficulty] = useState<TaskDifficulty>(task.difficulty); const [status, setStatus] = useState<TaskStatus>(task.status); const [error, setError] = useState("");
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState(task.title);
+  const [description, setDescription] = useState(task.descriptionMarkdown);
+  const [difficulty, setDifficulty] = useState<TaskDifficulty>(task.difficulty);
+  const [status, setStatus] = useState<TaskStatus>(task.status);
+  const [error, setError] = useState("");
   const mutation = useUpdateTaskMutation(task.id);
-  useEffect(() => { if (open && !dialogRef.current?.open) dialogRef.current?.showModal(); if (!open && dialogRef.current?.open) dialogRef.current.close(); }, [open]);
-  const submit = async (event: React.FormEvent) => { event.preventDefault(); if (mutation.isPending) return; if (!title.trim() || !description.trim()) { setError("Заполните название и описание."); return; } try { await mutation.mutateAsync({ title: title.trim(), descriptionMarkdown: description.trim(), difficulty, status, version: task.version }); setOpen(false); } catch (caught) { setError(caught instanceof ApiClientError && caught.status === 409 ? "Задание уже изменено. Обновите страницу." : "Не удалось обновить задание."); } };
-  return <><Button type="button" onClick={() => setOpen(true)}>Редактировать</Button><dialog ref={dialogRef} aria-labelledby="edit-task-title" className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35" onClose={() => setOpen(false)}><form className="space-y-5 p-6" onSubmit={submit}><div className="flex justify-between"><h2 id="edit-task-title" className="text-xl font-semibold">Редактировать задание</h2><button className="text-sm underline" type="button" onClick={() => setOpen(false)}>Закрыть</button></div><label className="block space-y-2"><span className="text-sm font-medium">Название</span><input className="h-11 w-full rounded-md border px-3" maxLength={220} value={title} onChange={(event) => setTitle(event.target.value)} /></label><label className="block space-y-2"><span className="text-sm font-medium">Описание Markdown</span><textarea className="min-h-36 w-full rounded-md border p-3" value={description} onChange={(event) => setDescription(event.target.value)} /></label><div className="grid gap-4 sm:grid-cols-2"><label className="space-y-2"><span className="block text-sm font-medium">Сложность</span><select className="h-11 w-full rounded-md border px-3" value={difficulty} onChange={(event) => setDifficulty(event.target.value as TaskDifficulty)}>{(Object.keys(taskDifficultyPresentation) as TaskDifficulty[]).map((value) => <option key={value} value={value}>{taskDifficultyPresentation[value]}</option>)}</select></label><label className="space-y-2"><span className="block text-sm font-medium">Статус</span><select className="h-11 w-full rounded-md border px-3" value={status} onChange={(event) => setStatus(event.target.value as TaskStatus)}>{(Object.keys(taskStatusPresentation) as TaskStatus[]).map((value) => <option key={value} value={value}>{taskStatusPresentation[value]}</option>)}</select></label></div>{error && <p className="text-sm text-red-700" role="alert">{error}</p>}<Button type="submit" disabled={mutation.isPending}>{mutation.isPending ? "Сохраняем…" : "Сохранить"}</Button></form></dialog></>;
+  useEffect(() => {
+    if (open && !dialogRef.current?.open) dialogRef.current?.showModal();
+    if (!open && dialogRef.current?.open) dialogRef.current.close();
+  }, [open]);
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (mutation.isPending) return;
+    if (!title.trim() || !description.trim()) {
+      setError("Заполните название и описание.");
+      return;
+    }
+    try {
+      await mutation.mutateAsync({
+        title: title.trim(),
+        descriptionMarkdown: description.trim(),
+        difficulty,
+        status,
+        version: task.version,
+      });
+      setOpen(false);
+    } catch (caught) {
+      setError(
+        caught instanceof ApiClientError && caught.status === 409
+          ? "Задание уже изменено. Обновите страницу."
+          : "Не удалось обновить задание.",
+      );
+    }
+  };
+  return (
+    <>
+      <Button type="button" onClick={() => setOpen(true)}>
+        Редактировать
+      </Button>
+      <dialog
+        ref={dialogRef}
+        aria-labelledby="edit-task-title"
+        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        onClose={() => setOpen(false)}
+      >
+        <form className="space-y-5 p-6" onSubmit={submit}>
+          <div className="flex justify-between">
+            <h2 id="edit-task-title" className="text-xl font-semibold">
+              Редактировать задание
+            </h2>
+            <button className="text-sm underline" type="button" onClick={() => setOpen(false)}>
+              Закрыть
+            </button>
+          </div>
+          <label className="block space-y-2">
+            <span className="text-sm font-medium">Название</span>
+            <input
+              className="h-11 w-full rounded-md border px-3"
+              maxLength={220}
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+            />
+          </label>
+          <label className="block space-y-2">
+            <span className="text-sm font-medium">Описание Markdown</span>
+            <textarea
+              className="min-h-36 w-full rounded-md border p-3"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+            />
+          </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="space-y-2">
+              <span className="block text-sm font-medium">Сложность</span>
+              <select
+                className="h-11 w-full rounded-md border px-3"
+                value={difficulty}
+                onChange={(event) => setDifficulty(event.target.value as TaskDifficulty)}
+              >
+                {(Object.keys(taskDifficultyPresentation) as TaskDifficulty[]).map((value) => (
+                  <option key={value} value={value}>
+                    {taskDifficultyPresentation[value]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="space-y-2">
+              <span className="block text-sm font-medium">Статус</span>
+              <select
+                className="h-11 w-full rounded-md border px-3"
+                value={status}
+                onChange={(event) => setStatus(event.target.value as TaskStatus)}
+              >
+                {(Object.keys(taskStatusPresentation) as TaskStatus[]).map((value) => (
+                  <option key={value} value={value}>
+                    {taskStatusPresentation[value]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {error && (
+            <p className="text-sm text-red-700" role="alert">
+              {error}
+            </p>
+          )}
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending ? "Сохраняем…" : "Сохранить"}
+          </Button>
+        </form>
+      </dialog>
+    </>
+  );
 }

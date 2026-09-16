@@ -18,9 +18,7 @@ describe("auth routing", () => {
   });
 
   it("redirects an anonymous protected route to login", () => {
-    expect(getRoleRedirect(null, "TEACHER", "/teacher/students")).toBe(
-      "/login?next=%2Fteacher%2Fstudents",
-    );
+    expect(getRoleRedirect(null, "TEACHER", "/teacher/students")).toBe("/login?next=%2Fteacher%2Fstudents");
   });
 
   it("redirects a user away from the other role area", () => {

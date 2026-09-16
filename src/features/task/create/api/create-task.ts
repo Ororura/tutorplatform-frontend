@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { taskQueries, type CreateTaskRequest, type Task } from "@/entities/task";
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { type CreateTaskRequest, type Task, taskQueries } from "@/entities/task";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 
 async function createTask(body: CreateTaskRequest): Promise<Task> {
   const { data, error, response } = await apiClient.POST("/api/v1/teacher/tasks", { body });

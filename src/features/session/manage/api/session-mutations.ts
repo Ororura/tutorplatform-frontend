@@ -1,24 +1,30 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
-  sessionQueries,
   type CreateLessonSessionRequest,
   type LessonSessionDetails,
+  sessionQueries,
   type UpdateLessonSessionRequest,
 } from "@/entities/session";
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 
 async function createSession(studentId: string, body: CreateLessonSessionRequest): Promise<LessonSessionDetails> {
   const { data, error, response } = await apiClient.POST("/api/v1/teacher/students/{studentId}/sessions", {
-    params: { path: { studentId } }, body,
+    params: { path: { studentId } },
+    body,
   });
   if (error) throw new ApiClientError(response.status, error);
   return data;
 }
 
-async function updateSession(studentId: string, sessionId: string, body: UpdateLessonSessionRequest): Promise<LessonSessionDetails> {
+async function updateSession(
+  studentId: string,
+  sessionId: string,
+  body: UpdateLessonSessionRequest,
+): Promise<LessonSessionDetails> {
   const { data, error, response } = await apiClient.PATCH("/api/v1/teacher/students/{studentId}/sessions/{sessionId}", {
-    params: { path: { studentId, sessionId } }, body,
+    params: { path: { studentId, sessionId } },
+    body,
   });
   if (error) throw new ApiClientError(response.status, error);
   return data;

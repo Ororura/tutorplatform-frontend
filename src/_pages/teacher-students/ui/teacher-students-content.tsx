@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type FormEvent, useCallback, useEffect, useState } from "react";
 
-import { studentQueries, type StudentAccountStatus, type StudentListParams } from "@/entities/student";
+import { type StudentAccountStatus, type StudentListParams, studentQueries } from "@/entities/student";
 import { CreateStudentDialog } from "@/features/create-student";
 
 import { StudentListState } from "./student-list-state";
@@ -40,15 +40,18 @@ export function TeacherStudentsContent() {
   };
   const students = useQuery(studentQueries.list(params));
 
-  const navigate = useCallback((updates: Record<string, string | undefined>) => {
-    const next = new URLSearchParams(searchParams.toString());
-    for (const [key, value] of Object.entries(updates)) {
-      if (value) next.set(key, value);
-      else next.delete(key);
-    }
-    const suffix = next.toString();
-    router.replace(suffix ? `${pathname}?${suffix}` : pathname, { scroll: false });
-  }, [pathname, router, searchParams]);
+  const navigate = useCallback(
+    (updates: Record<string, string | undefined>) => {
+      const next = new URLSearchParams(searchParams.toString());
+      for (const [key, value] of Object.entries(updates)) {
+        if (value) next.set(key, value);
+        else next.delete(key);
+      }
+      const suffix = next.toString();
+      router.replace(suffix ? `${pathname}?${suffix}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
 
   return (
     <div className="mt-8 space-y-8">
@@ -56,11 +59,15 @@ export function TeacherStudentsContent() {
         <CreateStudentDialog open={createOpen} onOpenChange={setCreateOpen} />
       </div>
       <section aria-labelledby="student-list-heading" className="space-y-4">
-        <h2 id="student-list-heading" className="text-xl font-semibold">Список учеников</h2>
+        <h2 id="student-list-heading" className="text-xl font-semibold">
+          Список учеников
+        </h2>
         <div className="flex flex-col gap-3 sm:flex-row">
           <StudentSearch key={search} initialSearch={search} navigate={navigate} />
           <div>
-            <label className="sr-only" htmlFor="account-status-filter">Статус аккаунта</label>
+            <label className="sr-only" htmlFor="account-status-filter">
+              Статус аккаунта
+            </label>
             <select
               id="account-status-filter"
               className="h-10 w-full rounded-md border border-neutral-300 bg-white px-3 sm:w-auto"
@@ -74,7 +81,9 @@ export function TeacherStudentsContent() {
             </select>
           </div>
           <div>
-            <label className="sr-only" htmlFor="student-sort">Сортировка</label>
+            <label className="sr-only" htmlFor="student-sort">
+              Сортировка
+            </label>
             <select
               id="student-sort"
               className="h-10 w-full rounded-md border border-neutral-300 bg-white px-3 sm:w-auto"
@@ -89,7 +98,11 @@ export function TeacherStudentsContent() {
           </div>
         </div>
 
-        {students.isFetching && !students.isPending && <p className="text-sm text-neutral-500" role="status">Обновляем список…</p>}
+        {students.isFetching && !students.isPending && (
+          <p className="text-sm text-neutral-500" role="status">
+            Обновляем список…
+          </p>
+        )}
 
         <StudentListState
           isPending={students.isPending}
@@ -111,7 +124,9 @@ export function TeacherStudentsContent() {
               Назад
             </button>
             <div className="flex items-center gap-3 text-sm text-neutral-600">
-              <span>Страница {students.data.page + 1} из {students.data.totalPages}</span>
+              <span>
+                Страница {students.data.page + 1} из {students.data.totalPages}
+              </span>
               <label htmlFor="student-page-size">На странице</label>
               <select
                 id="student-page-size"
@@ -119,7 +134,11 @@ export function TeacherStudentsContent() {
                 value={size}
                 onChange={(event) => navigate({ size: event.target.value, page: undefined })}
               >
-                {allowedSizes.map((value) => <option key={value} value={value}>{value}</option>)}
+                {allowedSizes.map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
               </select>
             </div>
             <button
@@ -164,7 +183,9 @@ function StudentSearch({
 
   return (
     <form className="flex flex-1 gap-2" onSubmit={submit} role="search">
-      <label className="sr-only" htmlFor="student-search">Поиск ученика</label>
+      <label className="sr-only" htmlFor="student-search">
+        Поиск ученика
+      </label>
       <input
         id="student-search"
         name="search"
@@ -174,7 +195,9 @@ function StudentSearch({
         value={value}
         onChange={(event) => setValue(event.target.value)}
       />
-      <button className="rounded-md border border-neutral-300 bg-white px-4 text-sm font-medium" type="submit">Найти</button>
+      <button className="rounded-md border border-neutral-300 bg-white px-4 text-sm font-medium" type="submit">
+        Найти
+      </button>
     </form>
   );
 }

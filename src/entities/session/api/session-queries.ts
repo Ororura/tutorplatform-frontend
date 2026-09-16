@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components } from "@/shared/api/generated/schema";
 
 export type AttendanceStatus = components["schemas"]["LessonSessionSummaryResponse"]["attendanceStatus"];
@@ -35,13 +35,15 @@ export async function getStudentSession(studentId: string, sessionId: string): P
 export const sessionQueries = {
   all: () => ["lesson-sessions"] as const,
   studentLists: (studentId: string) => [...sessionQueries.all(), "list", studentId] as const,
-  list: (studentId: string, params: SessionListParams) => queryOptions({
-    queryKey: [...sessionQueries.studentLists(studentId), params] as const,
-    queryFn: () => getStudentSessions(studentId, params),
-  }),
+  list: (studentId: string, params: SessionListParams) =>
+    queryOptions({
+      queryKey: [...sessionQueries.studentLists(studentId), params] as const,
+      queryFn: () => getStudentSessions(studentId, params),
+    }),
   details: () => [...sessionQueries.all(), "detail"] as const,
-  detail: (studentId: string, sessionId: string) => queryOptions({
-    queryKey: [...sessionQueries.details(), studentId, sessionId] as const,
-    queryFn: () => getStudentSession(studentId, sessionId),
-  }),
+  detail: (studentId: string, sessionId: string) =>
+    queryOptions({
+      queryKey: [...sessionQueries.details(), studentId, sessionId] as const,
+      queryFn: () => getStudentSession(studentId, sessionId),
+    }),
 };

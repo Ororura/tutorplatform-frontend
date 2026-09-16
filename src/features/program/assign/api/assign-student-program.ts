@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import {
-  studentProgramQueries,
-  type StudentProgramSummary,
-} from "@/entities/student-program";
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { studentProgramQueries, type StudentProgramSummary } from "@/entities/student-program";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components } from "@/shared/api/generated/schema";
 
 export type AssignStudentProgramRequest = components["schemas"]["AssignStudentProgramRequest"];
@@ -15,10 +12,10 @@ type Variables = {
 };
 
 async function assignStudentProgram({ studentId, body }: Variables): Promise<StudentProgramSummary> {
-  const { data, error, response } = await apiClient.POST(
-    "/api/v1/teacher/students/{studentId}/programs",
-    { params: { path: { studentId } }, body },
-  );
+  const { data, error, response } = await apiClient.POST("/api/v1/teacher/students/{studentId}/programs", {
+    params: { path: { studentId } },
+    body,
+  });
 
   if (error) {
     throw new ApiClientError(response.status, error);

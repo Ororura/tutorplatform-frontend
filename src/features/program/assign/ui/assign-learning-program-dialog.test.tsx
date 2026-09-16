@@ -2,15 +2,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { AssignLearningProgramDialog } from "./assign-learning-program-dialog";
 
 const mocks = vi.hoisted(() => ({ get: vi.fn(), post: vi.fn() }));
 
 vi.mock("@/shared/api/client", async (importOriginal) => ({
-  ...await importOriginal<typeof import("@/shared/api/client")>(),
+  ...(await importOriginal<typeof import("@/shared/api/client")>()),
   apiClient: { GET: mocks.get, POST: mocks.post },
 }));
-
-import { AssignLearningProgramDialog } from "./assign-learning-program-dialog";
 
 const activeTemplate = {
   id: "learning-1",
@@ -40,8 +39,17 @@ function setup() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
   const invalidate = vi.spyOn(client, "invalidateQueries");
   const onAssigned = vi.fn();
-  const Wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-  render(<AssignLearningProgramDialog studentId="student-from-route" triggerLabel="Назначить программу" onAssigned={onAssigned} />, { wrapper: Wrapper });
+  const Wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
+  render(
+    <AssignLearningProgramDialog
+      studentId="student-from-route"
+      triggerLabel="Назначить программу"
+      onAssigned={onAssigned}
+    />,
+    { wrapper: Wrapper },
+  );
   return { client, invalidate, onAssigned };
 }
 
@@ -93,11 +101,15 @@ describe("AssignLearningProgramDialog", () => {
     fireEvent.change(screen.getByLabelText("Интервал отчёта, часов"), { target: { value: "1.5" } });
     fireEvent.click(screen.getByRole("button", { name: "Назначить" }));
 
-    await waitFor(() => expect(mocks.post).toHaveBeenCalledWith(
-      "/api/v1/teacher/students/{studentId}/programs",
-      { params: { path: { studentId: "student-from-route" } }, body: { learningProgramId: "learning-1", reportIntervalMinutes: 90 } },
-    ));
-    await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ["student-programs", "list", "student-from-route"] }));
+    await waitFor(() =>
+      expect(mocks.post).toHaveBeenCalledWith("/api/v1/teacher/students/{studentId}/programs", {
+        params: { path: { studentId: "student-from-route" } },
+        body: { learningProgramId: "learning-1", reportIntervalMinutes: 90 },
+      }),
+    );
+    await waitFor(() =>
+      expect(invalidate).toHaveBeenCalledWith({ queryKey: ["student-programs", "list", "student-from-route"] }),
+    );
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ["student-programs", "detail", "student-from-route"] });
     expect(onAssigned).toHaveBeenCalledWith(created);
   });
@@ -105,7 +117,11 @@ describe("AssignLearningProgramDialog", () => {
   it("blocks double submit while assignment is pending", async () => {
     mockLists([activeTemplate]);
     let finish!: (value: unknown) => void;
-    mocks.post.mockReturnValue(new Promise((resolve) => { finish = resolve; }));
+    mocks.post.mockReturnValue(
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+    );
     setup();
     fireEvent.click(screen.getByRole("button", { name: "Назначить программу" }));
     fireEvent.click(await screen.findByRole("radio", { name: /Python с нуля/ }));
@@ -119,7 +135,13 @@ describe("AssignLearningProgramDialog", () => {
   it("shows a friendly duplicate conflict and refreshes assignments", async () => {
     mockLists([activeTemplate]);
     mocks.post.mockResolvedValue({
-      error: { code: "STUDENT_PROGRAM_ALREADY_ASSIGNED", message: "conflict", timestamp: "2026-09-01", traceId: "t", details: [] },
+      error: {
+        code: "STUDENT_PROGRAM_ALREADY_ASSIGNED",
+        message: "conflict",
+        timestamp: "2026-09-01",
+        traceId: "t",
+        details: [],
+      },
       response: new Response(null, { status: 409 }),
     });
     const { invalidate } = setup();
@@ -133,7 +155,13 @@ describe("AssignLearningProgramDialog", () => {
   it("keeps the dialog open and refreshes stale templates after a 404", async () => {
     mockLists([activeTemplate]);
     mocks.post.mockResolvedValue({
-      error: { code: "LEARNING_PROGRAM_NOT_FOUND", message: "missing", timestamp: "2026-09-01", traceId: "t", details: [] },
+      error: {
+        code: "LEARNING_PROGRAM_NOT_FOUND",
+        message: "missing",
+        timestamp: "2026-09-01",
+        traceId: "t",
+        details: [],
+      },
       response: new Response(null, { status: 404 }),
     });
     setup();
@@ -148,7 +176,13 @@ describe("AssignLearningProgramDialog", () => {
   it("shows backend interval validation beside the field", async () => {
     mockLists([activeTemplate]);
     mocks.post.mockResolvedValue({
-      error: { code: "VALIDATION_ERROR", message: "invalid", timestamp: "2026-09-01", traceId: "t", details: [{ field: "reportIntervalMinutes", message: "Должно быть больше нуля" }] },
+      error: {
+        code: "VALIDATION_ERROR",
+        message: "invalid",
+        timestamp: "2026-09-01",
+        traceId: "t",
+        details: [{ field: "reportIntervalMinutes", message: "Должно быть больше нуля" }],
+      },
       response: new Response(null, { status: 400 }),
     });
     setup();

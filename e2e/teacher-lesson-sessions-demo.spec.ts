@@ -29,7 +29,7 @@ test("demo teacher reads Alex session history and creates a real session", async
     const studentId = location.pathname.split("/")[3];
     const studentProgramId = (document.querySelector("#session-program") as HTMLSelectElement).value;
     const response = await fetch(`/api/v1/teacher/students/${studentId}/progress?studentProgramId=${studentProgramId}`);
-    const progress = await response.json() as { totalLearningMinutes: number };
+    const progress = (await response.json()) as { totalLearningMinutes: number };
     return { studentId, studentProgramId, learningMinutes: progress.totalLearningMinutes };
   });
   await page.getByLabel("Дата и время").fill("2026-09-13T12:34");
@@ -45,10 +45,16 @@ test("demo teacher reads Alex session history and creates a real session", async
   await expect(page.getByText(summary)).toBeVisible();
   await expect(page.getByText("E2E private teacher note")).toBeVisible();
   await expect(page.getByText("Переменные и типы данных")).toBeVisible();
-  await expect.poll(() => page.evaluate(async ({ studentId, studentProgramId }) => {
-    const response = await fetch(`/api/v1/teacher/students/${studentId}/progress?studentProgramId=${studentProgramId}`);
-    return ((await response.json()) as { totalLearningMinutes: number }).totalLearningMinutes;
-  }, progressContext)).toBe(progressContext.learningMinutes + 60);
+  await expect
+    .poll(() =>
+      page.evaluate(async ({ studentId, studentProgramId }) => {
+        const response = await fetch(
+          `/api/v1/teacher/students/${studentId}/progress?studentProgramId=${studentProgramId}`,
+        );
+        return ((await response.json()) as { totalLearningMinutes: number }).totalLearningMinutes;
+      }, progressContext),
+    )
+    .toBe(progressContext.learningMinutes + 60);
   await page.reload();
   await expect(page.getByText(summary)).toBeVisible();
   await page.getByRole("link", { name: "Все занятия" }).click();

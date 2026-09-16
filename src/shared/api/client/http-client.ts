@@ -11,11 +11,7 @@ let csrf: CsrfTokenResponse | null = null;
 let csrfRequest: Promise<CsrfTokenResponse> | null = null;
 let unauthorizedHandler: (() => void) | null = null;
 
-const SESSION_CHANGING_PATHS = new Set([
-  "/api/v1/auth/login",
-  "/api/v1/auth/logout",
-  "/api/v1/auth/register/teacher",
-]);
+const SESSION_CHANGING_PATHS = new Set(["/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/register/teacher"]);
 
 export function setUnauthorizedHandler(handler: (() => void) | null): void {
   unauthorizedHandler = handler;
@@ -103,13 +99,15 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
     headers.set("Content-Type", "application/json");
   }
 
-  const response = await apiTransport(new Request(path, {
-    ...options,
-    method,
-    headers,
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
-    credentials: "include",
-  }));
+  const response = await apiTransport(
+    new Request(path, {
+      ...options,
+      method,
+      headers,
+      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      credentials: "include",
+    }),
+  );
 
   if (!response.ok) {
     throw await toApiError(response);
@@ -148,8 +146,9 @@ async function isCsrfFailure(response: Response): Promise<boolean> {
 }
 
 function isSessionChangingPath(pathname: string): boolean {
-  return SESSION_CHANGING_PATHS.has(pathname)
-    || /^\/api\/v1\/public\/student-invitations\/[^/]+\/accept$/.test(pathname);
+  return (
+    SESSION_CHANGING_PATHS.has(pathname) || /^\/api\/v1\/public\/student-invitations\/[^/]+\/accept$/.test(pathname)
+  );
 }
 
 function isExpectedAnonymousResponse(pathname: string): boolean {

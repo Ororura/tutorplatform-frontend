@@ -2,13 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { studentInviteQueries } from "@/entities/student-invite";
 import { studentQueries } from "@/entities/student";
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 
 async function revokeStudentInvite(studentId: string, inviteId: string): Promise<void> {
-  const { error, response } = await apiClient.DELETE(
-    "/api/v1/teacher/students/{studentId}/invites/{inviteId}",
-    { params: { path: { studentId, inviteId } } },
-  );
+  const { error, response } = await apiClient.DELETE("/api/v1/teacher/students/{studentId}/invites/{inviteId}", {
+    params: { path: { studentId, inviteId } },
+  });
 
   if (error) {
     throw new ApiClientError(response.status, error);

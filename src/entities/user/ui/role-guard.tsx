@@ -12,21 +12,14 @@ import { AppLoadingState } from "./app-loading-state";
 
 type UserRole = CurrentUser["roles"][number];
 
-export function RoleGuard({
-  children,
-  role,
-}: Readonly<{ children: React.ReactNode; role: UserRole }>) {
+export function RoleGuard({ children, role }: Readonly<{ children: React.ReactNode; role: UserRole }>) {
   const pathname = usePathname();
   const router = useRouter();
   const auth = useAuth();
 
   useEffect(() => {
     if (auth.status === "unauthenticated" || auth.status === "authenticated") {
-      const destination = getRoleRedirect(
-        auth.status === "authenticated" ? auth.user : null,
-        role,
-        pathname,
-      );
+      const destination = getRoleRedirect(auth.status === "authenticated" ? auth.user : null, role, pathname);
       if (destination) {
         router.replace(destination);
       }

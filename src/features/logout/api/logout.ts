@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 
 async function logout(): Promise<void> {
   const { error, response } = await apiClient.POST("/api/v1/auth/logout");

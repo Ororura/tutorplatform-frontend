@@ -1,14 +1,12 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components, operations } from "@/shared/api/generated/schema";
 
 export type StudentSummary = components["schemas"]["StudentSummaryResponse"];
 export type StudentDetails = components["schemas"]["StudentDetailsResponse"];
 export type StudentPage = components["schemas"]["StudentPageResponse"];
-export type StudentListParams = NonNullable<
-  operations["listTeacherStudents"]["parameters"]["query"]
->;
+export type StudentListParams = NonNullable<operations["listTeacherStudents"]["parameters"]["query"]>;
 export type StudentAccountStatus = StudentSummary["accountStatus"];
 
 async function getStudentList(params: StudentListParams): Promise<StudentPage> {
@@ -24,10 +22,9 @@ async function getStudentList(params: StudentListParams): Promise<StudentPage> {
 }
 
 async function getStudent(studentId: string): Promise<StudentDetails> {
-  const { data, error, response } = await apiClient.GET(
-    "/api/v1/teacher/students/{studentId}",
-    { params: { path: { studentId } } },
-  );
+  const { data, error, response } = await apiClient.GET("/api/v1/teacher/students/{studentId}", {
+    params: { path: { studentId } },
+  });
 
   if (error) {
     throw new ApiClientError(response.status, error);

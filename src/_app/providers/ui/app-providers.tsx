@@ -31,10 +31,7 @@ export function AppProviders({ children }: Readonly<{ children: React.ReactNode 
   );
 }
 
-function ApiLifecycle({
-  children,
-  queryClient,
-}: Readonly<{ children: React.ReactNode; queryClient: QueryClient }>) {
+function ApiLifecycle({ children, queryClient }: Readonly<{ children: React.ReactNode; queryClient: QueryClient }>) {
   const pathname = usePathname();
   const router = useRouter();
 

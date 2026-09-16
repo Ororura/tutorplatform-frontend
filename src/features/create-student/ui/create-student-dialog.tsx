@@ -49,10 +49,17 @@ export function CreateStudentDialog({ open: controlledOpen, onOpenChange }: Read
         <div className="p-5 sm:p-6">
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
-              <h2 id="create-student-title" className="text-xl font-semibold">Добавить ученика</h2>
+              <h2 id="create-student-title" className="text-xl font-semibold">
+                Добавить ученика
+              </h2>
               <p className="mt-1 text-sm text-neutral-600">Укажите имя. Аккаунт и приглашение можно создать позже.</p>
             </div>
-            <button className="rounded px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100" type="button" onClick={close} aria-label="Закрыть">
+            <button
+              className="rounded px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100"
+              type="button"
+              onClick={close}
+              aria-label="Закрыть"
+            >
               Закрыть
             </button>
           </div>

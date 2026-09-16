@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components } from "@/shared/api/generated/schema";
 
 export type StudentProgramSummary = components["schemas"]["StudentProgramSummaryResponse"];
@@ -10,10 +10,9 @@ export type ProgramTopic = components["schemas"]["ProgramTopicResponse"];
 export type TopicProgressStatus = ProgramTopic["progressStatus"];
 
 export async function getStudentPrograms(studentId: string): Promise<StudentProgramSummary[]> {
-  const { data, error, response } = await apiClient.GET(
-    "/api/v1/teacher/students/{studentId}/programs",
-    { params: { path: { studentId } } },
-  );
+  const { data, error, response } = await apiClient.GET("/api/v1/teacher/students/{studentId}/programs", {
+    params: { path: { studentId } },
+  });
 
   if (error) {
     throw new ApiClientError(response.status, error);
@@ -22,10 +21,7 @@ export async function getStudentPrograms(studentId: string): Promise<StudentProg
   return data;
 }
 
-export async function getStudentProgram(
-  studentId: string,
-  studentProgramId: string,
-): Promise<StudentProgramDetails> {
+export async function getStudentProgram(studentId: string, studentProgramId: string): Promise<StudentProgramDetails> {
   const { data, error, response } = await apiClient.GET(
     "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}",
     { params: { path: { studentId, studentProgramId } } },

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { ApiClientError, apiClient } from "@/shared/api/client";
+import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components } from "@/shared/api/generated/schema";
 
 export type CurrentUser = components["schemas"]["CurrentUserResponse"];

@@ -15,23 +15,40 @@ export function StudentProgramDetail({
           <div>
             <p className="text-sm font-medium text-neutral-600">{program.subject.name}</p>
             <h1 className="mt-1 text-3xl font-semibold">{program.title}</h1>
-            {program.description && <p className="mt-3 max-w-3xl whitespace-pre-line text-neutral-700">{program.description}</p>}
+            {program.description && (
+              <p className="mt-3 max-w-3xl whitespace-pre-line text-neutral-700">{program.description}</p>
+            )}
           </div>
           <span className="rounded-full bg-neutral-100 px-3 py-1 text-sm font-medium">
             {programStatusLabels[program.status]}
           </span>
         </div>
         <dl className="mt-5 flex flex-wrap gap-x-8 gap-y-3 text-sm">
-          <div><dt className="text-neutral-500">Начата</dt><dd className="font-medium">{formatProgramDate(program.startedAt)}</dd></div>
-          {program.completedAt && <div><dt className="text-neutral-500">Завершена</dt><dd className="font-medium">{formatProgramDate(program.completedAt)}</dd></div>}
-          <div><dt className="text-neutral-500">Отчётный интервал</dt><dd className="font-medium">{program.reportIntervalMinutes} мин</dd></div>
+          <div>
+            <dt className="text-neutral-500">Начата</dt>
+            <dd className="font-medium">{formatProgramDate(program.startedAt)}</dd>
+          </div>
+          {program.completedAt && (
+            <div>
+              <dt className="text-neutral-500">Завершена</dt>
+              <dd className="font-medium">{formatProgramDate(program.completedAt)}</dd>
+            </div>
+          )}
+          <div>
+            <dt className="text-neutral-500">Отчётный интервал</dt>
+            <dd className="font-medium">{program.reportIntervalMinutes} мин</dd>
+          </div>
         </dl>
       </header>
 
       <section className="space-y-5" aria-labelledby="program-structure-heading">
-        <h2 id="program-structure-heading" className="text-xl font-semibold">Содержание программы</h2>
+        <h2 id="program-structure-heading" className="text-xl font-semibold">
+          Содержание программы
+        </h2>
         {program.modules.length === 0 && (
-          <p className="rounded-lg border border-dashed border-neutral-300 p-6 text-neutral-600">В программе пока нет модулей.</p>
+          <p className="rounded-lg border border-dashed border-neutral-300 p-6 text-neutral-600">
+            В программе пока нет модулей.
+          </p>
         )}
         {program.modules.map((module) => (
           <section className="rounded-lg border border-neutral-200 bg-white" key={module.id}>

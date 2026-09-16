@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 
-import { studentInviteQueries, StudentInviteHistory } from "@/entities/student-invite";
-import { studentQueries, StudentDetailsCard, StudentProfileNav } from "@/entities/student";
+import { StudentInviteHistory, studentInviteQueries } from "@/entities/student-invite";
+import { StudentDetailsCard, StudentProfileNav, studentQueries } from "@/entities/student";
 import { CreateStudentInviteDialog } from "@/features/create-student-invite";
 import { EditStudentForm } from "@/features/edit-student";
 import { useRevokeStudentInviteMutation } from "@/features/revoke-student-invite";
@@ -31,7 +31,11 @@ export function TeacherStudentView({ studentId }: Readonly<{ studentId: string }
           error={student.error}
           onRetry={() => student.refetch()}
         />
-        <p><Link className="underline underline-offset-4" href="/teacher/students">Вернуться к списку</Link></p>
+        <p>
+          <Link className="underline underline-offset-4" href="/teacher/students">
+            Вернуться к списку
+          </Link>
+        </p>
       </main>
     );
   }
@@ -42,14 +46,24 @@ export function TeacherStudentView({ studentId }: Readonly<{ studentId: string }
   return (
     <main className="mx-auto max-w-5xl space-y-8 px-6 py-12">
       <div>
-        <Link className="text-sm text-neutral-600 underline underline-offset-4" href="/teacher/students">← Все ученики</Link>
+        <Link className="text-sm text-neutral-600 underline underline-offset-4" href="/teacher/students">
+          ← Все ученики
+        </Link>
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
-          <h1 className="text-3xl font-semibold">{student.data.firstName} {student.data.lastName ?? ""}</h1>
-          <Button type="button" onClick={() => setEditing((value) => !value)}>{editing ? "Закрыть редактирование" : "Редактировать"}</Button>
+          <h1 className="text-3xl font-semibold">
+            {student.data.firstName} {student.data.lastName ?? ""}
+          </h1>
+          <Button type="button" onClick={() => setEditing((value) => !value)}>
+            {editing ? "Закрыть редактирование" : "Редактировать"}
+          </Button>
         </div>
       </div>
 
-      {editing ? <EditStudentForm student={student.data} onDone={() => setEditing(false)} /> : <StudentDetailsCard student={student.data} />}
+      {editing ? (
+        <EditStudentForm student={student.data} onDone={() => setEditing(false)} />
+      ) : (
+        <StudentDetailsCard student={student.data} />
+      )}
 
       <StudentProfileNav active="overview" studentId={studentId} />
 
@@ -61,12 +75,16 @@ export function TeacherStudentView({ studentId }: Readonly<{ studentId: string }
       )}
 
       <section className="space-y-4" aria-labelledby="invite-history-heading">
-        <h2 id="invite-history-heading" className="text-xl font-semibold">История приглашений</h2>
+        <h2 id="invite-history-heading" className="text-xl font-semibold">
+          История приглашений
+        </h2>
         {invites.isPending && <p aria-busy="true">Загружаем приглашения…</p>}
         {invites.isError && (
           <div className="space-y-3" role="alert">
             <p className="text-red-700">Не удалось загрузить приглашения.</p>
-            <Button type="button" onClick={() => invites.refetch()}>Повторить</Button>
+            <Button type="button" onClick={() => invites.refetch()}>
+              Повторить
+            </Button>
           </div>
         )}
         {invites.data && (
@@ -80,7 +98,11 @@ export function TeacherStudentView({ studentId }: Readonly<{ studentId: string }
             }}
           />
         )}
-        {revokeInvite.isError && <p className="text-sm text-red-700" role="alert">Не удалось отозвать приглашение.</p>}
+        {revokeInvite.isError && (
+          <p className="text-sm text-red-700" role="alert">
+            Не удалось отозвать приглашение.
+          </p>
+        )}
       </section>
     </main>
   );

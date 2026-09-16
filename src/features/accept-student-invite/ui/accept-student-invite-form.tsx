@@ -9,10 +9,7 @@ import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
 import { useAcceptStudentInviteMutation } from "../api/accept-student-invite";
-import {
-  acceptStudentInviteSchema,
-  type AcceptStudentInviteFormValues,
-} from "../model/accept-student-invite-schema";
+import { type AcceptStudentInviteFormValues, acceptStudentInviteSchema } from "../model/accept-student-invite-schema";
 
 export function AcceptStudentInviteForm({ token }: Readonly<{ token: string }>) {
   const router = useRouter();

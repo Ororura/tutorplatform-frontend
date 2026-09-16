@@ -10,16 +10,29 @@ type Props = {
   onAddStudent?: () => void;
 };
 
-export function StudentListState({ isPending, isError, data, onRetry, hasActiveFilters, onAddStudent }: Readonly<Props>) {
+export function StudentListState({
+  isPending,
+  isError,
+  data,
+  onRetry,
+  hasActiveFilters,
+  onAddStudent,
+}: Readonly<Props>) {
   if (isPending) {
-    return <p className="rounded-lg border border-neutral-200 bg-white p-5 text-neutral-600" aria-busy="true">Загружаем учеников…</p>;
+    return (
+      <p className="rounded-lg border border-neutral-200 bg-white p-5 text-neutral-600" aria-busy="true">
+        Загружаем учеников…
+      </p>
+    );
   }
 
   if (isError || !data) {
     return (
       <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-5" role="alert">
         <p className="text-red-800">Не удалось загрузить список учеников.</p>
-        <Button type="button" onClick={onRetry}>Повторить</Button>
+        <Button type="button" onClick={onRetry}>
+          Повторить
+        </Button>
       </div>
     );
   }
@@ -32,7 +45,9 @@ export function StudentListState({ isPending, isError, data, onRetry, hasActiveF
           {hasActiveFilters ? "Измените поиск или фильтры." : "Добавьте первого ученика, чтобы начать работу."}
         </p>
         {!hasActiveFilters && onAddStudent && (
-          <Button className="mt-4" type="button" onClick={onAddStudent}>Добавить ученика</Button>
+          <Button className="mt-4" type="button" onClick={onAddStudent}>
+            Добавить ученика
+          </Button>
         )}
       </div>
     );

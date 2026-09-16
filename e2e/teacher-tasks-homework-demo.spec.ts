@@ -38,7 +38,9 @@ test("demo teacher reads Task Library and atomically assigns TEXT + CODE homewor
   await page.getByLabel("Название").fill(title);
   const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
   const pad = (value: number) => String(value).padStart(2, "0");
-  const dueAt = `${tomorrow.getFullYear()}-${pad(tomorrow.getMonth() + 1)}-${pad(tomorrow.getDate())}T${pad(tomorrow.getHours())}:${pad(tomorrow.getMinutes())}`;
+  const dueAt = `${tomorrow.getFullYear()}-${pad(tomorrow.getMonth() + 1)}-${pad(tomorrow.getDate())}T${pad(
+    tomorrow.getHours(),
+  )}:${pad(tomorrow.getMinutes())}`;
   await page.getByLabel("Срок").fill(dueAt);
   await page.getByRole("checkbox", { name: /Разница между = и ==/ }).check();
   await page.getByRole("checkbox", { name: /Сумма двух чисел/ }).check();

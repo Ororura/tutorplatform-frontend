@@ -1,4 +1,4 @@
-import { getUserHome, type CurrentUser } from "@/entities/user";
+import { type CurrentUser, getUserHome } from "@/entities/user";
 
 export function getPostLoginRoute(user: CurrentUser, requestedPath: string | null): string {
   const home = getUserHome(user);

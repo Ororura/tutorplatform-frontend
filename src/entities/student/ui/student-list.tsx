@@ -21,9 +21,7 @@ export function StudentList({ students }: Readonly<{ students: StudentSummary[] 
               </span>
             </span>
             <span className="flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full bg-neutral-100 px-2.5 py-1">
-                {getStudentStatusLabel(student.status)}
-              </span>
+              <span className="rounded-full bg-neutral-100 px-2.5 py-1">{getStudentStatusLabel(student.status)}</span>
               <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-800">
                 {getStudentAccountStatusLabel(student.accountStatus)}
               </span>

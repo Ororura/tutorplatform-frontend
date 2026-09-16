@@ -44,23 +44,22 @@ describe("StudentListState", () => {
         onRetry={vi.fn()}
         data={{
           ...emptyPage,
-          items: [{
-            id: "student-1",
-            firstName: "Анна",
-            lastName: "Иванова",
-            status: "ACTIVE",
-            accountStatus: "INVITED",
-            createdAt: "2026-09-07T08:00:00Z",
-          }],
+          items: [
+            {
+              id: "student-1",
+              firstName: "Анна",
+              lastName: "Иванова",
+              status: "ACTIVE",
+              accountStatus: "INVITED",
+              createdAt: "2026-09-07T08:00:00Z",
+            },
+          ],
           totalElements: 1,
           totalPages: 1,
         }}
       />,
     );
-    expect(screen.getByRole("link", { name: /Анна Иванова/ })).toHaveAttribute(
-      "href",
-      "/teacher/students/student-1",
-    );
+    expect(screen.getByRole("link", { name: /Анна Иванова/ })).toHaveAttribute("href", "/teacher/students/student-1");
     expect(screen.getByText("Приглашён")).toBeInTheDocument();
   });
 
@@ -72,14 +71,16 @@ describe("StudentListState", () => {
         onRetry={vi.fn()}
         data={{
           ...emptyPage,
-          items: [{
-            id: "student-2",
-            firstName: "Алексей",
-            lastName: "Иванов",
-            status: "ACTIVE",
-            accountStatus: "REGISTERED",
-            createdAt: "2026-09-07T08:00:00Z",
-          }],
+          items: [
+            {
+              id: "student-2",
+              firstName: "Алексей",
+              lastName: "Иванов",
+              status: "ACTIVE",
+              accountStatus: "REGISTERED",
+              createdAt: "2026-09-07T08:00:00Z",
+            },
+          ],
           totalElements: 1,
           totalPages: 1,
         }}

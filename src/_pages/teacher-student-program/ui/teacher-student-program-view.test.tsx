@@ -1,16 +1,27 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { TeacherStudentProgramView } from "./teacher-student-program-view";
 
 const mocks = vi.hoisted(() => ({ useQuery: vi.fn(), replace: vi.fn() }));
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery, queryOptions: (options: unknown) => options }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: mocks.replace }) }));
-vi.mock("next/link", () => ({ default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => <a href={href} {...props}>{children}</a> }));
+vi.mock("next/link", () => ({
+  default: ({
+    children,
+    href,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    href: string;
+  }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
+}));
 vi.mock("@/features/program/assign", () => ({
   AssignLearningProgramDialog: ({ triggerLabel }: { triggerLabel: string }) => <button>{triggerLabel}</button>,
 }));
-
-import { TeacherStudentProgramView } from "./teacher-student-program-view";
 
 const program = (id: string, title: string) => ({
   id,
@@ -53,10 +64,15 @@ describe("TeacherStudentProgramView", () => {
   });
 
   it("renders a compact selector for multiple programs", () => {
-    mocks.useQuery.mockReturnValue(queryResult({ data: [program("program-1", "Python с нуля"), program("program-2", "Алгоритмы")] }));
+    mocks.useQuery.mockReturnValue(
+      queryResult({ data: [program("program-1", "Python с нуля"), program("program-2", "Алгоритмы")] }),
+    );
     render(<TeacherStudentProgramView studentId="student-1" />);
     expect(screen.getByRole("heading", { name: "Выберите программу" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Алгоритмы/ })).toHaveAttribute("href", "/teacher/students/student-1/programs/program-2");
+    expect(screen.getByRole("link", { name: /Алгоритмы/ })).toHaveAttribute(
+      "href",
+      "/teacher/students/student-1/programs/program-2",
+    );
     expect(screen.getByRole("button", { name: "Назначить ещё программу" })).toBeInTheDocument();
     expect(mocks.replace).not.toHaveBeenCalled();
   });

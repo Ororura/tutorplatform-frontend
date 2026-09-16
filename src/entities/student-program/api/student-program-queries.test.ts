@@ -31,10 +31,9 @@ describe("studentProgramQueries", () => {
     getMock.mockResolvedValue({ data, error: undefined, response: new Response(null, { status: 200 }) });
 
     await getStudentProgram("student-2", "program-2");
-    expect(getMock).toHaveBeenCalledWith(
-      "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}",
-      { params: { path: { studentId: "student-2", studentProgramId: "program-2" } } },
-    );
+    expect(getMock).toHaveBeenCalledWith("/api/v1/teacher/students/{studentId}/programs/{studentProgramId}", {
+      params: { path: { studentId: "student-2", studentProgramId: "program-2" } },
+    });
     expect(studentProgramQueries.detail("student-1", "program-2").queryKey).not.toEqual(
       studentProgramQueries.detail("student-2", "program-2").queryKey,
     );

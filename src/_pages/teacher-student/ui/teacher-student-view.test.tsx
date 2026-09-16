@@ -1,10 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { TeacherStudentView } from "./teacher-student-view";
 
 const mocks = vi.hoisted(() => ({ useQuery: vi.fn(), revoke: { isPending: false, isError: false, mutate: vi.fn() } }));
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery }));
-vi.mock("next/link", () => ({ default: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a> }));
+vi.mock("next/link", () => ({
+  default: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
+}));
 vi.mock("@/entities/student", () => ({
   studentQueries: { detail: (id: string) => ({ queryKey: ["students", "detail", id] }) },
   StudentDetailsCard: () => <div>Данные ученика</div>,
@@ -15,12 +18,11 @@ vi.mock("@/entities/student-invite", () => ({
   StudentInviteHistory: () => <div>Приглашения</div>,
 }));
 vi.mock("@/features/create-student-invite", () => ({
-  CreateStudentInviteDialog: ({ available }: { available: boolean }) => available ? <button>Отправить приглашение</button> : null,
+  CreateStudentInviteDialog: ({ available }: { available: boolean }) =>
+    available ? <button>Отправить приглашение</button> : null,
 }));
 vi.mock("@/features/edit-student", () => ({ EditStudentForm: () => <form>Редактирование</form> }));
 vi.mock("@/features/revoke-student-invite", () => ({ useRevokeStudentInviteMutation: () => mocks.revoke }));
-
-import { TeacherStudentView } from "./teacher-student-view";
 
 const baseStudent = {
   id: "student-1",
@@ -38,7 +40,10 @@ function setQueries(accountStatus: "REGISTERED" | "INVITED" | "UNREGISTERED", in
       isPending: false,
       isError: false,
       isSuccess: true,
-      data: { ...baseStudent, account: { status: accountStatus, email: accountStatus === "UNREGISTERED" ? undefined : "alex@example.com" } },
+      data: {
+        ...baseStudent,
+        account: { status: accountStatus, email: accountStatus === "UNREGISTERED" ? undefined : "alex@example.com" },
+      },
       refetch: vi.fn(),
     })
     .mockReturnValueOnce({

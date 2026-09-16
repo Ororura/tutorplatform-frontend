@@ -25,7 +25,9 @@ export function StudentDetailQueryState({ isPending, isError, error, onRetry }: 
     return (
       <div className="space-y-4" role="alert">
         <p>Не удалось загрузить карточку ученика.</p>
-        <Button type="button" onClick={onRetry}>Повторить</Button>
+        <Button type="button" onClick={onRetry}>
+          Повторить
+        </Button>
       </div>
     );
   }
