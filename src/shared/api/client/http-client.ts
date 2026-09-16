@@ -1,84 +1,113 @@
+"use client";
+
+import createClient, { type Middleware } from "openapi-fetch";
+
 import { ApiClientError, type ApiErrorBody } from "./types";
-import type { components } from "../generated/schema";
+import type { components, paths } from "../generated/schema";
 
 type CsrfTokenResponse = components["schemas"]["CsrfTokenResponse"];
 
-type RequestOptions = Omit<RequestInit, "body"> & {
-  body?: unknown;
-};
-
-let csrf: CsrfTokenResponse | null = null;
-let csrfRequest: Promise<CsrfTokenResponse> | null = null;
-let unauthorizedHandler: (() => void) | null = null;
+const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS", "TRACE"]);
 
 const SESSION_CHANGING_PATHS = new Set(["/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/register/teacher"]);
 
+let csrfToken: CsrfTokenResponse | null = null;
+
+let csrfRequest: {
+  generation: number;
+  promise: Promise<CsrfTokenResponse>;
+} | null = null;
+
+let csrfGeneration = 0;
+
+let unauthorizedHandler: (() => void) | null = null;
+
+/**
+ * Вызывается из React lifecycle для глобальной обработки
+ * истёкшей/отсутствующей пользовательской сессии.
+ */
 export function setUnauthorizedHandler(handler: (() => void) | null): void {
   unauthorizedHandler = handler;
 }
 
+/**
+ * Инвалидирует текущий CSRF.
+ *
+ * generation не позволяет старому уже выполняющемуся
+ * запросу записать устаревший токен обратно в cache.
+ */
 export function resetCsrfToken(): void {
-  csrf = null;
+  csrfGeneration += 1;
+  csrfToken = null;
   csrfRequest = null;
 }
 
-export async function apiTransport(input: Request): Promise<Response> {
-  const method = input.method.toUpperCase();
-  const pathname = new URL(input.url).pathname;
-  const unsafe = !["GET", "HEAD", "OPTIONS", "TRACE"].includes(method);
-  const send = async (forceCsrf = false) => {
-    const headers = new Headers(input.headers);
-
-    if (unsafe) {
-      const token = await getCsrfToken(forceCsrf);
-      headers.set(token.headerName, token.token);
+/**
+ * Возвращает текущий CSRF token.
+ *
+ * Параллельные запросы используют один Promise,
+ * чтобы не делать несколько GET /auth/csrf одновременно.
+ *
+ * force используется после CSRF_INVALID.
+ */
+export async function getCsrfToken(force = false): Promise<CsrfTokenResponse> {
+  if (force) {
+    /*
+     * Если refresh уже выполняется, второй запрос
+     * присоединяется к нему вместо создания нового.
+     */
+    if (csrfToken === null && csrfRequest?.generation === csrfGeneration) {
+      return csrfRequest.promise;
     }
 
-    return fetch(new Request(input.clone(), { headers, credentials: "include" }));
+    resetCsrfToken();
+  }
+
+  if (csrfToken) {
+    return csrfToken;
+  }
+
+  if (csrfRequest?.generation === csrfGeneration) {
+    return csrfRequest.promise;
+  }
+
+  const generation = csrfGeneration;
+  const promise = loadCsrfToken();
+
+  csrfRequest = {
+    generation,
+    promise,
   };
 
-  let response = await send();
-
-  if (response.status === 403 && unsafe && (await isCsrfFailure(response))) {
-    response = await send(true);
-  }
-
-  if (response.ok && isSessionChangingPath(pathname)) {
-    resetCsrfToken();
-    void getCsrfToken().catch(() => resetCsrfToken());
-  }
-
-  if (response.status === 401 && !isExpectedAnonymousResponse(pathname)) {
-    unauthorizedHandler?.();
-  }
-
-  return response;
-}
-
-export async function getCsrfToken(force = false): Promise<CsrfTokenResponse> {
-  if (csrf && !force) {
-    return csrf;
-  }
-
-  if (csrfRequest && !force) {
-    return csrfRequest;
-  }
-
-  const request = loadCsrfToken();
-  csrfRequest = request;
-
   try {
-    csrf = await request;
-    return csrf;
+    const token = await promise;
+
+    /*
+     * Пока выполнялся request могла произойти
+     * login/logout/session rotation.
+     *
+     * В таком случае старый token не кешируем.
+     */
+    if (generation === csrfGeneration) {
+      csrfToken = token;
+    }
+
+    return token;
   } finally {
-    if (csrfRequest === request) {
+    if (csrfRequest?.promise === promise) {
       csrfRequest = null;
     }
   }
 }
 
+/**
+ * Используем native fetch напрямую.
+ *
+ * Через apiTransport этот запрос пускать нельзя,
+ * иначе получение CSRF само потребует CSRF.
+ */
 async function loadCsrfToken(): Promise<CsrfTokenResponse> {
-  const response = await fetch("/api/v1/auth/csrf", {
+  const response = await globalThis.fetch("/api/v1/auth/csrf", {
     method: "GET",
     credentials: "include",
     cache: "no-store",
@@ -91,39 +120,116 @@ async function loadCsrfToken(): Promise<CsrfTokenResponse> {
   return (await response.json()) as CsrfTokenResponse;
 }
 
-export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const method = (options.method ?? "GET").toUpperCase();
-  const headers = new Headers(options.headers);
+/**
+ * Низкоуровневый browser transport.
+ *
+ * openapi-fetch будет использовать его вместо native fetch.
+ */
+export const apiTransport: typeof fetch = async (input, init) => {
+  const request = new Request(input, {
+    ...(init ?? {}),
+    credentials: "include",
+  });
 
-  if (options.body !== undefined) {
-    headers.set("Content-Type", "application/json");
-  }
+  const method = request.method.toUpperCase();
+  const pathname = new URL(request.url).pathname;
 
-  const response = await apiTransport(
-    new Request(path, {
-      ...options,
-      method,
+  const unsafe = !SAFE_METHODS.has(method);
+
+  const send = async (forceCsrf = false): Promise<Response> => {
+    const headers = new Headers(request.headers);
+
+    if (unsafe) {
+      const csrf = await getCsrfToken(forceCsrf);
+
+      headers.set(csrf.headerName, csrf.token);
+    }
+
+    /*
+     * Используем clone(), потому что body Request является stream.
+     *
+     * Это позволяет безопасно повторить request один раз
+     * после CSRF_INVALID.
+     */
+    const outgoingRequest = new Request(request.clone(), {
       headers,
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
       credentials: "include",
-    }),
-  );
+    });
 
-  if (!response.ok) {
-    throw await toApiError(response);
+    return globalThis.fetch(outgoingRequest);
+  };
+
+  let response = await send();
+
+  /*
+   * Повторяем запрос только для конкретной CSRF ошибки.
+   *
+   * Обычный 403 повторять нельзя.
+   */
+  if (response.status === 403 && unsafe && (await isCsrfFailure(response))) {
+    response = await send(true);
   }
 
-  if (response.status === 204) {
-    return undefined as T;
+  /*
+   * Login/logout/register могут изменить server session.
+   *
+   * Текущий CSRF больше не считаем валидным.
+   * Новый будет получен лениво перед следующим unsafe request.
+   */
+  if (response.ok && isSessionChangingPath(pathname)) {
+    resetCsrfToken();
   }
 
-  return (await response.json()) as T;
-}
+  /*
+   * Глобальный session handler.
+   *
+   * auth/me может законно вернуть 401 для anonymous user.
+   * login может вернуть 401 из-за неверных credentials.
+   */
+  if (response.status === 401 && !isExpectedAnonymousResponse(pathname)) {
+    unauthorizedHandler?.();
+  }
 
+  return response;
+};
+
+/**
+ * HTTP error → ApiClientError.
+ *
+ * Этот middleware выполняется уже после apiTransport,
+ * поэтому CSRF retry к этому моменту завершён.
+ */
+const apiErrorMiddleware: Middleware = {
+  async onResponse({ response }) {
+    if (!response.ok) {
+      throw await toApiError(response);
+    }
+  },
+};
+
+/**
+ * Основной HTTP client приложения.
+ *
+ * URL, params, body и response выводятся
+ * непосредственно из OpenAPI paths.
+ */
+export const api = createClient<paths>({
+  fetch: apiTransport,
+});
+
+api.use(apiErrorMiddleware);
+
+/**
+ * Преобразует backend ApiErrorBody в application error.
+ */
 async function toApiError(response: Response): Promise<ApiClientError> {
   let body: ApiErrorBody;
+
   try {
-    body = (await response.json()) as ApiErrorBody;
+    /*
+     * clone() оставляет оригинальный Response нетронутым.
+     */
+    body = (await response.clone().json()) as ApiErrorBody;
   } catch {
     body = {
       code: "HTTP_ERROR",
@@ -133,12 +239,14 @@ async function toApiError(response: Response): Promise<ApiClientError> {
       details: [],
     };
   }
+
   return new ApiClientError(response.status, body);
 }
 
 async function isCsrfFailure(response: Response): Promise<boolean> {
   try {
     const body = (await response.clone().json()) as Partial<ApiErrorBody>;
+
     return body.code === "CSRF_INVALID";
   } catch {
     return false;

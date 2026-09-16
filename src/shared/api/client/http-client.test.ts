@@ -85,15 +85,44 @@ describe("apiTransport", () => {
   it("loads a fresh token after a session-changing login", async () => {
     const fetchMock = vi
       .fn()
-      .mockResolvedValueOnce(Response.json({ token: "anonymous-token", headerName: "X-XSRF-TOKEN" }))
-      .mockResolvedValueOnce(Response.json({ id: "user-id", roles: ["TEACHER"] }))
-      .mockResolvedValueOnce(Response.json({ token: "authenticated-token", headerName: "X-XSRF-TOKEN" }));
+      .mockResolvedValueOnce(
+        Response.json({
+          token: "anonymous-token",
+          headerName: "X-XSRF-TOKEN",
+        }),
+      )
+      .mockResolvedValueOnce(
+        Response.json({
+          id: "user-id",
+          roles: ["TEACHER"],
+        }),
+      )
+      .mockResolvedValueOnce(
+        Response.json({
+          token: "authenticated-token",
+          headerName: "X-XSRF-TOKEN",
+        }),
+      );
+
     vi.stubGlobal("fetch", fetchMock);
 
-    await apiTransport(new Request("http://localhost/api/v1/auth/login", { method: "POST" }));
+    await apiTransport(
+      new Request("http://localhost/api/v1/auth/login", {
+        method: "POST",
+      }),
+    );
 
-    expect(fetchMock).toHaveBeenCalledTimes(3);
-    await expect(getCsrfToken()).resolves.toMatchObject({ token: "authenticated-token" });
+    // 1. CSRF для login
+    // 2. Сам login
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+
+    // После успешного login старый CSRF инвалидирован.
+    // Новый загружается лениво.
+    await expect(getCsrfToken()).resolves.toMatchObject({
+      token: "authenticated-token",
+    });
+
+    // 3. Новый CSRF уже для authenticated session
     expect(fetchMock).toHaveBeenCalledTimes(3);
   });
 
