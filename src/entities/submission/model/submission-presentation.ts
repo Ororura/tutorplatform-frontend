@@ -1,7 +1,8 @@
 import type { components } from "@/shared/api/generated/schema";
 
-type SubmissionStatus = components["schemas"]["StudentSubmissionResponse"]["status"];
-type ExecutionStatus =
+export type SubmissionStatus = components["schemas"]["StudentSubmissionResponse"]["status"];
+
+export type ExecutionStatus =
   | components["schemas"]["ExecutionStatus"]
   | components["schemas"]["CodeSubmissionExecutionResponse"]["status"];
 
