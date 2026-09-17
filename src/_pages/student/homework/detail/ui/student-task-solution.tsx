@@ -263,6 +263,32 @@ function CodeSolution({
   );
 }
 
+function RunExecutionStatus({
+  status,
+}: Readonly<{
+  status: keyof typeof executionStatusPresentation;
+}>) {
+  switch (status) {
+    case "PASSED":
+      return <p className="font-medium text-green-700">Все тесты пройдены</p>;
+
+    case "FAILED":
+      return <p className="font-medium text-red-700">Есть непройденные тесты</p>;
+
+    case "TIMEOUT":
+      return <p className="font-medium text-red-700">Превышен лимит времени</p>;
+
+    case "RUNTIME_ERROR":
+      return <p className="font-medium text-red-700">Программа завершилась с ошибкой</p>;
+
+    case "SYSTEM_ERROR":
+      return <p className="font-medium text-red-700">Не удалось выполнить код. Попробуйте ещё раз.</p>;
+
+    default:
+      return <p className="font-medium">{executionStatusPresentation[status]}</p>;
+  }
+}
+
 function RunResult({
   result,
 }: Readonly<{
@@ -276,7 +302,7 @@ function RunResult({
       aria-label="Результат запуска"
       aria-live="polite"
     >
-      <ExecutionStatus status={result.status} />
+      <RunExecutionStatus status={result.status} />
 
       {result.passedTests !== undefined && result.totalTests !== undefined && (
         <p className="text-sm">

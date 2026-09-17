@@ -2,12 +2,31 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { StudentTaskSolution } from "./student-task-solution";
-
 const mocks = vi.hoisted(() => ({
   useQuery: vi.fn(),
-  submitText: { mutate: vi.fn(), isPending: false, isError: false, data: undefined },
-  runCode: { mutate: vi.fn(), isPending: false, isError: false, data: undefined },
-  submitCode: { mutate: vi.fn(), isPending: false, isError: false, data: undefined },
+
+  submitText: {
+    mutate: vi.fn(),
+    isPending: false,
+    isError: false,
+    data: undefined,
+  },
+
+  runCode: {
+    mutate: vi.fn(),
+    reset: vi.fn(),
+    isPending: false,
+    isError: false,
+    data: undefined,
+  },
+
+  submitCode: {
+    mutate: vi.fn(),
+    reset: vi.fn(),
+    isPending: false,
+    isError: false,
+    data: undefined,
+  },
 }));
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery, queryOptions: (value: unknown) => value }));
@@ -53,18 +72,34 @@ const base = {
 describe("StudentTaskSolution", () => {
   beforeEach(() => {
     mocks.useQuery.mockReset();
+
     mocks.useQuery.mockReturnValue({
-      data: { items: [], page: 0, size: 20, totalElements: 0, totalPages: 0 },
+      data: {
+        items: [],
+        page: 0,
+        size: 20,
+        totalElements: 0,
+        totalPages: 0,
+      },
       isPending: false,
     });
-    Object.values(mocks).forEach((value) => {
-      if (typeof value === "object" && value && "mutate" in value) {
-        value.mutate.mockReset();
-        value.isPending = false;
-        value.isError = false;
-        value.data = undefined;
-      }
-    });
+
+    mocks.submitText.mutate.mockReset();
+    mocks.submitText.isPending = false;
+    mocks.submitText.isError = false;
+    mocks.submitText.data = undefined;
+
+    mocks.runCode.mutate.mockReset();
+    mocks.runCode.reset.mockReset();
+    mocks.runCode.isPending = false;
+    mocks.runCode.isError = false;
+    mocks.runCode.data = undefined;
+
+    mocks.submitCode.mutate.mockReset();
+    mocks.submitCode.reset.mockReset();
+    mocks.submitCode.isPending = false;
+    mocks.submitCode.isError = false;
+    mocks.submitCode.data = undefined;
   });
 
   it("submits TEXT answer without code or student-controlled submission fields", () => {

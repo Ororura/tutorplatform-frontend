@@ -23,3 +23,4 @@ export const executionStatusPresentation: Record<ExecutionStatus, string> = {
   RUNTIME_ERROR: "Ошибка выполнения",
   SYSTEM_ERROR: "Не удалось выполнить код",
 };
+

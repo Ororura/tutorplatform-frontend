@@ -1,9 +1,32 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { TeacherStudentHomeworkDetailView } from "./teacher-student-homework-detail-view";
 
-const mocks = vi.hoisted(() => ({ useQuery: vi.fn(), cancel: vi.fn(), confirm: vi.fn() }));
-vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery, queryOptions: (value: unknown) => value }));
+const mocks = vi.hoisted(() => ({
+  useQuery: vi.fn(),
+  cancel: vi.fn(),
+  confirm: vi.fn(),
+
+  review: {
+    mutate: vi.fn(),
+    isPending: false,
+    isError: false,
+    variables: undefined as
+      | {
+          studentId: string;
+          submissionId: string;
+          status: "PASSED" | "FAILED";
+        }
+      | undefined,
+  },
+}));
+
+vi.mock("@tanstack/react-query", () => ({
+  useQuery: mocks.useQuery,
+  queryOptions: (value: unknown) => value,
+}));
+
 vi.mock("next/link", () => ({
   default: ({
     children,
@@ -17,11 +40,16 @@ vi.mock("next/link", () => ({
     </a>
   ),
 }));
+
 vi.mock("@/features/homework/cancel", () => ({
   useCancelHomeworkMutation: () => ({
     mutateAsync: mocks.cancel,
     isPending: false,
   }),
+}));
+
+vi.mock("@/features/submission/review-text", () => ({
+  useReviewTextSubmissionMutation: () => mocks.review,
 }));
 
 const details = {
@@ -49,22 +77,61 @@ const details = {
 
 describe("TeacherStudentHomeworkDetailView", () => {
   beforeEach(() => {
-    mocks.cancel.mockReset().mockResolvedValue({ ...details, status: "CANCELLED" });
+    mocks.cancel.mockReset().mockResolvedValue({
+      ...details,
+      status: "CANCELLED",
+    });
+
     mocks.confirm.mockReset().mockReturnValue(true);
+
+    mocks.review.mutate.mockReset();
+    mocks.review.isPending = false;
+    mocks.review.isError = false;
+    mocks.review.variables = undefined;
+
     vi.stubGlobal("confirm", mocks.confirm);
-    mocks.useQuery.mockImplementation((options?: { queryKey?: unknown[] }) =>
-      options?.queryKey?.includes("student-programs")
-        ? {
-            data: [
-              {
-                id: "p1",
-                title: "Python",
-                subject: { name: "Информатика" },
+
+    mocks.useQuery.mockReset();
+
+    mocks.useQuery.mockImplementation((options?: { queryKey?: readonly unknown[] }) => {
+      if (options?.queryKey?.includes("student-programs")) {
+        return {
+          data: [
+            {
+              id: "p1",
+              title: "Python",
+              subject: {
+                name: "Информатика",
               },
-            ],
-          }
-        : { data: details, isPending: false, isError: false },
-    );
+            },
+          ],
+          isPending: false,
+          isError: false,
+        };
+      }
+
+      if (options?.queryKey?.includes("teacher-submissions")) {
+        return {
+          data: {
+            items: [],
+            page: 0,
+            size: 100,
+            totalElements: 0,
+            totalPages: 0,
+          },
+          isPending: false,
+          isError: false,
+          refetch: vi.fn(),
+        };
+      }
+
+      return {
+        data: details,
+        isPending: false,
+        isError: false,
+        refetch: vi.fn(),
+      };
+    });
   });
   it("renders nullable dates, backend overdue, ordered items, required flags and task links", () => {
     render(<TeacherStudentHomeworkDetailView studentId="alex" homeworkId="hw-1" />);
