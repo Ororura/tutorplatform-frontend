@@ -5,21 +5,20 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    groups:
-      npm-dependencies:
-        patterns:
-          - "*"
+    open-pull-requests-limit: 20
+    ignore:
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-major"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    groups:
-      github-actions:
-        patterns:
-          - "*"
+    open-pull-requests-limit: 20
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 20
