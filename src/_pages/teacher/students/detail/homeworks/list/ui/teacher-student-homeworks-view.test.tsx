@@ -56,7 +56,16 @@ describe("TeacherStudentHomeworksView", () => {
         : { data: emptyPage, isPending: false, isError: false, isFetching: false, refetch: vi.fn() },
     );
     render(<TeacherStudentHomeworksView studentId="alex" />);
-    expect(screen.getAllByRole("link", { name: "Назначить домашнее задание" }).length).toBeGreaterThan(0);
+    const createLinks = screen.getAllByRole("link", {
+      name: "Назначить домашнее задание",
+    });
+
+    expect(createLinks.length).toBeGreaterThan(0);
+
+    createLinks.forEach((link) => {
+      expect(link).toHaveClass("bg-blue-600");
+      expect(link).not.toHaveClass("bg-neutral-900");
+    });
     fireEvent.change(screen.getByLabelText("Статус"), { target: { value: "COMPLETED" } });
     expect(mocks.replace).toHaveBeenCalledWith("/teacher/students/alex/homework?status=COMPLETED", { scroll: false });
   });

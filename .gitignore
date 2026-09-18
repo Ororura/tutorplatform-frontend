@@ -11,3 +11,4 @@ test-results
 .env
 *.log
 *.tsbuildinfo
+.env.local
