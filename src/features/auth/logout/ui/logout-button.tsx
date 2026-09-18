@@ -15,18 +15,19 @@ export function LogoutButton() {
       await logout.mutateAsync();
       router.replace("/login");
     } catch {
-      // The visible error below keeps the user on the authenticated page for retry.
+      // Error remains visible below so the user can retry.
     }
   };
 
   return (
-    <div className="space-y-2">
-      <Button type="button" onClick={handleLogout} disabled={logout.isPending}>
+    <div className="space-y-1">
+      <Button type="button" variant="secondary" onClick={handleLogout} disabled={logout.isPending}>
         {logout.isPending ? "Выходим…" : "Выйти"}
       </Button>
+
       {logout.isError && (
-        <p className="text-sm text-red-700" role="alert">
-          Не удалось выйти. Попробуйте ещё раз.
+        <p className="max-w-40 text-xs text-red-600" role="alert">
+          Не удалось выйти.
         </p>
       )}
     </div>

@@ -1,44 +1,20 @@
-import Link from "next/link";
 import { Suspense } from "react";
-
-import { LogoutButton } from "@/features/auth/logout";
 
 import { TeacherStudentsContent } from "./teacher-students-content";
 
 export function TeacherStudentsPage() {
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
-      <div className="flex items-start justify-between gap-6">
-        <h1 className="text-3xl font-semibold">Ученики</h1>
-
-        <div className="flex flex-wrap items-center justify-end gap-3">
-          <Link
-            className="inline-flex h-10 items-center rounded-md border border-neutral-300 px-4 text-sm font-medium"
-            href="/teacher/programs"
-          >
-            Программы
-          </Link>
-
-          <Link
-            className="inline-flex h-10 items-center rounded-md border border-neutral-300 px-4 text-sm font-medium"
-            href="/teacher/tasks"
-          >
-            Банк заданий
-          </Link>
-
-          <LogoutButton />
+    <Suspense
+      fallback={
+        <div
+          className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
+          aria-busy="true"
+        >
+          Загружаем страницу…
         </div>
-      </div>
-
-      <Suspense
-        fallback={
-          <p className="mt-8 text-neutral-600" aria-busy="true">
-            Загружаем страницу…
-          </p>
-        }
-      >
-        <TeacherStudentsContent />
-      </Suspense>
-    </main>
+      }
+    >
+      <TeacherStudentsContent />
+    </Suspense>
   );
 }

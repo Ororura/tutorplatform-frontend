@@ -6,9 +6,12 @@ export function TeacherTasksPage() {
   return (
     <Suspense
       fallback={
-        <p className="mx-auto max-w-5xl px-6 py-12" aria-busy="true">
+        <div
+          className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
+          aria-busy="true"
+        >
           Загружаем банк заданий…
-        </p>
+        </div>
       }
     >
       <TeacherTasksView />

@@ -20,17 +20,18 @@ export function StudentListState({
 }: Readonly<Props>) {
   if (isPending) {
     return (
-      <p className="rounded-lg border border-neutral-200 bg-white p-5 text-neutral-600" aria-busy="true">
+      <div className="rounded-2xl bg-slate-50 p-6 text-sm text-slate-500" aria-busy="true">
         Загружаем учеников…
-      </p>
+      </div>
     );
   }
 
   if (isError || !data) {
     return (
-      <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-5" role="alert">
-        <p className="text-red-800">Не удалось загрузить список учеников.</p>
-        <Button type="button" onClick={onRetry}>
+      <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
+        <p className="text-sm text-red-700">Не удалось загрузить список учеников.</p>
+
+        <Button type="button" variant="secondary" onClick={onRetry}>
           Повторить
         </Button>
       </div>
@@ -39,13 +40,17 @@ export function StudentListState({
 
   if (data.items.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-neutral-300 p-8 text-center">
-        <p className="font-medium">{hasActiveFilters ? "Ученики не найдены" : "У вас пока нет учеников"}</p>
-        <p className="mt-1 text-sm text-neutral-600">
+      <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
+        <p className="font-semibold text-slate-900">
+          {hasActiveFilters ? "Ученики не найдены" : "У вас пока нет учеников"}
+        </p>
+
+        <p className="mt-2 text-sm text-slate-500">
           {hasActiveFilters ? "Измените поиск или фильтры." : "Добавьте первого ученика, чтобы начать работу."}
         </p>
+
         {!hasActiveFilters && onAddStudent && (
-          <Button className="mt-4" type="button" onClick={onAddStudent}>
+          <Button className="mt-5" type="button" onClick={onAddStudent}>
             Добавить ученика
           </Button>
         )}
