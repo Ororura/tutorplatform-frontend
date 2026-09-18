@@ -11,6 +11,9 @@ import { Button } from "@/shared/ui/button";
 
 const statuses: HomeworkStatus[] = ["ASSIGNED", "COMPLETED", "CANCELLED"];
 
+const primaryLinkClassName =
+  "inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200";
+
 function pageFrom(value: string | null) {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed >= 0 ? parsed : 0;
@@ -47,10 +50,7 @@ export function TeacherStudentHomeworksView({ studentId }: Readonly<{ studentId:
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
           <h1 className="text-3xl font-semibold">Домашние задания</h1>
           {programs.data && programs.data.length > 0 && (
-            <Link
-              className="inline-flex h-10 items-center rounded-md bg-neutral-900 px-4 text-sm font-medium text-white"
-              href={`/teacher/students/${studentId}/homework/new`}
-            >
+            <Link className={primaryLinkClassName} href={`/teacher/students/${studentId}/homework/new`}>
               Назначить домашнее задание
             </Link>
           )}
@@ -105,10 +105,7 @@ export function TeacherStudentHomeworksView({ studentId }: Readonly<{ studentId:
         <div className="space-y-4 rounded-lg border border-dashed p-8 text-center">
           <p className="font-medium">Домашних заданий пока нет</p>
           {programs.data && programs.data.length > 0 ? (
-            <Link
-              className="inline-block rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
-              href={`/teacher/students/${studentId}/homework/new`}
-            >
+            <Link className={primaryLinkClassName} href={`/teacher/students/${studentId}/homework/new`}>
               Назначить домашнее задание
             </Link>
           ) : programs.data?.length === 0 ? (
