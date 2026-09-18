@@ -35,4 +35,21 @@ describe("TeacherStudentProgramDetailView", () => {
     expect(screen.getByRole("heading", { name: "Программа не найдена" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Повторить" })).not.toBeInTheDocument();
   });
+  it("links back to the student program overview", () => {
+    mocks.useQuery.mockReturnValue({
+      isPending: true,
+      isError: false,
+      error: null,
+      data: undefined,
+      refetch: vi.fn(),
+    });
+
+    render(<TeacherStudentProgramDetailView studentId="student-1" studentProgramId="program-1" />);
+
+    expect(
+      screen.getByRole("link", {
+        name: "← Программы ученика",
+      }),
+    ).toHaveAttribute("href", "/teacher/students/student-1/program");
+  });
 });

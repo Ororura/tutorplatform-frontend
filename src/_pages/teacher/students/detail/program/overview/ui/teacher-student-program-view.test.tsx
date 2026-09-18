@@ -57,10 +57,28 @@ describe("TeacherStudentProgramView", () => {
     expect(screen.getByRole("button", { name: "Назначить программу" })).toBeInTheDocument();
   });
 
-  it("redirects one program to its explicit route", () => {
-    mocks.useQuery.mockReturnValue(queryResult({ data: [program("program-1", "Python с нуля")] }));
+  it("keeps the program overview accessible when the student has one program", () => {
+    mocks.useQuery.mockReturnValue(
+      queryResult({
+        data: [program("program-1", "Python с нуля")],
+      }),
+    );
+
     render(<TeacherStudentProgramView studentId="student-1" />);
-    expect(mocks.replace).toHaveBeenCalledWith("/teacher/students/student-1/programs/program-1");
+
+    expect(mocks.replace).not.toHaveBeenCalled();
+
+    expect(
+      screen.getByRole("link", {
+        name: /Python с нуля/,
+      }),
+    ).toHaveAttribute("href", "/teacher/students/student-1/programs/program-1");
+
+    expect(
+      screen.getByRole("button", {
+        name: "Назначить ещё программу",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("renders a compact selector for multiple programs", () => {
