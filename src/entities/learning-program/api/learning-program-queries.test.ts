@@ -1,26 +1,47 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { apiClient } from "@/shared/api/client";
+import { getLearningPrograms } from "./learning-program-queries";
 
-import { getLearningPrograms, learningProgramQueries } from "./learning-program-queries";
-
-vi.mock("@/shared/api/client", () => ({
-  ApiClientError: class ApiClientError extends Error {},
-  apiClient: { GET: vi.fn() },
+const mocks = vi.hoisted(() => ({
+  get: vi.fn(),
 }));
 
-const getMock = vi.mocked(apiClient.GET);
+vi.mock("@/shared/api/client", () => ({
+  apiClient: {
+    GET: mocks.get,
+  },
+  ApiClientError: class ApiClientError extends Error {},
+}));
 
-describe("learningProgramQueries", () => {
-  beforeEach(() => getMock.mockReset());
-
-  it("requests only the backend ACTIVE set used by assignment", async () => {
-    getMock.mockResolvedValue({ data: [], error: undefined, response: new Response(null, { status: 200 }) });
-
-    await expect(getLearningPrograms("ACTIVE")).resolves.toEqual([]);
-    expect(getMock).toHaveBeenCalledWith("/api/v1/teacher/programs", {
-      params: { query: { status: "ACTIVE" } },
+describe("getLearningPrograms", () => {
+  beforeEach(() => {
+    mocks.get.mockReset();
+    mocks.get.mockResolvedValue({
+      data: [],
+      error: undefined,
+      response: { status: 200 },
     });
-    expect(learningProgramQueries.list("ACTIVE").queryKey).toEqual(["learning-programs", "list", "ACTIVE"]);
+  });
+
+  it("loads all teacher programs when status is omitted", async () => {
+    await getLearningPrograms();
+
+    expect(mocks.get).toHaveBeenCalledWith("/api/v1/teacher/programs", {
+      params: {
+        query: {},
+      },
+    });
+  });
+
+  it("passes status filter to backend", async () => {
+    await getLearningPrograms("ACTIVE");
+
+    expect(mocks.get).toHaveBeenCalledWith("/api/v1/teacher/programs", {
+      params: {
+        query: {
+          status: "ACTIVE",
+        },
+      },
+    });
   });
 });
