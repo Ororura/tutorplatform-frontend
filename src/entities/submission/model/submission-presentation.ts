@@ -3,8 +3,7 @@ import type { components } from "@/shared/api/generated/schema";
 export type SubmissionStatus = components["schemas"]["StudentSubmissionResponse"]["status"];
 
 export type ExecutionStatus =
-  | components["schemas"]["ExecutionStatus"]
-  | components["schemas"]["CodeSubmissionExecutionResponse"]["status"];
+  components["schemas"]["ExecutionStatus"] | components["schemas"]["CodeSubmissionExecutionResponse"]["status"];
 
 export const submissionStatusPresentation: Record<SubmissionStatus, string> = {
   SUBMITTED: "Отправлено",
@@ -23,4 +22,3 @@ export const executionStatusPresentation: Record<ExecutionStatus, string> = {
   RUNTIME_ERROR: "Ошибка выполнения",
   SYSTEM_ERROR: "Не удалось выполнить код",
 };
-
