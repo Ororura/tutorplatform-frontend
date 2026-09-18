@@ -1,13 +1,16 @@
+import { ClipboardCheck } from "lucide-react";
 import Link from "next/link";
 
 export function StudentNavigation() {
   return (
-    <nav aria-label="Навигация ученика" className="border-b border-neutral-200 bg-white">
-      <div className="mx-auto flex h-14 max-w-4xl items-center px-6">
-        <Link className="text-sm font-medium text-neutral-900" href="/student/homework">
-          Домашние задания
-        </Link>
-      </div>
+    <nav aria-label="Навигация ученика" className="flex items-center">
+      <Link
+        className="inline-flex h-10 items-center gap-2 rounded-xl bg-blue-50 px-3 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+        href="/student/homework"
+      >
+        <ClipboardCheck size={17} aria-hidden="true" />
+        Домашние задания
+      </Link>
     </nav>
   );
 }

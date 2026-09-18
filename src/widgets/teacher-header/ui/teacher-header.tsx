@@ -49,10 +49,10 @@ export function TeacherHeader() {
   return (
     <header className="sticky top-0 z-40 pt-3">
       <div className="mx-auto max-w-[1600px] px-3 sm:px-5">
-        <div className="overflow-hidden rounded-[24px] border border-white/80 bg-white/95 shadow-[0_12px_40px_rgba(45,79,135,0.08)] backdrop-blur-xl">
+        <div className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-[0_12px_40px_rgba(45,79,135,0.08)] backdrop-blur-xl">
           <div className="flex h-16 items-center gap-5 px-4 sm:px-5">
             <Link className="flex shrink-0 items-center gap-3" href="/teacher/students">
-              <span className="flex size-10 items-center justify-center rounded-[14px] bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-sm shadow-blue-200">
+              <span className="flex size-10 items-center justify-center rounded-[14px] bg-linear-to-br from-blue-500 to-blue-600 text-white shadow-sm shadow-blue-200">
                 <BookOpen size={21} strokeWidth={2.1} />
               </span>
 

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { StudentHomeworkDetailView } from "./student-homework-detail-view";
@@ -101,7 +101,11 @@ describe("StudentHomeworkDetailView", () => {
     expect(screen.getByText("Обязательное")).toBeInTheDocument();
     expect(screen.getAllByText("Дополнительное")).toHaveLength(2);
     expect(screen.getByText("Ожидает проверки")).toBeInTheDocument();
-    expect(screen.getAllByText("Выполнено")).toHaveLength(2);
+    const taskList = screen.getByRole("list", {
+      name: "Задания",
+    });
+
+    expect(within(taskList).getByText("Выполнено")).toBeInTheDocument();
     expect(screen.getByText("Пока не поддерживается")).toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole("button", { name: "Решить" })[0]);

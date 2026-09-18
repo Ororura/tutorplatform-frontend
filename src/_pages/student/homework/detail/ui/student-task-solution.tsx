@@ -31,11 +31,14 @@ export function StudentTaskSolution({ homeworkId, homeworkStatus, item }: Soluti
   const readOnly = homeworkStatus !== "ASSIGNED";
 
   return (
-    <section className="space-y-6 rounded-lg border bg-white p-6" aria-labelledby={`task-${item.id}-heading`}>
+    <section
+      className="space-y-6 rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
+      aria-labelledby={`task-${item.id}-heading`}
+    >
       <TaskHeader item={item} />
 
       {readOnly && (
-        <p className="rounded-md bg-neutral-100 p-3 text-sm text-neutral-700">
+        <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
           {homeworkStatus === "CANCELLED"
             ? "Домашнее задание отменено. Новые решения недоступны."
             : "Домашнее задание завершено. Новые решения недоступны."}
@@ -47,7 +50,7 @@ export function StudentTaskSolution({ homeworkId, homeworkStatus, item }: Soluti
       {item.task.taskType === "CODE" && <CodeSolution disabled={readOnly} homeworkId={homeworkId} item={item} />}
 
       {item.task.taskType !== "TEXT" && item.task.taskType !== "CODE" && (
-        <p className="rounded-md bg-neutral-100 p-3 text-sm">Этот тип задания пока не поддерживается.</p>
+        <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Этот тип задания пока не поддерживается.</p>
       )}
 
       {submissions.isError && (
@@ -64,8 +67,8 @@ export function StudentTaskSolution({ homeworkId, homeworkStatus, item }: Soluti
 function TaskHeader({ item }: Readonly<{ item: StudentHomeworkItem }>) {
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
-        <span className="rounded-full bg-neutral-100 px-2.5 py-1">
+      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+        <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-700">
           {taskTypePresentation[item.task.taskType] ?? item.task.taskType}
         </span>
 
@@ -74,7 +77,7 @@ function TaskHeader({ item }: Readonly<{ item: StudentHomeworkItem }>) {
         <span>{item.passed ? "Выполнено" : "Не выполнено"}</span>
       </div>
 
-      <h2 className="text-xl font-semibold" id={`task-${item.id}-heading`}>
+      <h2 className="text-xl font-semibold text-slate-950" id={`task-${item.id}-heading`}>
         {item.task.title}
       </h2>
 
@@ -117,7 +120,7 @@ function TextSolution({
         <span className="font-medium">Ваш ответ</span>
 
         <textarea
-          className="min-h-40 w-full rounded-md border border-neutral-300 p-3"
+          className="min-h-40 w-full rounded-xl border border-slate-200 bg-white p-3 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
           disabled={disabled || submit.isPending}
           id={`answer-${item.id}`}
           onChange={(event) => setTextAnswer(event.target.value)}
@@ -195,7 +198,7 @@ function CodeSolution({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-neutral-600">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
         <span>Язык: {languagePresentation[config.language] ?? config.language}</span>
 
         {config.timeLimitMs !== undefined && <span>Лимит времени: {config.timeLimitMs} мс</span>}
@@ -204,16 +207,14 @@ function CodeSolution({
       </div>
 
       {!config.executionEnabled && (
-        <p className="rounded-md bg-neutral-100 p-3 text-sm text-neutral-700">
-          Запуск и отправка кода сейчас недоступны.
-        </p>
+        <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Запуск и отправка кода сейчас недоступны.</p>
       )}
 
       <label className="block space-y-2" htmlFor={`source-${item.id}`}>
         <span className="font-medium">Код решения</span>
 
         <textarea
-          className="min-h-72 w-full overflow-auto rounded-md border border-neutral-300 p-3 font-mono text-sm whitespace-pre"
+          className="min-h-72 w-full overflow-auto rounded-xl border border-slate-200 bg-slate-950 p-4 font-mono text-sm text-slate-100 whitespace-pre outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
           disabled={executionDisabled || busy}
           id={`source-${item.id}`}
           onChange={(event) => setSourceCode(event.target.value)}
@@ -238,16 +239,11 @@ function CodeSolution({
       </label>
 
       <div className="flex flex-wrap gap-3">
-        <Button disabled={actionsDisabled} onClick={handleRun} type="button">
+        <Button variant="secondary" disabled={actionsDisabled} onClick={handleRun} type="button">
           {run.isPending ? "Запускаем…" : "Запустить"}
         </Button>
 
-        <Button
-          className="bg-blue-700 hover:bg-blue-600"
-          disabled={actionsDisabled}
-          onClick={handleSubmit}
-          type="button"
-        >
+        <Button disabled={actionsDisabled} onClick={handleSubmit} type="button">
           {submit.isPending ? "Проверяем решение…" : "Отправить решение"}
         </Button>
       </div>
@@ -298,7 +294,7 @@ function RunResult({
 
   return (
     <section
-      className="space-y-3 rounded-md border border-neutral-200 p-4"
+      className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50/60 p-4"
       aria-label="Результат запуска"
       aria-live="polite"
     >
@@ -314,7 +310,7 @@ function RunResult({
       )}
 
       {result.executionTimeMs !== undefined && (
-        <p className="text-sm text-neutral-600">Время выполнения: {result.executionTimeMs} мс</p>
+        <p className="text-sm text-slate-500">Время выполнения: {result.executionTimeMs} мс</p>
       )}
 
       {result.tests && result.tests.length > 0 && (
@@ -342,14 +338,14 @@ function SubmissionSummary({ submission }: Readonly<{ submission: StudentSubmiss
 
   return (
     <section
-      className="space-y-3 rounded-md border border-neutral-200 p-4"
+      className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50/60 p-4"
       aria-label="Результат отправки"
       aria-live="polite"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="font-medium">{submissionStatusPresentation[submission.status] ?? submission.status}</p>
 
-        <span className="text-sm text-neutral-500">Попытка {submission.attemptNo}</span>
+        <span className="text-sm text-slate-400">Попытка {submission.attemptNo}</span>
       </div>
 
       {execution && (
@@ -363,7 +359,7 @@ function SubmissionSummary({ submission }: Readonly<{ submission: StudentSubmiss
             </strong>
           </p>
 
-          <p className="text-sm text-neutral-600">Время выполнения: {execution.executionTimeMs} мс</p>
+          <p className="text-sm text-slate-500">Время выполнения: {execution.executionTimeMs} мс</p>
 
           <Output label="stdout" value={execution.stdoutExcerpt} />
 
@@ -402,10 +398,10 @@ function SubmissionHistory({ submissions }: Readonly<{ submissions: StudentSubmi
   if (submissions.length === 0) return null;
 
   return (
-    <section className="border-t pt-4" aria-label="История попыток">
+    <section className="border-t border-slate-100 pt-4" aria-label="История попыток">
       <h3 className="font-medium">Попытки</h3>
 
-      <ul className="mt-3 space-y-2 text-sm text-neutral-700">
+      <ul className="mt-3 space-y-2 text-sm text-slate-600">
         {submissions.map((submission) => (
           <li className="flex flex-wrap items-center gap-x-2" key={submission.id}>
             <span>Попытка {submission.attemptNo}</span>
