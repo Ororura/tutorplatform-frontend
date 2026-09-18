@@ -105,7 +105,7 @@ jobs:
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             set -e
 
-            cd /opt/tutorplatform/frontend
+            cd /opt/tutorplatform
 
             docker compose pull
             docker compose up -d
