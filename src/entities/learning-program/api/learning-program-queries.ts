@@ -5,10 +5,13 @@ import type { components } from "@/shared/api/generated/schema";
 
 export type LearningProgram = components["schemas"]["LearningProgramSummaryResponse"];
 export type LearningProgramStatus = LearningProgram["status"];
+export type CreateLearningProgramRequest = components["schemas"]["CreateLearningProgramRequest"];
 
-export async function getLearningPrograms(status: LearningProgramStatus): Promise<LearningProgram[]> {
+export async function getLearningPrograms(status?: LearningProgramStatus): Promise<LearningProgram[]> {
   const { data, error, response } = await apiClient.GET("/api/v1/teacher/programs", {
-    params: { query: { status } },
+    params: {
+      query: status ? { status } : {},
+    },
   });
 
   if (error) {
@@ -20,10 +23,12 @@ export async function getLearningPrograms(status: LearningProgramStatus): Promis
 
 export const learningProgramQueries = {
   all: () => ["learning-programs"] as const,
+
   lists: () => [...learningProgramQueries.all(), "list"] as const,
-  list: (status: LearningProgramStatus) =>
+
+  list: (status?: LearningProgramStatus) =>
     queryOptions({
-      queryKey: [...learningProgramQueries.lists(), status] as const,
+      queryKey: [...learningProgramQueries.lists(), status ?? "ALL"] as const,
       queryFn: () => getLearningPrograms(status),
     }),
 };
