@@ -1,3 +1,4 @@
+import { CalendarClock, ChevronRight, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
 
 import type { HomeworkSummary } from "../api/homework-queries";
@@ -7,30 +8,63 @@ import {
   homeworkStatusPresentation,
 } from "../model/homework-presentation";
 
-export function HomeworkList({ homeworks, studentId }: Readonly<{ homeworks: HomeworkSummary[]; studentId: string }>) {
+function getStatusClassName(state: ReturnType<typeof getHomeworkPresentationState>) {
+  switch (state) {
+    case "OVERDUE":
+      return "bg-red-50 text-red-700";
+    case "COMPLETED":
+      return "bg-emerald-50 text-emerald-700";
+    case "CANCELLED":
+      return "bg-slate-100 text-slate-600";
+    default:
+      return "bg-blue-50 text-blue-700";
+  }
+}
+
+export function HomeworkList({
+  homeworks,
+  studentId,
+}: Readonly<{
+  homeworks: HomeworkSummary[];
+  studentId: string;
+}>) {
   return (
-    <ul className="divide-y divide-neutral-200 rounded-lg border border-neutral-200 bg-white">
+    <ul className="divide-y divide-slate-100">
       {homeworks.map((homework) => {
         const state = getHomeworkPresentationState(homework);
+
         return (
           <li key={homework.id}>
             <Link
-              className="flex flex-col gap-2 p-4 transition hover:bg-neutral-50 sm:flex-row sm:items-center sm:justify-between"
+              className="group flex flex-col gap-4 px-2 py-5 transition hover:bg-slate-50/70 sm:flex-row sm:items-center"
               href={`/teacher/students/${studentId}/homework/${homework.id}`}
             >
-              <span>
-                <span className="font-medium">{homework.title}</span>
-                <span className="mt-1 block text-sm text-neutral-500">
-                  Назначено {formatHomeworkDate(homework.assignedAt)}
-                  {homework.dueAt ? ` · срок ${formatHomeworkDate(homework.dueAt)}` : " · без срока"}
+              <span className="flex min-w-0 flex-1 items-start gap-4">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                  <ClipboardCheck size={19} />
+                </span>
+
+                <span className="min-w-0">
+                  <span className="block truncate font-semibold text-slate-950">{homework.title}</span>
+
+                  <span className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+                    <CalendarClock size={14} />
+                    Назначено {formatHomeworkDate(homework.assignedAt)}
+                    <span aria-hidden="true">·</span>
+                    {homework.dueAt ? `срок ${formatHomeworkDate(homework.dueAt)}` : "без срока"}
+                  </span>
                 </span>
               </span>
-              <span
-                className={`w-fit rounded-full px-2.5 py-1 text-xs ${
-                  state === "OVERDUE" ? "bg-red-50 text-red-800" : "bg-neutral-100 text-neutral-700"
-                }`}
-              >
-                {homeworkStatusPresentation[state]}
+
+              <span className="flex shrink-0 items-center gap-3">
+                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClassName(state)}`}>
+                  {homeworkStatusPresentation[state]}
+                </span>
+
+                <ChevronRight
+                  size={18}
+                  className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-blue-600"
+                />
               </span>
             </Link>
           </li>

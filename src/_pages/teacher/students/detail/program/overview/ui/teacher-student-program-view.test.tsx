@@ -86,7 +86,11 @@ describe("TeacherStudentProgramView", () => {
       queryResult({ data: [program("program-1", "Python с нуля"), program("program-2", "Алгоритмы")] }),
     );
     render(<TeacherStudentProgramView studentId="student-1" />);
-    expect(screen.getByRole("heading", { name: "Выберите программу" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Программы ученика",
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Алгоритмы/ })).toHaveAttribute(
       "href",
       "/teacher/students/student-1/programs/program-2",

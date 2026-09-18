@@ -42,7 +42,8 @@ describe("SessionList", () => {
     expect(screen.getByText("Проведено")).toBeInTheDocument();
     expect(screen.getByText("Пропущено")).toBeInTheDocument();
     expect(screen.getByText("Отменено")).toBeInTheDocument();
-    expect(screen.getAllByText("60 мин · Тем: 1")).toHaveLength(3);
+    expect(screen.getAllByText("60 мин")).toHaveLength(3);
+    expect(screen.getAllByText("Тем: 1")).toHaveLength(3);
     expect(screen.getAllByText("Разобрали переменные")).toHaveLength(3);
     expect(screen.getAllByRole("link")[0]).toHaveAttribute("href", "/teacher/students/student-1/sessions/one");
   });
