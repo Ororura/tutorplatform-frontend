@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { StudentHomeworksView } from "./student-homeworks-view";
@@ -79,7 +79,11 @@ describe("StudentHomeworksView", () => {
 
     expect(screen.getByText("Нужно выполнить")).toBeInTheDocument();
     expect(screen.getByText("Просрочено")).toBeInTheDocument();
-    expect(screen.getByText("Выполнено")).toBeInTheDocument();
+    const completedHomework = screen.getByRole("link", {
+      name: /Готовая работа/,
+    });
+
+    expect(within(completedHomework).getByText("Выполнено")).toBeInTheDocument();
     expect(screen.getByText("Отменено")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Новая работа/ })).toHaveAttribute("href", "/student/homework/assigned");
     expect(screen.getByText(/Выполнено 2 июля 2026/)).toBeInTheDocument();
