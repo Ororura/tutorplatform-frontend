@@ -255,7 +255,9 @@ async function isCsrfFailure(response: Response): Promise<boolean> {
 
 function isSessionChangingPath(pathname: string): boolean {
   return (
-    SESSION_CHANGING_PATHS.has(pathname) || /^\/api\/v1\/public\/student-invitations\/[^/]+\/accept$/.test(pathname)
+    SESSION_CHANGING_PATHS.has(pathname) ||
+    /^\/api\/v1\/public\/teacher-invitations\/[^/]+\/accept$/.test(pathname) ||
+    /^\/api\/v1\/public\/student-invitations\/[^/]+\/accept$/.test(pathname)
   );
 }
 
