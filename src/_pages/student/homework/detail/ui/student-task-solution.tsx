@@ -210,6 +210,73 @@ function CodeSolution({
         <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Запуск и отправка кода сейчас недоступны.</p>
       )}
 
+      <details className="rounded-xl border border-slate-200 bg-slate-50/60 px-3 py-2 text-sm" open>
+        <summary className="cursor-pointer font-medium text-slate-700">Как выполнить задание</summary>
+        <div className="mt-3 space-y-3 text-slate-600">
+          <p>
+            Напишите программу на Python, которая решает задачу. Для чтения входных данных используйте input(), для
+            вывода результата — print().
+          </p>
+          <p>
+            Преподаватель мог заранее подготовить для вас часть решения. Если в редакторе уже есть код, внимательно
+            изучите его и дополните или измените согласно условию задания. Необязательно писать программу с нуля
+          </p>
+          <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100">
+            <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
+          </pre>
+          <p className="text-xs text-slate-500">Программа считывает два числа из одной строки и выводит их сумму</p>
+          <ul className="space-y-1 text-xs">
+            <li>«Запустить» — проверить код и посмотреть результат без отправки окончательного решения.</li>
+            <li>«Отправить решение» — сохранить ответ и проверить его по тестам задания.</li>
+          </ul>
+          <p className="text-xs text-slate-500">
+            Входные данные для проверки подаются автоматически. Вводить их вручную после запуска не нужно
+          </p>
+          <div className="space-y-3 border-t border-slate-200 pt-3">
+            <h3 className="font-medium text-slate-700">Когда решение считается верным?</h3>
+            <p>
+              Программа считается верной, когда успешно проходит все тесты задания. Система автоматически передаёт вашей
+              программе входные данные и сравнивает полученный результат с ожидаемым ответом.
+            </p>
+            <p>
+              Для вывода результата используйте print(). Именно то, что программа выводит в консоль, проверяется
+              системой.
+            </p>
+            <p>
+              Выводите только то, что требуется в условии. Не добавляйте пояснения вроде &quot;Ответ:&quot;,
+              &quot;Результат:&quot; или &quot;Введите число:&quot;, если задание этого не требует
+            </p>
+            <div className="space-y-2">
+              <p>Условие: «Прочитайте два числа и выведите их сумму».</p>
+              <div>
+                <p className="text-xs font-medium text-green-700">Правильно:</p>
+                <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100">
+                  <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
+                </pre>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-red-700">Неправильно:</p>
+                <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100">
+                  <code>{'a, b = map(int, input().split())\nprint("Сумма чисел:", a + b)'}</code>
+                </pre>
+              </div>
+              <p className="text-xs text-slate-500">
+                Если ожидаемый ответ — 5, программа должна вывести 5, а не &quot;Сумма чисел: 5&quot;.
+              </p>
+            </div>
+            <ul className="space-y-1 text-xs">
+              <li>input() получает входные данные, которые система подаёт автоматически.</li>
+              <li>print() выводит результат, который система сравнивает с ожидаемым.</li>
+              <li>
+                Программа может работать без ошибок, но не пройти проверку из-за неправильного ответа или лишнего текста
+                в выводе.
+              </li>
+              <li>Успешное прохождение одного примера не гарантирует прохождение всех тестов.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
       <label className="block space-y-2" htmlFor={`source-${item.id}`}>
         <span className="font-medium">Код решения</span>
 
