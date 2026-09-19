@@ -4,6679 +4,6784 @@
  */
 
 export interface paths {
-  "/api/v1/teacher/tasks/{taskId}/test-cases": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/tasks/{taskId}/test-cases": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Atomically replace CODE task test cases */
+        put: operations["replaceTaskTestCases"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    /** Atomically replace CODE task test cases */
-    put: operations["replaceTaskTestCases"];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/tasks/{taskId}/programming-config": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/tasks/{taskId}/programming-config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update CODE task configuration */
+        put: operations["updateProgrammingTaskConfig"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    /** Update CODE task configuration */
-    put: operations["updateProgrammingTaskConfig"];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/sessions/{sessionId}/assessment": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/sessions/{sessionId}/assessment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a lesson session assessment */
+        get: operations["getTeacherAssessment"];
+        /** Create or replace a lesson session assessment */
+        put: operations["saveTeacherAssessment"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get a lesson session assessment */
-    get: operations["getTeacherAssessment"];
-    /** Create or replace a lesson session assessment */
-    put: operations["saveTeacherAssessment"];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/topics/{topicId}/tasks/{taskId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/topics/{topicId}/tasks/{taskId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Attach a text task to a topic */
+        post: operations["attachTaskToTopic"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Attach a text task to a topic */
-    post: operations["attachTaskToTopic"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/topics/{topicId}/materials": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/topics/{topicId}/materials": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List lesson materials for a topic */
+        get: operations["listLessonMaterials"];
+        put?: never;
+        /** Create a lesson material */
+        post: operations["createLessonMaterial"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List lesson materials for a topic */
-    get: operations["listLessonMaterials"];
-    put?: never;
-    /** Create a lesson material */
-    post: operations["createLessonMaterial"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/topics/{topicId}/materials/upload": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/topics/{topicId}/materials/upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload a FILE or IMAGE lesson material */
+        post: operations["uploadLessonMaterial"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Upload a FILE or IMAGE lesson material */
-    post: operations["uploadLessonMaterial"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/tasks": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List the current teacher's tasks */
+        get: operations["listTasks"];
+        put?: never;
+        /** Create a TEXT or fully configured CODE task */
+        post: operations["createTask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List the current teacher's tasks */
-    get: operations["listTasks"];
-    put?: never;
-    /** Create a TEXT or fully configured CODE task */
-    post: operations["createTask"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List students owned by the current teacher */
+        get: operations["listTeacherStudents"];
+        put?: never;
+        /** Create a student owned by the current teacher */
+        post: operations["createStudent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List students owned by the current teacher */
-    get: operations["listTeacherStudents"];
-    put?: never;
-    /** Create a student owned by the current teacher */
-    post: operations["createStudent"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/sessions": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List lesson sessions for a student */
+        get: operations["listLessonSessions"];
+        put?: never;
+        /** Create a lesson session */
+        post: operations["createLessonSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List lesson sessions for a student */
-    get: operations["listLessonSessions"];
-    put?: never;
-    /** Create a lesson session */
-    post: operations["createLessonSession"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/progress/shares": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/progress/shares": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List progress share metadata */
+        get: operations["listProgressShares"];
+        put?: never;
+        /** Create a live current-progress share */
+        post: operations["createProgressShare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List progress share metadata */
-    get: operations["listProgressShares"];
-    put?: never;
-    /** Create a live current-progress share */
-    post: operations["createProgressShare"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/programs": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/programs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List programs for a student owned by the current teacher */
+        get: operations["listTeacherStudentPrograms"];
+        put?: never;
+        /** Assign an active learning program to an owned student */
+        post: operations["assignTeacherStudentProgram"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List programs for a student owned by the current teacher */
-    get: operations["listTeacherStudentPrograms"];
-    put?: never;
-    /** Assign an active learning program to an owned student */
-    post: operations["assignTeacherStudentProgram"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/invites": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List invitation metadata for a student */
+        get: operations["listStudentInvites"];
+        put?: never;
+        /** Create an invitation for a student */
+        post: operations["createStudentInvite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List invitation metadata for a student */
-    get: operations["listStudentInvites"];
-    put?: never;
-    /** Create an invitation for a student */
-    post: operations["createStudentInvite"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/homeworks": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/homeworks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List homework for a student */
+        get: operations["listHomeworks"];
+        put?: never;
+        /** Create homework for a student */
+        post: operations["createHomework"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List homework for a student */
-    get: operations["listHomeworks"];
-    put?: never;
-    /** Create homework for a student */
-    post: operations["createHomework"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/homeworks/{homeworkId}/cancel": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/homeworks/{homeworkId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel assigned homework */
+        post: operations["cancelHomework"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Cancel assigned homework */
-    post: operations["cancelHomework"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/reports": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List progress reports accessible to the current teacher */
+        get: operations["listProgressReports"];
+        put?: never;
+        /** Create a progress report draft */
+        post: operations["createProgressReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List progress reports accessible to the current teacher */
-    get: operations["listProgressReports"];
-    put?: never;
-    /** Create a progress report draft */
-    post: operations["createProgressReport"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/reports/{reportId}/shares": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/reports/{reportId}/shares": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List report-share metadata */
+        get: operations["listReportShares"];
+        put?: never;
+        /** Create a historical progress-report share */
+        post: operations["createReportShare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List report-share metadata */
-    get: operations["listReportShares"];
-    put?: never;
-    /** Create a historical progress-report share */
-    post: operations["createReportShare"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/reports/{reportId}/publish": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/reports/{reportId}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish a draft report */
+        post: operations["publishProgressReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Publish a draft report */
-    post: operations["publishProgressReport"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/programs": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/programs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List learning program templates owned by the current teacher */
+        get: operations["listTeacherLearningPrograms"];
+        put?: never;
+        /** Create a draft learning program template */
+        post: operations["createTeacherLearningProgram"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List learning program templates owned by the current teacher */
-    get: operations["listTeacherLearningPrograms"];
-    put?: never;
-    /** Create a draft learning program template */
-    post: operations["createTeacherLearningProgram"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/programs/{programId}/activate": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/programs/{programId}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate an owned draft learning program */
+        post: operations["activateTeacherLearningProgram"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Activate an owned draft learning program */
-    post: operations["activateTeacherLearningProgram"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/student/tasks/{taskId}/submissions": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/student/tasks/{taskId}/submissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List the current student's task submissions */
+        get: operations["listStudentTaskSubmissions"];
+        put?: never;
+        /** Submit a TEXT answer for a homework task */
+        post: operations["submitTextAnswer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List the current student's task submissions */
-    get: operations["listStudentTaskSubmissions"];
-    put?: never;
-    /** Submit a TEXT answer for a homework task */
-    post: operations["submitTextAnswer"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/student/tasks/{taskId}/run": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/student/tasks/{taskId}/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Run code for an assigned CODE task without creating a submission */
+        post: operations["runCode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Run code for an assigned CODE task without creating a submission */
-    post: operations["runCode"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/student/tasks/{taskId}/code-submissions": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/student/tasks/{taskId}/code-submissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit and execute a CODE solution for a homework task */
+        post: operations["submitCodeAnswer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Submit and execute a CODE solution for a homework task */
-    post: operations["submitCodeAnswer"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/teacher-invitations/{token}/accept": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/teacher-invitations/{token}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register a teacher using an invitation */
+        post: operations["acceptTeacherInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Register a teacher using an invitation */
-    post: operations["acceptTeacherInvitation"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/student-invitations/{token}/accept": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/student-invitations/{token}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept a student invitation */
+        post: operations["acceptStudentInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Accept a student invitation */
-    post: operations["acceptStudentInvitation"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/register/teacher": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/register/teacher": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register a teacher account */
+        post: operations["registerTeacher"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Register a teacher account */
-    post: operations["registerTeacher"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/logout": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Log out and invalidate the current session */
+        post: operations["logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Log out and invalidate the current session */
-    post: operations["logout"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/login": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Log in with email and password */
+        post: operations["login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Log in with email and password */
-    post: operations["login"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/admin/teacher-invitations": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/admin/teacher-invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List teacher registration invitations */
+        get: operations["listTeacherInvitations"];
+        put?: never;
+        /** Create a teacher registration invitation */
+        post: operations["createTeacherInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List teacher registration invitations */
-    get: operations["listTeacherInvitations"];
-    put?: never;
-    /** Create a teacher registration invitation */
-    post: operations["createTeacherInvitation"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/topics/{topicId}/materials/{materialId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/topics/{topicId}/materials/{materialId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a lesson material */
+        get: operations["getLessonMaterial"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a lesson material */
+        patch: operations["updateLessonMaterial"];
+        trace?: never;
     };
-    /** Get a lesson material */
-    get: operations["getLessonMaterial"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Update a lesson material */
-    patch: operations["updateLessonMaterial"];
-    trace?: never;
-  };
-  "/api/v1/teacher/tasks/{taskId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/tasks/{taskId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a task; CODE details include all teacher-visible tests */
+        get: operations["getTask"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update common task fields and lifecycle status */
+        patch: operations["updateTask"];
+        trace?: never;
     };
-    /** Get a task; CODE details include all teacher-visible tests */
-    get: operations["getTask"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Update common task fields and lifecycle status */
-    patch: operations["updateTask"];
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a student owned by the current teacher */
+        get: operations["getStudent"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a student owned by the current teacher */
+        patch: operations["updateStudent"];
+        trace?: never;
     };
-    /** Get a student owned by the current teacher */
-    get: operations["getStudent"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Update a student owned by the current teacher */
-    patch: operations["updateStudent"];
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/submissions/{submissionId}/review": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/submissions/{submissionId}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Review a text submission */
+        patch: operations["reviewTextSubmission"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Review a text submission */
-    patch: operations["reviewTextSubmission"];
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/sessions/{sessionId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/sessions/{sessionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a lesson session */
+        get: operations["getLessonSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a lesson session */
+        patch: operations["updateLessonSession"];
+        trace?: never;
     };
-    /** Get a lesson session */
-    get: operations["getLessonSession"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Update a lesson session */
-    patch: operations["updateLessonSession"];
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/homeworks/{homeworkId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/homeworks/{homeworkId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get homework details */
+        get: operations["getHomework"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update assigned homework */
+        patch: operations["updateHomework"];
+        trace?: never;
     };
-    /** Get homework details */
-    get: operations["getHomework"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Update assigned homework */
-    patch: operations["updateHomework"];
-    trace?: never;
-  };
-  "/api/v1/teacher/reports/{reportId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/reports/{reportId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a persisted progress report snapshot */
+        get: operations["getProgressReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Edit draft report text */
+        patch: operations["updateProgressReport"];
+        trace?: never;
     };
-    /** Get a persisted progress report snapshot */
-    get: operations["getProgressReport"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Edit draft report text */
-    patch: operations["updateProgressReport"];
-    trace?: never;
-  };
-  "/api/v1/admin/settings/registration": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/admin/settings/registration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Change platform registration mode */
+        patch: operations["changeRegistrationMode"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Change platform registration mode */
-    patch: operations["changeRegistrationMode"];
-    trace?: never;
-  };
-  "/api/v1/teacher/topics/{topicId}/materials/{materialId}/download": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/topics/{topicId}/materials/{materialId}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download an owned lesson material attachment */
+        get: operations["downloadLessonMaterial"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Download an owned lesson material attachment */
-    get: operations["downloadLessonMaterial"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/subjects": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/subjects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List subjects available to the current teacher */
+        get: operations["listTeacherSubjects"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List subjects available to the current teacher */
-    get: operations["listTeacherSubjects"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/submissions": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/submissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List a teacher's student's submissions */
+        get: operations["listTeacherStudentSubmissions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List a teacher's student's submissions */
-    get: operations["listTeacherStudentSubmissions"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/progress": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current progress for an owned student */
+        get: operations["getTeacherStudentProgress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get current progress for an owned student */
-    get: operations["getTeacherStudentProgress"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a program structure for a student owned by the current teacher */
+        get: operations["getTeacherStudentProgram"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get a program structure for a student owned by the current teacher */
-    get: operations["getTeacherStudentProgram"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/reports/{reportId}/pdf": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/reports/{reportId}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download a published progress report as PDF */
+        get: operations["downloadProgressReportPdf"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Download a published progress report as PDF */
-    get: operations["downloadProgressReportPdf"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/student/submissions/{submissionId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/programs/{programId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an owned learning program template */
+        get: operations["getTeacherLearningProgram"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get one submission owned by the current student */
-    get: operations["getStudentSubmission"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/student/progress": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/student/submissions/{submissionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one submission owned by the current student */
+        get: operations["getStudentSubmission"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get current progress for the authenticated student */
-    get: operations["getCurrentStudentProgress"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/student/homeworks": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/student/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current progress for the authenticated student */
+        get: operations["getCurrentStudentProgress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** List homework assigned to the current student */
-    get: operations["listStudentHomeworks"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/student/homeworks/{homeworkId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/student/homeworks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List homework assigned to the current student */
+        get: operations["listStudentHomeworks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get homework assigned to the current student */
-    get: operations["getStudentHomework"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/teacher-invitations/{token}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/student/homeworks/{homeworkId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get homework assigned to the current student */
+        get: operations["getStudentHomework"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get teacher registration invitation */
-    get: operations["getPublicTeacherInvitation"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/student-invitations/{token}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/teacher-invitations/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get teacher registration invitation */
+        get: operations["getPublicTeacherInvitation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get public student invitation metadata */
-    get: operations["getPublicStudentInvitation"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/reports/{token}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/student-invitations/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get public student invitation metadata */
+        get: operations["getPublicStudentInvitation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get a historical progress report by share token */
-    get: operations["getPublicProgressReport"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/reports/{token}/pdf": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/reports/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a historical progress report by share token */
+        get: operations["getPublicProgressReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Download a shared published progress report as PDF */
-    get: operations["downloadPublicProgressReportPdf"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/registration-settings": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/reports/{token}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download a shared published progress report as PDF */
+        get: operations["downloadPublicProgressReportPdf"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get public registration settings */
-    get: operations["getPublicRegistrationSettings"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/progress/{token}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/registration-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get public registration settings */
+        get: operations["getPublicRegistrationSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get live current progress by share token */
-    get: operations["getPublicCurrentProgress"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/me": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/progress/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get live current progress by share token */
+        get: operations["getPublicCurrentProgress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get the current authenticated user */
-    get: operations["getCurrentUser"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/csrf": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the current authenticated user */
+        get: operations["getCurrentUser"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get CSRF token */
-    get: operations["getCsrfToken"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/admin/settings": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/csrf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get CSRF token */
+        get: operations["getCsrfToken"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get platform settings */
-    get: operations["getAdminPlatformSettings"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/progress/shares/{shareId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/admin/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get platform settings */
+        get: operations["getAdminPlatformSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Revoke a progress share */
-    delete: operations["revokeProgressShare"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/students/{studentId}/invites/{inviteId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/progress/shares/{shareId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke a progress share */
+        delete: operations["revokeProgressShare"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Revoke a student invitation */
-    delete: operations["revokeStudentInvite"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/teacher/reports/{reportId}/shares/{shareId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/students/{studentId}/invites/{inviteId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke a student invitation */
+        delete: operations["revokeStudentInvite"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Revoke a report share */
-    delete: operations["revokeReportShare"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/admin/teacher-invitations/{invitationId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/teacher/reports/{reportId}/shares/{shareId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke a report share */
+        delete: operations["revokeReportShare"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Revoke a teacher registration invitation */
-    delete: operations["revokeTeacherInvitation"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
+    "/api/v1/admin/teacher-invitations/{invitationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke a teacher registration invitation */
+        delete: operations["revokeTeacherInvitation"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    /**
-     * @description EXACT compares output verbatim. NORMALIZED will normalize line endings and trailing whitespace during execution.
-     * @enum {string}
-     */
-    ComparisonMode: "EXACT" | "NORMALIZED";
-    ReplaceTaskTestCasesRequest: {
-      items: components["schemas"]["TaskTestCaseRequest"][];
-    };
-    TaskTestCaseRequest: {
-      /** Format: uuid */
-      id?: string;
-      inputText?: string;
-      expectedOutput: string;
-      hidden: boolean;
-      comparisonMode: components["schemas"]["ComparisonMode"];
-      /** Format: int32 */
-      position: number;
-    };
-    ApiError: {
-      code: string;
-      message: string;
-      /** Format: date-time */
-      timestamp: string;
-      traceId: string;
-      details: components["schemas"]["ApiErrorDetail"][];
-    };
-    ApiErrorDetail: {
-      field: string;
-      message: string;
-    };
-    TaskTestCaseResponse: {
-      /** Format: uuid */
-      id: string;
-      inputText?: string;
-      expectedOutput: string;
-      hidden: boolean;
-      comparisonMode: components["schemas"]["ComparisonMode"];
-      /** Format: int32 */
-      position: number;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    TaskTestCasesResponse: {
-      items?: components["schemas"]["TaskTestCaseResponse"][];
-    };
-    UpdateProgrammingTaskConfigRequest: {
-      starterCode?: string;
-      executionEnabled: boolean;
-      /** Format: int32 */
-      timeLimitMs: number;
-      /** Format: int32 */
-      memoryLimitMb: number;
-    };
-    /**
-     * @description Programming language supported by CODE tasks
-     * @enum {string}
-     */
-    ProgrammingLanguage: "PYTHON";
-    ProgrammingTaskConfigResponse: {
-      language: components["schemas"]["ProgrammingLanguage"];
-      starterCode?: string;
-      executionEnabled: boolean;
-      /** Format: int32 */
-      timeLimitMs: number;
-      /** Format: int32 */
-      memoryLimitMb: number;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    SaveTeacherAssessmentRequest: {
-      /** Format: int32 */
-      understandingScore?: number | null;
-      /** Format: int32 */
-      independenceScore?: number | null;
-      /** Format: int32 */
-      practiceScore?: number | null;
-      /** Format: int32 */
-      homeworkScore?: number | null;
-      publicComment?: string | null;
-    };
-    TeacherAssessmentResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      lessonSessionId: string;
-      /** Format: int32 */
-      understandingScore?: number | null;
-      /** Format: int32 */
-      independenceScore?: number | null;
-      /** Format: int32 */
-      practiceScore?: number | null;
-      /** Format: int32 */
-      homeworkScore?: number | null;
-      publicComment?: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    AttachTaskToTopicRequest: {
-      /** Format: int32 */
-      position: number;
-      required: boolean;
-    };
-    TopicTaskResponse: {
-      /** Format: uuid */
-      topicId: string;
-      /** Format: uuid */
-      taskId: string;
-      /** Format: int32 */
-      position: number;
-      required: boolean;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    CreateLessonMaterialRequest: {
-      /** @enum {string} */
-      materialType: "MARKDOWN" | "TEXT" | "CODE_EXAMPLE" | "LINK";
-      title: string;
-      content?: string | null;
-      externalUrl?: string | null;
-      /** Format: int32 */
-      position: number;
-    };
-    LessonMaterialResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      topicId: string;
-      /** @enum {string} */
-      materialType: "MARKDOWN" | "TEXT" | "IMAGE" | "FILE" | "LINK" | "CODE_EXAMPLE";
-      title: string;
-      content?: string | null;
-      externalUrl?: string | null;
-      /** Format: int32 */
-      position: number;
-      /** Format: int64 */
-      version: number;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    CreateTaskRequest: {
-      /** Format: uuid */
-      subjectId: string;
-      title: string;
-      descriptionMarkdown: string;
-      /** @enum {string} */
-      difficulty: "EASY" | "MEDIUM" | "HARD";
-      /**
-       * @description Defaults to TEXT when omitted
-       * @enum {string}
-       */
-      taskType?: "TEXT" | "CODE";
-      programmingConfig?: components["schemas"]["ProgrammingTaskConfigRequest"];
-      testCases?: components["schemas"]["TaskTestCaseRequest"][];
-    };
-    ProgrammingTaskConfigRequest: {
-      language: components["schemas"]["ProgrammingLanguage"];
-      starterCode?: string;
-      executionEnabled: boolean;
-      /** Format: int32 */
-      timeLimitMs: number;
-      /** Format: int32 */
-      memoryLimitMb: number;
-    };
-    TaskResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      subjectId: string;
-      title: string;
-      descriptionMarkdown: string;
-      /** @enum {string} */
-      taskType: "TEXT" | "CODE";
-      /** @enum {string} */
-      difficulty: "EASY" | "MEDIUM" | "HARD";
-      /** @enum {string} */
-      status: "DRAFT" | "ACTIVE" | "ARCHIVED";
-      /** Format: int64 */
-      version: number;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      programmingConfig?: components["schemas"]["ProgrammingTaskConfigResponse"];
-      testCases?: components["schemas"]["TaskTestCaseResponse"][];
-    };
-    CreateStudentRequest: {
-      /** @example Андрей */
-      firstName: string;
-      /** @example Иванов */
-      lastName?: string | null;
-    };
-    StudentSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      firstName: string;
-      lastName?: string | null;
-      /** @enum {string} */
-      status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
-      /** @enum {string} */
-      accountStatus: "UNREGISTERED" | "INVITED" | "REGISTERED";
-      /** Format: date-time */
-      createdAt: string;
-    };
-    CreateLessonSessionRequest: {
-      /** Format: uuid */
-      studentProgramId: string;
-      /** Format: date-time */
-      startedAt: string;
-      /** Format: int32 */
-      durationMinutes: number;
-      /** @enum {string} */
-      attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
-      summary?: string | null;
-      privateNotes?: string | null;
-      topics: components["schemas"]["LessonSessionTopicRequest"][];
-    };
-    LessonSessionTopicRequest: {
-      /** Format: uuid */
-      topicId: string;
-      /** @default false */
-      isPrimary: boolean;
-    };
-    LessonSessionDetailsResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      /** Format: date-time */
-      startedAt: string;
-      /** Format: int32 */
-      durationMinutes: number;
-      /** @enum {string} */
-      attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
-      summary?: string | null;
-      privateNotes?: string | null;
-      topics: components["schemas"]["LessonSessionTopicResponse"][];
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      /** Format: int64 */
-      version: number;
-    };
-    LessonSessionTopicResponse: {
-      /** Format: uuid */
-      topicId: string;
-      isPrimary: boolean;
-    };
-    CreateProgressShareRequest: {
-      /** Format: uuid */
-      studentProgramId: string;
-      /** Format: date-time */
-      expiresAt?: string | null;
-    };
-    /** @description New progress share; the URL is returned only once */
-    ProgressShareCreatedResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      /** Format: date-time */
-      expiresAt?: string | null;
-      /** Format: uri */
-      shareUrl: string;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    AssignStudentProgramRequest: {
-      /** Format: uuid */
-      learningProgramId: string;
-      /**
-       * Format: int32
-       * @default 480
-       */
-      reportIntervalMinutes: number | null;
-    };
-    ProgramSubjectResponse: {
-      /** Format: uuid */
-      id: string;
-      code?: string | null;
-      name: string;
-    };
-    StudentProgramSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      learningProgramId: string;
-      title: string;
-      description?: string | null;
-      /** @enum {string} */
-      status: "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
-      /** Format: int32 */
-      reportIntervalMinutes: number;
-      /** Format: date-time */
-      startedAt: string;
-      /** Format: date-time */
-      completedAt?: string | null;
-      subject: components["schemas"]["ProgramSubjectResponse"];
-    };
-    CreateStudentInviteRequest: {
-      /**
-       * Format: email
-       * @example student@example.com
-       */
-      email: string;
-    };
-    StudentInviteCreatedResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentId: string;
-      /** Format: email */
-      email: string;
-      /** Format: date-time */
-      expiresAt: string;
-      /** Format: uri */
-      inviteUrl: string;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    CreateHomeworkRequest: {
-      /** Format: uuid */
-      studentProgramId: string;
-      title: string;
-      description?: string | null;
-      /** Format: date-time */
-      dueAt?: string | null;
-      items: components["schemas"]["HomeworkItemRequest"][];
-    };
-    HomeworkItemRequest: {
-      /** Format: uuid */
-      taskId: string;
-      /** Format: int32 */
-      position: number;
-      required: boolean;
-    };
-    HomeworkDetailsResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      title: string;
-      description?: string | null;
-      /** @enum {string} */
-      status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
-      /** Format: date-time */
-      assignedAt: string;
-      /** Format: date-time */
-      dueAt?: string | null;
-      overdue: boolean;
-      /** Format: date-time */
-      completedAt?: string | null;
-      items: components["schemas"]["HomeworkItemResponse"][];
-      /** Format: int64 */
-      version: number;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    HomeworkItemResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      taskId: string;
-      taskTitle?: string | null;
-      /** Format: int32 */
-      position: number;
-      required: boolean;
-    };
-    CreateProgressReportRequest: {
-      /** Format: uuid */
-      studentProgramId: string;
-      /** Format: uuid */
-      learningPeriodId: string;
-    };
-    Assessment: {
-      understandingAverage?: number;
-      independenceAverage?: number;
-      practiceAverage?: number;
-      homeworkAverage?: number;
-    };
-    Metrics: {
-      /** Format: int32 */
-      learningMinutes?: number;
-      /** Format: int64 */
-      sessionsCount?: number;
-      /** Format: double */
-      attendanceRate?: number;
-      /** Format: int64 */
-      homeworkAssigned?: number;
-      /** Format: int64 */
-      homeworkCompleted?: number;
-      /** Format: int64 */
-      practiceAssigned?: number;
-      /** Format: int64 */
-      practiceCompleted?: number;
-    };
-    ProgressReportDetailsResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      /** Format: uuid */
-      learningPeriodId?: string | null;
-      /** @enum {string} */
-      status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-      /** Format: date-time */
-      periodStartedAt: string;
-      /** Format: date-time */
-      periodEndedAt: string;
-      /** Format: int32 */
-      learningMinutes: number;
-      /** Format: int32 */
-      snapshotSchemaVersion: number;
-      snapshot: components["schemas"]["ProgressReportSnapshotV1"];
-      teacherSummary?: string | null;
-      nextPeriodPlan?: string | null;
-      /** Format: date-time */
-      publishedAt?: string | null;
-      /** Format: int64 */
-      version: number;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    ProgressReportSnapshotV1: {
-      metrics?: components["schemas"]["Metrics"];
-      assessment?: components["schemas"]["Assessment"];
-      topics?: components["schemas"]["Topics"];
-      skills?: components["schemas"]["Skill"][];
-    };
-    Skill: {
-      /** Format: uuid */
-      skillId?: string;
-      name?: string;
-      progress?: number;
-    };
-    Topic: {
-      /** Format: uuid */
-      id?: string;
-      title?: string;
-    };
-    Topics: {
-      completed?: components["schemas"]["Topic"][];
-      inProgress?: components["schemas"]["Topic"][];
-    };
-    CreateReportShareRequest: {
-      /** Format: date-time */
-      expiresAt?: string | null;
-    };
-    /** @description New report share; the URL is returned only once */
-    ReportShareCreatedResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      reportId: string;
-      /** Format: date-time */
-      expiresAt?: string | null;
-      /** Format: uri */
-      shareUrl: string;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    PublishProgressReportRequest: {
-      /** Format: int64 */
-      version: number;
-    };
-    CreateLearningProgramRequest: {
-      /** Format: uuid */
-      subjectId: string;
-      title: string;
-      description?: string | null;
-    };
-    LearningProgramSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      subject: components["schemas"]["ProgramSubjectResponse"];
-      title: string;
-      description?: string | null;
-      /** @enum {string} */
-      status: "DRAFT" | "ACTIVE" | "ARCHIVED";
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    /** @description Student answer for a TEXT homework task */
-    SubmitTextAnswerRequest: {
-      /** Format: uuid */
-      homeworkItemId: string;
-      textAnswer: string;
-    };
-    CodeSubmissionExecutionResponse: {
-      /** @enum {string} */
-      status: "PENDING" | "RUNNING" | "PASSED" | "FAILED" | "TIMEOUT" | "RUNTIME_ERROR" | "SYSTEM_ERROR";
-      /** Format: int32 */
-      passedTests: number;
-      /** Format: int32 */
-      totalTests: number;
-      /** Format: int32 */
-      executionTimeMs?: number | null;
-      stdoutExcerpt?: string | null;
-      stderrExcerpt?: string | null;
-    };
-    StudentSubmissionResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      taskId: string;
-      /** Format: uuid */
-      homeworkItemId?: string | null;
-      /** Format: int32 */
-      attemptNo: number;
-      /** @enum {string} */
-      status: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
-      textAnswer?: string | null;
-      /** Format: date-time */
-      submittedAt: string;
-      /** @description Returned for an owned CODE submission detail */
-      sourceCode?: string | null;
-      execution?: components["schemas"]["CodeSubmissionExecutionResponse"];
-    };
-    /** @description Transient code run in an assigned homework item context */
-    RunCodeRequest: {
-      sourceCode: string;
-      /** Format: uuid */
-      homeworkItemId: string;
-    };
-    /**
-     * @description Outcome of isolated code execution
-     * @enum {string}
-     */
-    ExecutionStatus: "PASSED" | "FAILED" | "TIMEOUT" | "RUNTIME_ERROR" | "SYSTEM_ERROR";
-    /** @description Transient student-safe execution result */
-    RunCodeResponse: {
-      /** Format: uuid */
-      executionId: string;
-      status: components["schemas"]["ExecutionStatus"];
-      /** Format: int32 */
-      passedTests?: number;
-      /** Format: int32 */
-      totalTests?: number;
-      /** Format: int64 */
-      executionTimeMs?: number;
-      stdoutExcerpt?: string;
-      stderrExcerpt?: string;
-      tests?: components["schemas"]["StudentRunCodeTestResultResponse"][];
-    };
-    /** @description Student-safe test outcome without test content or process output */
-    StudentRunCodeTestResultResponse: {
-      /** Format: int32 */
-      position: number;
-      hidden: boolean;
-      passed: boolean;
-    };
-    /** @description Student source code for a CODE homework task */
-    SubmitCodeAnswerRequest: {
-      /** Format: uuid */
-      homeworkItemId: string;
-      sourceCode: string;
-    };
-    AcceptTeacherInvitationRequest: {
-      /** @example Егор */
-      displayName: string;
-      /**
-       * Format: password
-       * @example correct horse battery staple
-       */
-      password: string;
-    };
-    CurrentUserResponse: {
-      /** Format: uuid */
-      id: string;
-      /** @example teacher@example.com */
-      email: string;
-      /** @example Егор */
-      displayName: string;
-      roles: ("TEACHER" | "STUDENT" | "ADMIN")[];
-    };
-    AcceptStudentInviteRequest: {
-      /**
-       * Format: password
-       * @example correct horse battery staple
-       */
-      password: string;
-    };
-    TeacherRegistrationRequest: {
-      /** @example Егор */
-      displayName: string;
-      /**
-       * Format: email
-       * @example teacher@example.com
-       */
-      email: string;
-      /**
-       * Format: password
-       * @example correct horse battery staple
-       */
-      password: string;
-    };
-    LoginRequest: {
-      /**
-       * Format: email
-       * @example teacher@example.com
-       */
-      email: string;
-      /**
-       * Format: password
-       * @example correct horse battery staple
-       */
-      password: string;
-    };
-    CreateTeacherInvitationRequest: {
-      /**
-       * Format: email
-       * @example teacher@example.com
-       */
-      email: string;
-    };
-    TeacherInvitationCreatedResponse: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: email */
-      email?: string;
-      /** Format: date-time */
-      expiresAt?: string;
-      /** Format: uri */
-      invitationUrl?: string;
-      /** Format: date-time */
-      createdAt?: string;
-    };
-    UpdateLessonMaterialRequest: {
-      /** @enum {string} */
-      materialType: "MARKDOWN" | "TEXT" | "CODE_EXAMPLE" | "LINK";
-      title: string;
-      content?: string | null;
-      externalUrl?: string | null;
-      /** Format: int32 */
-      position: number;
-      /** Format: int64 */
-      version: number;
-    };
-    UpdateTaskRequest: {
-      title: string;
-      descriptionMarkdown: string;
-      /** @enum {string} */
-      difficulty: "EASY" | "MEDIUM" | "HARD";
-      /** @enum {string} */
-      status: "DRAFT" | "ACTIVE" | "ARCHIVED";
-      /** Format: int64 */
-      version: number;
-    };
-    UpdateStudentRequest: {
-      /** @example Андрей */
-      firstName?: string | null;
-      /** @example Петров */
-      lastName?: string | null;
-    };
-    UpdateStudentResponse: {
-      /** Format: uuid */
-      id: string;
-      firstName: string;
-      lastName?: string | null;
-      /** @enum {string} */
-      status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
-      /** @enum {string} */
-      accountStatus: "UNREGISTERED" | "INVITED" | "REGISTERED";
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    ReviewTextSubmissionRequest: {
-      /** @enum {string} */
-      status: "PASSED" | "FAILED";
-    };
-    TeacherSubmissionResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentId: string;
-      /** Format: uuid */
-      taskId: string;
-      /** Format: uuid */
-      homeworkItemId?: string | null;
-      /** Format: int32 */
-      attemptNo: number;
-      /** @enum {string} */
-      status: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
-      textAnswer?: string | null;
-      /** Format: date-time */
-      submittedAt: string;
-    };
-    UpdateLessonSessionRequest: {
-      /** Format: date-time */
-      startedAt: string;
-      /** Format: int32 */
-      durationMinutes: number;
-      /** @enum {string} */
-      attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
-      summary?: string | null;
-      privateNotes?: string | null;
-      /** Format: int64 */
-      version: number;
-      topics: components["schemas"]["LessonSessionTopicRequest"][];
-    };
-    UpdateHomeworkRequest: {
-      title: string;
-      description?: string | null;
-      /** Format: date-time */
-      dueAt?: string | null;
-      /** Format: int64 */
-      version: number;
-      items: components["schemas"]["HomeworkItemRequest"][];
-    };
-    UpdateProgressReportRequest: {
-      teacherSummary?: string | null;
-      nextPeriodPlan?: string | null;
-      /** Format: int64 */
-      version: number;
-    };
-    ChangeRegistrationModeRequest: {
-      /**
-       * @example INVITE_ONLY
-       * @enum {string}
-       */
-      mode: "OPEN" | "INVITE_ONLY";
-    };
-    PlatformSettingsResponse: {
-      /** @enum {string} */
-      registrationMode?: "OPEN" | "INVITE_ONLY";
-      /** Format: date-time */
-      updatedAt?: string;
-      /** Format: uuid */
-      updatedByAdminId?: string;
-    };
-    TaskPageResponse: {
-      items: components["schemas"]["TaskResponse"][];
-      /** Format: int32 */
-      page: number;
-      /** Format: int32 */
-      size: number;
-      /** Format: int64 */
-      totalElements: number;
-      /** Format: int32 */
-      totalPages: number;
-    };
-    SubjectSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      code?: string | null;
-      name: string;
-      description?: string | null;
-      /** @enum {string} */
-      status: "ACTIVE" | "ARCHIVED";
-    };
-    StudentPageResponse: {
-      items: components["schemas"]["StudentSummaryResponse"][];
-      /** Format: int32 */
-      page: number;
-      /** Format: int32 */
-      size: number;
-      /** Format: int64 */
-      totalElements: number;
-      /** Format: int32 */
-      totalPages: number;
-    };
-    StudentAccountResponse: {
-      /** @enum {string} */
-      status: "UNREGISTERED" | "INVITED" | "REGISTERED";
-      email?: string | null;
-    };
-    StudentDetailsResponse: {
-      /** Format: uuid */
-      id: string;
-      firstName: string;
-      lastName?: string | null;
-      /** @enum {string} */
-      status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
-      account: components["schemas"]["StudentAccountResponse"];
-      relation: components["schemas"]["StudentRelationResponse"];
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    StudentRelationResponse: {
-      /** @enum {string} */
-      type: "PRIMARY";
-      /** Format: date-time */
-      startedAt: string;
-    };
-    TeacherSubmissionPageResponse: {
-      items: components["schemas"]["TeacherSubmissionResponse"][];
-      /** Format: int32 */
-      page: number;
-      /** Format: int32 */
-      size: number;
-      /** Format: int64 */
-      totalElements: number;
-      /** Format: int32 */
-      totalPages: number;
-    };
-    LessonSessionPageResponse: {
-      items: components["schemas"]["LessonSessionSummaryResponse"][];
-      /** Format: int32 */
-      page: number;
-      /** Format: int32 */
-      size: number;
-      /** Format: int64 */
-      totalElements: number;
-      /** Format: int32 */
-      totalPages: number;
-    };
-    LessonSessionSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      /** Format: date-time */
-      startedAt: string;
-      /** Format: int32 */
-      durationMinutes: number;
-      /** @enum {string} */
-      attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
-      summary?: string | null;
-      topics: components["schemas"]["LessonSessionTopicResponse"][];
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      /** Format: int64 */
-      version: number;
-    };
-    AssessmentResponse: {
-      understandingAverage?: number | null;
-      independenceAverage?: number | null;
-      practiceAverage?: number | null;
-      homeworkAverage?: number | null;
-    };
-    /** @description Current learning progress for a student program */
-    CurrentProgressResponse: {
-      /** Format: uuid */
-      studentProgramId?: string;
-      /** Format: int64 */
-      totalLearningMinutes?: number;
-      /** Format: int64 */
-      sessionsCount?: number;
-      /**
-       * Format: double
-       * @description Attendance ratio in the 0..1 range
-       * @example 0.75
-       */
-      attendanceRate?: number;
-      /** Format: int32 */
-      totalTopics?: number;
-      topics?: components["schemas"]["TopicsResponse"];
-      homework?: components["schemas"]["HomeworkResponse"];
-      practice?: components["schemas"]["PracticeResponse"];
-      assessment?: components["schemas"]["AssessmentResponse"];
-    };
-    HomeworkResponse: {
-      /** Format: int64 */
-      assigned?: number;
-      /** Format: int64 */
-      completed?: number;
-    };
-    PracticeResponse: {
-      /** Format: int64 */
-      assigned?: number;
-      /** Format: int64 */
-      completed?: number;
-    };
-    TopicResponse: {
-      /** Format: uuid */
-      id?: string;
-      title?: string;
-      /** @enum {string} */
-      status?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED";
-    };
-    TopicsResponse: {
-      completed?: components["schemas"]["TopicResponse"][];
-      inProgress?: components["schemas"]["TopicResponse"][];
-    };
-    ProgressShareListResponse: {
-      items: components["schemas"]["ProgressShareSummaryResponse"][];
-    };
-    /** @enum {string} */
-    ProgressShareStatus: "ACTIVE" | "EXPIRED" | "REVOKED";
-    ProgressShareSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      status: components["schemas"]["ProgressShareStatus"];
-      /** Format: date-time */
-      expiresAt?: string | null;
-      /** Format: date-time */
-      revokedAt?: string | null;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    ProgramModuleResponse: {
-      /** Format: uuid */
-      id: string;
-      title: string;
-      description?: string | null;
-      /** Format: int32 */
-      position: number;
-      topics: components["schemas"]["ProgramTopicResponse"][];
-    };
-    ProgramTopicResponse: {
-      /** Format: uuid */
-      id: string;
-      title: string;
-      description?: string | null;
-      /** Format: int32 */
-      position: number;
-      /** @enum {string} */
-      topicStatus: "DRAFT" | "ACTIVE" | "ARCHIVED";
-      /** @enum {string|null} */
-      progressStatus?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED" | null;
-    };
-    StudentProgramDetailsResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      learningProgramId: string;
-      title: string;
-      description?: string | null;
-      /** @enum {string} */
-      status: "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
-      /** Format: int32 */
-      reportIntervalMinutes: number;
-      /** Format: date-time */
-      startedAt: string;
-      /** Format: date-time */
-      completedAt?: string | null;
-      subject: components["schemas"]["ProgramSubjectResponse"];
-      modules: components["schemas"]["ProgramModuleResponse"][];
-    };
-    StudentInviteListResponse: {
-      items: components["schemas"]["StudentInviteSummaryResponse"][];
-    };
-    StudentInviteSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: email */
-      email: string;
-      /** @enum {string} */
-      status: "ACTIVE" | "ACCEPTED" | "REVOKED" | "EXPIRED";
-      /** Format: date-time */
-      expiresAt: string;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    HomeworkPageResponse: {
-      items: components["schemas"]["HomeworkSummaryResponse"][];
-      /** Format: int32 */
-      page: number;
-      /** Format: int32 */
-      size: number;
-      /** Format: int64 */
-      totalElements: number;
-      /** Format: int32 */
-      totalPages: number;
-    };
-    HomeworkSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      title: string;
-      /** @enum {string} */
-      status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
-      /** Format: date-time */
-      assignedAt: string;
-      /** Format: date-time */
-      dueAt?: string | null;
-      overdue: boolean;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    ProgressReportPageResponse: {
-      items: components["schemas"]["ProgressReportSummaryResponse"][];
-      /** Format: int32 */
-      page: number;
-      /** Format: int32 */
-      size: number;
-      /** Format: int64 */
-      totalElements: number;
-      /** Format: int32 */
-      totalPages: number;
-    };
-    ProgressReportSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      /** Format: uuid */
-      learningPeriodId?: string | null;
-      /** @enum {string} */
-      status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-      /** Format: date-time */
-      periodStartedAt: string;
-      /** Format: date-time */
-      periodEndedAt: string;
-      /** Format: int32 */
-      learningMinutes: number;
-      /** Format: date-time */
-      publishedAt?: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    ReportShareListResponse: {
-      items?: components["schemas"]["ReportShareSummaryResponse"][];
-    };
-    /** @enum {string} */
-    ReportShareStatus: "ACTIVE" | "EXPIRED" | "REVOKED";
-    ReportShareSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      reportId: string;
-      status: components["schemas"]["ReportShareStatus"];
-      /** Format: date-time */
-      expiresAt?: string | null;
-      /** Format: date-time */
-      revokedAt?: string | null;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    StudentSubmissionPageResponse: {
-      items: components["schemas"]["StudentSubmissionResponse"][];
-      /** Format: int32 */
-      page: number;
-      /** Format: int32 */
-      size: number;
-      /** Format: int64 */
-      totalElements: number;
-      /** Format: int32 */
-      totalPages: number;
-    };
-    StudentHomeworkPageResponse: {
-      items: components["schemas"]["StudentHomeworkSummaryResponse"][];
-      /** Format: int32 */
-      page: number;
-      /** Format: int32 */
-      size: number;
-      /** Format: int64 */
-      totalElements: number;
-      /** Format: int32 */
-      totalPages: number;
-    };
-    StudentHomeworkSummaryResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      title: string;
-      /** @enum {string} */
-      status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
-      /** Format: date-time */
-      assignedAt: string;
-      /** Format: date-time */
-      dueAt?: string | null;
-      overdue: boolean;
-      /** Format: date-time */
-      completedAt?: string | null;
-      /** Format: int64 */
-      itemsCount: number;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    CodeExecutionResponse: {
-      language: components["schemas"]["ProgrammingLanguage"];
-      starterCode?: string | null;
-      executionEnabled: boolean;
-      /** Format: int32 */
-      timeLimitMs: number;
-      /** Format: int32 */
-      memoryLimitMb: number;
-    };
-    StudentHomeworkDetailsResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      studentProgramId: string;
-      title: string;
-      description?: string | null;
-      /** @enum {string} */
-      status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
-      /** Format: date-time */
-      assignedAt: string;
-      /** Format: date-time */
-      dueAt?: string | null;
-      overdue: boolean;
-      /** Format: date-time */
-      completedAt?: string | null;
-      items: components["schemas"]["StudentHomeworkItemResponse"][];
-    };
-    StudentHomeworkItemResponse: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      taskId: string;
-      /** Format: int32 */
-      position: number;
-      required: boolean;
-      passed: boolean;
-      /** @enum {string|null} */
-      latestSubmissionStatus?: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR" | null;
-      task: components["schemas"]["StudentTaskResponse"];
-    };
-    StudentTaskResponse: {
-      /** Format: uuid */
-      id: string;
-      title: string;
-      descriptionMarkdown: string;
-      /** @enum {string} */
-      taskType: "CODE" | "TEXT" | "SINGLE_CHOICE" | "MULTIPLE_CHOICE" | "FILE_UPLOAD";
-      /** @enum {string} */
-      difficulty: "EASY" | "MEDIUM" | "HARD";
-      codeExecution?: components["schemas"]["CodeExecutionResponse"];
-    };
-    PublicTeacherInvitationResponse: {
-      /** Format: email */
-      email?: string;
-      /** @enum {string} */
-      status?: "ACTIVE" | "ACCEPTED" | "REVOKED" | "EXPIRED";
-      /** Format: date-time */
-      expiresAt?: string;
-    };
-    PublicStudentInviteResponse: {
-      student: components["schemas"]["StudentName"];
-      teacher: components["schemas"]["TeacherName"];
-      /** Format: email */
-      email: string;
-      /** Format: date-time */
-      expiresAt: string;
-    };
-    StudentName: {
-      firstName: string;
-      lastName?: string | null;
-    };
-    TeacherName: {
-      displayName: string;
-    };
-    /** @description Public, read-only historical progress report */
-    PublicProgressReportResponse: {
-      /** Format: date-time */
-      periodStartedAt: string;
-      /** Format: date-time */
-      periodEndedAt: string;
-      /** Format: int32 */
-      learningMinutes: number;
-      snapshot: components["schemas"]["PublicProgressReportSnapshot"];
-      teacherSummary?: string | null;
-      nextPeriodPlan?: string | null;
-      /** Format: date-time */
-      publishedAt: string;
-    };
-    PublicProgressReportSnapshot: {
-      metrics?: components["schemas"]["Metrics"];
-      assessment?: components["schemas"]["Assessment"];
-      topics?: components["schemas"]["Topics"];
-      skills?: components["schemas"]["Skill"][];
-    };
-    RegistrationSettingsResponse: {
-      /** @enum {string} */
-      registrationMode?: "OPEN" | "INVITE_ONLY";
-    };
-    PublicAssessmentResponse: {
-      understandingAverage?: number | null;
-      independenceAverage?: number | null;
-      practiceAverage?: number | null;
-      homeworkAverage?: number | null;
-    };
-    /** @description Public, parent-safe live current progress */
-    PublicCurrentProgressResponse: {
-      /** Format: int64 */
-      totalLearningMinutes?: number;
-      /** Format: int64 */
-      sessionsCount?: number;
-      /**
-       * Format: double
-       * @description Attendance ratio in the 0..1 range
-       * @example 0.75
-       */
-      attendanceRate?: number;
-      topics?: components["schemas"]["PublicTopicsResponse"];
-      homework?: components["schemas"]["PublicHomeworkResponse"];
-      practice?: components["schemas"]["PublicPracticeResponse"];
-      assessment?: components["schemas"]["PublicAssessmentResponse"];
-    };
-    PublicHomeworkResponse: {
-      /** Format: int64 */
-      assigned?: number;
-      /** Format: int64 */
-      completed?: number;
-    };
-    PublicPracticeResponse: {
-      /** Format: int64 */
-      assigned?: number;
-      /** Format: int64 */
-      completed?: number;
-    };
-    PublicTopicResponse: {
-      title?: string;
-    };
-    PublicTopicsResponse: {
-      completed?: components["schemas"]["PublicTopicResponse"][];
-      inProgress?: components["schemas"]["PublicTopicResponse"][];
-    };
-    CsrfTokenResponse: {
-      token: string;
-      headerName: string;
-    };
-    TeacherInvitationListResponse: {
-      invitations?: components["schemas"]["TeacherInvitationSummaryResponse"][];
-    };
-    TeacherInvitationSummaryResponse: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: email */
-      email?: string;
-      /** @enum {string} */
-      status?: "ACTIVE" | "ACCEPTED" | "REVOKED" | "EXPIRED";
-      /** Format: date-time */
-      expiresAt?: string;
-      /** Format: date-time */
-      createdAt?: string;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    schemas: {
+        /**
+         * @description EXACT compares output verbatim. NORMALIZED will normalize line endings and trailing whitespace during execution.
+         * @enum {string}
+         */
+        ComparisonMode: "EXACT" | "NORMALIZED";
+        ReplaceTaskTestCasesRequest: {
+            items: components["schemas"]["TaskTestCaseRequest"][];
+        };
+        TaskTestCaseRequest: {
+            /** Format: uuid */
+            id?: string;
+            inputText?: string;
+            expectedOutput: string;
+            hidden: boolean;
+            comparisonMode: components["schemas"]["ComparisonMode"];
+            /** Format: int32 */
+            position: number;
+        };
+        ApiError: {
+            code: string;
+            message: string;
+            /** Format: date-time */
+            timestamp: string;
+            traceId: string;
+            details: components["schemas"]["ApiErrorDetail"][];
+        };
+        ApiErrorDetail: {
+            field: string;
+            message: string;
+        };
+        TaskTestCaseResponse: {
+            /** Format: uuid */
+            id: string;
+            inputText?: string;
+            expectedOutput: string;
+            hidden: boolean;
+            comparisonMode: components["schemas"]["ComparisonMode"];
+            /** Format: int32 */
+            position: number;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        TaskTestCasesResponse: {
+            items?: components["schemas"]["TaskTestCaseResponse"][];
+        };
+        UpdateProgrammingTaskConfigRequest: {
+            starterCode?: string;
+            executionEnabled: boolean;
+            /** Format: int32 */
+            timeLimitMs: number;
+            /** Format: int32 */
+            memoryLimitMb: number;
+        };
+        /**
+         * @description Programming language supported by CODE tasks
+         * @enum {string}
+         */
+        ProgrammingLanguage: "PYTHON";
+        ProgrammingTaskConfigResponse: {
+            language: components["schemas"]["ProgrammingLanguage"];
+            starterCode?: string;
+            executionEnabled: boolean;
+            /** Format: int32 */
+            timeLimitMs: number;
+            /** Format: int32 */
+            memoryLimitMb: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        SaveTeacherAssessmentRequest: {
+            /** Format: int32 */
+            understandingScore?: number | null;
+            /** Format: int32 */
+            independenceScore?: number | null;
+            /** Format: int32 */
+            practiceScore?: number | null;
+            /** Format: int32 */
+            homeworkScore?: number | null;
+            publicComment?: string | null;
+        };
+        TeacherAssessmentResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            lessonSessionId: string;
+            /** Format: int32 */
+            understandingScore?: number | null;
+            /** Format: int32 */
+            independenceScore?: number | null;
+            /** Format: int32 */
+            practiceScore?: number | null;
+            /** Format: int32 */
+            homeworkScore?: number | null;
+            publicComment?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AttachTaskToTopicRequest: {
+            /** Format: int32 */
+            position: number;
+            required: boolean;
+        };
+        TopicTaskResponse: {
+            /** Format: uuid */
+            topicId: string;
+            /** Format: uuid */
+            taskId: string;
+            /** Format: int32 */
+            position: number;
+            required: boolean;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        CreateLessonMaterialRequest: {
+            /** @enum {string} */
+            materialType: "MARKDOWN" | "TEXT" | "CODE_EXAMPLE" | "LINK";
+            title: string;
+            content?: string | null;
+            externalUrl?: string | null;
+            /** Format: int32 */
+            position: number;
+        };
+        LessonMaterialResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            topicId: string;
+            /** @enum {string} */
+            materialType: "MARKDOWN" | "TEXT" | "IMAGE" | "FILE" | "LINK" | "CODE_EXAMPLE";
+            title: string;
+            content?: string | null;
+            externalUrl?: string | null;
+            /** Format: int32 */
+            position: number;
+            /** Format: int64 */
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CreateTaskRequest: {
+            /** Format: uuid */
+            subjectId: string;
+            title: string;
+            descriptionMarkdown: string;
+            /** @enum {string} */
+            difficulty: "EASY" | "MEDIUM" | "HARD";
+            /**
+             * @description Defaults to TEXT when omitted
+             * @enum {string}
+             */
+            taskType?: "TEXT" | "CODE";
+            programmingConfig?: components["schemas"]["ProgrammingTaskConfigRequest"];
+            testCases?: components["schemas"]["TaskTestCaseRequest"][];
+        };
+        ProgrammingTaskConfigRequest: {
+            language: components["schemas"]["ProgrammingLanguage"];
+            starterCode?: string;
+            executionEnabled: boolean;
+            /** Format: int32 */
+            timeLimitMs: number;
+            /** Format: int32 */
+            memoryLimitMb: number;
+        };
+        TaskResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            subjectId: string;
+            title: string;
+            descriptionMarkdown: string;
+            /** @enum {string} */
+            taskType: "TEXT" | "CODE";
+            /** @enum {string} */
+            difficulty: "EASY" | "MEDIUM" | "HARD";
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+            /** Format: int64 */
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            programmingConfig?: components["schemas"]["ProgrammingTaskConfigResponse"];
+            testCases?: components["schemas"]["TaskTestCaseResponse"][];
+        };
+        CreateStudentRequest: {
+            /** @example Андрей */
+            firstName: string;
+            /** @example Иванов */
+            lastName?: string | null;
+        };
+        StudentSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            firstName: string;
+            lastName?: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
+            /** @enum {string} */
+            accountStatus: "UNREGISTERED" | "INVITED" | "REGISTERED";
+            /** Format: date-time */
+            createdAt: string;
+        };
+        CreateLessonSessionRequest: {
+            /** Format: uuid */
+            studentProgramId: string;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: int32 */
+            durationMinutes: number;
+            /** @enum {string} */
+            attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
+            summary?: string | null;
+            privateNotes?: string | null;
+            topics: components["schemas"]["LessonSessionTopicRequest"][];
+        };
+        LessonSessionTopicRequest: {
+            /** Format: uuid */
+            topicId: string;
+            /** @default false */
+            isPrimary: boolean;
+        };
+        LessonSessionDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: int32 */
+            durationMinutes: number;
+            /** @enum {string} */
+            attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
+            summary?: string | null;
+            privateNotes?: string | null;
+            topics: components["schemas"]["LessonSessionTopicResponse"][];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: int64 */
+            version: number;
+        };
+        LessonSessionTopicResponse: {
+            /** Format: uuid */
+            topicId: string;
+            isPrimary: boolean;
+        };
+        CreateProgressShareRequest: {
+            /** Format: uuid */
+            studentProgramId: string;
+            /** Format: date-time */
+            expiresAt?: string | null;
+        };
+        /** @description New progress share; the URL is returned only once */
+        ProgressShareCreatedResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            /** Format: date-time */
+            expiresAt?: string | null;
+            /** Format: uri */
+            shareUrl: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        AssignStudentProgramRequest: {
+            /** Format: uuid */
+            learningProgramId: string;
+            /**
+             * Format: int32
+             * @default 480
+             */
+            reportIntervalMinutes: number | null;
+        };
+        ProgramSubjectResponse: {
+            /** Format: uuid */
+            id: string;
+            code?: string | null;
+            name: string;
+        };
+        StudentProgramSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            learningProgramId: string;
+            title: string;
+            description?: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
+            /** Format: int32 */
+            reportIntervalMinutes: number;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            completedAt?: string | null;
+            subject: components["schemas"]["ProgramSubjectResponse"];
+        };
+        CreateStudentInviteRequest: {
+            /**
+             * Format: email
+             * @example student@example.com
+             */
+            email: string;
+        };
+        StudentInviteCreatedResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentId: string;
+            /** Format: email */
+            email: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** Format: uri */
+            inviteUrl: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        CreateHomeworkRequest: {
+            /** Format: uuid */
+            studentProgramId: string;
+            title: string;
+            description?: string | null;
+            /** Format: date-time */
+            dueAt?: string | null;
+            items: components["schemas"]["HomeworkItemRequest"][];
+        };
+        HomeworkItemRequest: {
+            /** Format: uuid */
+            taskId: string;
+            /** Format: int32 */
+            position: number;
+            required: boolean;
+        };
+        HomeworkDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            title: string;
+            description?: string | null;
+            /** @enum {string} */
+            status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
+            /** Format: date-time */
+            assignedAt: string;
+            /** Format: date-time */
+            dueAt?: string | null;
+            overdue: boolean;
+            /** Format: date-time */
+            completedAt?: string | null;
+            items: components["schemas"]["HomeworkItemResponse"][];
+            /** Format: int64 */
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        HomeworkItemResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            taskId: string;
+            taskTitle?: string | null;
+            /** Format: int32 */
+            position: number;
+            required: boolean;
+        };
+        CreateProgressReportRequest: {
+            /** Format: uuid */
+            studentProgramId: string;
+            /** Format: uuid */
+            learningPeriodId: string;
+        };
+        Assessment: {
+            understandingAverage?: number;
+            independenceAverage?: number;
+            practiceAverage?: number;
+            homeworkAverage?: number;
+        };
+        Metrics: {
+            /** Format: int32 */
+            learningMinutes?: number;
+            /** Format: int64 */
+            sessionsCount?: number;
+            /** Format: double */
+            attendanceRate?: number;
+            /** Format: int64 */
+            homeworkAssigned?: number;
+            /** Format: int64 */
+            homeworkCompleted?: number;
+            /** Format: int64 */
+            practiceAssigned?: number;
+            /** Format: int64 */
+            practiceCompleted?: number;
+        };
+        ProgressReportDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            /** Format: uuid */
+            learningPeriodId?: string | null;
+            /** @enum {string} */
+            status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+            /** Format: date-time */
+            periodStartedAt: string;
+            /** Format: date-time */
+            periodEndedAt: string;
+            /** Format: int32 */
+            learningMinutes: number;
+            /** Format: int32 */
+            snapshotSchemaVersion: number;
+            snapshot: components["schemas"]["ProgressReportSnapshotV1"];
+            teacherSummary?: string | null;
+            nextPeriodPlan?: string | null;
+            /** Format: date-time */
+            publishedAt?: string | null;
+            /** Format: int64 */
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ProgressReportSnapshotV1: {
+            metrics?: components["schemas"]["Metrics"];
+            assessment?: components["schemas"]["Assessment"];
+            topics?: components["schemas"]["Topics"];
+            skills?: components["schemas"]["Skill"][];
+        };
+        Skill: {
+            /** Format: uuid */
+            skillId?: string;
+            name?: string;
+            progress?: number;
+        };
+        Topic: {
+            /** Format: uuid */
+            id?: string;
+            title?: string;
+        };
+        Topics: {
+            completed?: components["schemas"]["Topic"][];
+            inProgress?: components["schemas"]["Topic"][];
+        };
+        CreateReportShareRequest: {
+            /** Format: date-time */
+            expiresAt?: string | null;
+        };
+        /** @description New report share; the URL is returned only once */
+        ReportShareCreatedResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            reportId: string;
+            /** Format: date-time */
+            expiresAt?: string | null;
+            /** Format: uri */
+            shareUrl: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        PublishProgressReportRequest: {
+            /** Format: int64 */
+            version: number;
+        };
+        CreateLearningProgramRequest: {
+            /** Format: uuid */
+            subjectId: string;
+            title: string;
+            description?: string | null;
+        };
+        LearningProgramSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            subject: components["schemas"]["ProgramSubjectResponse"];
+            title: string;
+            description?: string | null;
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        /** @description Student answer for a TEXT homework task */
+        SubmitTextAnswerRequest: {
+            /** Format: uuid */
+            homeworkItemId: string;
+            textAnswer: string;
+        };
+        CodeSubmissionExecutionResponse: {
+            /** @enum {string} */
+            status: "PENDING" | "RUNNING" | "PASSED" | "FAILED" | "TIMEOUT" | "RUNTIME_ERROR" | "SYSTEM_ERROR";
+            /** Format: int32 */
+            passedTests: number;
+            /** Format: int32 */
+            totalTests: number;
+            /** Format: int32 */
+            executionTimeMs?: number | null;
+            stdoutExcerpt?: string | null;
+            stderrExcerpt?: string | null;
+        };
+        StudentSubmissionResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            taskId: string;
+            /** Format: uuid */
+            homeworkItemId?: string | null;
+            /** Format: int32 */
+            attemptNo: number;
+            /** @enum {string} */
+            status: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
+            textAnswer?: string | null;
+            /** Format: date-time */
+            submittedAt: string;
+            /** @description Returned for an owned CODE submission detail */
+            sourceCode?: string | null;
+            execution?: components["schemas"]["CodeSubmissionExecutionResponse"];
+        };
+        /** @description Transient code run in an assigned homework item context */
+        RunCodeRequest: {
+            sourceCode: string;
+            /** Format: uuid */
+            homeworkItemId: string;
+        };
+        /**
+         * @description Outcome of isolated code execution
+         * @enum {string}
+         */
+        ExecutionStatus: "PASSED" | "FAILED" | "TIMEOUT" | "RUNTIME_ERROR" | "SYSTEM_ERROR";
+        /** @description Transient student-safe execution result */
+        RunCodeResponse: {
+            /** Format: uuid */
+            executionId: string;
+            status: components["schemas"]["ExecutionStatus"];
+            /** Format: int32 */
+            passedTests?: number;
+            /** Format: int32 */
+            totalTests?: number;
+            /** Format: int64 */
+            executionTimeMs?: number;
+            stdoutExcerpt?: string;
+            stderrExcerpt?: string;
+            tests?: components["schemas"]["StudentRunCodeTestResultResponse"][];
+        };
+        /** @description Student-safe test outcome without test content or process output */
+        StudentRunCodeTestResultResponse: {
+            /** Format: int32 */
+            position: number;
+            hidden: boolean;
+            passed: boolean;
+        };
+        /** @description Student source code for a CODE homework task */
+        SubmitCodeAnswerRequest: {
+            /** Format: uuid */
+            homeworkItemId: string;
+            sourceCode: string;
+        };
+        AcceptTeacherInvitationRequest: {
+            /** @example Егор */
+            displayName: string;
+            /**
+             * Format: password
+             * @example correct horse battery staple
+             */
+            password: string;
+        };
+        CurrentUserResponse: {
+            /** Format: uuid */
+            id: string;
+            /** @example teacher@example.com */
+            email: string;
+            /** @example Егор */
+            displayName: string;
+            roles: ("TEACHER" | "STUDENT" | "ADMIN")[];
+        };
+        AcceptStudentInviteRequest: {
+            /**
+             * Format: password
+             * @example correct horse battery staple
+             */
+            password: string;
+        };
+        TeacherRegistrationRequest: {
+            /** @example Егор */
+            displayName: string;
+            /**
+             * Format: email
+             * @example teacher@example.com
+             */
+            email: string;
+            /**
+             * Format: password
+             * @example correct horse battery staple
+             */
+            password: string;
+        };
+        LoginRequest: {
+            /**
+             * Format: email
+             * @example teacher@example.com
+             */
+            email: string;
+            /**
+             * Format: password
+             * @example correct horse battery staple
+             */
+            password: string;
+        };
+        CreateTeacherInvitationRequest: {
+            /**
+             * Format: email
+             * @example teacher@example.com
+             */
+            email: string;
+        };
+        TeacherInvitationCreatedResponse: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: email */
+            email?: string;
+            /** Format: date-time */
+            expiresAt?: string;
+            /** Format: uri */
+            invitationUrl?: string;
+            /** Format: date-time */
+            createdAt?: string;
+        };
+        UpdateLessonMaterialRequest: {
+            /** @enum {string} */
+            materialType: "MARKDOWN" | "TEXT" | "CODE_EXAMPLE" | "LINK";
+            title: string;
+            content?: string | null;
+            externalUrl?: string | null;
+            /** Format: int32 */
+            position: number;
+            /** Format: int64 */
+            version: number;
+        };
+        UpdateTaskRequest: {
+            title: string;
+            descriptionMarkdown: string;
+            /** @enum {string} */
+            difficulty: "EASY" | "MEDIUM" | "HARD";
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+            /** Format: int64 */
+            version: number;
+        };
+        UpdateStudentRequest: {
+            /** @example Андрей */
+            firstName?: string | null;
+            /** @example Петров */
+            lastName?: string | null;
+        };
+        UpdateStudentResponse: {
+            /** Format: uuid */
+            id: string;
+            firstName: string;
+            lastName?: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
+            /** @enum {string} */
+            accountStatus: "UNREGISTERED" | "INVITED" | "REGISTERED";
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ReviewTextSubmissionRequest: {
+            /** @enum {string} */
+            status: "PASSED" | "FAILED";
+        };
+        TeacherSubmissionResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentId: string;
+            /** Format: uuid */
+            taskId: string;
+            /** Format: uuid */
+            homeworkItemId?: string | null;
+            /** Format: int32 */
+            attemptNo: number;
+            /** @enum {string} */
+            status: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
+            textAnswer?: string | null;
+            /** Format: date-time */
+            submittedAt: string;
+        };
+        UpdateLessonSessionRequest: {
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: int32 */
+            durationMinutes: number;
+            /** @enum {string} */
+            attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
+            summary?: string | null;
+            privateNotes?: string | null;
+            /** Format: int64 */
+            version: number;
+            topics: components["schemas"]["LessonSessionTopicRequest"][];
+        };
+        UpdateHomeworkRequest: {
+            title: string;
+            description?: string | null;
+            /** Format: date-time */
+            dueAt?: string | null;
+            /** Format: int64 */
+            version: number;
+            items: components["schemas"]["HomeworkItemRequest"][];
+        };
+        UpdateProgressReportRequest: {
+            teacherSummary?: string | null;
+            nextPeriodPlan?: string | null;
+            /** Format: int64 */
+            version: number;
+        };
+        ChangeRegistrationModeRequest: {
+            /**
+             * @example INVITE_ONLY
+             * @enum {string}
+             */
+            mode: "OPEN" | "INVITE_ONLY";
+        };
+        PlatformSettingsResponse: {
+            /** @enum {string} */
+            registrationMode?: "OPEN" | "INVITE_ONLY";
+            /** Format: date-time */
+            updatedAt?: string;
+            /** Format: uuid */
+            updatedByAdminId?: string;
+        };
+        TaskPageResponse: {
+            items: components["schemas"]["TaskResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        SubjectSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            code?: string | null;
+            name: string;
+            description?: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "ARCHIVED";
+        };
+        StudentPageResponse: {
+            items: components["schemas"]["StudentSummaryResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        StudentAccountResponse: {
+            /** @enum {string} */
+            status: "UNREGISTERED" | "INVITED" | "REGISTERED";
+            email?: string | null;
+        };
+        StudentDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            firstName: string;
+            lastName?: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
+            account: components["schemas"]["StudentAccountResponse"];
+            relation: components["schemas"]["StudentRelationResponse"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        StudentRelationResponse: {
+            /** @enum {string} */
+            type: "PRIMARY";
+            /** Format: date-time */
+            startedAt: string;
+        };
+        TeacherSubmissionPageResponse: {
+            items: components["schemas"]["TeacherSubmissionResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        LessonSessionPageResponse: {
+            items: components["schemas"]["LessonSessionSummaryResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        LessonSessionSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: int32 */
+            durationMinutes: number;
+            /** @enum {string} */
+            attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
+            summary?: string | null;
+            topics: components["schemas"]["LessonSessionTopicResponse"][];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: int64 */
+            version: number;
+        };
+        AssessmentResponse: {
+            understandingAverage?: number | null;
+            independenceAverage?: number | null;
+            practiceAverage?: number | null;
+            homeworkAverage?: number | null;
+        };
+        /** @description Current learning progress for a student program */
+        CurrentProgressResponse: {
+            /** Format: uuid */
+            studentProgramId?: string;
+            /** Format: int64 */
+            totalLearningMinutes?: number;
+            /** Format: int64 */
+            sessionsCount?: number;
+            /**
+             * Format: double
+             * @description Attendance ratio in the 0..1 range
+             * @example 0.75
+             */
+            attendanceRate?: number;
+            /** Format: int32 */
+            totalTopics?: number;
+            topics?: components["schemas"]["TopicsResponse"];
+            homework?: components["schemas"]["HomeworkResponse"];
+            practice?: components["schemas"]["PracticeResponse"];
+            assessment?: components["schemas"]["AssessmentResponse"];
+        };
+        HomeworkResponse: {
+            /** Format: int64 */
+            assigned?: number;
+            /** Format: int64 */
+            completed?: number;
+        };
+        PracticeResponse: {
+            /** Format: int64 */
+            assigned?: number;
+            /** Format: int64 */
+            completed?: number;
+        };
+        TopicResponse: {
+            /** Format: uuid */
+            id?: string;
+            title?: string;
+            /** @enum {string} */
+            status?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED";
+        };
+        TopicsResponse: {
+            completed?: components["schemas"]["TopicResponse"][];
+            inProgress?: components["schemas"]["TopicResponse"][];
+        };
+        ProgressShareListResponse: {
+            items: components["schemas"]["ProgressShareSummaryResponse"][];
+        };
+        /** @enum {string} */
+        ProgressShareStatus: "ACTIVE" | "EXPIRED" | "REVOKED";
+        ProgressShareSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            status: components["schemas"]["ProgressShareStatus"];
+            /** Format: date-time */
+            expiresAt?: string | null;
+            /** Format: date-time */
+            revokedAt?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        ProgramModuleResponse: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description?: string | null;
+            /** Format: int32 */
+            position: number;
+            topics: components["schemas"]["ProgramTopicResponse"][];
+        };
+        ProgramTopicResponse: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description?: string | null;
+            /** Format: int32 */
+            position: number;
+            /** @enum {string} */
+            topicStatus: "DRAFT" | "ACTIVE" | "ARCHIVED";
+            /** @enum {string|null} */
+            progressStatus?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED" | null;
+        };
+        StudentProgramDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            learningProgramId: string;
+            title: string;
+            description?: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
+            /** Format: int32 */
+            reportIntervalMinutes: number;
+            /** Format: date-time */
+            startedAt: string;
+            /** Format: date-time */
+            completedAt?: string | null;
+            subject: components["schemas"]["ProgramSubjectResponse"];
+            modules: components["schemas"]["ProgramModuleResponse"][];
+        };
+        StudentInviteListResponse: {
+            items: components["schemas"]["StudentInviteSummaryResponse"][];
+        };
+        StudentInviteSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: email */
+            email: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "ACCEPTED" | "REVOKED" | "EXPIRED";
+            /** Format: date-time */
+            expiresAt: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        HomeworkPageResponse: {
+            items: components["schemas"]["HomeworkSummaryResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        HomeworkSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            title: string;
+            /** @enum {string} */
+            status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
+            /** Format: date-time */
+            assignedAt: string;
+            /** Format: date-time */
+            dueAt?: string | null;
+            overdue: boolean;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        ProgressReportPageResponse: {
+            items: components["schemas"]["ProgressReportSummaryResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        ProgressReportSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            /** Format: uuid */
+            learningPeriodId?: string | null;
+            /** @enum {string} */
+            status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+            /** Format: date-time */
+            periodStartedAt: string;
+            /** Format: date-time */
+            periodEndedAt: string;
+            /** Format: int32 */
+            learningMinutes: number;
+            /** Format: date-time */
+            publishedAt?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ReportShareListResponse: {
+            items?: components["schemas"]["ReportShareSummaryResponse"][];
+        };
+        /** @enum {string} */
+        ReportShareStatus: "ACTIVE" | "EXPIRED" | "REVOKED";
+        ReportShareSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            reportId: string;
+            status: components["schemas"]["ReportShareStatus"];
+            /** Format: date-time */
+            expiresAt?: string | null;
+            /** Format: date-time */
+            revokedAt?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        LearningProgramDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            subject: components["schemas"]["ProgramSubjectResponse"];
+            title: string;
+            description?: string | null;
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+            /** Format: int64 */
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            hasAssignments: boolean;
+            editable: boolean;
+            modules: components["schemas"]["LearningProgramModuleDetailsResponse"][];
+        };
+        LearningProgramModuleDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description?: string | null;
+            /** Format: int32 */
+            position: number;
+            topics: components["schemas"]["LearningProgramTopicDetailsResponse"][];
+        };
+        LearningProgramTopicDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description?: string | null;
+            /** Format: int32 */
+            position: number;
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+            /** Format: int64 */
+            version: number;
+        };
+        StudentSubmissionPageResponse: {
+            items: components["schemas"]["StudentSubmissionResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        StudentHomeworkPageResponse: {
+            items: components["schemas"]["StudentHomeworkSummaryResponse"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
+        StudentHomeworkSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            title: string;
+            /** @enum {string} */
+            status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
+            /** Format: date-time */
+            assignedAt: string;
+            /** Format: date-time */
+            dueAt?: string | null;
+            overdue: boolean;
+            /** Format: date-time */
+            completedAt?: string | null;
+            /** Format: int64 */
+            itemsCount: number;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        CodeExecutionResponse: {
+            language: components["schemas"]["ProgrammingLanguage"];
+            starterCode?: string | null;
+            executionEnabled: boolean;
+            /** Format: int32 */
+            timeLimitMs: number;
+            /** Format: int32 */
+            memoryLimitMb: number;
+        };
+        StudentHomeworkDetailsResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            studentProgramId: string;
+            title: string;
+            description?: string | null;
+            /** @enum {string} */
+            status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
+            /** Format: date-time */
+            assignedAt: string;
+            /** Format: date-time */
+            dueAt?: string | null;
+            overdue: boolean;
+            /** Format: date-time */
+            completedAt?: string | null;
+            items: components["schemas"]["StudentHomeworkItemResponse"][];
+        };
+        StudentHomeworkItemResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            taskId: string;
+            /** Format: int32 */
+            position: number;
+            required: boolean;
+            passed: boolean;
+            /** @enum {string|null} */
+            latestSubmissionStatus?: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR" | null;
+            task: components["schemas"]["StudentTaskResponse"];
+        };
+        StudentTaskResponse: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            descriptionMarkdown: string;
+            /** @enum {string} */
+            taskType: "CODE" | "TEXT" | "SINGLE_CHOICE" | "MULTIPLE_CHOICE" | "FILE_UPLOAD";
+            /** @enum {string} */
+            difficulty: "EASY" | "MEDIUM" | "HARD";
+            codeExecution?: components["schemas"]["CodeExecutionResponse"];
+        };
+        PublicTeacherInvitationResponse: {
+            /** Format: email */
+            email?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "ACCEPTED" | "REVOKED" | "EXPIRED";
+            /** Format: date-time */
+            expiresAt?: string;
+        };
+        PublicStudentInviteResponse: {
+            student: components["schemas"]["StudentName"];
+            teacher: components["schemas"]["TeacherName"];
+            /** Format: email */
+            email: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        StudentName: {
+            firstName: string;
+            lastName?: string | null;
+        };
+        TeacherName: {
+            displayName: string;
+        };
+        /** @description Public, read-only historical progress report */
+        PublicProgressReportResponse: {
+            /** Format: date-time */
+            periodStartedAt: string;
+            /** Format: date-time */
+            periodEndedAt: string;
+            /** Format: int32 */
+            learningMinutes: number;
+            snapshot: components["schemas"]["PublicProgressReportSnapshot"];
+            teacherSummary?: string | null;
+            nextPeriodPlan?: string | null;
+            /** Format: date-time */
+            publishedAt: string;
+        };
+        PublicProgressReportSnapshot: {
+            metrics?: components["schemas"]["Metrics"];
+            assessment?: components["schemas"]["Assessment"];
+            topics?: components["schemas"]["Topics"];
+            skills?: components["schemas"]["Skill"][];
+        };
+        RegistrationSettingsResponse: {
+            /** @enum {string} */
+            registrationMode?: "OPEN" | "INVITE_ONLY";
+        };
+        PublicAssessmentResponse: {
+            understandingAverage?: number | null;
+            independenceAverage?: number | null;
+            practiceAverage?: number | null;
+            homeworkAverage?: number | null;
+        };
+        /** @description Public, parent-safe live current progress */
+        PublicCurrentProgressResponse: {
+            /** Format: int64 */
+            totalLearningMinutes?: number;
+            /** Format: int64 */
+            sessionsCount?: number;
+            /**
+             * Format: double
+             * @description Attendance ratio in the 0..1 range
+             * @example 0.75
+             */
+            attendanceRate?: number;
+            topics?: components["schemas"]["PublicTopicsResponse"];
+            homework?: components["schemas"]["PublicHomeworkResponse"];
+            practice?: components["schemas"]["PublicPracticeResponse"];
+            assessment?: components["schemas"]["PublicAssessmentResponse"];
+        };
+        PublicHomeworkResponse: {
+            /** Format: int64 */
+            assigned?: number;
+            /** Format: int64 */
+            completed?: number;
+        };
+        PublicPracticeResponse: {
+            /** Format: int64 */
+            assigned?: number;
+            /** Format: int64 */
+            completed?: number;
+        };
+        PublicTopicResponse: {
+            title?: string;
+        };
+        PublicTopicsResponse: {
+            completed?: components["schemas"]["PublicTopicResponse"][];
+            inProgress?: components["schemas"]["PublicTopicResponse"][];
+        };
+        CsrfTokenResponse: {
+            token: string;
+            headerName: string;
+        };
+        TeacherInvitationListResponse: {
+            invitations?: components["schemas"]["TeacherInvitationSummaryResponse"][];
+        };
+        TeacherInvitationSummaryResponse: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: email */
+            email?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "ACCEPTED" | "REVOKED" | "EXPIRED";
+            /** Format: date-time */
+            expiresAt?: string;
+            /** Format: date-time */
+            createdAt?: string;
+        };
+    };
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  replaceTaskTestCases: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ReplaceTaskTestCasesRequest"];
-      };
-    };
-    responses: {
-      /** @description Test cases replaced */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TaskTestCasesResponse"];
-        };
-      };
-      /** @description Invalid test cases or task type */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  updateProgrammingTaskConfig: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateProgrammingTaskConfigRequest"];
-      };
-    };
-    responses: {
-      /** @description Configuration updated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProgrammingTaskConfigResponse"];
-        };
-      };
-      /** @description Invalid configuration or task type */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getTeacherAssessment: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        sessionId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Assessment details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TeacherAssessmentResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Lesson session or assessment not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  saveTeacherAssessment: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        sessionId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["SaveTeacherAssessmentRequest"];
-      };
-    };
-    responses: {
-      /** @description Assessment updated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TeacherAssessmentResponse"];
-        };
-      };
-      /** @description Assessment created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TeacherAssessmentResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Lesson session not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Concurrent assessment conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  attachTaskToTopic: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        topicId: string;
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AttachTaskToTopicRequest"];
-      };
-    };
-    responses: {
-      /** @description Task attached */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TopicTaskResponse"];
-        };
-      };
-      /** @description Validation or subject mismatch */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task or topic not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Attachment conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listLessonMaterials: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Topic identifier */
-        topicId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Lesson materials ordered by position */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"][];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Topic not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createLessonMaterial: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Topic identifier */
-        topicId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateLessonMaterialRequest"];
-      };
-    };
-    responses: {
-      /** @description Lesson material created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Topic not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Position conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  uploadLessonMaterial: {
-    parameters: {
-      query: {
-        materialType: "FILE" | "IMAGE";
-        title: string;
-        position: number;
-      };
-      header?: never;
-      path: {
-        topicId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: {
-      content: {
-        "multipart/form-data": {
-          /** Format: binary */
-          file: string;
-        };
-      };
-    };
-    responses: {
-      /** @description File and material created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description Invalid file or metadata */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description Teacher role and CSRF required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description Topic not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description Position conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description File too large */
-      413: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-    };
-  };
-  listTasks: {
-    parameters: {
-      query?: {
-        subjectId?: string;
-        status?: "DRAFT" | "ACTIVE" | "ARCHIVED";
-        difficulty?: "EASY" | "MEDIUM" | "HARD";
-        /**
-         * @description Zero-based page index
-         * @example 0
-         */
-        page?: number;
-        /**
-         * @description Page size from 1 to 100
-         * @example 20
-         */
-        size?: number;
-        /**
-         * @description Sort as field,direction
-         * @example createdAt,desc
-         */
-        sort?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Task page */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TaskPageResponse"];
-        };
-      };
-      /** @description Invalid list parameters */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createTask: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateTaskRequest"];
-      };
-    };
-    responses: {
-      /** @description Task created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TaskResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Subject not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listTeacherStudents: {
-    parameters: {
-      query?: {
-        page?: number;
-        size?: number;
-        query?: string;
-        accountStatus?: "UNREGISTERED" | "INVITED" | "REGISTERED";
-        sort?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student page */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentPageResponse"];
-        };
-      };
-      /** @description Invalid list parameters */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createStudent: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateStudentRequest"];
-      };
-    };
-    responses: {
-      /** @description Student created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentSummaryResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listLessonSessions: {
-    parameters: {
-      query?: {
-        /**
-         * @description Zero-based page index
-         * @example 0
-         */
-        page?: number;
-        /**
-         * @description Page size from 1 to 100
-         * @example 20
-         */
-        size?: number;
-        /**
-         * @description Sort as field,direction
-         * @example startedAt,desc
-         */
-        sort?: string;
-      };
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Lesson session page */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonSessionPageResponse"];
-        };
-      };
-      /** @description Invalid list parameters */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createLessonSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateLessonSessionRequest"];
-      };
-    };
-    responses: {
-      /** @description Lesson session created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonSessionDetailsResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listProgressShares: {
-    parameters: {
-      query?: {
-        /** @description Optional student-program filter */
-        studentProgramId?: string;
-      };
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Progress share metadata */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProgressShareListResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or student program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createProgressShare: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateProgressShareRequest"];
-      };
-    };
-    responses: {
-      /** @description Progress share created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProgressShareCreatedResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required or CSRF rejected */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or student program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listTeacherStudentPrograms: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student program summaries */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentProgramSummaryResponse"][];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  assignTeacherStudentProgram: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AssignStudentProgramRequest"];
-      };
-    };
-    responses: {
-      /** @description Student program assigned */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentProgramSummaryResponse"];
-        };
-      };
-      /** @description Invalid request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or learning program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Program cannot be assigned */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listStudentInvites: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Invitation list */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentInviteListResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createStudentInvite: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateStudentInviteRequest"];
-      };
-    };
-    responses: {
-      /** @description Invitation created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentInviteCreatedResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or email conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listHomeworks: {
-    parameters: {
-      query?: {
-        studentProgramId?: string;
-        status?: "ASSIGNED" | "COMPLETED" | "CANCELLED";
-        /**
-         * @description Zero-based page index
-         * @example 0
-         */
-        page?: number;
-        /**
-         * @description Page size from 1 to 100
-         * @example 20
-         */
-        size?: number;
-        /**
-         * @description Sort as field,direction
-         * @example assignedAt,desc
-         */
-        sort?: string;
-      };
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Homework page */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["HomeworkPageResponse"];
-        };
-      };
-      /** @description Invalid list parameters */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createHomework: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateHomeworkRequest"];
-      };
-    };
-    responses: {
-      /** @description Homework created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["HomeworkDetailsResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student, program, or task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  cancelHomework: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        homeworkId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Homework cancelled */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["HomeworkDetailsResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Homework not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listProgressReports: {
-    parameters: {
-      query?: {
-        studentProgramId?: string;
-        status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-        /**
-         * @description Zero-based page index
-         * @example 0
-         */
-        page?: number;
-        /**
-         * @description Page size from 1 to 100
-         * @example 20
-         */
-        size?: number;
-        /**
-         * @description Allow-listed field,direction
-         * @example createdAt,desc
-         */
-        sort?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Progress report page */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProgressReportPageResponse"];
-        };
-      };
-      /** @description Invalid pagination, filter, or sort */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createProgressReport: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateProgressReportRequest"];
-      };
-    };
-    responses: {
-      /** @description Draft created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProgressReportDetailsResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student program or learning period not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Report already exists or period is invalid */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listReportShares: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        reportId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Report-share metadata */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ReportShareListResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress report not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createReportShare: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        reportId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateReportShareRequest"];
-      };
-    };
-    responses: {
-      /** @description Report share created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ReportShareCreatedResponse"];
-        };
-      };
-      /** @description Expiration is invalid */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required or CSRF rejected */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress report not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress report is not published */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  publishProgressReport: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        reportId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["PublishProgressReportRequest"];
-      };
-    };
-    responses: {
-      /** @description Report published */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProgressReportDetailsResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress report not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Report is not publishable or version is stale */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listTeacherLearningPrograms: {
-    parameters: {
-      query?: {
-        status?: "DRAFT" | "ACTIVE" | "ARCHIVED";
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Learning program templates */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LearningProgramSummaryResponse"][];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  createTeacherLearningProgram: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateLearningProgramRequest"];
-      };
-    };
-    responses: {
-      /** @description Learning program created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LearningProgramSummaryResponse"];
-        };
-      };
-      /** @description Invalid request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Subject not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  activateTeacherLearningProgram: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        programId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Learning program activated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LearningProgramSummaryResponse"];
-        };
-      };
-      /** @description Learning program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invalid status transition */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listStudentTaskSubmissions: {
-    parameters: {
-      query?: {
-        /** @description Optional homework item context */
-        homeworkItemId?: string;
-        /**
-         * @description Zero-based page index
-         * @example 0
-         */
-        page?: number;
-        /**
-         * @description Page size from 1 to 100
-         * @example 20
-         */
-        size?: number;
-      };
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student submission page */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentSubmissionPageResponse"];
-        };
-      };
-      /** @description Invalid pagination or context */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task or homework item not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  submitTextAnswer: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["SubmitTextAnswerRequest"];
-      };
-    };
-    responses: {
-      /** @description TEXT submission created for teacher review */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentSubmissionResponse"];
-        };
-      };
-      /** @description Validation or submission context error */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student role or CSRF token required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task or homework item not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Homework does not accept submissions */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  runCode: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["RunCodeRequest"];
-      };
-    };
-    responses: {
-      /** @description Student-safe execution result */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["RunCodeResponse"];
-        };
-      };
-      /** @description Invalid request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student role and CSRF token required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task or execution context not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task cannot be executed */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  submitCodeAnswer: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["SubmitCodeAnswerRequest"];
-      };
-    };
-    responses: {
-      /** @description CODE submission created and executed */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentSubmissionResponse"];
-        };
-      };
-      /** @description Validation or submission context error */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student role or CSRF token required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task or homework item not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Homework does not accept submissions */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  acceptTeacherInvitation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AcceptTeacherInvitationRequest"];
-      };
-    };
-    responses: {
-      /** @description Teacher registered and authenticated */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CurrentUserResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invalid CSRF token */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invitation not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invitation unavailable or email registered */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  acceptStudentInvitation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AcceptStudentInviteRequest"];
-      };
-    };
-    responses: {
-      /** @description Invitation accepted and student authenticated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CurrentUserResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Missing or invalid CSRF token */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invitation not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or email conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invitation is expired, revoked, or accepted */
-      410: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  registerTeacher: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["TeacherRegistrationRequest"];
-      };
-    };
-    responses: {
-      /** @description Teacher registered */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CurrentUserResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Missing or invalid CSRF token */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Email already registered */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  logout: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Logged out */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Missing or invalid CSRF token */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  login: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LoginRequest"];
-      };
-    };
-    responses: {
-      /** @description Authenticated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CurrentUserResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invalid credentials */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Missing or invalid CSRF token */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listTeacherInvitations: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TeacherInvitationListResponse"];
-        };
-      };
-    };
-  };
-  createTeacherInvitation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateTeacherInvitationRequest"];
-      };
-    };
-    responses: {
-      /** @description Invitation created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TeacherInvitationCreatedResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Admin role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Email already registered */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getLessonMaterial: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Topic identifier */
-        topicId: string;
-        /** @description Lesson material identifier */
-        materialId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Lesson material details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Lesson material not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  updateLessonMaterial: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Topic identifier */
-        topicId: string;
-        /** @description Lesson material identifier */
-        materialId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateLessonMaterialRequest"];
-      };
-    };
-    responses: {
-      /** @description Lesson material updated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonMaterialResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Lesson material not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Position or version conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getTask: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Task details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TaskResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  updateTask: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateTaskRequest"];
-      };
-    };
-    responses: {
-      /** @description Task updated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TaskResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Version conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getStudent: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentDetailsResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  updateStudent: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateStudentRequest"];
-      };
-    };
-    responses: {
-      /** @description Student updated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["UpdateStudentResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  reviewTextSubmission: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        submissionId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ReviewTextSubmissionRequest"];
-      };
-    };
-    responses: {
-      /** @description Submission reviewed */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TeacherSubmissionResponse"];
-        };
-      };
-      /** @description Invalid review status */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role or CSRF token required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or submission not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Submission is not reviewable */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getLessonSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        sessionId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Lesson session details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonSessionDetailsResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Lesson session not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  updateLessonSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        sessionId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateLessonSessionRequest"];
-      };
-    };
-    responses: {
-      /** @description Lesson session updated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["LessonSessionDetailsResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Lesson session not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Version conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getHomework: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        homeworkId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Homework details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["HomeworkDetailsResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Homework not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  updateHomework: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        homeworkId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateHomeworkRequest"];
-      };
-    };
-    responses: {
-      /** @description Homework updated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["HomeworkDetailsResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Homework not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Version or item conflict */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getProgressReport: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        reportId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Progress report details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProgressReportDetailsResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress report not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  updateProgressReport: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        reportId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateProgressReportRequest"];
-      };
-    };
-    responses: {
-      /** @description Draft updated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProgressReportDetailsResponse"];
-        };
-      };
-      /** @description Validation failed */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress report not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Report is not editable or version is stale */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  changeRegistrationMode: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ChangeRegistrationModeRequest"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["PlatformSettingsResponse"];
-        };
-      };
-    };
-  };
-  downloadLessonMaterial: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        topicId: string;
-        materialId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Attachment content */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": string;
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": string;
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": string;
-        };
-      };
-      /** @description Lesson material not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": string;
-        };
-      };
-    };
-  };
-  listTeacherSubjects: {
-    parameters: {
-      query?: {
-        status?: "ACTIVE" | "ARCHIVED";
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Available subjects */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["SubjectSummaryResponse"][];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listTeacherStudentSubmissions: {
-    parameters: {
-      query?: {
-        status?: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
-        /**
-         * @description Zero-based page index
-         * @example 0
-         */
-        page?: number;
-        /**
-         * @description Page size from 1 to 100
-         * @example 20
-         */
-        size?: number;
-        /**
-         * @description Sort as submittedAt|attemptNo|status,asc|desc
-         * @example submittedAt,desc
-         */
-        sort?: string;
-      };
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Submission page */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["TeacherSubmissionPageResponse"];
-        };
-      };
-      /** @description Invalid pagination, filter, or sort */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getTeacherStudentProgress: {
-    parameters: {
-      query: {
-        /** @description Student program belonging to the requested student */
-        studentProgramId: string;
-      };
-      header?: never;
-      path: {
-        studentId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Current progress */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["CurrentProgressResponse"];
-        };
-      };
-      /** @description Missing or invalid student program id */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or student program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getTeacherStudentProgram: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        studentProgramId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student program details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentProgramDetailsResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or student program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  downloadProgressReportPdf: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        reportId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Progress report PDF */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/pdf": string;
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress report not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Only published reports can be exported */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description PDF generation failed */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getStudentSubmission: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        submissionId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student submission */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentSubmissionResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Submission not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getCurrentStudentProgress: {
-    parameters: {
-      query: {
-        /** @description Student program belonging to the current student */
-        studentProgramId: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Current progress */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["CurrentProgressResponse"];
-        };
-      };
-      /** @description Missing or invalid student program id */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or student program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  listStudentHomeworks: {
-    parameters: {
-      query?: {
-        /** @description Optional student program owned by the current student */
-        studentProgramId?: string;
-        status?: "ASSIGNED" | "COMPLETED" | "CANCELLED";
-        /**
-         * @description Zero-based page index
-         * @example 0
-         */
-        page?: number;
-        /**
-         * @description Page size from 1 to 100
-         * @example 20
-         */
-        size?: number;
-        /**
-         * @description Sort as field,direction
-         * @example assignedAt,desc
-         */
-        sort?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student homework page */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentHomeworkPageResponse"];
-        };
-      };
-      /** @description Invalid list parameters */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or student program not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getStudentHomework: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        homeworkId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student homework details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["StudentHomeworkDetailsResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Homework not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getPublicTeacherInvitation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Invitation details */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["PublicTeacherInvitationResponse"];
-        };
-      };
-      /** @description Invitation not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getPublicStudentInvitation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Invitation metadata */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PublicStudentInviteResponse"];
-        };
-      };
-      /** @description Invitation not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invitation is expired, revoked, or accepted */
-      410: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getPublicProgressReport: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Public historical progress report */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["PublicProgressReportResponse"];
-        };
-      };
-      /** @description Report share not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Report share expired or revoked */
-      410: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  downloadPublicProgressReportPdf: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Public progress report PDF */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/pdf": string;
-        };
-      };
-      /** @description Report share not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Report share expired or revoked */
-      410: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description PDF generation failed */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getPublicRegistrationSettings: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["RegistrationSettingsResponse"];
-        };
-      };
-    };
-  };
-  getPublicCurrentProgress: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Parent-safe live current progress */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["PublicCurrentProgressResponse"];
-        };
-      };
-      /** @description Progress share not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress share expired or revoked */
-      410: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getCurrentUser: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Current user */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CurrentUserResponse"];
-        };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getCsrfToken: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CsrfTokenResponse"];
-        };
-      };
-      /** @description Unexpected server failure */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  getAdminPlatformSettings: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["PlatformSettingsResponse"];
-        };
-      };
-    };
-  };
-  revokeProgressShare: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        shareId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Progress share revoked */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required or CSRF rejected */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or progress share not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  revokeStudentInvite: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        inviteId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Invitation revoked */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Student or invitation not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invitation already accepted */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  revokeReportShare: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        reportId: string;
-        shareId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Report share revoked */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Authentication required */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Teacher role required or CSRF rejected */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Progress report or share not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
-  revokeTeacherInvitation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        invitationId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Invitation revoked */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Invitation not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-      /** @description Invitation is not active */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ApiError"];
-        };
-      };
-    };
-  };
+    replaceTaskTestCases: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReplaceTaskTestCasesRequest"];
+            };
+        };
+        responses: {
+            /** @description Test cases replaced */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TaskTestCasesResponse"];
+                };
+            };
+            /** @description Invalid test cases or task type */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    updateProgrammingTaskConfig: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProgrammingTaskConfigRequest"];
+            };
+        };
+        responses: {
+            /** @description Configuration updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgrammingTaskConfigResponse"];
+                };
+            };
+            /** @description Invalid configuration or task type */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getTeacherAssessment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Assessment details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TeacherAssessmentResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Lesson session or assessment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    saveTeacherAssessment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveTeacherAssessmentRequest"];
+            };
+        };
+        responses: {
+            /** @description Assessment updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TeacherAssessmentResponse"];
+                };
+            };
+            /** @description Assessment created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TeacherAssessmentResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Lesson session not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Concurrent assessment conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    attachTaskToTopic: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                topicId: string;
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachTaskToTopicRequest"];
+            };
+        };
+        responses: {
+            /** @description Task attached */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TopicTaskResponse"];
+                };
+            };
+            /** @description Validation or subject mismatch */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task or topic not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Attachment conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listLessonMaterials: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Topic identifier */
+                topicId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lesson materials ordered by position */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"][];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Topic not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createLessonMaterial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Topic identifier */
+                topicId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLessonMaterialRequest"];
+            };
+        };
+        responses: {
+            /** @description Lesson material created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Topic not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Position conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    uploadLessonMaterial: {
+        parameters: {
+            query: {
+                materialType: "FILE" | "IMAGE";
+                title: string;
+                position: number;
+            };
+            header?: never;
+            path: {
+                topicId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description File and material created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description Invalid file or metadata */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description Teacher role and CSRF required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description Topic not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description Position conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description File too large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+        };
+    };
+    listTasks: {
+        parameters: {
+            query?: {
+                subjectId?: string;
+                status?: "DRAFT" | "ACTIVE" | "ARCHIVED";
+                difficulty?: "EASY" | "MEDIUM" | "HARD";
+                /**
+                 * @description Zero-based page index
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description Page size from 1 to 100
+                 * @example 20
+                 */
+                size?: number;
+                /**
+                 * @description Sort as field,direction
+                 * @example createdAt,desc
+                 */
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Task page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TaskPageResponse"];
+                };
+            };
+            /** @description Invalid list parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTaskRequest"];
+            };
+        };
+        responses: {
+            /** @description Task created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TaskResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Subject not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listTeacherStudents: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+                query?: string;
+                accountStatus?: "UNREGISTERED" | "INVITED" | "REGISTERED";
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentPageResponse"];
+                };
+            };
+            /** @description Invalid list parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createStudent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStudentRequest"];
+            };
+        };
+        responses: {
+            /** @description Student created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentSummaryResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listLessonSessions: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Zero-based page index
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description Page size from 1 to 100
+                 * @example 20
+                 */
+                size?: number;
+                /**
+                 * @description Sort as field,direction
+                 * @example startedAt,desc
+                 */
+                sort?: string;
+            };
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lesson session page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonSessionPageResponse"];
+                };
+            };
+            /** @description Invalid list parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createLessonSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLessonSessionRequest"];
+            };
+        };
+        responses: {
+            /** @description Lesson session created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonSessionDetailsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listProgressShares: {
+        parameters: {
+            query?: {
+                /** @description Optional student-program filter */
+                studentProgramId?: string;
+            };
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Progress share metadata */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressShareListResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or student program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createProgressShare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProgressShareRequest"];
+            };
+        };
+        responses: {
+            /** @description Progress share created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressShareCreatedResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required or CSRF rejected */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or student program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listTeacherStudentPrograms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student program summaries */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentProgramSummaryResponse"][];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    assignTeacherStudentProgram: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignStudentProgramRequest"];
+            };
+        };
+        responses: {
+            /** @description Student program assigned */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentProgramSummaryResponse"];
+                };
+            };
+            /** @description Invalid request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or learning program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Program cannot be assigned */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listStudentInvites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invitation list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentInviteListResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createStudentInvite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStudentInviteRequest"];
+            };
+        };
+        responses: {
+            /** @description Invitation created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentInviteCreatedResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or email conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listHomeworks: {
+        parameters: {
+            query?: {
+                studentProgramId?: string;
+                status?: "ASSIGNED" | "COMPLETED" | "CANCELLED";
+                /**
+                 * @description Zero-based page index
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description Page size from 1 to 100
+                 * @example 20
+                 */
+                size?: number;
+                /**
+                 * @description Sort as field,direction
+                 * @example assignedAt,desc
+                 */
+                sort?: string;
+            };
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Homework page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["HomeworkPageResponse"];
+                };
+            };
+            /** @description Invalid list parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createHomework: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateHomeworkRequest"];
+            };
+        };
+        responses: {
+            /** @description Homework created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["HomeworkDetailsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student, program, or task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    cancelHomework: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                homeworkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Homework cancelled */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["HomeworkDetailsResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Homework not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listProgressReports: {
+        parameters: {
+            query?: {
+                studentProgramId?: string;
+                status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+                /**
+                 * @description Zero-based page index
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description Page size from 1 to 100
+                 * @example 20
+                 */
+                size?: number;
+                /**
+                 * @description Allow-listed field,direction
+                 * @example createdAt,desc
+                 */
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Progress report page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressReportPageResponse"];
+                };
+            };
+            /** @description Invalid pagination, filter, or sort */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createProgressReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProgressReportRequest"];
+            };
+        };
+        responses: {
+            /** @description Draft created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressReportDetailsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student program or learning period not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Report already exists or period is invalid */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listReportShares: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Report-share metadata */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ReportShareListResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress report not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createReportShare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateReportShareRequest"];
+            };
+        };
+        responses: {
+            /** @description Report share created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ReportShareCreatedResponse"];
+                };
+            };
+            /** @description Expiration is invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required or CSRF rejected */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress report not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress report is not published */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    publishProgressReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublishProgressReportRequest"];
+            };
+        };
+        responses: {
+            /** @description Report published */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressReportDetailsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress report not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Report is not publishable or version is stale */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listTeacherLearningPrograms: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "ACTIVE" | "ARCHIVED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Learning program templates */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LearningProgramSummaryResponse"][];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createTeacherLearningProgram: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLearningProgramRequest"];
+            };
+        };
+        responses: {
+            /** @description Learning program created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LearningProgramSummaryResponse"];
+                };
+            };
+            /** @description Invalid request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Subject not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    activateTeacherLearningProgram: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                programId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Learning program activated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LearningProgramSummaryResponse"];
+                };
+            };
+            /** @description Learning program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invalid status transition */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listStudentTaskSubmissions: {
+        parameters: {
+            query?: {
+                /** @description Optional homework item context */
+                homeworkItemId?: string;
+                /**
+                 * @description Zero-based page index
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description Page size from 1 to 100
+                 * @example 20
+                 */
+                size?: number;
+            };
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student submission page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentSubmissionPageResponse"];
+                };
+            };
+            /** @description Invalid pagination or context */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task or homework item not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    submitTextAnswer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitTextAnswerRequest"];
+            };
+        };
+        responses: {
+            /** @description TEXT submission created for teacher review */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentSubmissionResponse"];
+                };
+            };
+            /** @description Validation or submission context error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student role or CSRF token required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task or homework item not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Homework does not accept submissions */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    runCode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RunCodeRequest"];
+            };
+        };
+        responses: {
+            /** @description Student-safe execution result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RunCodeResponse"];
+                };
+            };
+            /** @description Invalid request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student role and CSRF token required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task or execution context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task cannot be executed */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    submitCodeAnswer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitCodeAnswerRequest"];
+            };
+        };
+        responses: {
+            /** @description CODE submission created and executed */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentSubmissionResponse"];
+                };
+            };
+            /** @description Validation or submission context error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student role or CSRF token required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task or homework item not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Homework does not accept submissions */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    acceptTeacherInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AcceptTeacherInvitationRequest"];
+            };
+        };
+        responses: {
+            /** @description Teacher registered and authenticated */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CurrentUserResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invalid CSRF token */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invitation unavailable or email registered */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    acceptStudentInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AcceptStudentInviteRequest"];
+            };
+        };
+        responses: {
+            /** @description Invitation accepted and student authenticated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CurrentUserResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing or invalid CSRF token */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or email conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invitation is expired, revoked, or accepted */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    registerTeacher: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TeacherRegistrationRequest"];
+            };
+        };
+        responses: {
+            /** @description Teacher registered */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CurrentUserResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing or invalid CSRF token */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Email already registered */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Logged out */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid CSRF token */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Authenticated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CurrentUserResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invalid credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing or invalid CSRF token */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listTeacherInvitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TeacherInvitationListResponse"];
+                };
+            };
+        };
+    };
+    createTeacherInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTeacherInvitationRequest"];
+            };
+        };
+        responses: {
+            /** @description Invitation created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TeacherInvitationCreatedResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Admin role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Email already registered */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getLessonMaterial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Topic identifier */
+                topicId: string;
+                /** @description Lesson material identifier */
+                materialId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lesson material details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Lesson material not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    updateLessonMaterial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Topic identifier */
+                topicId: string;
+                /** @description Lesson material identifier */
+                materialId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLessonMaterialRequest"];
+            };
+        };
+        responses: {
+            /** @description Lesson material updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonMaterialResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Lesson material not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Position or version conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Task details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TaskResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    updateTask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTaskRequest"];
+            };
+        };
+        responses: {
+            /** @description Task updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TaskResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Version conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getStudent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentDetailsResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    updateStudent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStudentRequest"];
+            };
+        };
+        responses: {
+            /** @description Student updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateStudentResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    reviewTextSubmission: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                submissionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewTextSubmissionRequest"];
+            };
+        };
+        responses: {
+            /** @description Submission reviewed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TeacherSubmissionResponse"];
+                };
+            };
+            /** @description Invalid review status */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role or CSRF token required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or submission not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Submission is not reviewable */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getLessonSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lesson session details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonSessionDetailsResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Lesson session not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    updateLessonSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLessonSessionRequest"];
+            };
+        };
+        responses: {
+            /** @description Lesson session updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LessonSessionDetailsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Lesson session not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Version conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getHomework: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                homeworkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Homework details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["HomeworkDetailsResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Homework not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    updateHomework: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                homeworkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateHomeworkRequest"];
+            };
+        };
+        responses: {
+            /** @description Homework updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["HomeworkDetailsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Homework not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Version or item conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getProgressReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Progress report details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressReportDetailsResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress report not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    updateProgressReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProgressReportRequest"];
+            };
+        };
+        responses: {
+            /** @description Draft updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProgressReportDetailsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress report not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Report is not editable or version is stale */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    changeRegistrationMode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeRegistrationModeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PlatformSettingsResponse"];
+                };
+            };
+        };
+    };
+    downloadLessonMaterial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                topicId: string;
+                materialId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Attachment content */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+            /** @description Lesson material not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    listTeacherSubjects: {
+        parameters: {
+            query?: {
+                status?: "ACTIVE" | "ARCHIVED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Available subjects */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SubjectSummaryResponse"][];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listTeacherStudentSubmissions: {
+        parameters: {
+            query?: {
+                status?: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
+                /**
+                 * @description Zero-based page index
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description Page size from 1 to 100
+                 * @example 20
+                 */
+                size?: number;
+                /**
+                 * @description Sort as submittedAt|attemptNo|status,asc|desc
+                 * @example submittedAt,desc
+                 */
+                sort?: string;
+            };
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Submission page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TeacherSubmissionPageResponse"];
+                };
+            };
+            /** @description Invalid pagination, filter, or sort */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getTeacherStudentProgress: {
+        parameters: {
+            query: {
+                /** @description Student program belonging to the requested student */
+                studentProgramId: string;
+            };
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CurrentProgressResponse"];
+                };
+            };
+            /** @description Missing or invalid student program id */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or student program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getTeacherStudentProgram: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                studentProgramId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student program details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentProgramDetailsResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or student program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    downloadProgressReportPdf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reportId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Progress report PDF */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress report not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Only published reports can be exported */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description PDF generation failed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getTeacherLearningProgram: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                programId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Learning program template */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LearningProgramDetailsResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Learning program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getStudentSubmission: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                submissionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student submission */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentSubmissionResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Submission not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getCurrentStudentProgress: {
+        parameters: {
+            query: {
+                /** @description Student program belonging to the current student */
+                studentProgramId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CurrentProgressResponse"];
+                };
+            };
+            /** @description Missing or invalid student program id */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or student program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listStudentHomeworks: {
+        parameters: {
+            query?: {
+                /** @description Optional student program owned by the current student */
+                studentProgramId?: string;
+                status?: "ASSIGNED" | "COMPLETED" | "CANCELLED";
+                /**
+                 * @description Zero-based page index
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description Page size from 1 to 100
+                 * @example 20
+                 */
+                size?: number;
+                /**
+                 * @description Sort as field,direction
+                 * @example assignedAt,desc
+                 */
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student homework page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentHomeworkPageResponse"];
+                };
+            };
+            /** @description Invalid list parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or student program not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getStudentHomework: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                homeworkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student homework details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StudentHomeworkDetailsResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Homework not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getPublicTeacherInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invitation details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PublicTeacherInvitationResponse"];
+                };
+            };
+            /** @description Invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getPublicStudentInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invitation metadata */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicStudentInviteResponse"];
+                };
+            };
+            /** @description Invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invitation is expired, revoked, or accepted */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getPublicProgressReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Public historical progress report */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PublicProgressReportResponse"];
+                };
+            };
+            /** @description Report share not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Report share expired or revoked */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    downloadPublicProgressReportPdf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Public progress report PDF */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                };
+            };
+            /** @description Report share not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Report share expired or revoked */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description PDF generation failed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getPublicRegistrationSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RegistrationSettingsResponse"];
+                };
+            };
+        };
+    };
+    getPublicCurrentProgress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Parent-safe live current progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PublicCurrentProgressResponse"];
+                };
+            };
+            /** @description Progress share not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress share expired or revoked */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getCurrentUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current user */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CurrentUserResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getCsrfToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CsrfTokenResponse"];
+                };
+            };
+            /** @description Unexpected server failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getAdminPlatformSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PlatformSettingsResponse"];
+                };
+            };
+        };
+    };
+    revokeProgressShare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                shareId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Progress share revoked */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required or CSRF rejected */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or progress share not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    revokeStudentInvite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+                inviteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invitation revoked */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Student or invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invitation already accepted */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    revokeReportShare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reportId: string;
+                shareId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Report share revoked */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Teacher role required or CSRF rejected */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Progress report or share not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    revokeTeacherInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invitationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invitation revoked */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invitation is not active */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
 }

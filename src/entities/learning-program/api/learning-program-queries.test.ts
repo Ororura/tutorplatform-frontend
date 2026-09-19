@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getLearningPrograms } from "./learning-program-queries";
+import { getLearningProgram, getLearningPrograms } from "./learning-program-queries";
 
 const mocks = vi.hoisted(() => ({
   get: vi.fn(),
@@ -40,6 +40,18 @@ describe("getLearningPrograms", () => {
       params: {
         query: {
           status: "ACTIVE",
+        },
+      },
+    });
+  });
+
+  it("loads a teacher program by id", async () => {
+    await getLearningProgram("program-1");
+
+    expect(mocks.get).toHaveBeenCalledWith("/api/v1/teacher/programs/{programId}", {
+      params: {
+        path: {
+          programId: "program-1",
         },
       },
     });

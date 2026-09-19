@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { Archive, BookOpenText, CheckCircle2, FilePenLine } from "lucide-react";
+import Link from "next/link";
 
 import { type LearningProgramStatus, learningProgramQueries } from "@/entities/learning-program";
 import { ActivateLearningProgramButton } from "@/features/program/activate";
@@ -106,8 +107,14 @@ export function TeacherProgramsView() {
                   return (
                     <article
                       key={program.id}
-                      className="group flex min-h-56 flex-col rounded-[22px] border border-slate-200/80 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_35px_rgba(45,79,135,0.08)]"
+                      className="group relative flex min-h-56 flex-col rounded-[22px] border border-slate-200/80 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_35px_rgba(45,79,135,0.08)]"
                     >
+                      <Link
+                        className="absolute inset-0 rounded-[22px] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        href={`/teacher/programs/${program.id}`}
+                        aria-label={`Открыть программу: ${program.title}`}
+                      />
+
                       <div className="flex items-start justify-between gap-4">
                         <span className="flex size-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
                           <BookOpenText size={20} />
@@ -143,7 +150,7 @@ export function TeacherProgramsView() {
                       </div>
 
                       {program.status === "DRAFT" && (
-                        <div className="mt-5 border-t border-slate-100 pt-4">
+                        <div className="relative z-10 mt-5 border-t border-slate-100 pt-4">
                           <ActivateLearningProgramButton programId={program.id} />
                         </div>
                       )}
