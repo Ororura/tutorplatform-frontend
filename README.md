@@ -24,7 +24,7 @@ npm run dev
 The only frontend environment variables are:
 
 - `BACKEND_INTERNAL_URL` — server-side rewrite target; defaults to `http://localhost:8080`.
-- `NEXT_PUBLIC_DEMO_MODE` — set to `true` to show demo form-fill buttons in development. The
+- `DEMO_MODE` — set to `true` at container runtime to show demo form-fill buttons. The
   helper never renders in production and never logs in automatically.
 
 Demo users:

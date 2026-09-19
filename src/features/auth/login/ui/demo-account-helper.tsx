@@ -1,4 +1,5 @@
 import { Button } from "@/shared/ui/button";
+import { useDemoMode } from "@/shared/config";
 
 export type DemoCredentials = { email: string; password: string };
 
@@ -8,12 +9,8 @@ const demoAccounts: ReadonlyArray<DemoCredentials & { label: string }> = [
   { label: "Demo Student Maria", email: "maria.demo@tutor.local", password: "DemoStudent123!" },
 ];
 
-export function isDemoMode(nodeEnv = process.env.NODE_ENV, enabled = process.env.NEXT_PUBLIC_DEMO_MODE): boolean {
-  return nodeEnv !== "production" && enabled === "true";
-}
-
 export function DemoAccountHelper({ onSelect }: Readonly<{ onSelect: (credentials: DemoCredentials) => void }>) {
-  if (!isDemoMode()) {
+  if (!useDemoMode()) {
     return null;
   }
 
