@@ -126,6 +126,46 @@ describe("apiTransport", () => {
     expect(fetchMock).toHaveBeenCalledTimes(3);
   });
 
+  it("resets CSRF after accepting a teacher invitation", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        Response.json({
+          token: "anonymous-token",
+          headerName: "X-XSRF-TOKEN",
+        }),
+      )
+      .mockResolvedValueOnce(
+        Response.json(
+          {
+            id: "teacher-id",
+            roles: ["TEACHER"],
+          },
+          { status: 201 },
+        ),
+      )
+      .mockResolvedValueOnce(
+        Response.json({
+          token: "authenticated-token",
+          headerName: "X-XSRF-TOKEN",
+        }),
+      );
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    await apiTransport(
+      new Request("http://localhost/api/v1/public/teacher-invitations/test-token/accept", {
+        method: "POST",
+      }),
+    );
+
+    await expect(getCsrfToken()).resolves.toMatchObject({
+      token: "authenticated-token",
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
   it("notifies the app for an expired protected request but not auth discovery or login", async () => {
     const onUnauthorized = vi.fn();
     const fetchMock = vi
