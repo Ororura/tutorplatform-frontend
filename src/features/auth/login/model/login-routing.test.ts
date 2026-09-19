@@ -18,6 +18,21 @@ describe("getPostLoginRoute", () => {
     expect(getPostLoginRoute(student, null)).toBe("/student");
   });
 
+  it("routes ADMIN to /admin", () => {
+    const admin: CurrentUser = {
+      ...teacher,
+      roles: ["ADMIN", "TEACHER"],
+    };
+
+    expect(getPostLoginRoute(admin, null)).toBe("/admin");
+
+    expect(getPostLoginRoute(admin, "/admin/settings")).toBe("/admin/settings");
+
+    expect(getPostLoginRoute(admin, "/teacher/students")).toBe("/teacher/students");
+
+    expect(getPostLoginRoute(admin, "/student")).toBe("/admin");
+  });
+
   it("keeps only a requested path inside the authenticated role area", () => {
     expect(getPostLoginRoute(teacher, "/teacher/students")).toBe("/teacher/students");
     expect(getPostLoginRoute(student, "/teacher/students")).toBe("/student");

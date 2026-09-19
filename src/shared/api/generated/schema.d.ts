@@ -391,6 +391,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/public/teacher-invitations/{token}/accept": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Register a teacher using an invitation */
+    post: operations["acceptTeacherInvitation"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/public/student-invitations/{token}/accept": {
     parameters: {
       query?: never;
@@ -453,6 +470,24 @@ export interface paths {
     put?: never;
     /** Log in with email and password */
     post: operations["login"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/admin/teacher-invitations": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List teacher registration invitations */
+    get: operations["listTeacherInvitations"];
+    put?: never;
+    /** Create a teacher registration invitation */
+    post: operations["createTeacherInvitation"];
     delete?: never;
     options?: never;
     head?: never;
@@ -582,6 +617,23 @@ export interface paths {
     head?: never;
     /** Edit draft report text */
     patch: operations["updateProgressReport"];
+    trace?: never;
+  };
+  "/api/v1/admin/settings/registration": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Change platform registration mode */
+    patch: operations["changeRegistrationMode"];
     trace?: never;
   };
   "/api/v1/teacher/topics/{topicId}/materials/{materialId}/download": {
@@ -754,6 +806,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/public/teacher-invitations/{token}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get teacher registration invitation */
+    get: operations["getPublicTeacherInvitation"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/public/student-invitations/{token}": {
     parameters: {
       query?: never;
@@ -797,6 +866,23 @@ export interface paths {
     };
     /** Download a shared published progress report as PDF */
     get: operations["downloadPublicProgressReportPdf"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/public/registration-settings": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get public registration settings */
+    get: operations["getPublicRegistrationSettings"];
     put?: never;
     post?: never;
     delete?: never;
@@ -856,6 +942,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/admin/settings": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get platform settings */
+    get: operations["getAdminPlatformSettings"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/teacher/students/{studentId}/progress/shares/{shareId}": {
     parameters: {
       query?: never;
@@ -902,6 +1005,23 @@ export interface paths {
     post?: never;
     /** Revoke a report share */
     delete: operations["revokeReportShare"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/admin/teacher-invitations/{invitationId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Revoke a teacher registration invitation */
+    delete: operations["revokeTeacherInvitation"];
     options?: never;
     head?: never;
     patch?: never;
@@ -984,14 +1104,14 @@ export interface components {
     };
     SaveTeacherAssessmentRequest: {
       /** Format: int32 */
-      understandingScore?: number;
+      understandingScore?: number | null;
       /** Format: int32 */
-      independenceScore?: number;
+      independenceScore?: number | null;
       /** Format: int32 */
-      practiceScore?: number;
+      practiceScore?: number | null;
       /** Format: int32 */
-      homeworkScore?: number;
-      publicComment?: string;
+      homeworkScore?: number | null;
+      publicComment?: string | null;
     };
     TeacherAssessmentResponse: {
       /** Format: uuid */
@@ -999,14 +1119,14 @@ export interface components {
       /** Format: uuid */
       lessonSessionId: string;
       /** Format: int32 */
-      understandingScore?: number;
+      understandingScore?: number | null;
       /** Format: int32 */
-      independenceScore?: number;
+      independenceScore?: number | null;
       /** Format: int32 */
-      practiceScore?: number;
+      practiceScore?: number | null;
       /** Format: int32 */
-      homeworkScore?: number;
-      publicComment?: string;
+      homeworkScore?: number | null;
+      publicComment?: string | null;
       /** Format: date-time */
       createdAt: string;
       /** Format: date-time */
@@ -1032,8 +1152,8 @@ export interface components {
       /** @enum {string} */
       materialType: "MARKDOWN" | "TEXT" | "CODE_EXAMPLE" | "LINK";
       title: string;
-      content?: string;
-      externalUrl?: string;
+      content?: string | null;
+      externalUrl?: string | null;
       /** Format: int32 */
       position: number;
     };
@@ -1045,8 +1165,8 @@ export interface components {
       /** @enum {string} */
       materialType: "MARKDOWN" | "TEXT" | "IMAGE" | "FILE" | "LINK" | "CODE_EXAMPLE";
       title: string;
-      content?: string;
-      externalUrl?: string;
+      content?: string | null;
+      externalUrl?: string | null;
       /** Format: int32 */
       position: number;
       /** Format: int64 */
@@ -1106,13 +1226,13 @@ export interface components {
       /** @example Андрей */
       firstName: string;
       /** @example Иванов */
-      lastName?: string;
+      lastName?: string | null;
     };
     StudentSummaryResponse: {
       /** Format: uuid */
       id: string;
       firstName: string;
-      lastName?: string;
+      lastName?: string | null;
       /** @enum {string} */
       status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
       /** @enum {string} */
@@ -1129,8 +1249,8 @@ export interface components {
       durationMinutes: number;
       /** @enum {string} */
       attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
-      summary?: string;
-      privateNotes?: string;
+      summary?: string | null;
+      privateNotes?: string | null;
       topics: components["schemas"]["LessonSessionTopicRequest"][];
     };
     LessonSessionTopicRequest: {
@@ -1150,8 +1270,8 @@ export interface components {
       durationMinutes: number;
       /** @enum {string} */
       attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
-      summary?: string;
-      privateNotes?: string;
+      summary?: string | null;
+      privateNotes?: string | null;
       topics: components["schemas"]["LessonSessionTopicResponse"][];
       /** Format: date-time */
       createdAt: string;
@@ -1191,12 +1311,12 @@ export interface components {
        * Format: int32
        * @default 480
        */
-      reportIntervalMinutes: number;
+      reportIntervalMinutes: number | null;
     };
     ProgramSubjectResponse: {
       /** Format: uuid */
       id: string;
-      code?: string;
+      code?: string | null;
       name: string;
     };
     StudentProgramSummaryResponse: {
@@ -1205,7 +1325,7 @@ export interface components {
       /** Format: uuid */
       learningProgramId: string;
       title: string;
-      description?: string;
+      description?: string | null;
       /** @enum {string} */
       status: "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
       /** Format: int32 */
@@ -1213,7 +1333,7 @@ export interface components {
       /** Format: date-time */
       startedAt: string;
       /** Format: date-time */
-      completedAt?: string;
+      completedAt?: string | null;
       subject: components["schemas"]["ProgramSubjectResponse"];
     };
     CreateStudentInviteRequest: {
@@ -1241,9 +1361,9 @@ export interface components {
       /** Format: uuid */
       studentProgramId: string;
       title: string;
-      description?: string;
+      description?: string | null;
       /** Format: date-time */
-      dueAt?: string;
+      dueAt?: string | null;
       items: components["schemas"]["HomeworkItemRequest"][];
     };
     HomeworkItemRequest: {
@@ -1259,16 +1379,16 @@ export interface components {
       /** Format: uuid */
       studentProgramId: string;
       title: string;
-      description?: string;
+      description?: string | null;
       /** @enum {string} */
       status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
       /** Format: date-time */
       assignedAt: string;
       /** Format: date-time */
-      dueAt?: string;
+      dueAt?: string | null;
       overdue: boolean;
       /** Format: date-time */
-      completedAt?: string;
+      completedAt?: string | null;
       items: components["schemas"]["HomeworkItemResponse"][];
       /** Format: int64 */
       version: number;
@@ -1282,7 +1402,7 @@ export interface components {
       id: string;
       /** Format: uuid */
       taskId: string;
-      taskTitle?: string;
+      taskTitle?: string | null;
       /** Format: int32 */
       position: number;
       required: boolean;
@@ -1321,7 +1441,7 @@ export interface components {
       /** Format: uuid */
       studentProgramId: string;
       /** Format: uuid */
-      learningPeriodId?: string;
+      learningPeriodId?: string | null;
       /** @enum {string} */
       status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
       /** Format: date-time */
@@ -1333,10 +1453,10 @@ export interface components {
       /** Format: int32 */
       snapshotSchemaVersion: number;
       snapshot: components["schemas"]["ProgressReportSnapshotV1"];
-      teacherSummary?: string;
-      nextPeriodPlan?: string;
+      teacherSummary?: string | null;
+      nextPeriodPlan?: string | null;
       /** Format: date-time */
-      publishedAt?: string;
+      publishedAt?: string | null;
       /** Format: int64 */
       version: number;
       /** Format: date-time */
@@ -1390,14 +1510,14 @@ export interface components {
       /** Format: uuid */
       subjectId: string;
       title: string;
-      description?: string;
+      description?: string | null;
     };
     LearningProgramSummaryResponse: {
       /** Format: uuid */
       id: string;
       subject: components["schemas"]["ProgramSubjectResponse"];
       title: string;
-      description?: string;
+      description?: string | null;
       /** @enum {string} */
       status: "DRAFT" | "ACTIVE" | "ARCHIVED";
       /** Format: date-time */
@@ -1419,9 +1539,9 @@ export interface components {
       /** Format: int32 */
       totalTests: number;
       /** Format: int32 */
-      executionTimeMs?: number;
-      stdoutExcerpt?: string;
-      stderrExcerpt?: string;
+      executionTimeMs?: number | null;
+      stdoutExcerpt?: string | null;
+      stderrExcerpt?: string | null;
     };
     StudentSubmissionResponse: {
       /** Format: uuid */
@@ -1429,16 +1549,16 @@ export interface components {
       /** Format: uuid */
       taskId: string;
       /** Format: uuid */
-      homeworkItemId?: string;
+      homeworkItemId?: string | null;
       /** Format: int32 */
       attemptNo: number;
       /** @enum {string} */
       status: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
-      textAnswer?: string;
+      textAnswer?: string | null;
       /** Format: date-time */
       submittedAt: string;
       /** @description Returned for an owned CODE submission detail */
-      sourceCode?: string;
+      sourceCode?: string | null;
       execution?: components["schemas"]["CodeSubmissionExecutionResponse"];
     };
     /** @description Transient code run in an assigned homework item context */
@@ -1480,7 +1600,9 @@ export interface components {
       homeworkItemId: string;
       sourceCode: string;
     };
-    AcceptStudentInviteRequest: {
+    AcceptTeacherInvitationRequest: {
+      /** @example Егор */
+      displayName: string;
       /**
        * Format: password
        * @example correct horse battery staple
@@ -1494,7 +1616,14 @@ export interface components {
       email: string;
       /** @example Егор */
       displayName: string;
-      roles: ("TEACHER" | "STUDENT")[];
+      roles: ("TEACHER" | "STUDENT" | "ADMIN")[];
+    };
+    AcceptStudentInviteRequest: {
+      /**
+       * Format: password
+       * @example correct horse battery staple
+       */
+      password: string;
     };
     TeacherRegistrationRequest: {
       /** @example Егор */
@@ -1522,12 +1651,31 @@ export interface components {
        */
       password: string;
     };
+    CreateTeacherInvitationRequest: {
+      /**
+       * Format: email
+       * @example teacher@example.com
+       */
+      email: string;
+    };
+    TeacherInvitationCreatedResponse: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: email */
+      email?: string;
+      /** Format: date-time */
+      expiresAt?: string;
+      /** Format: uri */
+      invitationUrl?: string;
+      /** Format: date-time */
+      createdAt?: string;
+    };
     UpdateLessonMaterialRequest: {
       /** @enum {string} */
       materialType: "MARKDOWN" | "TEXT" | "CODE_EXAMPLE" | "LINK";
       title: string;
-      content?: string;
-      externalUrl?: string;
+      content?: string | null;
+      externalUrl?: string | null;
       /** Format: int32 */
       position: number;
       /** Format: int64 */
@@ -1545,15 +1693,15 @@ export interface components {
     };
     UpdateStudentRequest: {
       /** @example Андрей */
-      firstName?: string;
+      firstName?: string | null;
       /** @example Петров */
-      lastName?: string;
+      lastName?: string | null;
     };
     UpdateStudentResponse: {
       /** Format: uuid */
       id: string;
       firstName: string;
-      lastName?: string;
+      lastName?: string | null;
       /** @enum {string} */
       status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
       /** @enum {string} */
@@ -1573,12 +1721,12 @@ export interface components {
       /** Format: uuid */
       taskId: string;
       /** Format: uuid */
-      homeworkItemId?: string;
+      homeworkItemId?: string | null;
       /** Format: int32 */
       attemptNo: number;
       /** @enum {string} */
       status: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
-      textAnswer?: string;
+      textAnswer?: string | null;
       /** Format: date-time */
       submittedAt: string;
     };
@@ -1589,26 +1737,41 @@ export interface components {
       durationMinutes: number;
       /** @enum {string} */
       attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
-      summary?: string;
-      privateNotes?: string;
+      summary?: string | null;
+      privateNotes?: string | null;
       /** Format: int64 */
       version: number;
       topics: components["schemas"]["LessonSessionTopicRequest"][];
     };
     UpdateHomeworkRequest: {
       title: string;
-      description?: string;
+      description?: string | null;
       /** Format: date-time */
-      dueAt?: string;
+      dueAt?: string | null;
       /** Format: int64 */
       version: number;
       items: components["schemas"]["HomeworkItemRequest"][];
     };
     UpdateProgressReportRequest: {
-      teacherSummary?: string;
-      nextPeriodPlan?: string;
+      teacherSummary?: string | null;
+      nextPeriodPlan?: string | null;
       /** Format: int64 */
       version: number;
+    };
+    ChangeRegistrationModeRequest: {
+      /**
+       * @example INVITE_ONLY
+       * @enum {string}
+       */
+      mode: "OPEN" | "INVITE_ONLY";
+    };
+    PlatformSettingsResponse: {
+      /** @enum {string} */
+      registrationMode?: "OPEN" | "INVITE_ONLY";
+      /** Format: date-time */
+      updatedAt?: string;
+      /** Format: uuid */
+      updatedByAdminId?: string;
     };
     TaskPageResponse: {
       items: components["schemas"]["TaskResponse"][];
@@ -1624,9 +1787,9 @@ export interface components {
     SubjectSummaryResponse: {
       /** Format: uuid */
       id: string;
-      code?: string;
+      code?: string | null;
       name: string;
-      description?: string;
+      description?: string | null;
       /** @enum {string} */
       status: "ACTIVE" | "ARCHIVED";
     };
@@ -1644,13 +1807,13 @@ export interface components {
     StudentAccountResponse: {
       /** @enum {string} */
       status: "UNREGISTERED" | "INVITED" | "REGISTERED";
-      email?: string;
+      email?: string | null;
     };
     StudentDetailsResponse: {
       /** Format: uuid */
       id: string;
       firstName: string;
-      lastName?: string;
+      lastName?: string | null;
       /** @enum {string} */
       status: "ACTIVE" | "INACTIVE" | "ARCHIVED";
       account: components["schemas"]["StudentAccountResponse"];
@@ -1699,7 +1862,7 @@ export interface components {
       durationMinutes: number;
       /** @enum {string} */
       attendanceStatus: "ATTENDED" | "MISSED" | "CANCELLED";
-      summary?: string;
+      summary?: string | null;
       topics: components["schemas"]["LessonSessionTopicResponse"][];
       /** Format: date-time */
       createdAt: string;
@@ -1780,7 +1943,7 @@ export interface components {
       /** Format: uuid */
       id: string;
       title: string;
-      description?: string;
+      description?: string | null;
       /** Format: int32 */
       position: number;
       topics: components["schemas"]["ProgramTopicResponse"][];
@@ -1789,13 +1952,13 @@ export interface components {
       /** Format: uuid */
       id: string;
       title: string;
-      description?: string;
+      description?: string | null;
       /** Format: int32 */
       position: number;
       /** @enum {string} */
       topicStatus: "DRAFT" | "ACTIVE" | "ARCHIVED";
-      /** @enum {string} */
-      progressStatus?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED";
+      /** @enum {string|null} */
+      progressStatus?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED" | null;
     };
     StudentProgramDetailsResponse: {
       /** Format: uuid */
@@ -1803,7 +1966,7 @@ export interface components {
       /** Format: uuid */
       learningProgramId: string;
       title: string;
-      description?: string;
+      description?: string | null;
       /** @enum {string} */
       status: "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
       /** Format: int32 */
@@ -1811,7 +1974,7 @@ export interface components {
       /** Format: date-time */
       startedAt: string;
       /** Format: date-time */
-      completedAt?: string;
+      completedAt?: string | null;
       subject: components["schemas"]["ProgramSubjectResponse"];
       modules: components["schemas"]["ProgramModuleResponse"][];
     };
@@ -1852,7 +2015,7 @@ export interface components {
       /** Format: date-time */
       assignedAt: string;
       /** Format: date-time */
-      dueAt?: string;
+      dueAt?: string | null;
       overdue: boolean;
       /** Format: date-time */
       createdAt: string;
@@ -1874,7 +2037,7 @@ export interface components {
       /** Format: uuid */
       studentProgramId: string;
       /** Format: uuid */
-      learningPeriodId?: string;
+      learningPeriodId?: string | null;
       /** @enum {string} */
       status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
       /** Format: date-time */
@@ -1884,7 +2047,7 @@ export interface components {
       /** Format: int32 */
       learningMinutes: number;
       /** Format: date-time */
-      publishedAt?: string;
+      publishedAt?: string | null;
       /** Format: date-time */
       createdAt: string;
       /** Format: date-time */
@@ -1941,10 +2104,10 @@ export interface components {
       /** Format: date-time */
       assignedAt: string;
       /** Format: date-time */
-      dueAt?: string;
+      dueAt?: string | null;
       overdue: boolean;
       /** Format: date-time */
-      completedAt?: string;
+      completedAt?: string | null;
       /** Format: int64 */
       itemsCount: number;
       /** Format: date-time */
@@ -1952,7 +2115,7 @@ export interface components {
     };
     CodeExecutionResponse: {
       language: components["schemas"]["ProgrammingLanguage"];
-      starterCode?: string;
+      starterCode?: string | null;
       executionEnabled: boolean;
       /** Format: int32 */
       timeLimitMs: number;
@@ -1965,16 +2128,16 @@ export interface components {
       /** Format: uuid */
       studentProgramId: string;
       title: string;
-      description?: string;
+      description?: string | null;
       /** @enum {string} */
       status: "ASSIGNED" | "COMPLETED" | "CANCELLED";
       /** Format: date-time */
       assignedAt: string;
       /** Format: date-time */
-      dueAt?: string;
+      dueAt?: string | null;
       overdue: boolean;
       /** Format: date-time */
-      completedAt?: string;
+      completedAt?: string | null;
       items: components["schemas"]["StudentHomeworkItemResponse"][];
     };
     StudentHomeworkItemResponse: {
@@ -1986,8 +2149,8 @@ export interface components {
       position: number;
       required: boolean;
       passed: boolean;
-      /** @enum {string} */
-      latestSubmissionStatus?: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR";
+      /** @enum {string|null} */
+      latestSubmissionStatus?: "SUBMITTED" | "PASSED" | "FAILED" | "NEEDS_REVIEW" | "SYSTEM_ERROR" | null;
       task: components["schemas"]["StudentTaskResponse"];
     };
     StudentTaskResponse: {
@@ -2001,6 +2164,14 @@ export interface components {
       difficulty: "EASY" | "MEDIUM" | "HARD";
       codeExecution?: components["schemas"]["CodeExecutionResponse"];
     };
+    PublicTeacherInvitationResponse: {
+      /** Format: email */
+      email?: string;
+      /** @enum {string} */
+      status?: "ACTIVE" | "ACCEPTED" | "REVOKED" | "EXPIRED";
+      /** Format: date-time */
+      expiresAt?: string;
+    };
     PublicStudentInviteResponse: {
       student: components["schemas"]["StudentName"];
       teacher: components["schemas"]["TeacherName"];
@@ -2011,7 +2182,7 @@ export interface components {
     };
     StudentName: {
       firstName: string;
-      lastName?: string;
+      lastName?: string | null;
     };
     TeacherName: {
       displayName: string;
@@ -2035,6 +2206,10 @@ export interface components {
       assessment?: components["schemas"]["Assessment"];
       topics?: components["schemas"]["Topics"];
       skills?: components["schemas"]["Skill"][];
+    };
+    RegistrationSettingsResponse: {
+      /** @enum {string} */
+      registrationMode?: "OPEN" | "INVITE_ONLY";
     };
     PublicAssessmentResponse: {
       understandingAverage?: number | null;
@@ -2081,6 +2256,21 @@ export interface components {
     CsrfTokenResponse: {
       token: string;
       headerName: string;
+    };
+    TeacherInvitationListResponse: {
+      invitations?: components["schemas"]["TeacherInvitationSummaryResponse"][];
+    };
+    TeacherInvitationSummaryResponse: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: email */
+      email?: string;
+      /** @enum {string} */
+      status?: "ACTIVE" | "ACCEPTED" | "REVOKED" | "EXPIRED";
+      /** Format: date-time */
+      expiresAt?: string;
+      /** Format: date-time */
+      createdAt?: string;
     };
   };
   responses: never;
@@ -4266,6 +4456,68 @@ export interface operations {
       };
     };
   };
+  acceptTeacherInvitation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        token: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AcceptTeacherInvitationRequest"];
+      };
+    };
+    responses: {
+      /** @description Teacher registered and authenticated */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CurrentUserResponse"];
+        };
+      };
+      /** @description Validation failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Invalid CSRF token */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Invitation not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Invitation unavailable or email registered */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
   acceptStudentInvitation: {
     parameters: {
       query?: never;
@@ -4462,6 +4714,86 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  listTeacherInvitations: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["TeacherInvitationListResponse"];
+        };
+      };
+    };
+  };
+  createTeacherInvitation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateTeacherInvitationRequest"];
+      };
+    };
+    responses: {
+      /** @description Invitation created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["TeacherInvitationCreatedResponse"];
+        };
+      };
+      /** @description Validation failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Admin role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Email already registered */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
         };
       };
     };
@@ -5259,6 +5591,30 @@ export interface operations {
       };
     };
   };
+  changeRegistrationMode: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChangeRegistrationModeRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PlatformSettingsResponse"];
+        };
+      };
+    };
+  };
   downloadLessonMaterial: {
     parameters: {
       query?: never;
@@ -5834,6 +6190,37 @@ export interface operations {
       };
     };
   };
+  getPublicTeacherInvitation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        token: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Invitation details */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PublicTeacherInvitationResponse"];
+        };
+      };
+      /** @description Invitation not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
   getPublicStudentInvitation: {
     parameters: {
       query?: never;
@@ -5963,6 +6350,26 @@ export interface operations {
       };
     };
   };
+  getPublicRegistrationSettings: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["RegistrationSettingsResponse"];
+        };
+      };
+    };
+  };
   getPublicCurrentProgress: {
     parameters: {
       query?: never;
@@ -6057,6 +6464,26 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  getAdminPlatformSettings: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PlatformSettingsResponse"];
         };
       };
     };
@@ -6205,6 +6632,44 @@ export interface operations {
       };
       /** @description Progress report or share not found */
       404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  revokeTeacherInvitation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        invitationId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Invitation revoked */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Invitation not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Invitation is not active */
+      409: {
         headers: {
           [name: string]: unknown;
         };
