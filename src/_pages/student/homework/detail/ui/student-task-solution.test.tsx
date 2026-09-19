@@ -184,6 +184,42 @@ describe("StudentTaskSolution", () => {
     });
   });
 
+  it("shows the expanded Python execution guide only for CODE tasks", () => {
+    const { rerender } = render(
+      <StudentTaskSolution
+        homeworkId="homework-1"
+        homeworkStatus="ASSIGNED"
+        item={{
+          ...base,
+          task: {
+            ...base.task,
+            taskType: "CODE",
+            codeExecution: { language: "PYTHON", executionEnabled: true, timeLimitMs: 1000, memoryLimitMb: 128 },
+          },
+        }}
+      />,
+    );
+
+    const guide = screen.getByText("Как выполнить задание").closest("details");
+    expect(guide).not.toBeNull();
+    expect(guide).toHaveAttribute("open");
+    expect(screen.getByText(/Для чтения входных данных используйте input\(\)/)).toBeInTheDocument();
+    expect(screen.getByText("Программа считывает два числа из одной строки и выводит их сумму")).toBeInTheDocument();
+    expect(screen.getByText(/Входные данные для проверки подаются автоматически/)).toBeInTheDocument();
+    expect(screen.getByText(/«Запустить» — проверить код/)).toBeInTheDocument();
+    expect(screen.getByText(/«Отправить решение» — сохранить ответ/)).toBeInTheDocument();
+
+    rerender(
+      <StudentTaskSolution
+        homeworkId="homework-1"
+        homeworkStatus="ASSIGNED"
+        item={{ ...base, task: { ...base.task, taskType: "TEXT" } }}
+      />,
+    );
+
+    expect(screen.queryByText("Как выполнить задание")).not.toBeInTheDocument();
+  });
+
   it.each([
     ["PASSED", "Все тесты пройдены"],
     ["FAILED", "Есть непройденные тесты"],
