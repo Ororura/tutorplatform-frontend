@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -12,6 +11,7 @@ import { useLoginMutation } from "../api/login";
 import { getPostLoginRoute } from "../model/login-routing";
 import { type LoginFormValues, loginSchema } from "../model/login-schema";
 import { DemoAccountHelper } from "./demo-account-helper";
+import { RegistrationAvailability } from "./registration-availability";
 
 export function LoginForm() {
   const router = useRouter();
@@ -112,12 +112,7 @@ export function LoginForm() {
         }}
       />
 
-      <p className="text-sm text-neutral-600">
-        Нет аккаунта?{" "}
-        <Link className="font-medium text-neutral-900 underline underline-offset-4" href="/register">
-          Зарегистрироваться
-        </Link>
-      </p>
+      <RegistrationAvailability />
     </form>
   );
 }

@@ -15,6 +15,10 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
+vi.mock("./registration-availability", () => ({
+  RegistrationAvailability: () => null,
+}));
+
 vi.mock("../api/login", () => ({
   useLoginMutation: () => ({ mutateAsync, isPending: false }),
 }));
