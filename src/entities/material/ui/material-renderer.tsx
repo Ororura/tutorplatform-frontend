@@ -7,7 +7,7 @@ function downloadUrl(material: LessonMaterial): string {
   )}/download`;
 }
 
-function externalUrl(value?: string): string | undefined {
+function externalUrl(value?: string | null): string | undefined {
   if (!value) return undefined;
   try {
     const url = new URL(value);

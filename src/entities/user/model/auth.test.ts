@@ -17,6 +17,21 @@ describe("auth routing", () => {
     expect(getUserHome(student)).toBe("/student");
   });
 
+  it("routes ADMIN to the administration area", () => {
+    const admin: CurrentUser = {
+      ...teacher,
+      roles: ["ADMIN", "TEACHER"],
+    };
+
+    expect(getUserHome(admin)).toBe("/admin");
+
+    expect(getRoleRedirect(admin, "ADMIN", "/admin")).toBeNull();
+
+    expect(getRoleRedirect(admin, "TEACHER", "/teacher")).toBeNull();
+
+    expect(getRoleRedirect(teacher, "ADMIN", "/admin")).toBe("/teacher");
+  });
+
   it("redirects an anonymous protected route to login", () => {
     expect(getRoleRedirect(null, "TEACHER", "/teacher/students")).toBe("/login?next=%2Fteacher%2Fstudents");
   });

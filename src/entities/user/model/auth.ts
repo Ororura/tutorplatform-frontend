@@ -6,8 +6,18 @@ export type AuthState =
   | { status: "unauthenticated" }
   | { status: "error"; error: Error };
 
-export function getUserHome(user: CurrentUser): "/teacher" | "/student" {
-  return user.roles.includes("TEACHER") ? "/teacher" : "/student";
+export type UserHome = "/admin" | "/teacher" | "/student";
+
+export function getUserHome(user: CurrentUser): UserHome {
+  if (user.roles.includes("ADMIN")) {
+    return "/admin";
+  }
+
+  if (user.roles.includes("TEACHER")) {
+    return "/teacher";
+  }
+
+  return "/student";
 }
 
 export function getRoleRedirect(
@@ -18,5 +28,6 @@ export function getRoleRedirect(
   if (user === null) {
     return `/login?next=${encodeURIComponent(pathname)}`;
   }
+
   return user.roles.includes(role) ? null : getUserHome(user);
 }
