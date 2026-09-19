@@ -1,7 +1,17 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { TeacherHeader } from "./teacher-header";
+
+const { roles } = vi.hoisted(() => ({
+  roles: {
+    current: ["TEACHER"] as string[],
+  },
+}));
+
+afterEach(() => {
+  roles.current = ["TEACHER"];
+});
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/teacher/students/student-1",
@@ -27,7 +37,7 @@ vi.mock("@/entities/user", () => ({
       id: "user-1",
       displayName: "Анна Ковалева",
       email: "teacher@example.com",
-      roles: ["TEACHER"],
+      roles: roles.current,
     },
   }),
 }));
@@ -69,5 +79,32 @@ describe("TeacherHeader", () => {
     });
 
     expect(studentLinks.some((link) => link.getAttribute("aria-current") === "page")).toBe(true);
+  });
+  it("does not show admin navigation to a regular teacher", () => {
+    roles.current = ["TEACHER"];
+
+    render(<TeacherHeader />);
+
+    expect(
+      screen.queryByRole("link", {
+        name: "Администрирование",
+      }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows admin navigation when teacher also has ADMIN role", () => {
+    roles.current = ["TEACHER", "ADMIN"];
+
+    render(<TeacherHeader />);
+
+    const adminLinks = screen.getAllByRole("link", {
+      name: "Администрирование",
+    });
+
+    expect(adminLinks).toHaveLength(2);
+
+    for (const link of adminLinks) {
+      expect(link).toHaveAttribute("href", "/admin");
+    }
   });
 });

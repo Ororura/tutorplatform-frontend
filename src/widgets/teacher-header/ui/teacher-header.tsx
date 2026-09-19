@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, BookOpenText, ClipboardList, Users } from "lucide-react";
+import { BookOpen, BookOpenText, ClipboardList, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -45,6 +45,7 @@ export function TeacherHeader() {
   const pathname = usePathname();
   const currentUser = useCurrentUserQuery();
   const displayName = currentUser.data?.displayName ?? "Преподаватель";
+  const isAdmin = currentUser.data?.roles.includes("ADMIN") ?? false;
 
   return (
     <header className="sticky top-0 z-40 pt-3">
@@ -95,6 +96,16 @@ export function TeacherHeader() {
                 </span>
               </div>
 
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 lg:inline-flex"
+                >
+                  <ShieldCheck size={17} />
+                  Администрирование
+                </Link>
+              )}
+
               <LogoutButton />
             </div>
           </div>
@@ -121,6 +132,15 @@ export function TeacherHeader() {
                 </Link>
               );
             })}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              >
+                <ShieldCheck size={16} />
+                Администрирование
+              </Link>
+            )}
           </nav>
         </div>
       </div>
