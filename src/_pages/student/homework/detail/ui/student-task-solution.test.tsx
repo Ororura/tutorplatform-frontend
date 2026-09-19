@@ -211,6 +211,12 @@ describe("StudentTaskSolution", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Программа считывает два числа из одной строки и выводит их сумму")).toBeInTheDocument();
     expect(screen.getByText(/Входные данные для проверки подаются автоматически/)).toBeInTheDocument();
+    expect(screen.getByText("Когда решение считается верным?")).toBeInTheDocument();
+    expect(screen.getByText(/Программа считается верной, когда успешно проходит все тесты задания/)).toBeInTheDocument();
+    expect(screen.getByText(/Прочитайте два числа и выведите их сумму/)).toBeInTheDocument();
+    expect(screen.getByText(/Если ожидаемый ответ — 5/)).toBeInTheDocument();
+    expect(screen.getByText(/input\(\) получает входные данные/)).toBeInTheDocument();
+    expect(screen.getByText(/Успешное прохождение одного примера не гарантирует прохождение всех тестов/)).toBeInTheDocument();
     expect(screen.getByText(/«Запустить» — проверить код/)).toBeInTheDocument();
     expect(screen.getByText(/«Отправить решение» — сохранить ответ/)).toBeInTheDocument();
 

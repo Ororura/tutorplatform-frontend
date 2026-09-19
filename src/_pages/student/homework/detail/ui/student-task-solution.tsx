@@ -232,6 +232,45 @@ function CodeSolution({
           <p className="text-xs text-slate-500">
             Входные данные для проверки подаются автоматически. Вводить их вручную после запуска не нужно
           </p>
+          <div className="space-y-3 border-t border-slate-200 pt-3">
+            <h3 className="font-medium text-slate-700">Когда решение считается верным?</h3>
+            <p>
+              Программа считается верной, когда успешно проходит все тесты задания. Система автоматически передаёт
+              вашей программе входные данные и сравнивает полученный результат с ожидаемым ответом.
+            </p>
+            <p>
+              Для вывода результата используйте print(). Именно то, что программа выводит в консоль, проверяется
+              системой.
+            </p>
+            <p>
+              Выводите только то, что требуется в условии. Не добавляйте пояснения вроде &quot;Ответ:&quot;, &quot;Результат:&quot; или
+              &quot;Введите число:&quot;, если задание этого не требует
+            </p>
+            <div className="space-y-2">
+              <p>Условие: «Прочитайте два числа и выведите их сумму».</p>
+              <div>
+                <p className="text-xs font-medium text-green-700">Правильно:</p>
+                <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100">
+                  <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
+                </pre>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-red-700">Неправильно:</p>
+                <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100">
+                  <code>{'a, b = map(int, input().split())\nprint("Сумма чисел:", a + b)'}</code>
+                </pre>
+              </div>
+              <p className="text-xs text-slate-500">
+                Если ожидаемый ответ — 5, программа должна вывести 5, а не &quot;Сумма чисел: 5&quot;.
+              </p>
+            </div>
+            <ul className="space-y-1 text-xs">
+              <li>input() получает входные данные, которые система подаёт автоматически.</li>
+              <li>print() выводит результат, который система сравнивает с ожидаемым.</li>
+              <li>Программа может работать без ошибок, но не пройти проверку из-за неправильного ответа или лишнего текста в выводе.</li>
+              <li>Успешное прохождение одного примера не гарантирует прохождение всех тестов.</li>
+            </ul>
+          </div>
         </div>
       </details>
 
