@@ -204,6 +204,11 @@ describe("StudentTaskSolution", () => {
     expect(guide).not.toBeNull();
     expect(guide).toHaveAttribute("open");
     expect(screen.getByText(/Для чтения входных данных используйте input\(\)/)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Преподаватель мог заранее подготовить для вас часть решения. Если в редакторе уже есть код, внимательно изучите его и дополните или измените согласно условию задания. Необязательно писать программу с нуля",
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText("Программа считывает два числа из одной строки и выводит их сумму")).toBeInTheDocument();
     expect(screen.getByText(/Входные данные для проверки подаются автоматически/)).toBeInTheDocument();
     expect(screen.getByText(/«Запустить» — проверить код/)).toBeInTheDocument();
