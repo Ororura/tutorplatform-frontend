@@ -8,6 +8,11 @@ const eslintConfig = defineConfig([
   ...nextTs,
 
   {
+    settings: {
+      react: {
+        version: "19",
+      },
+    },
     rules: {
       "no-console": "warn",
 
