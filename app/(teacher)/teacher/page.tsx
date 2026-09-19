@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { TeacherHomePage } from "@/_pages/teacher/home";
 
-export default function TeacherWorkspacePage() {
-  redirect("/teacher/students");
+export default function Page() {
+  return <TeacherHomePage />;
 }
