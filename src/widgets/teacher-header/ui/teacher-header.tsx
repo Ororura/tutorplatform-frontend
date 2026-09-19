@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, BookOpenText, ClipboardList, ShieldCheck, Users } from "lucide-react";
+import { BookOpen, BookOpenText, ClipboardList, House, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -8,6 +8,11 @@ import { useCurrentUserQuery } from "@/entities/user";
 import { LogoutButton } from "@/features/auth/logout";
 
 const navigation = [
+  {
+    href: "/teacher",
+    label: "Главная",
+    icon: House,
+  },
   {
     href: "/teacher/students",
     label: "Ученики",
@@ -26,6 +31,8 @@ const navigation = [
 ] as const;
 
 function isActivePath(pathname: string, href: string) {
+  if (href === "/teacher") return pathname === href;
+
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -52,7 +59,7 @@ export function TeacherHeader() {
       <div className="mx-auto max-w-[1600px] px-3 sm:px-5">
         <div className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-[0_12px_40px_rgba(45,79,135,0.08)] backdrop-blur-xl">
           <div className="flex h-16 items-center gap-5 px-4 sm:px-5">
-            <Link className="flex shrink-0 items-center gap-3" href="/teacher/students">
+            <Link className="flex shrink-0 items-center gap-3" href="/teacher">
               <span className="flex size-10 items-center justify-center rounded-[14px] bg-linear-to-br from-blue-500 to-blue-600 text-white shadow-sm shadow-blue-200">
                 <BookOpen size={21} strokeWidth={2.1} />
               </span>
@@ -63,7 +70,7 @@ export function TeacherHeader() {
               </span>
             </Link>
 
-            <nav className="hidden h-full items-center gap-1 lg:flex" aria-label="Навигация преподавателя">
+            <nav className="hidden h-full items-center gap-1 xl:flex" aria-label="Навигация преподавателя">
               {navigation.map(({ href, label, icon: Icon }) => {
                 const active = isActivePath(pathname, href);
 
@@ -99,7 +106,7 @@ export function TeacherHeader() {
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 lg:inline-flex"
+                  className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 xl:inline-flex"
                 >
                   <ShieldCheck size={17} />
                   Администрирование
@@ -111,7 +118,7 @@ export function TeacherHeader() {
           </div>
 
           <nav
-            className="flex gap-1 overflow-x-auto border-t border-slate-100 px-3 py-2 lg:hidden"
+            className="flex gap-1 overflow-x-auto border-t border-slate-100 px-3 py-2 xl:hidden"
             aria-label="Мобильная навигация преподавателя"
           >
             {navigation.map(({ href, label, icon: Icon }) => {

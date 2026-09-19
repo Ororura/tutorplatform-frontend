@@ -3,18 +3,22 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { TeacherHeader } from "./teacher-header";
 
-const { roles } = vi.hoisted(() => ({
+const { roles, route } = vi.hoisted(() => ({
   roles: {
     current: ["TEACHER"] as string[],
+  },
+  route: {
+    current: "/teacher/students/student-1",
   },
 }));
 
 afterEach(() => {
   roles.current = ["TEACHER"];
+  route.current = "/teacher/students/student-1";
 });
 
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/teacher/students/student-1",
+  usePathname: () => route.current,
 }));
 
 vi.mock("next/link", () => ({
@@ -47,6 +51,30 @@ vi.mock("@/features/auth/logout", () => ({
 }));
 
 describe("TeacherHeader", () => {
+  it("links the brand and homepage navigation to the teacher workspace", () => {
+    route.current = "/teacher";
+
+    render(<TeacherHeader />);
+
+    expect(screen.getByRole("link", { name: /Умнее Вместе/ })).toHaveAttribute("href", "/teacher");
+
+    const homeLinks = screen.getAllByRole("link", { name: /Главная/ });
+
+    expect(homeLinks).toHaveLength(2);
+    expect(homeLinks.every((link) => link.getAttribute("aria-current") === "page")).toBe(true);
+  });
+
+  it("does not mark the homepage active on a nested teacher route", () => {
+    render(<TeacherHeader />);
+
+    expect(screen.getAllByRole("link", { name: /Главная/ }).some((link) => link.hasAttribute("aria-current"))).toBe(
+      false,
+    );
+    expect(
+      screen.getAllByRole("link", { name: /Ученики/ }).some((link) => link.getAttribute("aria-current") === "page"),
+    ).toBe(true);
+  });
+
   it("renders teacher navigation and current user", () => {
     render(<TeacherHeader />);
 
@@ -106,5 +134,20 @@ describe("TeacherHeader", () => {
     for (const link of adminLinks) {
       expect(link).toHaveAttribute("href", "/admin");
     }
+  });
+
+  it("keeps the full desktop navigation behind the wide-screen breakpoint", () => {
+    roles.current = ["TEACHER", "ADMIN"];
+
+    render(<TeacherHeader />);
+
+    expect(screen.getByRole("navigation", { name: "Навигация преподавателя" })).toHaveClass("xl:flex");
+    expect(screen.getByRole("navigation", { name: "Мобильная навигация преподавателя" })).toHaveClass("xl:hidden");
+
+    const desktopAdminLink = screen
+      .getAllByRole("link", { name: "Администрирование" })
+      .find((link) => link.classList.contains("hidden"));
+
+    expect(desktopAdminLink).toHaveClass("xl:inline-flex");
   });
 });
