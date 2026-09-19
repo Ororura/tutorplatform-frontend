@@ -33,10 +33,12 @@
 ### Task 1: Make `/teacher` a first-class navigation destination
 
 **Files:**
+
 - Modify: `src/widgets/teacher-header/ui/teacher-header.test.tsx`
 - Modify: `src/widgets/teacher-header/ui/teacher-header.tsx`
 
 **Interfaces:**
+
 - Consumes: `usePathname(): string` and the existing teacher navigation model.
 - Produces: desktop/mobile links named `Главная` with `href="/teacher"`; the brand link also targets `/teacher`; root-only active matching for that link.
 
@@ -68,8 +70,12 @@ it("does not mark the homepage active on a nested teacher route", () => {
   route.current = "/teacher/students/student-1";
   render(<TeacherHeader />);
 
-  expect(screen.getAllByRole("link", { name: /Главная/ }).some((link) => link.hasAttribute("aria-current"))).toBe(false);
-  expect(screen.getAllByRole("link", { name: /Ученики/ }).some((link) => link.getAttribute("aria-current") === "page")).toBe(true);
+  expect(screen.getAllByRole("link", { name: /Главная/ }).some((link) => link.hasAttribute("aria-current"))).toBe(
+    false,
+  );
+  expect(
+    screen.getAllByRole("link", { name: /Ученики/ }).some((link) => link.getAttribute("aria-current") === "page"),
+  ).toBe(true);
 });
 ```
 
@@ -115,6 +121,7 @@ Expected: all teacher-header tests pass.
 ### Task 2: Add standalone homepage widgets
 
 **Files:**
+
 - Create: `src/widgets/teacher-attention/index.ts`
 - Create: `src/widgets/teacher-attention/ui/teacher-attention.tsx`
 - Create: `src/widgets/teacher-attention/ui/teacher-attention.test.tsx`
@@ -126,6 +133,7 @@ Expected: all teacher-header tests pass.
 - Create: `src/widgets/teacher-quick-actions/ui/teacher-quick-actions.test.tsx`
 
 **Interfaces:**
+
 - Consumes: existing `StudentPage`, status-label helpers, and three existing dialog components.
 - Produces: `TeacherAttention()`, `TeacherStudentsOverview(props)`, and `TeacherQuickActions()` exports.
 
@@ -169,7 +177,8 @@ export function TeacherAttention() {
         <div>
           <h2 className="text-xl font-semibold tracking-tight text-slate-950">Требует внимания</h2>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            Сводка по работам пока недоступна: текущий API не позволяет получить ожидающие проверки и просроченные домашние задания без отдельных запросов по каждому ученику.
+            Сводка по работам пока недоступна: текущий API не позволяет получить ожидающие проверки и просроченные
+            домашние задания без отдельных запросов по каждому ученику.
           </p>
         </div>
       </div>
@@ -208,7 +217,14 @@ it("keeps an error recoverable", () => {
 });
 
 it("renders the empty state", () => {
-  render(<TeacherStudentsOverview isPending={false} isError={false} data={{ items: [], page: 0, size: 6, totalElements: 0, totalPages: 0 }} onRetry={vi.fn()} />);
+  render(
+    <TeacherStudentsOverview
+      isPending={false}
+      isError={false}
+      data={{ items: [], page: 0, size: 6, totalElements: 0, totalPages: 0 }}
+      onRetry={vi.fn()}
+    />,
+  );
   expect(screen.getByText("Учеников пока нет")).toBeInTheDocument();
 });
 
@@ -217,7 +233,10 @@ it("renders real summaries, nullable names, detail links, and the full-list link
   expect(screen.getByText("Анна Смирнова")).toBeInTheDocument();
   expect(screen.getByText("Максим")).toBeInTheDocument();
   expect(screen.queryByText(/undefined/)).not.toBeInTheDocument();
-  expect(screen.getByRole("link", { name: /Открыть Анна Смирнова/ })).toHaveAttribute("href", "/teacher/students/student-1");
+  expect(screen.getByRole("link", { name: /Открыть Анна Смирнова/ })).toHaveAttribute(
+    "href",
+    "/teacher/students/student-1",
+  );
   expect(screen.getByRole("link", { name: /Все ученики/ })).toHaveAttribute("href", "/teacher/students");
   expect(screen.getByText("Показаны последние 2 из 8")).toBeInTheDocument();
 });
@@ -249,12 +268,18 @@ export function TeacherStudentsOverview({ data, isPending, isError, onRetry }: R
   let content: ReactNode;
 
   if (isPending) {
-    content = <p aria-busy="true" className="py-8 text-sm text-slate-500">Загружаем учеников…</p>;
+    content = (
+      <p aria-busy="true" className="py-8 text-sm text-slate-500">
+        Загружаем учеников…
+      </p>
+    );
   } else if (isError) {
     content = (
       <div role="alert" className="py-8">
         <p className="text-sm text-red-700">Не удалось загрузить учеников.</p>
-        <Button className="mt-4" type="button" variant="secondary" onClick={onRetry}>Повторить</Button>
+        <Button className="mt-4" type="button" variant="secondary" onClick={onRetry}>
+          Повторить
+        </Button>
       </div>
     );
   } else if (!data || data.items.length === 0) {
@@ -274,7 +299,11 @@ export function TeacherStudentsOverview({ data, isPending, isError, onRetry }: R
                       {getStudentStatusLabel(student.status)} · {getStudentAccountStatusLabel(student.accountStatus)}
                     </p>
                   </div>
-                  <Link className="text-sm font-medium text-blue-600" href={`/teacher/students/${student.id}`} aria-label={`Открыть ${name}`}>
+                  <Link
+                    className="text-sm font-medium text-blue-600"
+                    href={`/teacher/students/${student.id}`}
+                    aria-label={`Открыть ${name}`}
+                  >
                     Открыть
                   </Link>
                 </div>
@@ -283,9 +312,13 @@ export function TeacherStudentsOverview({ data, isPending, isError, onRetry }: R
           })}
         </ul>
         {data.totalElements > data.items.length && (
-          <p className="mt-4 text-xs text-slate-500">Показаны последние {data.items.length} из {data.totalElements}</p>
+          <p className="mt-4 text-xs text-slate-500">
+            Показаны последние {data.items.length} из {data.totalElements}
+          </p>
         )}
-        <Link className="mt-5 inline-flex text-sm font-medium text-blue-600" href="/teacher/students">Все ученики</Link>
+        <Link className="mt-5 inline-flex text-sm font-medium text-blue-600" href="/teacher/students">
+          Все ученики
+        </Link>
       </>
     );
   }
@@ -381,12 +414,14 @@ Expected: all new widget tests pass.
 ### Task 3: Compose the homepage and replace the redirect
 
 **Files:**
+
 - Create: `src/_pages/teacher/home/index.ts`
 - Create: `src/_pages/teacher/home/ui/teacher-home-page.tsx`
 - Create: `src/_pages/teacher/home/ui/teacher-home-page.test.tsx`
 - Modify: `app/(teacher)/teacher/page.tsx`
 
 **Interfaces:**
+
 - Consumes: `useCurrentUserQuery()`, `studentQueries.list({ page: 0, size: 6, sort: "createdAt,desc" })`, and all three homepage widgets.
 - Produces: `TeacherHomePage()` exported through `_pages/teacher/home`; `/teacher` renders it directly.
 
@@ -526,10 +561,12 @@ Expected: all affected tests pass without warnings.
 ### Task 4: Validate, update the graph, review, and commit
 
 **Files:**
+
 - Modify automatically: `graphify-out/` if the frontend repository owns graph output; otherwise run the command from the parent project and do not copy unrelated graph files into the frontend commit.
 - Review: every file changed since `origin/main`.
 
 **Interfaces:**
+
 - Consumes: completed tasks 1–3.
 - Produces: verified branch and final commit `feat(teacher): implement teacher homepage`.
 
