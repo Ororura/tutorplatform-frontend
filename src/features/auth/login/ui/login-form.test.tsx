@@ -30,6 +30,19 @@ afterEach(() => {
 });
 
 describe("LoginForm", () => {
+  it("allows the password to be shown and hidden", () => {
+    render(<LoginForm />);
+
+    const password = screen.getByLabelText("Пароль");
+    expect(password).toHaveAttribute("type", "password");
+
+    fireEvent.click(screen.getByRole("button", { name: "Показать пароль" }));
+    expect(password).toHaveAttribute("type", "text");
+
+    fireEvent.click(screen.getByRole("button", { name: "Скрыть пароль" }));
+    expect(password).toHaveAttribute("type", "password");
+  });
+
   it("shows invalid credentials from a login 401 without a global redirect", async () => {
     mutateAsync.mockRejectedValue(
       new ApiClientError(401, {
