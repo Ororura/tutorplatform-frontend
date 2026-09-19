@@ -109,6 +109,11 @@ describe("TeacherProgramsView", () => {
         name: "Создать программу",
       }),
     ).toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: "Открыть программу: Python с нуля" })).toHaveAttribute(
+      "href",
+      "/teacher/programs/draft-program",
+    );
   });
 
   it("allows activation only for draft program", () => {

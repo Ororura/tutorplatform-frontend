@@ -738,6 +738,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/teacher/programs/{programId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get an owned learning program template */
+    get: operations["getTeacherLearningProgram"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/student/submissions/{submissionId}": {
     parameters: {
       query?: never;
@@ -2070,6 +2087,45 @@ export interface components {
       revokedAt?: string | null;
       /** Format: date-time */
       createdAt: string;
+    };
+    LearningProgramDetailsResponse: {
+      /** Format: uuid */
+      id: string;
+      subject: components["schemas"]["ProgramSubjectResponse"];
+      title: string;
+      description?: string | null;
+      /** @enum {string} */
+      status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+      /** Format: int64 */
+      version: number;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+      hasAssignments: boolean;
+      editable: boolean;
+      modules: components["schemas"]["LearningProgramModuleDetailsResponse"][];
+    };
+    LearningProgramModuleDetailsResponse: {
+      /** Format: uuid */
+      id: string;
+      title: string;
+      description?: string | null;
+      /** Format: int32 */
+      position: number;
+      topics: components["schemas"]["LearningProgramTopicDetailsResponse"][];
+    };
+    LearningProgramTopicDetailsResponse: {
+      /** Format: uuid */
+      id: string;
+      title: string;
+      description?: string | null;
+      /** Format: int32 */
+      position: number;
+      /** @enum {string} */
+      status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+      /** Format: int64 */
+      version: number;
     };
     StudentSubmissionPageResponse: {
       items: components["schemas"]["StudentSubmissionResponse"][];
@@ -5949,6 +6005,55 @@ export interface operations {
       };
       /** @description PDF generation failed */
       500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  getTeacherLearningProgram: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        programId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Learning program template */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["LearningProgramDetailsResponse"];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Learning program not found */
+      404: {
         headers: {
           [name: string]: unknown;
         };
