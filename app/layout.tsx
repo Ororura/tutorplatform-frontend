@@ -5,6 +5,9 @@ import "@/_app/styles/globals.css";
 export const metadata: Metadata = {
   title: "Tutor Learning Platform",
   description: "Digital tutoring workflow and transparent learning progress.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
