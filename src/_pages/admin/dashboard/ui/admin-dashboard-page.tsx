@@ -1,5 +1,22 @@
 import Link from "next/link";
 
+const sections = [
+  {
+    href: "/admin/settings",
+    number: "01",
+    title: "Настройки регистрации",
+    description: "Управление открытой регистрацией и доступом по приглашениям.",
+    action: "Открыть настройки",
+  },
+  {
+    href: "/admin/invitations",
+    number: "02",
+    title: "Приглашения преподавателей",
+    description: "Создание приглашений, просмотр истории и отзыв действующих ссылок.",
+    action: "Управлять приглашениями",
+  },
+] as const;
+
 export function AdminDashboardPage() {
   return (
     <main className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
@@ -12,26 +29,21 @@ export function AdminDashboardPage() {
       </header>
 
       <section className="mt-8 grid gap-4 md:grid-cols-2">
-        <Link
-          href="/admin/settings"
-          className="rounded-2xl border border-neutral-200 bg-white p-6 transition-colors hover:border-neutral-900"
-        >
-          <h2 className="text-lg font-semibold">Настройки регистрации</h2>
+        {sections.map((section) => (
+          <Link
+            key={section.href}
+            href={section.href}
+            className="group flex min-h-56 flex-col rounded-2xl border border-neutral-200 bg-white p-6 transition-colors hover:border-blue-300"
+          >
+            <span className="text-xs font-medium text-neutral-400">{section.number}</span>
 
-          <p className="mt-2 text-sm leading-6 text-neutral-600">
-            Разрешить открытую регистрацию или ограничить создание аккаунтов приглашениями.
-          </p>
+            <h2 className="mt-5 text-xl font-semibold text-neutral-950">{section.title}</h2>
 
-          <span className="mt-6 inline-block text-sm font-medium">Открыть настройки →</span>
-        </Link>
+            <p className="mt-3 max-w-sm text-sm leading-6 text-neutral-600">{section.description}</p>
 
-        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
-          <h2 className="text-lg font-semibold">Приглашения преподавателей</h2>
-
-          <p className="mt-2 text-sm leading-6 text-neutral-600">Создание, просмотр и отзыв приглашений.</p>
-
-          <span className="mt-6 inline-block text-sm text-neutral-500">Добавим следующим этапом</span>
-        </div>
+            <span className="mt-auto pt-6 text-sm font-medium text-blue-700">{section.action} →</span>
+          </Link>
+        ))}
       </section>
     </main>
   );
