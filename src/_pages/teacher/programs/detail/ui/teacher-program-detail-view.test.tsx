@@ -30,7 +30,9 @@ vi.mock("@/shared/api/client", () => ({ ApiClientError: mocks.ApiClientError }))
 
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
-    <a href={href} {...props}>{children}</a>
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
@@ -59,7 +61,14 @@ const program = {
       description: "Основы",
       position: 0,
       topics: [
-        { id: "topic-1", title: "Натуральные числа", description: "Первый урок", position: 0, status: "ACTIVE" as const, version: 1 },
+        {
+          id: "topic-1",
+          title: "Натуральные числа",
+          description: "Первый урок",
+          position: 0,
+          status: "ACTIVE" as const,
+          version: 1,
+        },
       ],
     },
   ],
@@ -95,20 +104,37 @@ describe("TeacherProgramDetailView", () => {
   });
 
   it("renders empty modules state", () => {
-    mocks.useQuery.mockReturnValue({ data: { ...program, modules: [] }, isPending: false, isError: false, refetch: mocks.refetch });
+    mocks.useQuery.mockReturnValue({
+      data: { ...program, modules: [] },
+      isPending: false,
+      isError: false,
+      refetch: mocks.refetch,
+    });
     render(<TeacherProgramDetailView programId="program-1" />);
     expect(screen.getByText("Модулей пока нет")).toBeInTheDocument();
   });
 
   it("renders a not found state without retry", () => {
-    mocks.useQuery.mockReturnValue({ data: undefined, isPending: false, isError: true, error: new mocks.ApiClientError(404), refetch: mocks.refetch });
+    mocks.useQuery.mockReturnValue({
+      data: undefined,
+      isPending: false,
+      isError: true,
+      error: new mocks.ApiClientError(404),
+      refetch: mocks.refetch,
+    });
     render(<TeacherProgramDetailView programId="missing" />);
     expect(screen.getByText("Программа не найдена")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Повторить" })).not.toBeInTheDocument();
   });
 
   it("allows retry after another loading error", () => {
-    mocks.useQuery.mockReturnValue({ data: undefined, isPending: false, isError: true, error: new mocks.ApiClientError(500), refetch: mocks.refetch });
+    mocks.useQuery.mockReturnValue({
+      data: undefined,
+      isPending: false,
+      isError: true,
+      error: new mocks.ApiClientError(500),
+      refetch: mocks.refetch,
+    });
     render(<TeacherProgramDetailView programId="program-1" />);
     fireEvent.click(screen.getByRole("button", { name: "Повторить" }));
     expect(mocks.refetch).toHaveBeenCalled();
