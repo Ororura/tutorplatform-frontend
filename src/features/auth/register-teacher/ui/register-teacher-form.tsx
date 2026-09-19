@@ -59,7 +59,9 @@ export function RegisterTeacherForm() {
           message:
             error.body.code === "EMAIL_ALREADY_REGISTERED"
               ? "Аккаунт с таким email уже существует"
-              : error.body.message,
+              : error.body.code === "REGISTRATION_INVITE_REQUIRED"
+                ? "Регистрация теперь доступна только по приглашению. Попросите администратора платформы создать для вас ссылку."
+                : error.body.message,
         });
         return;
       }
