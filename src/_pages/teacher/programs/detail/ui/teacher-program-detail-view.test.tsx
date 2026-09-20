@@ -47,6 +47,13 @@ vi.mock("@/features/program/module/manage", () => ({
     editable ? <button type="button">Изменить</button> : null,
 }));
 
+vi.mock("@/features/program/topic/manage", () => ({
+  CreateLearningProgramTopicDialog: ({ editable }: { editable: boolean }) =>
+    editable ? <button type="button">Добавить тему</button> : null,
+  LearningProgramTopicActions: ({ editable }: { editable: boolean }) =>
+    editable ? <button type="button">Изменить тему</button> : null,
+}));
+
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
     <a href={href} {...props}>
@@ -106,8 +113,9 @@ describe("TeacherProgramDetailView", () => {
     expect(mocks.detail).toHaveBeenCalledWith("program-1");
     expect(screen.getByRole("heading", { name: "Алгебра" })).toBeInTheDocument();
     expect(screen.getByText("Математика")).toBeInTheDocument();
-    expect(screen.getByText("Активна")).toBeInTheDocument();
+    expect(screen.getAllByText("Активна")).toHaveLength(2);
     expect(screen.getByText("Натуральные числа")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Добавить тему" })).toHaveLength(2);
     expect(screen.getByText("В этом модуле пока нет тем.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "← Программы обучения" })).toHaveAttribute("href", "/teacher/programs");
 
@@ -144,6 +152,7 @@ describe("TeacherProgramDetailView", () => {
 
     expect(screen.getByRole("button", { name: "Редактировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Добавить модуль" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Добавить тему" })).toHaveLength(2);
     expect(screen.getByRole("button", { name: "Активировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Архивировать" })).toBeInTheDocument();
 
@@ -157,6 +166,7 @@ describe("TeacherProgramDetailView", () => {
 
     expect(screen.queryByRole("button", { name: "Редактировать" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Добавить модуль" })).not.toBeInTheDocument();
+    expect(screen.queryAllByRole("button", { name: "Добавить тему" })).toHaveLength(0);
     expect(screen.queryByRole("button", { name: "Активировать" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Архивировать" })).not.toBeInTheDocument();
   });

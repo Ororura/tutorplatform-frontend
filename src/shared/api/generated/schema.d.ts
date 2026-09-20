@@ -344,6 +344,28 @@ export interface paths {
     patch: operations["updateTeacherLearningProgramModule"];
     trace?: never;
   };
+  "/api/v1/teacher/programs/{programId}/modules/{moduleId}/topics": {
+    parameters: { query?: never; header?: never; path?: never; cookie?: never };
+    get?: never;
+    put?: never;
+    post: operations["createTeacherLearningProgramTopic"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/teacher/programs/{programId}/modules/{moduleId}/topics/{topicId}": {
+    parameters: { query?: never; header?: never; path?: never; cookie?: never };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations["updateTeacherLearningProgramTopic"];
+    trace?: never;
+  };
   "/api/v1/teacher/programs/{programId}/activate": {
     parameters: {
       query?: never;
@@ -2187,6 +2209,16 @@ export interface components {
       /** @enum {string} */
       status: "DRAFT" | "ACTIVE" | "ARCHIVED";
       /** Format: int64 */
+      version: number;
+    };
+    CreateLearningProgramTopicRequest: {
+      title: string;
+      description?: string | null;
+    };
+    UpdateLearningProgramTopicRequest: {
+      title: string;
+      description?: string | null;
+      status: "DRAFT" | "ACTIVE" | "ARCHIVED";
       version: number;
     };
     StudentSubmissionPageResponse: {
@@ -6145,6 +6177,37 @@ export interface operations {
       200: {
         headers: { [name: string]: unknown };
         content: { "*/*": components["schemas"]["LearningProgramModuleResponse"] };
+      };
+      400: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      404: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      409: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+    };
+  };
+  createTeacherLearningProgramTopic: {
+    parameters: { query?: never; header?: never; path: { programId: string; moduleId: string }; cookie?: never };
+    requestBody: { content: { "application/json": components["schemas"]["CreateLearningProgramTopicRequest"] } };
+    responses: {
+      201: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["LearningProgramTopicDetailsResponse"] };
+      };
+      400: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      404: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      409: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+    };
+  };
+  updateTeacherLearningProgramTopic: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: { programId: string; moduleId: string; topicId: string };
+      cookie?: never;
+    };
+    requestBody: { content: { "application/json": components["schemas"]["UpdateLearningProgramTopicRequest"] } };
+    responses: {
+      200: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["LearningProgramTopicDetailsResponse"] };
       };
       400: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
       404: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
