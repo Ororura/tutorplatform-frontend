@@ -28,6 +28,18 @@ vi.mock("@/entities/learning-program", () => ({
 
 vi.mock("@/shared/api/client", () => ({ ApiClientError: mocks.ApiClientError }));
 
+vi.mock("@/features/program/activate", () => ({
+  ActivateLearningProgramButton: () => <button type="button">Активировать</button>,
+}));
+
+vi.mock("@/features/program/archive", () => ({
+  ArchiveLearningProgramButton: () => <button type="button">Архивировать</button>,
+}));
+
+vi.mock("@/features/program/edit", () => ({
+  EditLearningProgramDialog: () => <button type="button">Редактировать</button>,
+}));
+
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
     <a href={href} {...props}>
@@ -112,6 +124,32 @@ describe("TeacherProgramDetailView", () => {
     });
     render(<TeacherProgramDetailView programId="program-1" />);
     expect(screen.getByText("Модулей пока нет")).toBeInTheDocument();
+  });
+
+  it("shows editable actions and makes archived programs read-only", () => {
+    mocks.useQuery.mockReturnValue({
+      data: { ...program, status: "DRAFT" as const },
+      isPending: false,
+      isError: false,
+      refetch: mocks.refetch,
+    });
+    const { rerender } = render(<TeacherProgramDetailView programId="program-1" />);
+
+    expect(screen.getByRole("button", { name: "Редактировать" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Активировать" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Архивировать" })).toBeInTheDocument();
+
+    mocks.useQuery.mockReturnValue({
+      data: { ...program, status: "ARCHIVED" as const, editable: false },
+      isPending: false,
+      isError: false,
+      refetch: mocks.refetch,
+    });
+    rerender(<TeacherProgramDetailView programId="program-1" />);
+
+    expect(screen.queryByRole("button", { name: "Редактировать" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Активировать" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Архивировать" })).not.toBeInTheDocument();
   });
 
   it("renders a not found state without retry", () => {
