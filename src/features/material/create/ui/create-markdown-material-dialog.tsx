@@ -2,13 +2,24 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { SafeMarkdown } from "@/entities/material";
+import type { LessonMaterial } from "@/entities/material";
+import { MaterialRenderer } from "@/entities/material";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
 import { useCreateMaterialMutation } from "../api/create-material";
 
 type Mode = "editor" | "preview";
+type CreateMaterialType = "MARKDOWN" | "CODE_EXAMPLE" | "LINK";
+
+function isExternalUrl(value: string): boolean {
+  try {
+    const protocol = new URL(value.trim()).protocol;
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+}
 
 export function CreateMarkdownMaterialDialog({
   topicId,
@@ -18,8 +29,9 @@ export function CreateMarkdownMaterialDialog({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("editor");
+  const [materialType, setMaterialType] = useState<CreateMaterialType>("MARKDOWN");
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [value, setValue] = useState("");
   const [error, setError] = useState("");
   const mutation = useCreateMaterialMutation(topicId);
 
@@ -32,8 +44,9 @@ export function CreateMarkdownMaterialDialog({
 
   const reset = () => {
     setMode("editor");
+    setMaterialType("MARKDOWN");
     setTitle("");
-    setContent("");
+    setValue("");
     setError("");
   };
 
@@ -41,14 +54,24 @@ export function CreateMarkdownMaterialDialog({
     event.preventDefault();
     if (mutation.isPending) return;
 
-    if (!title.trim() || !content.trim()) {
-      setError("Заполните название и содержимое материала.");
+    if (!title.trim() || !value.trim()) {
+      setError(materialType === "LINK" ? "Заполните название и URL." : "Заполните название и содержимое материала.");
+      return;
+    }
+    if (materialType === "LINK" && !isExternalUrl(value)) {
+      setError("Укажите ссылку, начинающуюся с http:// или https://.");
       return;
     }
 
     setError("");
     try {
-      await mutation.mutateAsync({ materialType: "MARKDOWN", title: title.trim(), content, position });
+      await mutation.mutateAsync({
+        materialType,
+        title: title.trim(),
+        content: materialType === "LINK" ? null : value,
+        externalUrl: materialType === "LINK" ? value.trim() : null,
+        position,
+      });
       reset();
       setOpen(false);
     } catch (caught) {
@@ -67,14 +90,14 @@ export function CreateMarkdownMaterialDialog({
       </Button>
       <dialog
         ref={dialogRef}
-        aria-labelledby="create-markdown-material-title"
+        aria-labelledby="create-material-title"
         className="m-auto w-[min(48rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>
           <div className="flex items-start justify-between gap-4">
-            <h2 id="create-markdown-material-title" className="text-xl font-semibold">
-              Добавить Markdown-материал
+            <h2 id="create-material-title" className="text-xl font-semibold">
+              Добавить материал
             </h2>
             <button type="button" className="text-sm underline" onClick={() => setOpen(false)}>
               Закрыть
@@ -88,42 +111,99 @@ export function CreateMarkdownMaterialDialog({
               onChange={(event) => setTitle(event.target.value)}
             />
           </label>
+          <label className="block space-y-2">
+            <span className="text-sm font-medium">Тип материала</span>
+            <select
+              aria-label="Тип материала"
+              className="h-11 w-full rounded-md border px-3"
+              value={materialType}
+              onChange={(event) => {
+                setMaterialType(event.target.value as CreateMaterialType);
+                setMode("editor");
+                setError("");
+              }}
+            >
+              <option value="MARKDOWN">Markdown</option>
+              <option value="CODE_EXAMPLE">Пример кода</option>
+              <option value="LINK">Ссылка</option>
+            </select>
+          </label>
           <div className="space-y-2">
-            <div className="flex gap-2" role="tablist" aria-label="Режим материала">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={mode === "editor"}
-                className={`rounded-md px-3 py-2 text-sm ${mode === "editor" ? "bg-slate-100 font-medium" : "underline"}`}
-                onClick={() => setMode("editor")}
-              >
-                Редактор
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={mode === "preview"}
-                className={`rounded-md px-3 py-2 text-sm ${mode === "preview" ? "bg-slate-100 font-medium" : "underline"}`}
-                onClick={() => setMode("preview")}
-              >
-                Предпросмотр
-              </button>
-            </div>
+            {materialType !== "LINK" && (
+              <div className="flex gap-2" role="tablist" aria-label="Режим материала">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={mode === "editor"}
+                  className={`rounded-md px-3 py-2 text-sm ${mode === "editor" ? "bg-slate-100 font-medium" : "underline"}`}
+                  onClick={() => setMode("editor")}
+                >
+                  Редактор
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={mode === "preview"}
+                  className={`rounded-md px-3 py-2 text-sm ${mode === "preview" ? "bg-slate-100 font-medium" : "underline"}`}
+                  onClick={() => setMode("preview")}
+                >
+                  Предпросмотр
+                </button>
+              </div>
+            )}
             {mode === "editor" ? (
-              <textarea
-                aria-label="Содержимое Markdown"
-                className="min-h-64 w-full resize-y rounded-md border p-3 font-mono text-sm"
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-              />
+              materialType === "LINK" ? (
+                <label className="block space-y-2">
+                  <span className="text-sm font-medium">Ссылка</span>
+                  <input
+                    aria-label="Ссылка"
+                    className="h-11 w-full rounded-md border px-3"
+                    type="url"
+                    value={value}
+                    onChange={(event) => setValue(event.target.value)}
+                  />
+                </label>
+              ) : (
+                <textarea
+                  aria-label={materialType === "MARKDOWN" ? "Содержимое Markdown" : "Содержимое кода"}
+                  className={`min-h-64 w-full resize-y rounded-md border p-3 text-sm ${materialType === "CODE_EXAMPLE" ? "font-mono" : ""}`}
+                  value={value}
+                  onChange={(event) => setValue(event.target.value)}
+                />
+              )
             ) : (
               <div className="min-h-64 rounded-md border p-3" role="tabpanel">
-                {content ? (
-                  <SafeMarkdown>{content}</SafeMarkdown>
+                {value ? (
+                  <MaterialRenderer
+                    material={
+                      {
+                        id: "draft",
+                        topicId,
+                        materialType,
+                        title: title || "Без названия",
+                        content: materialType === "LINK" ? null : value,
+                        externalUrl: materialType === "LINK" ? value : null,
+                        position,
+                        version: 0,
+                        createdAt: "",
+                        updatedAt: "",
+                      } as LessonMaterial
+                    }
+                  />
                 ) : (
                   <p className="text-sm text-slate-500">Предпросмотр пуст.</p>
                 )}
               </div>
+            )}
+            {materialType === "LINK" && isExternalUrl(value) && (
+              <a
+                className="block break-all text-sm text-blue-700 underline"
+                href={value.trim()}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {value.trim()}
+              </a>
             )}
           </div>
           {error && (
