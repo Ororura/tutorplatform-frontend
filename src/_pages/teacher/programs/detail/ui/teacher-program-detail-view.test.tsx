@@ -40,6 +40,13 @@ vi.mock("@/features/program/edit", () => ({
   EditLearningProgramDialog: () => <button type="button">Редактировать</button>,
 }));
 
+vi.mock("@/features/program/module/manage", () => ({
+  CreateLearningProgramModuleDialog: ({ editable }: { editable: boolean }) =>
+    editable ? <button type="button">Добавить модуль</button> : null,
+  LearningProgramModuleActions: ({ editable }: { editable: boolean }) =>
+    editable ? <button type="button">Изменить</button> : null,
+}));
+
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
     <a href={href} {...props}>
@@ -136,6 +143,7 @@ describe("TeacherProgramDetailView", () => {
     const { rerender } = render(<TeacherProgramDetailView programId="program-1" />);
 
     expect(screen.getByRole("button", { name: "Редактировать" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Добавить модуль" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Активировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Архивировать" })).toBeInTheDocument();
 
@@ -148,6 +156,7 @@ describe("TeacherProgramDetailView", () => {
     rerender(<TeacherProgramDetailView programId="program-1" />);
 
     expect(screen.queryByRole("button", { name: "Редактировать" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Добавить модуль" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Активировать" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Архивировать" })).not.toBeInTheDocument();
   });

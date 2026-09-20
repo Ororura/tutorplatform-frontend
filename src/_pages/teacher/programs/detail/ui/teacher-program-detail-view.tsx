@@ -3,11 +3,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { Archive, BookOpenText, CheckCircle2, ChevronRight, FilePenLine, Layers3 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 import { type LearningProgramStatus, learningProgramQueries } from "@/entities/learning-program";
 import { ActivateLearningProgramButton } from "@/features/program/activate";
 import { ArchiveLearningProgramButton } from "@/features/program/archive";
 import { EditLearningProgramDialog } from "@/features/program/edit";
+import { CreateLearningProgramModuleDialog, LearningProgramModuleActions } from "@/features/program/module/manage";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -31,6 +33,7 @@ const statusIcon = {
 
 export function TeacherProgramDetailView({ programId }: Readonly<{ programId: string }>) {
   const program = useQuery(learningProgramQueries.detail(programId));
+  const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
   const notFound = program.error instanceof ApiClientError && program.error.status === 404;
 
   return (
@@ -111,18 +114,25 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                 className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7"
                 aria-labelledby="program-modules-heading"
               >
-                <div className="flex items-center gap-3">
-                  <span className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <Layers3 size={19} />
-                  </span>
-                  <div>
-                    <h2 id="program-modules-heading" className="text-xl font-semibold text-slate-950">
-                      Модули программы
-                    </h2>
-                    <p className="mt-1 text-sm text-slate-500">
-                      {modules.length} {modules.length === 1 ? "модуль" : "модулей"}
-                    </p>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                      <Layers3 size={19} />
+                    </span>
+                    <div>
+                      <h2 id="program-modules-heading" className="text-xl font-semibold text-slate-950">
+                        Модули программы
+                      </h2>
+                      <p className="mt-1 text-sm text-slate-500">
+                        {modules.length} {modules.length === 1 ? "модуль" : "модулей"}
+                      </p>
+                    </div>
                   </div>
+                  <CreateLearningProgramModuleDialog
+                    programId={program.data.id}
+                    editable={program.data.editable}
+                    onCreated={setExpandedModuleId}
+                  />
                 </div>
 
                 {modules.length === 0 ? (
@@ -135,34 +145,46 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     {modules.map((module) => {
                       const topics = [...module.topics].sort((a, b) => a.position - b.position);
                       return (
-                        <li key={module.id} className="rounded-2xl border border-slate-200/80 p-5">
-                          <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
-                            Модуль {module.position + 1}
-                          </p>
-                          <h3 className="mt-1 text-lg font-semibold text-slate-950">{module.title}</h3>
-                          {module.description && (
-                            <p className="mt-2 text-sm leading-6 text-slate-500">{module.description}</p>
-                          )}
-                          <div className="mt-5 border-t border-slate-100 pt-4">
-                            <h4 className="text-sm font-semibold text-slate-950">Темы</h4>
-                            {topics.length === 0 ? (
-                              <p className="mt-2 text-sm text-slate-500">В этом модуле пока нет тем.</p>
-                            ) : (
-                              <ol className="mt-3 space-y-2">
-                                {topics.map((topic) => (
-                                  <li key={topic.id} className="flex items-start gap-2 text-sm text-slate-700">
-                                    <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
-                                    <div>
-                                      <span className="font-medium">{topic.title}</span>
-                                      {topic.description && (
-                                        <p className="mt-0.5 text-slate-500">{topic.description}</p>
-                                      )}
-                                    </div>
-                                  </li>
-                                ))}
-                              </ol>
-                            )}
-                          </div>
+                        <li key={module.id} className="rounded-2xl border border-slate-200/80">
+                          <details
+                            open={expandedModuleId === module.id}
+                            onToggle={(event) => setExpandedModuleId(event.currentTarget.open ? module.id : null)}
+                          >
+                            <summary className="cursor-pointer list-none p-5">
+                              <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
+                                Модуль {module.position + 1}
+                              </p>
+                              <h3 className="mt-1 text-lg font-semibold text-slate-950">{module.title}</h3>
+                              {module.description && (
+                                <p className="mt-2 text-sm leading-6 text-slate-500">{module.description}</p>
+                              )}
+                            </summary>
+                            <div className="border-t border-slate-100 px-5 pb-5 pt-4">
+                              <h4 className="text-sm font-semibold text-slate-950">Темы</h4>
+                              {topics.length === 0 ? (
+                                <p className="mt-2 text-sm text-slate-500">В этом модуле пока нет тем.</p>
+                              ) : (
+                                <ol className="mt-3 space-y-2">
+                                  {topics.map((topic) => (
+                                    <li key={topic.id} className="flex items-start gap-2 text-sm text-slate-700">
+                                      <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
+                                      <div>
+                                        <span className="font-medium">{topic.title}</span>
+                                        {topic.description && (
+                                          <p className="mt-0.5 text-slate-500">{topic.description}</p>
+                                        )}
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ol>
+                              )}
+                              <LearningProgramModuleActions
+                                programId={program.data.id}
+                                module={module}
+                                editable={program.data.editable}
+                              />
+                            </div>
+                          </details>
                         </li>
                       );
                     })}
