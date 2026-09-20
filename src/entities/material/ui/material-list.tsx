@@ -1,7 +1,12 @@
+import type { ReactNode } from "react";
+
 import type { LessonMaterial } from "../api/material-queries";
 import { MaterialRenderer } from "./material-renderer";
 
-export function MaterialList({ materials }: Readonly<{ materials: LessonMaterial[] }>) {
+export function MaterialList({
+  materials,
+  renderActions,
+}: Readonly<{ materials: LessonMaterial[]; renderActions?: (material: LessonMaterial) => ReactNode }>) {
   if (materials.length === 0) {
     return (
       <p className="rounded-lg border border-dashed border-neutral-300 p-6 text-neutral-600">
@@ -14,7 +19,10 @@ export function MaterialList({ materials }: Readonly<{ materials: LessonMaterial
     <ol className="space-y-4">
       {materials.map((material) => (
         <li className="rounded-lg border border-neutral-200 bg-white p-5" key={material.id}>
-          <h3 className="mb-3 font-semibold">{material.title}</h3>
+          <div className="mb-3 flex items-start justify-between gap-4">
+            <h3 className="font-semibold">{material.title}</h3>
+            {renderActions?.(material)}
+          </div>
           <MaterialRenderer material={material} />
         </li>
       ))}
