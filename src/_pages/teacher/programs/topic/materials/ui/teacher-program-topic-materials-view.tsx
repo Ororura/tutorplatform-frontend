@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { MaterialList, topicMaterialQueries } from "@/entities/material";
 import { learningProgramQueries } from "@/entities/learning-program";
+import { CreateMarkdownMaterialDialog } from "@/features/material/create";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -77,9 +78,14 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
           </header>
 
           <section className="space-y-4" aria-labelledby="materials-heading">
-            <h2 className="text-xl font-semibold text-slate-950" id="materials-heading">
-              Материалы
-            </h2>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-xl font-semibold text-slate-950" id="materials-heading">
+                Материалы
+              </h2>
+              {program.data?.editable && (
+                <CreateMarkdownMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
+              )}
+            </div>
             {materials.isPending && (
               <p className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500" aria-busy="true">
                 Загружаем материалы…
