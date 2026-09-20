@@ -7,6 +7,7 @@ import { MaterialList, topicMaterialQueries } from "@/entities/material";
 import { learningProgramQueries } from "@/entities/learning-program";
 import { CreateMarkdownMaterialDialog } from "@/features/material/create";
 import { EditMaterialDialog, isEditableMaterial } from "@/features/material/edit";
+import { UploadMaterialDialog } from "@/features/material/upload";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -84,7 +85,10 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
                 Материалы
               </h2>
               {program.data?.editable && (
-                <CreateMarkdownMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
+                <div className="flex flex-wrap gap-2">
+                  <CreateMarkdownMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
+                  <UploadMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
+                </div>
               )}
             </div>
             {materials.isPending && (

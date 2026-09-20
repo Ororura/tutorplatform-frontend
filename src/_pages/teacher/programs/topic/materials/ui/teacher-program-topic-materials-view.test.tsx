@@ -51,6 +51,9 @@ vi.mock("@/features/material/edit", () => ({
 vi.mock("@/features/material/create", () => ({
   CreateMarkdownMaterialDialog: () => <button type="button">Добавить материал</button>,
 }));
+vi.mock("@/features/material/upload", () => ({
+  UploadMaterialDialog: () => <button type="button">Загрузить файл</button>,
+}));
 vi.mock("@/shared/api/client", () => ({ ApiClientError: mocks.ApiClientError }));
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
@@ -165,5 +168,6 @@ describe("TeacherProgramTopicMaterialsView", () => {
     expect(screen.getByRole("button", { name: "Редактировать text" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Редактировать file" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Редактировать image" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Загрузить файл" })).toBeInTheDocument();
   });
 });
