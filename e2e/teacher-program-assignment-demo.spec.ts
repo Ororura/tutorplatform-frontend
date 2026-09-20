@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("demo teacher assigns two real programs to Ilya", async ({ page }) => {
   test.setTimeout(90_000);
-  await page.goto("/login");
+  await page.goto("/login?next=%2Fteacher%2Fstudents");
   await page.getByLabel("Email", { exact: true }).fill("teacher.demo@tutor.local");
   await page.getByLabel("Пароль", { exact: true }).fill("DemoTeacher123!");
   await page.getByRole("button", { name: "Войти" }).click();

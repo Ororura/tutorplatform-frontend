@@ -2,14 +2,14 @@ import { expect, test } from "@playwright/test";
 
 test("demo teacher reads Task Library and atomically assigns TEXT + CODE homework", async ({ page }) => {
   test.setTimeout(120_000);
-  await page.goto("/login");
+  await page.goto("/login?next=%2Fteacher%2Fstudents");
   await page.getByLabel("Email", { exact: true }).fill("teacher.demo@tutor.local");
   await page.getByLabel("Пароль", { exact: true }).fill("DemoTeacher123!");
   await page.getByRole("button", { name: "Войти" }).click();
   await expect(page).toHaveURL(/\/teacher\/students$/);
 
   await page.getByRole("link", { name: "Банк заданий" }).click();
-  await expect(page.getByRole("heading", { name: "Банк заданий" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Банк заданий", level: 1 })).toBeVisible();
   await expect(page.getByRole("link", { name: /Когда использовать цикл while.*Текстовый ответ/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Сумма двух чисел.*Код/ })).toBeVisible();
   await page.getByRole("link", { name: /Сумма двух чисел/ }).click();
@@ -27,8 +27,21 @@ test("demo teacher reads Task Library and atomically assigns TEXT + CODE homewor
   await expect(page.getByRole("link", { name: /Циклы.*Назначено/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Практика со списками.*Просрочено/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Повторение основ.*Отменено/ })).toBeVisible();
-  await page.getByRole("link", { name: /Основы Python/ }).click();
-  await expect(page.getByRole("heading", { name: "Задания" })).toBeVisible();
+  await page
+    .getByRole("link", {
+      name: /Основы Python/,
+    })
+    .click();
+
+  await expect(page).toHaveURL(/\/teacher\/students\/[^/]+\/homework\/[^/?]+$/);
+
+  await expect(
+    page.getByRole("heading", {
+      name: "Задания",
+      exact: true,
+      level: 2,
+    }),
+  ).toBeVisible();
   await expect(page.getByRole("link", { name: "Выведи Hello, World!" })).toBeVisible();
 
   await page.getByRole("link", { name: "Домашние задания" }).click();
