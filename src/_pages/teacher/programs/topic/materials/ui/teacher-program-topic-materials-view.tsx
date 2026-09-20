@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 import { MaterialList, topicMaterialQueries } from "@/entities/material";
+import { taskDifficultyPresentation, taskQueries, taskTypePresentation, topicTaskQueries } from "@/entities/task";
+import { AttachTaskToTopicDialog } from "@/features/task/attach";
 import { learningProgramQueries } from "@/entities/learning-program";
 import { CreateMarkdownMaterialDialog } from "@/features/material/create";
 import { EditMaterialDialog, isEditableMaterial } from "@/features/material/edit";
@@ -23,8 +25,17 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
     ...topicMaterialQueries.list(topicId),
     enabled: Boolean(topicContext),
   });
+  const topicTasks = useQuery({
+    ...topicTaskQueries.list(topicId),
+    enabled: Boolean(topicContext),
+  });
+  const taskBank = useQuery({
+    ...taskQueries.activeForSubject(program.data?.subject?.id ?? ""),
+    enabled: Boolean(topicContext && program.data?.subject?.id),
+  });
   const programNotFound = program.error instanceof ApiClientError && program.error.status === 404;
   const materialsNotFound = materials.error instanceof ApiClientError && materials.error.status === 404;
+  const topicTasksNotFound = topicTasks.error instanceof ApiClientError && topicTasks.error.status === 404;
   const sortedMaterials = materials.data && [...materials.data].sort((left, right) => left.position - right.position);
   const reorderMaterials = useReorderLessonMaterialsMutation(topicId);
 
@@ -148,6 +159,70 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
                   ) : null
                 }
               />
+            )}
+          </section>
+
+          <section className="space-y-4" aria-labelledby="practice-tasks-heading">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-950" id="practice-tasks-heading">
+                  Практические задания
+                </h2>
+                <p className="mt-1 text-sm text-slate-500">Задания из банка по предмету программы.</p>
+              </div>
+              {program.data?.editable && topicTasks.data && taskBank.data && (
+                <AttachTaskToTopicDialog topicId={topicId} attachedTasks={topicTasks.data} tasks={taskBank.data} />
+              )}
+            </div>
+            {topicTasks.isPending && (
+              <p className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500" aria-busy="true">
+                Загружаем задания…
+              </p>
+            )}
+            {topicTasks.isError && (
+              <div className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+                <p>{topicTasksNotFound ? "Тема недоступна." : "Не удалось загрузить практические задания."}</p>
+                {!topicTasksNotFound && (
+                  <Button type="button" variant="secondary" onClick={() => void topicTasks.refetch()}>
+                    Повторить
+                  </Button>
+                )}
+              </div>
+            )}
+            {taskBank.isError && (
+              <div className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+                <p>Не удалось загрузить банк заданий.</p>
+                <Button type="button" variant="secondary" onClick={() => void taskBank.refetch()}>
+                  Повторить
+                </Button>
+              </div>
+            )}
+            {topicTasks.data && (
+              <div className="overflow-hidden rounded-[28px] border border-white/80 bg-white shadow-[0_12px_40px_rgba(45,79,135,0.06)]">
+                {topicTasks.data.length === 0 ? (
+                  <p className="p-6 text-sm text-slate-500">К теме пока не прикреплены задания.</p>
+                ) : (
+                  <ul className="divide-y divide-slate-100">
+                    {topicTasks.data.map((task) => (
+                      <li key={task.taskId} className="flex flex-wrap items-center justify-between gap-3 p-5">
+                        <div>
+                          <p className="font-semibold text-slate-900">{task.title}</p>
+                          <p className="mt-1 text-sm text-slate-500">
+                            {taskTypePresentation[task.taskType]} · {taskDifficultyPresentation[task.difficulty]}
+                            {!task.required && " · Необязательное"}
+                          </p>
+                        </div>
+                        <Link
+                          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                          href={`/teacher/tasks/${task.taskId}`}
+                        >
+                          Открыть задание
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             )}
           </section>
         </>

@@ -20,6 +20,17 @@ export async function getTeacherTasks(params: TaskListParams): Promise<TaskPage>
   return data;
 }
 
+export async function getAllActiveTeacherTasks(subjectId: string): Promise<Task[]> {
+  const firstPage = await getTeacherTasks({ page: 0, size: 100, sort: "title,asc", subjectId, status: "ACTIVE" });
+  const remainingPages = await Promise.all(
+    Array.from({ length: Math.max(0, firstPage.totalPages - 1) }, (_, index) =>
+      getTeacherTasks({ page: index + 1, size: 100, sort: "title,asc", subjectId, status: "ACTIVE" }),
+    ),
+  );
+
+  return [firstPage, ...remainingPages].flatMap((page) => page.items);
+}
+
 export async function getTeacherTask(taskId: string): Promise<Task> {
   const { data, error, response } = await apiClient.GET("/api/v1/teacher/tasks/{taskId}", {
     params: { path: { taskId } },
@@ -43,6 +54,11 @@ export const taskQueries = {
     queryOptions({
       queryKey: [...taskQueries.lists(), params] as const,
       queryFn: () => getTeacherTasks(params),
+    }),
+  activeForSubject: (subjectId: string) =>
+    queryOptions({
+      queryKey: [...taskQueries.lists(), "active", subjectId] as const,
+      queryFn: () => getAllActiveTeacherTasks(subjectId),
     }),
   details: () => [...taskQueries.all(), "detail"] as const,
   detail: (taskId: string) =>

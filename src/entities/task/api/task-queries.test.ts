@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { apiClient } from "@/shared/api/client";
-import { getTeacherTask, getTeacherTasks, taskQueries } from "./task-queries";
+import { getAllActiveTeacherTasks, getTeacherTask, getTeacherTasks, taskQueries } from "./task-queries";
 
 vi.mock("@/shared/api/client", () => ({
   ApiClientError: class extends Error {},
@@ -33,5 +33,33 @@ describe("taskQueries", () => {
     });
     await getTeacherTask("task-1");
     expect(getMock).toHaveBeenCalledWith("/api/v1/teacher/tasks/{taskId}", { params: { path: { taskId: "task-1" } } });
+  });
+
+  it("loads every page of active tasks for a program subject", async () => {
+    getMock
+      .mockResolvedValueOnce({
+        data: { items: [{ id: "task-1" }], totalPages: 2 } as never,
+        error: undefined,
+        response: new Response(null, { status: 200 }),
+      })
+      .mockResolvedValueOnce({
+        data: { items: [{ id: "task-2" }], totalPages: 2 } as never,
+        error: undefined,
+        response: new Response(null, { status: 200 }),
+      });
+
+    await expect(getAllActiveTeacherTasks("subject-1")).resolves.toEqual([{ id: "task-1" }, { id: "task-2" }]);
+    expect(getMock).toHaveBeenNthCalledWith(1, "/api/v1/teacher/tasks", {
+      params: { query: { page: 0, size: 100, sort: "title,asc", subjectId: "subject-1", status: "ACTIVE" } },
+    });
+    expect(getMock).toHaveBeenNthCalledWith(2, "/api/v1/teacher/tasks", {
+      params: { query: { page: 1, size: 100, sort: "title,asc", subjectId: "subject-1", status: "ACTIVE" } },
+    });
+    expect(taskQueries.activeForSubject("subject-1").queryKey).toEqual([
+      "teacher-tasks",
+      "list",
+      "active",
+      "subject-1",
+    ]);
   });
 });
