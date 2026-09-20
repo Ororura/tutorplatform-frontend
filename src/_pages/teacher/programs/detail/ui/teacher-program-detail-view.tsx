@@ -10,6 +10,7 @@ import { ActivateLearningProgramButton } from "@/features/program/activate";
 import { ArchiveLearningProgramButton } from "@/features/program/archive";
 import { EditLearningProgramDialog } from "@/features/program/edit";
 import { CreateLearningProgramModuleDialog, LearningProgramModuleActions } from "@/features/program/module/manage";
+import { CreateLearningProgramTopicDialog, LearningProgramTopicActions } from "@/features/program/topic/manage";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -30,6 +31,18 @@ const statusIcon = {
   ACTIVE: CheckCircle2,
   ARCHIVED: Archive,
 } satisfies Record<LearningProgramStatus, typeof FilePenLine>;
+
+const topicStatusPresentation = {
+  DRAFT: "Черновик",
+  ACTIVE: "Активна",
+  ARCHIVED: "В архиве",
+} as const;
+
+const topicStatusClassName = {
+  DRAFT: "bg-amber-50 text-amber-700",
+  ACTIVE: "bg-emerald-50 text-emerald-700",
+  ARCHIVED: "bg-slate-100 text-slate-600",
+} as const;
 
 export function TeacherProgramDetailView({ programId }: Readonly<{ programId: string }>) {
   const program = useQuery(learningProgramQueries.detail(programId));
@@ -160,7 +173,14 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                               )}
                             </summary>
                             <div className="border-t border-slate-100 px-5 pb-5 pt-4">
-                              <h4 className="text-sm font-semibold text-slate-950">Темы</h4>
+                              <div className="flex flex-wrap items-center justify-between gap-3">
+                                <h4 className="text-sm font-semibold text-slate-950">Темы</h4>
+                                <CreateLearningProgramTopicDialog
+                                  programId={program.data.id}
+                                  moduleId={module.id}
+                                  editable={program.data.editable}
+                                />
+                              </div>
                               {topics.length === 0 ? (
                                 <p className="mt-2 text-sm text-slate-500">В этом модуле пока нет тем.</p>
                               ) : (
@@ -168,8 +188,21 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                                   {topics.map((topic) => (
                                     <li key={topic.id} className="flex items-start gap-2 text-sm text-slate-700">
                                       <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
-                                      <div>
-                                        <span className="font-medium">{topic.title}</span>
+                                      <div className="min-w-0 flex-1">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                          <span className="font-medium">{topic.title}</span>
+                                          <span
+                                            className={`rounded-full px-2 py-0.5 text-xs font-medium ${topicStatusClassName[topic.status]}`}
+                                          >
+                                            {topicStatusPresentation[topic.status]}
+                                          </span>
+                                          <LearningProgramTopicActions
+                                            programId={program.data.id}
+                                            moduleId={module.id}
+                                            topic={topic}
+                                            editable={program.data.editable}
+                                          />
+                                        </div>
                                         {topic.description && (
                                           <p className="mt-0.5 text-slate-500">{topic.description}</p>
                                         )}
