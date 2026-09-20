@@ -7,6 +7,8 @@ import { MaterialList, topicMaterialQueries } from "@/entities/material";
 import { learningProgramQueries } from "@/entities/learning-program";
 import { CreateMarkdownMaterialDialog } from "@/features/material/create";
 import { EditMaterialDialog, isEditableMaterial } from "@/features/material/edit";
+import { useReorderLessonMaterialsMutation } from "@/features/material/reorder";
+import { UploadMaterialDialog } from "@/features/material/upload";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -24,6 +26,18 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
   const programNotFound = program.error instanceof ApiClientError && program.error.status === 404;
   const materialsNotFound = materials.error instanceof ApiClientError && materials.error.status === 404;
   const sortedMaterials = materials.data && [...materials.data].sort((left, right) => left.position - right.position);
+  const reorderMaterials = useReorderLessonMaterialsMutation(topicId);
+
+  function moveMaterial(index: number, direction: -1 | 1) {
+    if (!sortedMaterials || reorderMaterials.isPending) return;
+
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= sortedMaterials.length) return;
+
+    const orderedIds = sortedMaterials.map((material) => material.id);
+    [orderedIds[index], orderedIds[targetIndex]] = [orderedIds[targetIndex], orderedIds[index]];
+    reorderMaterials.mutate({ orderedIds });
+  }
 
   return (
     <main className="mx-auto max-w-5xl space-y-6">
@@ -84,7 +98,10 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
                 Материалы
               </h2>
               {program.data?.editable && (
-                <CreateMarkdownMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
+                <div className="flex flex-wrap gap-2">
+                  <CreateMarkdownMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
+                  <UploadMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
+                </div>
               )}
             </div>
             {materials.isPending && (
@@ -105,9 +122,29 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
             {sortedMaterials && (
               <MaterialList
                 materials={sortedMaterials}
-                renderActions={(material) =>
-                  program.data?.editable && isEditableMaterial(material) ? (
-                    <EditMaterialDialog material={material} />
+                renderActions={(material, index) =>
+                  program.data?.editable ? (
+                    <div className="flex flex-wrap items-center justify-end gap-2">
+                      <Button
+                        aria-label={`Переместить «${material.title}» вверх`}
+                        disabled={index === 0 || reorderMaterials.isPending}
+                        onClick={() => moveMaterial(index, -1)}
+                        type="button"
+                        variant="secondary"
+                      >
+                        Вверх
+                      </Button>
+                      <Button
+                        aria-label={`Переместить «${material.title}» вниз`}
+                        disabled={index === sortedMaterials.length - 1 || reorderMaterials.isPending}
+                        onClick={() => moveMaterial(index, 1)}
+                        type="button"
+                        variant="secondary"
+                      >
+                        Вниз
+                      </Button>
+                      {isEditableMaterial(material) && <EditMaterialDialog material={material} />}
+                    </div>
                   ) : null
                 }
               />

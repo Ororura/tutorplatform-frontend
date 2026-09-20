@@ -91,6 +91,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/teacher/topics/{topicId}/materials/order": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Reorder every lesson material in an owned topic */
+    put: operations["reorderLessonMaterials"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/teacher/topics/{topicId}/materials/upload": {
     parameters: {
       query?: never;
@@ -1278,6 +1295,9 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
+    };
+    ReorderLessonMaterialsRequest: {
+      orderedIds: string[];
     };
     CreateTaskRequest: {
       /** Format: uuid */
@@ -2836,6 +2856,30 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
+    };
+  };
+  reorderLessonMaterials: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Topic identifier */
+        topicId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: { content: { "application/json": components["schemas"]["ReorderLessonMaterialsRequest"] } };
+    responses: {
+      /** @description Lesson materials reordered */
+      204: { headers: { [name: string]: unknown }; content?: never };
+      /** @description Lesson material order is invalid */
+      400: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      /** @description Authentication required */
+      401: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      /** @description Teacher role and CSRF required */
+      403: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      /** @description Topic not found */
+      404: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
     };
   };
   createLessonMaterial: {

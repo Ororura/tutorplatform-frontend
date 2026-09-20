@@ -16,6 +16,8 @@ const mocks = vi.hoisted(() => {
     materialsList: vi.fn((topicId: string) => ({ queryKey: ["materials", topicId] })),
     programRefetch: vi.fn(),
     materialsRefetch: vi.fn(),
+    reorderMutate: vi.fn(),
+    reorderMutation: { isPending: false, mutate: vi.fn() },
     ApiClientError,
   };
 });
@@ -29,13 +31,13 @@ vi.mock("@/entities/material", () => ({
     renderActions,
   }: {
     materials: Array<{ id: string; title: string; materialType?: string }>;
-    renderActions?: (material: { id: string; title: string; materialType?: string }) => React.ReactNode;
+    renderActions?: (material: { id: string; title: string; materialType?: string }, index: number) => React.ReactNode;
   }) => (
     <ol data-testid="materials-list">
-      {materials.map((material) => (
+      {materials.map((material, index) => (
         <li key={material.title}>
           {material.title}
-          {renderActions?.(material)}
+          {renderActions?.(material, index)}
         </li>
       ))}
     </ol>
@@ -48,8 +50,14 @@ vi.mock("@/features/material/edit", () => ({
     <button type="button">Редактировать {material.id}</button>
   ),
 }));
+vi.mock("@/features/material/reorder", () => ({
+  useReorderLessonMaterialsMutation: () => mocks.reorderMutation,
+}));
 vi.mock("@/features/material/create", () => ({
   CreateMarkdownMaterialDialog: () => <button type="button">Добавить материал</button>,
+}));
+vi.mock("@/features/material/upload", () => ({
+  UploadMaterialDialog: () => <button type="button">Загрузить файл</button>,
 }));
 vi.mock("@/shared/api/client", () => ({ ApiClientError: mocks.ApiClientError }));
 vi.mock("next/link", () => ({
@@ -82,6 +90,8 @@ describe("TeacherProgramTopicMaterialsView", () => {
     mocks.materialsList.mockClear();
     mocks.programRefetch.mockReset();
     mocks.materialsRefetch.mockReset();
+    mocks.reorderMutate.mockReset();
+    mocks.reorderMutation = { isPending: false, mutate: mocks.reorderMutate };
     mocks.useQuery
       .mockReturnValueOnce(queryResult({ data: program, refetch: mocks.programRefetch }))
       .mockReturnValueOnce(
@@ -165,5 +175,37 @@ describe("TeacherProgramTopicMaterialsView", () => {
     expect(screen.getByRole("button", { name: "Редактировать text" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Редактировать file" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Редактировать image" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Загрузить файл" })).toBeInTheDocument();
+  });
+
+  it("moves materials with buttons, disables boundary actions, and blocks actions while reordering", () => {
+    mocks.useQuery.mockReset();
+    mocks.useQuery.mockReturnValueOnce(queryResult({ data: { ...program, editable: true } })).mockReturnValueOnce(
+      queryResult({
+        data: [
+          { id: "material-1", title: "Первый", position: 0 },
+          { id: "material-2", title: "Второй", position: 1 },
+        ],
+      }),
+    );
+
+    const { rerender } = render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
+
+    expect(screen.getByRole("button", { name: "Переместить «Первый» вверх" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Переместить «Второй» вниз" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Переместить «Первый» вниз" }));
+    expect(mocks.reorderMutate).toHaveBeenCalledWith({ orderedIds: ["material-2", "material-1"] });
+
+    mocks.reorderMutation = { isPending: true, mutate: mocks.reorderMutate };
+    mocks.useQuery.mockReturnValueOnce(queryResult({ data: { ...program, editable: true } })).mockReturnValueOnce(
+      queryResult({
+        data: [
+          { id: "material-1", title: "Первый", position: 0 },
+          { id: "material-2", title: "Второй", position: 1 },
+        ],
+      }),
+    );
+    rerender(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
+    expect(screen.getByRole("button", { name: "Переместить «Первый» вниз" })).toBeDisabled();
   });
 });
