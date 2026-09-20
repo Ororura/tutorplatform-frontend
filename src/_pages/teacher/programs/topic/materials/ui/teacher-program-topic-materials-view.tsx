@@ -38,6 +38,7 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
   const topicTasksNotFound = topicTasks.error instanceof ApiClientError && topicTasks.error.status === 404;
   const sortedMaterials = materials.data && [...materials.data].sort((left, right) => left.position - right.position);
   const reorderMaterials = useReorderLessonMaterialsMutation(topicId);
+  const materialsEditable = Boolean(program.data && program.data.status !== "ARCHIVED");
 
   function moveMaterial(index: number, direction: -1 | 1) {
     if (!sortedMaterials || reorderMaterials.isPending) return;
@@ -108,7 +109,7 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
               <h2 className="text-xl font-semibold text-slate-950" id="materials-heading">
                 Материалы
               </h2>
-              {program.data?.editable && (
+              {materialsEditable && (
                 <div className="flex flex-wrap gap-2">
                   <CreateMarkdownMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
                   <UploadMaterialDialog topicId={topicId} position={sortedMaterials?.length ?? 0} editable />
@@ -134,7 +135,7 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
               <MaterialList
                 materials={sortedMaterials}
                 renderActions={(material, index) =>
-                  program.data?.editable ? (
+                  materialsEditable ? (
                     <div className="flex flex-wrap items-center justify-end gap-2">
                       <Button
                         aria-label={`Переместить «${material.title}» вверх`}

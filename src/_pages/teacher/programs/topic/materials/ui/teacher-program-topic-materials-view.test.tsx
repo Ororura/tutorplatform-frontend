@@ -83,6 +83,7 @@ vi.mock("next/link", () => ({
 const program = {
   id: "program-1",
   title: "Алгебра",
+  status: "DRAFT" as const,
   modules: [
     {
       id: "module-1",
@@ -128,7 +129,7 @@ describe("TeacherProgramTopicMaterialsView", () => {
     expect(screen.getByRole("link", { name: "Алгебра" })).toHaveAttribute("href", "/teacher/programs/program-1");
     expect(screen.getByRole("heading", { name: "Линейные уравнения" })).toBeInTheDocument();
     expect(screen.getByText("Научимся решать уравнения.")).toBeInTheDocument();
-    expect(screen.getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Первый", "Второй"]);
+    expect(screen.getAllByRole("listitem").map((item) => item.firstChild?.textContent)).toEqual(["Первый", "Второй"]);
   });
 
   it("renders a loading state", () => {
@@ -186,10 +187,10 @@ describe("TeacherProgramTopicMaterialsView", () => {
     expect(screen.getByTestId("materials-list")).toBeEmptyDOMElement();
   });
 
-  it("offers editing only for supported material types in an editable program", () => {
+  it("allows material management in an assigned active program", () => {
     mocks.useQuery.mockReset();
     mocks.useQuery
-      .mockReturnValueOnce(queryResult({ data: { ...program, editable: true } }))
+      .mockReturnValueOnce(queryResult({ data: { ...program, status: "ACTIVE", editable: false } }))
       .mockReturnValueOnce(
         queryResult({
           data: [
@@ -210,10 +211,26 @@ describe("TeacherProgramTopicMaterialsView", () => {
     expect(screen.getByRole("button", { name: "Загрузить файл" })).toBeInTheDocument();
   });
 
+  it("hides material management actions in an archived program", () => {
+    mocks.useQuery.mockReset();
+    mocks.useQuery
+      .mockReturnValueOnce(queryResult({ data: { ...program, status: "ARCHIVED", editable: false } }))
+      .mockReturnValueOnce(queryResult({ data: [{ id: "text", title: "Текст", materialType: "TEXT", position: 0 }] }))
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
+
+    render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
+
+    expect(screen.queryByRole("button", { name: "Добавить материал" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Загрузить файл" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Переместить «Текст» вверх" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Редактировать text" })).not.toBeInTheDocument();
+  });
+
   it("moves materials with buttons, disables boundary actions, and blocks actions while reordering", () => {
     mocks.useQuery.mockReset();
     mocks.useQuery
-      .mockReturnValueOnce(queryResult({ data: { ...program, editable: true } }))
+      .mockReturnValueOnce(queryResult({ data: { ...program, status: "ACTIVE", editable: false } }))
       .mockReturnValueOnce(
         queryResult({
           data: [
@@ -234,7 +251,7 @@ describe("TeacherProgramTopicMaterialsView", () => {
 
     mocks.reorderMutation = { isPending: true, mutate: mocks.reorderMutate };
     mocks.useQuery
-      .mockReturnValueOnce(queryResult({ data: { ...program, editable: true } }))
+      .mockReturnValueOnce(queryResult({ data: { ...program, status: "ACTIVE", editable: false } }))
       .mockReturnValueOnce(
         queryResult({
           data: [
