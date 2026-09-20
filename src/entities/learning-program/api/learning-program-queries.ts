@@ -7,6 +7,7 @@ export type LearningProgram = components["schemas"]["LearningProgramSummaryRespo
 export type LearningProgramDetails = components["schemas"]["LearningProgramDetailsResponse"];
 export type LearningProgramStatus = LearningProgram["status"];
 export type CreateLearningProgramRequest = components["schemas"]["CreateLearningProgramRequest"];
+export type UpdateLearningProgramRequest = components["schemas"]["UpdateLearningProgramRequest"];
 
 export async function getLearningPrograms(status?: LearningProgramStatus): Promise<LearningProgram[]> {
   const { data, error, response } = await apiClient.GET("/api/v1/teacher/programs", {

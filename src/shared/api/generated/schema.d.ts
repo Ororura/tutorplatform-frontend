@@ -752,6 +752,24 @@ export interface paths {
     delete?: never;
     options?: never;
     head?: never;
+    /** Update an owned unassigned learning program */
+    patch: operations["updateTeacherLearningProgram"];
+    trace?: never;
+  };
+  "/api/v1/teacher/programs/{programId}/archive": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Archive an owned learning program */
+    post: operations["archiveTeacherLearningProgram"];
+    delete?: never;
+    options?: never;
+    head?: never;
     patch?: never;
     trace?: never;
   };
@@ -1528,6 +1546,12 @@ export interface components {
       subjectId: string;
       title: string;
       description?: string | null;
+    };
+    UpdateLearningProgramRequest: {
+      title: string;
+      description?: string | null;
+      /** Format: int64 */
+      version: number;
     };
     LearningProgramSummaryResponse: {
       /** Format: uuid */
@@ -6061,6 +6085,42 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
+    };
+  };
+  updateTeacherLearningProgram: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: { programId: string };
+      cookie?: never;
+    };
+    requestBody: {
+      content: { "application/json": components["schemas"]["UpdateLearningProgramRequest"] };
+    };
+    responses: {
+      200: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["LearningProgramDetailsResponse"] };
+      };
+      400: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      404: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      409: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+    };
+  };
+  archiveTeacherLearningProgram: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: { programId: string };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["LearningProgramSummaryResponse"] };
+      };
+      404: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
     };
   };
   getStudentSubmission: {

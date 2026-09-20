@@ -5,6 +5,9 @@ import { Archive, BookOpenText, CheckCircle2, ChevronRight, FilePenLine, Layers3
 import Link from "next/link";
 
 import { type LearningProgramStatus, learningProgramQueries } from "@/entities/learning-program";
+import { ActivateLearningProgramButton } from "@/features/program/activate";
+import { ArchiveLearningProgramButton } from "@/features/program/archive";
+import { EditLearningProgramDialog } from "@/features/program/edit";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -95,6 +98,13 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     {program.data.description || "Описание программы пока не добавлено."}
                   </p>
                 </section>
+                {program.data.status !== "ARCHIVED" && (
+                  <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-100 pt-5">
+                    {program.data.editable && <EditLearningProgramDialog program={program.data} />}
+                    {program.data.status === "DRAFT" && <ActivateLearningProgramButton programId={program.data.id} />}
+                    <ArchiveLearningProgramButton programId={program.data.id} />
+                  </div>
+                )}
               </section>
 
               <section
