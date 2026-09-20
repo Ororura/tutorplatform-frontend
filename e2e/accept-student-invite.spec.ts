@@ -1,5 +1,93 @@
 import { expect, test } from "@playwright/test";
 
+type RegistrationMode = "OPEN" | "INVITE_ONLY";
+
+let originalMode: RegistrationMode | null = null;
+
+test.beforeEach(async ({ request }) => {
+  const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
+
+  const hostname = new URL(baseURL).hostname;
+
+  if (!["localhost", "127.0.0.1"].includes(hostname)) {
+    throw new Error("Registration mode can only be changed in a local environment");
+  }
+
+  const csrfResponse = await request.get("/api/v1/auth/csrf");
+
+  expect(csrfResponse.ok()).toBeTruthy();
+
+  const csrf = await csrfResponse.json();
+
+  const loginResponse = await request.post("/api/v1/auth/login", {
+    headers: {
+      [csrf.headerName]: csrf.token,
+    },
+    data: {
+      email: "teacher.demo@tutor.local",
+      password: "DemoTeacher123!",
+    },
+  });
+
+  expect(loginResponse.ok()).toBeTruthy();
+
+  const settingsResponse = await request.get("/api/v1/admin/settings");
+
+  expect(settingsResponse.ok()).toBeTruthy();
+
+  const settings = await settingsResponse.json();
+
+  originalMode = settings.registrationMode;
+
+  expect(["OPEN", "INVITE_ONLY"]).toContain(originalMode);
+
+  if (originalMode === "OPEN") {
+    return;
+  }
+
+  const newCsrfResponse = await request.get("/api/v1/auth/csrf");
+
+  expect(newCsrfResponse.ok()).toBeTruthy();
+
+  const newCsrf = await newCsrfResponse.json();
+
+  const updateResponse = await request.patch("/api/v1/admin/settings/registration", {
+    headers: {
+      [newCsrf.headerName]: newCsrf.token,
+    },
+    data: {
+      mode: "OPEN",
+    },
+  });
+
+  expect(updateResponse.ok()).toBeTruthy();
+});
+
+test.afterEach(async ({ request }) => {
+  if (originalMode === null) {
+    return;
+  }
+
+  const csrfResponse = await request.get("/api/v1/auth/csrf");
+
+  expect(csrfResponse.ok()).toBeTruthy();
+
+  const csrf = await csrfResponse.json();
+
+  const response = await request.patch("/api/v1/admin/settings/registration", {
+    headers: {
+      [csrf.headerName]: csrf.token,
+    },
+    data: {
+      mode: originalMode,
+    },
+  });
+
+  expect(response.ok(), "Original registration mode must be restored").toBeTruthy();
+
+  originalMode = null;
+});
+
 test("teacher and student complete the authentication and invitation flow", async ({ browser, page }, testInfo) => {
   const suffix = `${Date.now()}-${testInfo.workerIndex}`;
   const teacherEmail = `teacher-${suffix}@example.com`;
@@ -21,7 +109,7 @@ test("teacher and student complete the authentication and invitation flow", asyn
   await expect(page).toHaveURL(/\/teacher\/students$/);
   await expect(page.getByRole("heading", { name: "Ученики" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Добавить ученика" }).click();
+  await page.getByRole("button", { name: "Добавить ученика" }).first().click();
   const createStudentDialog = page.getByRole("dialog", { name: "Добавить ученика" });
   await createStudentDialog.getByLabel("Имя", { exact: true }).fill("Андрей");
   await createStudentDialog.getByLabel("Фамилия", { exact: true }).fill("Иванов");
@@ -55,8 +143,8 @@ test("teacher and student complete the authentication and invitation flow", asyn
     await studentPage.getByLabel("Придумайте пароль").fill(studentPassword);
     await studentPage.getByRole("button", { name: "Принять приглашение" }).click();
 
-    await expect(studentPage).toHaveURL(/\/student$/);
-    await expect(studentPage.getByRole("heading", { name: "Student Workspace" })).toBeVisible();
+    await expect(studentPage).toHaveURL(/\/student\/homework$/);
+    await expect(studentPage.getByRole("heading", { name: "Домашние задания" })).toBeVisible();
 
     const currentUserResponse = await studentPage.request.get("/api/v1/auth/me");
     expect(currentUserResponse.ok()).toBeTruthy();
@@ -69,7 +157,7 @@ test("teacher and student complete the authentication and invitation flow", asyn
   }
 
   await page.reload();
-  await expect(page.getByText("Зарегистрирован", { exact: true })).toBeVisible();
+  await expect(page.locator("dl").getByText("Зарегистрирован", { exact: true })).toBeVisible();
 
   await page.goto("/teacher/students");
   await page.getByRole("button", { name: "Выйти" }).click();

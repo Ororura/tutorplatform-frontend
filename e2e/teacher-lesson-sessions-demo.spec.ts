@@ -2,16 +2,31 @@ import { expect, test } from "@playwright/test";
 
 test("demo teacher reads Alex session history and creates a real session", async ({ page }) => {
   test.setTimeout(90_000);
-  await page.goto("/login");
+  await page.goto("/login?next=%2Fteacher%2Fstudents");
   await page.getByLabel("Email", { exact: true }).fill("teacher.demo@tutor.local");
   await page.getByLabel("Пароль", { exact: true }).fill("DemoTeacher123!");
   await page.getByRole("button", { name: "Войти" }).click();
   await expect(page).toHaveURL(/\/teacher\/students$/);
 
   await page.getByLabel("Поиск ученика").fill("Алексей");
-  await page.getByRole("link", { name: /Алексей Иванов/ }).click();
-  await page.getByRole("link", { name: "Занятия", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Занятия" })).toBeVisible();
+
+  await expect(page).toHaveURL(/search=/);
+
+  const alexLink = page.getByRole("link", {
+    name: /Алексей Иванов/,
+  });
+
+  await expect(alexLink).toBeVisible();
+  await alexLink.click();
+
+  await expect(page).toHaveURL(/\/teacher\/students\/[^/?]+$/);
+
+  await expect(page.getByRole("heading", { name: "Алексей Иванов" })).toBeVisible();
+
+  await page.getByRole("navigation", { name: "Разделы ученика" }).getByRole("link", { name: "Занятия" }).click();
+
+  await expect(page).toHaveURL(/\/teacher\/students\/[^/]+\/sessions$/);
+  await expect(page.getByRole("heading", { name: "Занятия", level: 1, exact: true })).toBeVisible();
   await expect(page.getByText("Проведено").first()).toBeVisible();
   await expect(page.getByText("Пропущено")).toBeVisible();
   await expect(page.getByText("Отменено")).toBeVisible();

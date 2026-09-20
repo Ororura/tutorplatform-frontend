@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("demo teacher reads Alex, Maria and Ilya programs from the real backend", async ({ page }) => {
   test.setTimeout(60_000);
-  await page.goto("/login");
+  await page.goto("/login?next=%2Fteacher%2Fstudents");
   await page.getByLabel("Email", { exact: true }).fill("teacher.demo@tutor.local");
   await page.getByLabel("Пароль", { exact: true }).fill("DemoTeacher123!");
   await page.getByRole("button", { name: "Войти" }).click();
@@ -13,6 +13,8 @@ test("demo teacher reads Alex, Maria and Ilya programs from the real backend", a
   await page.getByRole("link", { name: /Алексей Иванов/ }).click();
   await expect(page.getByRole("heading", { name: "Алексей Иванов" })).toBeVisible();
   await page.getByRole("link", { name: "Программа", exact: true }).click();
+  await expect(page).toHaveURL(/\/teacher\/students\/[^/]+\/program$/);
+  await page.getByRole("link", { name: /Python с нуля/ }).click();
   await expect(page).toHaveURL(/\/teacher\/students\/[^/]+\/programs\/[^/]+$/);
   await expect(page.getByRole("heading", { name: "Python с нуля" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Основы Python" })).toBeVisible();
@@ -37,7 +39,19 @@ test("demo teacher reads Alex, Maria and Ilya programs from the real backend", a
   await page.getByRole("link", { name: /Мария Петрова/ }).click();
   await expect(page.getByRole("heading", { name: "Мария Петрова" })).toBeVisible();
   await page.getByRole("link", { name: "Программа", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Python — начало обучения" })).toBeVisible();
+  await page
+    .getByRole("link", {
+      name: /Python — начало обучения/,
+    })
+    .click();
+
+  await expect(page).toHaveURL(/\/teacher\/students\/[^/]+\/programs\/[^/]+$/);
+
+  await expect(
+    page.getByRole("heading", {
+      name: "Python — начало обучения",
+    }),
+  ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Первые шаги" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Знакомство с Python/ })).toBeVisible();
 

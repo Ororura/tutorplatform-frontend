@@ -4,7 +4,7 @@ test("demo teacher completes the real students vertical slice", async ({ page },
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"], {
     origin: "http://localhost:3000",
   });
-  await page.goto("/login");
+  await page.goto("/login?next=%2Fteacher%2Fstudents");
   await page.getByLabel("Email", { exact: true }).fill("teacher.demo@tutor.local");
   await page.getByLabel("Пароль", { exact: true }).fill("DemoTeacher123!");
   await page.getByRole("button", { name: "Войти" }).click();
@@ -20,10 +20,10 @@ test("demo teacher completes the real students vertical slice", async ({ page },
   await expect(page.getByRole("link", { name: /Мария Петрова/ })).toHaveCount(0);
   await page.getByRole("link", { name: /Алексей Иванов/ }).click();
   await expect(page.getByRole("heading", { name: "Алексей Иванов" })).toBeVisible();
-  await expect(page.getByText("Зарегистрирован", { exact: true })).toBeVisible();
+  await expect(page.locator("dl").getByText("Зарегистрирован", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Отправить приглашение" })).toHaveCount(0);
 
-  await page.getByRole("link", { name: "← Все ученики" }).click();
+  await page.getByRole("link", { name: "Все ученики", exact: true }).click();
   await page.getByLabel("Поиск ученика").fill("Илья");
   await expect(page).toHaveURL(/search=%D0%98%D0%BB%D1%8C%D1%8F/);
   await page.getByRole("link", { name: /Илья Соколов/ }).click();
@@ -51,5 +51,5 @@ test("demo teacher completes the real students vertical slice", async ({ page },
 
   await page.reload();
   await expect(page.getByRole("heading", { name: new RegExp(`Тестовый ${suffix}`) })).toBeVisible();
-  await expect(page.getByText("Приглашён", { exact: true })).toBeVisible();
+  await expect(page.locator("dl").getByText("Приглашён", { exact: true })).toBeVisible();
 });
