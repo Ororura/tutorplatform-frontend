@@ -14,6 +14,9 @@ const mocks = vi.hoisted(() => {
     useQuery: vi.fn(),
     detail: vi.fn((programId: string) => ({ queryKey: ["learning-programs", "detail", programId] })),
     refetch: vi.fn(),
+    reorderModules: vi.fn(),
+    reorderTopics: vi.fn(),
+    reorderPending: false,
     ApiClientError,
   };
 });
@@ -45,6 +48,7 @@ vi.mock("@/features/program/module/manage", () => ({
     editable ? <button type="button">Добавить модуль</button> : null,
   LearningProgramModuleActions: ({ editable }: { editable: boolean }) =>
     editable ? <button type="button">Изменить</button> : null,
+  useReorderLearningProgramModulesMutation: () => ({ mutate: mocks.reorderModules, isPending: mocks.reorderPending }),
 }));
 
 vi.mock("@/features/program/topic/manage", () => ({
@@ -52,6 +56,7 @@ vi.mock("@/features/program/topic/manage", () => ({
     editable ? <button type="button">Добавить тему</button> : null,
   LearningProgramTopicActions: ({ editable }: { editable: boolean }) =>
     editable ? <button type="button">Изменить тему</button> : null,
+  useReorderLearningProgramTopicsMutation: () => ({ mutate: mocks.reorderTopics, isPending: mocks.reorderPending }),
 }));
 
 vi.mock("next/link", () => ({
@@ -95,6 +100,14 @@ const program = {
           status: "ACTIVE" as const,
           version: 1,
         },
+        {
+          id: "topic-2",
+          title: "Целые числа",
+          description: null,
+          position: 1,
+          status: "DRAFT" as const,
+          version: 1,
+        },
       ],
     },
   ],
@@ -104,6 +117,9 @@ describe("TeacherProgramDetailView", () => {
   beforeEach(() => {
     mocks.detail.mockClear();
     mocks.refetch.mockReset();
+    mocks.reorderModules.mockReset();
+    mocks.reorderTopics.mockReset();
+    mocks.reorderPending = false;
     mocks.useQuery.mockReturnValue({ data: program, isPending: false, isError: false, refetch: mocks.refetch });
   });
 
@@ -122,6 +138,40 @@ describe("TeacherProgramDetailView", () => {
     const modules = screen.getAllByRole("listitem").filter((item) => item.textContent?.includes("Модуль"));
     expect(modules[0]).toHaveTextContent("Числа");
     expect(modules[1]).toHaveTextContent("Уравнения");
+  });
+
+  it("reorders modules and topics with complete ordered IDs", () => {
+    render(<TeacherProgramDetailView programId="program-1" />);
+
+    const moduleUp = screen.getAllByRole("button", { name: "Переместить модуль вверх" });
+    const moduleDown = screen.getAllByRole("button", { name: "Переместить модуль вниз" });
+    expect(moduleUp[0]).toBeDisabled();
+    expect(moduleDown[1]).toBeDisabled();
+    fireEvent.click(moduleDown[0]);
+    expect(mocks.reorderModules).toHaveBeenCalledWith({ orderedIds: ["module-2", "module-1"] });
+
+    const topicUp = screen.getAllByRole("button", { name: "Переместить тему вверх" });
+    const topicDown = screen.getAllByRole("button", { name: "Переместить тему вниз" });
+    expect(topicUp[0]).toBeDisabled();
+    expect(topicDown[1]).toBeDisabled();
+    fireEvent.click(topicDown[0]);
+    expect(mocks.reorderTopics).toHaveBeenCalledWith({ orderedIds: ["topic-2", "topic-1"] });
+  });
+
+  it("blocks all order controls while a reorder request is pending", () => {
+    mocks.reorderPending = true;
+    render(<TeacherProgramDetailView programId="program-1" />);
+
+    screen
+      .getAllByRole("button", { name: "Переместить модуль вверх" })
+      .forEach((button) => expect(button).toBeDisabled());
+    screen
+      .getAllByRole("button", { name: "Переместить модуль вниз" })
+      .forEach((button) => expect(button).toBeDisabled());
+    screen
+      .getAllByRole("button", { name: "Переместить тему вверх" })
+      .forEach((button) => expect(button).toBeDisabled());
+    screen.getAllByRole("button", { name: "Переместить тему вниз" }).forEach((button) => expect(button).toBeDisabled());
   });
 
   it("renders loading state", () => {

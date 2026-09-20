@@ -1,16 +1,37 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Archive, BookOpenText, CheckCircle2, ChevronRight, FilePenLine, Layers3 } from "lucide-react";
+import {
+  Archive,
+  ArrowDown,
+  ArrowUp,
+  BookOpenText,
+  CheckCircle2,
+  ChevronRight,
+  FilePenLine,
+  Layers3,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { type LearningProgramStatus, learningProgramQueries } from "@/entities/learning-program";
+import {
+  type LearningProgramDetails,
+  type LearningProgramStatus,
+  learningProgramQueries,
+} from "@/entities/learning-program";
 import { ActivateLearningProgramButton } from "@/features/program/activate";
 import { ArchiveLearningProgramButton } from "@/features/program/archive";
 import { EditLearningProgramDialog } from "@/features/program/edit";
-import { CreateLearningProgramModuleDialog, LearningProgramModuleActions } from "@/features/program/module/manage";
-import { CreateLearningProgramTopicDialog, LearningProgramTopicActions } from "@/features/program/topic/manage";
+import {
+  CreateLearningProgramModuleDialog,
+  LearningProgramModuleActions,
+  useReorderLearningProgramModulesMutation,
+} from "@/features/program/module/manage";
+import {
+  CreateLearningProgramTopicDialog,
+  LearningProgramTopicActions,
+  useReorderLearningProgramTopicsMutation,
+} from "@/features/program/topic/manage";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -44,8 +65,15 @@ const topicStatusClassName = {
   ARCHIVED: "bg-slate-100 text-slate-600",
 } as const;
 
+function reorderedIds(ids: string[], index: number, direction: -1 | 1) {
+  const nextIds = [...ids];
+  [nextIds[index], nextIds[index + direction]] = [nextIds[index + direction], nextIds[index]];
+  return nextIds;
+}
+
 export function TeacherProgramDetailView({ programId }: Readonly<{ programId: string }>) {
   const program = useQuery(learningProgramQueries.detail(programId));
+  const reorderModules = useReorderLearningProgramModulesMutation(programId);
   const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
   const notFound = program.error instanceof ApiClientError && program.error.status === 404;
 
@@ -155,7 +183,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                   </div>
                 ) : (
                   <ol className="mt-6 space-y-4">
-                    {modules.map((module) => {
+                    {modules.map((module, moduleIndex) => {
                       const topics = [...module.topics].sort((a, b) => a.position - b.position);
                       return (
                         <li key={module.id} className="rounded-2xl border border-slate-200/80">
@@ -164,13 +192,57 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                             onToggle={(event) => setExpandedModuleId(event.currentTarget.open ? module.id : null)}
                           >
                             <summary className="cursor-pointer list-none p-5">
-                              <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
-                                Модуль {module.position + 1}
-                              </p>
-                              <h3 className="mt-1 text-lg font-semibold text-slate-950">{module.title}</h3>
-                              {module.description && (
-                                <p className="mt-2 text-sm leading-6 text-slate-500">{module.description}</p>
-                              )}
+                              <div className="flex items-start justify-between gap-3">
+                                <div>
+                                  <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
+                                    Модуль {module.position + 1}
+                                  </p>
+                                  <h3 className="mt-1 text-lg font-semibold text-slate-950">{module.title}</h3>
+                                  {module.description && (
+                                    <p className="mt-2 text-sm leading-6 text-slate-500">{module.description}</p>
+                                  )}
+                                </div>
+                                {program.data.editable && (
+                                  <div className="flex shrink-0 gap-1" onClick={(event) => event.stopPropagation()}>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      className="size-8 rounded-lg p-0"
+                                      aria-label="Переместить модуль вверх"
+                                      disabled={reorderModules.isPending || moduleIndex === 0}
+                                      onClick={() =>
+                                        reorderModules.mutate({
+                                          orderedIds: reorderedIds(
+                                            modules.map((item) => item.id),
+                                            moduleIndex,
+                                            -1,
+                                          ),
+                                        })
+                                      }
+                                    >
+                                      <ArrowUp size={16} />
+                                    </Button>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      className="size-8 rounded-lg p-0"
+                                      aria-label="Переместить модуль вниз"
+                                      disabled={reorderModules.isPending || moduleIndex === modules.length - 1}
+                                      onClick={() =>
+                                        reorderModules.mutate({
+                                          orderedIds: reorderedIds(
+                                            modules.map((item) => item.id),
+                                            moduleIndex,
+                                            1,
+                                          ),
+                                        })
+                                      }
+                                    >
+                                      <ArrowDown size={16} />
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
                             </summary>
                             <div className="border-t border-slate-100 px-5 pb-5 pt-4">
                               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -184,32 +256,12 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                               {topics.length === 0 ? (
                                 <p className="mt-2 text-sm text-slate-500">В этом модуле пока нет тем.</p>
                               ) : (
-                                <ol className="mt-3 space-y-2">
-                                  {topics.map((topic) => (
-                                    <li key={topic.id} className="flex items-start gap-2 text-sm text-slate-700">
-                                      <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
-                                      <div className="min-w-0 flex-1">
-                                        <div className="flex flex-wrap items-center gap-2">
-                                          <span className="font-medium">{topic.title}</span>
-                                          <span
-                                            className={`rounded-full px-2 py-0.5 text-xs font-medium ${topicStatusClassName[topic.status]}`}
-                                          >
-                                            {topicStatusPresentation[topic.status]}
-                                          </span>
-                                          <LearningProgramTopicActions
-                                            programId={program.data.id}
-                                            moduleId={module.id}
-                                            topic={topic}
-                                            editable={program.data.editable}
-                                          />
-                                        </div>
-                                        {topic.description && (
-                                          <p className="mt-0.5 text-slate-500">{topic.description}</p>
-                                        )}
-                                      </div>
-                                    </li>
-                                  ))}
-                                </ol>
+                                <TopicList
+                                  programId={program.data.id}
+                                  moduleId={module.id}
+                                  topics={topics}
+                                  editable={program.data.editable}
+                                />
                               )}
                               <LearningProgramModuleActions
                                 programId={program.data.id}
@@ -228,5 +280,69 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
           );
         })()}
     </main>
+  );
+}
+
+function TopicList({
+  programId,
+  moduleId,
+  topics,
+  editable,
+}: Readonly<{
+  programId: string;
+  moduleId: string;
+  topics: LearningProgramDetails["modules"][number]["topics"];
+  editable: boolean;
+}>) {
+  const reorderTopics = useReorderLearningProgramTopicsMutation(programId, moduleId);
+  const topicIds = topics.map((topic) => topic.id);
+
+  return (
+    <ol className="mt-3 space-y-2">
+      {topics.map((topic, topicIndex) => (
+        <li key={topic.id} className="flex items-start gap-2 text-sm text-slate-700">
+          <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-medium">{topic.title}</span>
+              <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${topicStatusClassName[topic.status]}`}>
+                {topicStatusPresentation[topic.status]}
+              </span>
+              {editable && (
+                <span className="flex gap-1">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="size-8 rounded-lg p-0"
+                    aria-label="Переместить тему вверх"
+                    disabled={reorderTopics.isPending || topicIndex === 0}
+                    onClick={() => reorderTopics.mutate({ orderedIds: reorderedIds(topicIds, topicIndex, -1) })}
+                  >
+                    <ArrowUp size={16} />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="size-8 rounded-lg p-0"
+                    aria-label="Переместить тему вниз"
+                    disabled={reorderTopics.isPending || topicIndex === topics.length - 1}
+                    onClick={() => reorderTopics.mutate({ orderedIds: reorderedIds(topicIds, topicIndex, 1) })}
+                  >
+                    <ArrowDown size={16} />
+                  </Button>
+                </span>
+              )}
+              <LearningProgramTopicActions
+                programId={programId}
+                moduleId={moduleId}
+                topic={topic}
+                editable={editable}
+              />
+            </div>
+            {topic.description && <p className="mt-0.5 text-slate-500">{topic.description}</p>}
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }
