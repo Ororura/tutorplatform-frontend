@@ -304,7 +304,12 @@ function TopicList({
           <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-medium">{topic.title}</span>
+              <Link
+                className="font-medium text-slate-950 hover:text-blue-600 hover:underline hover:underline-offset-4"
+                href={`/teacher/programs/${programId}/topics/${topic.id}`}
+              >
+                {topic.title}
+              </Link>
               <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${topicStatusClassName[topic.status]}`}>
                 {topicStatusPresentation[topic.status]}
               </span>

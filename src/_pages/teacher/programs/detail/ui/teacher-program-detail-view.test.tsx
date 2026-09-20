@@ -131,6 +131,10 @@ describe("TeacherProgramDetailView", () => {
     expect(screen.getByText("Математика")).toBeInTheDocument();
     expect(screen.getAllByText("Активна")).toHaveLength(2);
     expect(screen.getByText("Натуральные числа")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Натуральные числа" })).toHaveAttribute(
+      "href",
+      "/teacher/programs/program-1/topics/topic-1",
+    );
     expect(screen.getAllByRole("button", { name: "Добавить тему" })).toHaveLength(2);
     expect(screen.getByText("В этом модуле пока нет тем.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "← Программы обучения" })).toHaveAttribute("href", "/teacher/programs");
