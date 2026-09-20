@@ -56,6 +56,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/teacher/topics/{topicId}/tasks": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List tasks attached to an owned topic */
+    get: operations["listTopicTasks"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/teacher/topics/{topicId}/tasks/{taskId}": {
     parameters: {
       query?: never;
@@ -1267,6 +1284,20 @@ export interface components {
       required: boolean;
       /** Format: date-time */
       createdAt: string;
+    };
+    TopicTaskDetailsResponse: {
+      /** Format: uuid */
+      taskId: string;
+      title: string;
+      /** @enum {string} */
+      taskType: "TEXT" | "CODE";
+      /** @enum {string} */
+      difficulty: "EASY" | "MEDIUM" | "HARD";
+      /** @enum {string} */
+      status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+      /** Format: int32 */
+      position: number;
+      required: boolean;
     };
     CreateLessonMaterialRequest: {
       /** @enum {string} */
@@ -2727,6 +2758,55 @@ export interface operations {
       };
       /** @description Concurrent assessment conflict */
       409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  listTopicTasks: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        topicId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Attached tasks */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["TopicTaskDetailsResponse"][];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Topic not found */
+      404: {
         headers: {
           [name: string]: unknown;
         };

@@ -24,6 +24,18 @@ const mocks = vi.hoisted(() => {
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery }));
 vi.mock("@/entities/learning-program", () => ({ learningProgramQueries: { detail: mocks.programDetail } }));
+vi.mock("@/entities/task", () => ({
+  taskQueries: {
+    list: (params: unknown) => ({ queryKey: ["tasks", params] }),
+    activeForSubject: (subjectId: string) => ({ queryKey: ["tasks", "active", subjectId] }),
+  },
+  topicTaskQueries: { list: (topicId: string) => ({ queryKey: ["topic-tasks", topicId] }) },
+  taskTypePresentation: { TEXT: "Текстовый ответ", CODE: "Код" },
+  taskDifficultyPresentation: { EASY: "Лёгкая", MEDIUM: "Средняя", HARD: "Сложная" },
+}));
+vi.mock("@/features/task/attach", () => ({
+  AttachTaskToTopicDialog: () => <button type="button">Прикрепить задание</button>,
+}));
 vi.mock("@/entities/material", () => ({
   topicMaterialQueries: { list: mocks.materialsList },
   MaterialList: ({
@@ -102,7 +114,9 @@ describe("TeacherProgramTopicMaterialsView", () => {
           ],
           refetch: mocks.materialsRefetch,
         }),
-      );
+      )
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
   });
 
   it("validates topic membership, renders breadcrumbs, topic details and materials ordered by position", () => {
@@ -119,7 +133,11 @@ describe("TeacherProgramTopicMaterialsView", () => {
 
   it("renders a loading state", () => {
     mocks.useQuery.mockReset();
-    mocks.useQuery.mockReturnValueOnce(queryResult({ isPending: true })).mockReturnValueOnce(queryResult());
+    mocks.useQuery
+      .mockReturnValueOnce(queryResult({ isPending: true }))
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
     render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
     expect(screen.getByText("Загружаем тему…")).toHaveAttribute("aria-busy", "true");
   });
@@ -128,6 +146,8 @@ describe("TeacherProgramTopicMaterialsView", () => {
     mocks.useQuery.mockReset();
     mocks.useQuery
       .mockReturnValueOnce(queryResult({ data: { ...program, modules: [] } }))
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult())
       .mockReturnValueOnce(queryResult());
     render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="other-topic" />);
     expect(screen.getByText("Тема не найдена")).toBeInTheDocument();
@@ -138,7 +158,9 @@ describe("TeacherProgramTopicMaterialsView", () => {
     mocks.useQuery.mockReset();
     mocks.useQuery
       .mockReturnValueOnce(queryResult({ data: program }))
-      .mockReturnValueOnce(queryResult({ isPending: true }));
+      .mockReturnValueOnce(queryResult({ isPending: true }))
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
     const { rerender } = render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
     expect(screen.getByText("Загружаем материалы…")).toHaveAttribute("aria-busy", "true");
 
@@ -147,28 +169,38 @@ describe("TeacherProgramTopicMaterialsView", () => {
       .mockReturnValueOnce(queryResult({ data: program }))
       .mockReturnValueOnce(
         queryResult({ isError: true, error: new mocks.ApiClientError(500), refetch: mocks.materialsRefetch }),
-      );
+      )
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
     rerender(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
     fireEvent.click(screen.getByRole("button", { name: "Повторить" }));
     expect(mocks.materialsRefetch).toHaveBeenCalled();
 
     mocks.useQuery.mockReset();
-    mocks.useQuery.mockReturnValueOnce(queryResult({ data: program })).mockReturnValueOnce(queryResult({ data: [] }));
+    mocks.useQuery
+      .mockReturnValueOnce(queryResult({ data: program }))
+      .mockReturnValueOnce(queryResult({ data: [] }))
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
     rerender(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
     expect(screen.getByTestId("materials-list")).toBeEmptyDOMElement();
   });
 
   it("offers editing only for supported material types in an editable program", () => {
     mocks.useQuery.mockReset();
-    mocks.useQuery.mockReturnValueOnce(queryResult({ data: { ...program, editable: true } })).mockReturnValueOnce(
-      queryResult({
-        data: [
-          { id: "text", title: "Текст", materialType: "TEXT", position: 1 },
-          { id: "file", title: "Файл", materialType: "FILE", position: 2 },
-          { id: "image", title: "Изображение", materialType: "IMAGE", position: 3 },
-        ],
-      }),
-    );
+    mocks.useQuery
+      .mockReturnValueOnce(queryResult({ data: { ...program, editable: true } }))
+      .mockReturnValueOnce(
+        queryResult({
+          data: [
+            { id: "text", title: "Текст", materialType: "TEXT", position: 1 },
+            { id: "file", title: "Файл", materialType: "FILE", position: 2 },
+            { id: "image", title: "Изображение", materialType: "IMAGE", position: 3 },
+          ],
+        }),
+      )
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
 
     render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
 
@@ -180,14 +212,18 @@ describe("TeacherProgramTopicMaterialsView", () => {
 
   it("moves materials with buttons, disables boundary actions, and blocks actions while reordering", () => {
     mocks.useQuery.mockReset();
-    mocks.useQuery.mockReturnValueOnce(queryResult({ data: { ...program, editable: true } })).mockReturnValueOnce(
-      queryResult({
-        data: [
-          { id: "material-1", title: "Первый", position: 0 },
-          { id: "material-2", title: "Второй", position: 1 },
-        ],
-      }),
-    );
+    mocks.useQuery
+      .mockReturnValueOnce(queryResult({ data: { ...program, editable: true } }))
+      .mockReturnValueOnce(
+        queryResult({
+          data: [
+            { id: "material-1", title: "Первый", position: 0 },
+            { id: "material-2", title: "Второй", position: 1 },
+          ],
+        }),
+      )
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
 
     const { rerender } = render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
 
@@ -197,14 +233,18 @@ describe("TeacherProgramTopicMaterialsView", () => {
     expect(mocks.reorderMutate).toHaveBeenCalledWith({ orderedIds: ["material-2", "material-1"] });
 
     mocks.reorderMutation = { isPending: true, mutate: mocks.reorderMutate };
-    mocks.useQuery.mockReturnValueOnce(queryResult({ data: { ...program, editable: true } })).mockReturnValueOnce(
-      queryResult({
-        data: [
-          { id: "material-1", title: "Первый", position: 0 },
-          { id: "material-2", title: "Второй", position: 1 },
-        ],
-      }),
-    );
+    mocks.useQuery
+      .mockReturnValueOnce(queryResult({ data: { ...program, editable: true } }))
+      .mockReturnValueOnce(
+        queryResult({
+          data: [
+            { id: "material-1", title: "Первый", position: 0 },
+            { id: "material-2", title: "Второй", position: 1 },
+          ],
+        }),
+      )
+      .mockReturnValueOnce(queryResult())
+      .mockReturnValueOnce(queryResult());
     rerender(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
     expect(screen.getByRole("button", { name: "Переместить «Первый» вниз" })).toBeDisabled();
   });
