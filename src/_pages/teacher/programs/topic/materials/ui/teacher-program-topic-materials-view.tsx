@@ -6,6 +6,7 @@ import Link from "next/link";
 import { MaterialList, topicMaterialQueries } from "@/entities/material";
 import { learningProgramQueries } from "@/entities/learning-program";
 import { CreateMarkdownMaterialDialog } from "@/features/material/create";
+import { EditMaterialDialog, isEditableMaterial } from "@/features/material/edit";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -101,7 +102,16 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
                 )}
               </div>
             )}
-            {sortedMaterials && <MaterialList materials={sortedMaterials} />}
+            {sortedMaterials && (
+              <MaterialList
+                materials={sortedMaterials}
+                renderActions={(material) =>
+                  program.data?.editable && isEditableMaterial(material) ? (
+                    <EditMaterialDialog material={material} />
+                  ) : null
+                }
+              />
+            )}
           </section>
         </>
       )}

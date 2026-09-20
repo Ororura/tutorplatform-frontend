@@ -24,13 +24,32 @@ vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery }));
 vi.mock("@/entities/learning-program", () => ({ learningProgramQueries: { detail: mocks.programDetail } }));
 vi.mock("@/entities/material", () => ({
   topicMaterialQueries: { list: mocks.materialsList },
-  MaterialList: ({ materials }: { materials: Array<{ title: string }> }) => (
+  MaterialList: ({
+    materials,
+    renderActions,
+  }: {
+    materials: Array<{ id: string; title: string; materialType?: string }>;
+    renderActions?: (material: { id: string; title: string; materialType?: string }) => React.ReactNode;
+  }) => (
     <ol data-testid="materials-list">
       {materials.map((material) => (
-        <li key={material.title}>{material.title}</li>
+        <li key={material.title}>
+          {material.title}
+          {renderActions?.(material)}
+        </li>
       ))}
     </ol>
   ),
+}));
+vi.mock("@/features/material/edit", () => ({
+  isEditableMaterial: (material: { materialType?: string }) =>
+    ["TEXT", "MARKDOWN", "CODE_EXAMPLE", "LINK"].includes(material.materialType ?? ""),
+  EditMaterialDialog: ({ material }: { material: { id: string } }) => (
+    <button type="button">Редактировать {material.id}</button>
+  ),
+}));
+vi.mock("@/features/material/create", () => ({
+  CreateMarkdownMaterialDialog: () => <button type="button">Добавить материал</button>,
 }));
 vi.mock("@/shared/api/client", () => ({ ApiClientError: mocks.ApiClientError }));
 vi.mock("next/link", () => ({
@@ -127,5 +146,24 @@ describe("TeacherProgramTopicMaterialsView", () => {
     mocks.useQuery.mockReturnValueOnce(queryResult({ data: program })).mockReturnValueOnce(queryResult({ data: [] }));
     rerender(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
     expect(screen.getByTestId("materials-list")).toBeEmptyDOMElement();
+  });
+
+  it("offers editing only for supported material types in an editable program", () => {
+    mocks.useQuery.mockReset();
+    mocks.useQuery.mockReturnValueOnce(queryResult({ data: { ...program, editable: true } })).mockReturnValueOnce(
+      queryResult({
+        data: [
+          { id: "text", title: "Текст", materialType: "TEXT", position: 1 },
+          { id: "file", title: "Файл", materialType: "FILE", position: 2 },
+          { id: "image", title: "Изображение", materialType: "IMAGE", position: 3 },
+        ],
+      }),
+    );
+
+    render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
+
+    expect(screen.getByRole("button", { name: "Редактировать text" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Редактировать file" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Редактировать image" })).not.toBeInTheDocument();
   });
 });
