@@ -66,40 +66,9 @@ async function createTopic(module: Locator, title: string) {
   await expect(module.getByRole("link", { name: title, exact: true })).toBeVisible();
 }
 
-async function createTextMaterialThroughApi(page: Page, topicId: string, title: string, content: string) {
-  // TEXT is supported by the backend and editor, but the existing create dialog does not expose it.
-  // Use the authenticated browser session so the test covers the real API without adding product functionality.
-  const result = await page.evaluate(
-    async ({ topicId: id, title: materialTitle, content: materialContent }) => {
-      const csrfResponse = await fetch("/api/v1/auth/csrf", { credentials: "include" });
-      const csrf = (await csrfResponse.json()) as { headerName: string; token: string };
-      const response = await fetch(`/api/v1/teacher/topics/${encodeURIComponent(id)}/materials`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          [csrf.headerName]: csrf.token,
-        },
-        body: JSON.stringify({
-          materialType: "TEXT",
-          title: materialTitle,
-          content: materialContent,
-          externalUrl: null,
-          position: 0,
-        }),
-      });
-
-      return { status: response.status, body: await response.text() };
-    },
-    { topicId, title, content },
-  );
-
-  expect(result.status, result.body).toBe(201);
-}
-
 async function createMaterial(
   page: Page,
-  material: { type: "MARKDOWN" | "CODE_EXAMPLE" | "LINK"; title: string; value: string },
+  material: { type: "TEXT" | "MARKDOWN" | "CODE_EXAMPLE" | "LINK"; title: string; value: string },
 ) {
   await page.getByRole("button", { name: "Добавить материал" }).click();
   const dialog = page.getByRole("dialog", { name: "Добавить материал" });
@@ -109,7 +78,12 @@ async function createMaterial(
   if (material.type === "LINK") {
     await dialog.getByLabel("Ссылка", { exact: true }).fill(material.value);
   } else {
-    const contentLabel = material.type === "MARKDOWN" ? "Содержимое Markdown" : "Содержимое кода";
+    const contentLabel =
+      material.type === "TEXT"
+        ? "Содержимое текста"
+        : material.type === "MARKDOWN"
+          ? "Содержимое Markdown"
+          : "Содержимое кода";
     await dialog.getByLabel(contentLabel, { exact: true }).fill(material.value);
   }
 
@@ -151,10 +125,10 @@ test("teacher creates and persists every editable material type", async ({ page 
   await programModule.getByRole("link", { name: topicTitle, exact: true }).click();
   await expect(page.getByRole("heading", { name: topicTitle, exact: true })).toBeVisible();
 
-  const topicId = new URL(page.url()).pathname.match(/\/topics\/([^/]+)$/)?.[1];
-  expect(topicId).toBeTruthy();
-  await createTextMaterialThroughApi(page, topicId!, textTitle, textContent);
-  await page.reload();
+  const textDialog = await createMaterial(page, { type: "TEXT", title: textTitle, value: textContent });
+  await textDialog.getByRole("tab", { name: "Предпросмотр" }).click();
+  await expect(textDialog.getByRole("tabpanel")).toContainText("Первая строка");
+  await textDialog.getByRole("button", { name: "Добавить", exact: true }).click();
   await expect(page.getByRole("heading", { name: textTitle, exact: true })).toBeVisible();
   await expect(
     page.getByRole("region", { name: "Материалы" }).getByRole("paragraph").filter({ hasText: textContent }),

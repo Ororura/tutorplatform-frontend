@@ -63,6 +63,26 @@ describe("CreateMarkdownMaterialDialog", () => {
     await Promise.resolve();
   });
 
+  it("previews and creates TEXT through the same dialog", () => {
+    render(<CreateMarkdownMaterialDialog topicId="topic-1" position={3} editable />);
+    fireEvent.click(screen.getByRole("button", { name: "Добавить материал" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Название" }), { target: { value: "Текст" } });
+    fireEvent.change(screen.getByRole("combobox", { name: "Тип материала" }), { target: { value: "TEXT" } });
+    const content = "Первая строка\nВторая строка";
+    fireEvent.change(screen.getByRole("textbox", { name: "Содержимое текста" }), { target: { value: content } });
+    fireEvent.click(screen.getByRole("tab", { name: "Предпросмотр" }));
+    expect(screen.getByTestId("material-preview")).toHaveTextContent("TEXT: Первая строка");
+    expect(screen.getByTestId("material-preview")).toHaveTextContent("Вторая строка");
+    fireEvent.click(screen.getByRole("button", { name: "Добавить" }));
+    expect(mocks.mutateAsync).toHaveBeenCalledWith({
+      materialType: "TEXT",
+      title: "Текст",
+      content,
+      externalUrl: null,
+      position: 3,
+    });
+  });
+
   it("previews and creates only http/https links", () => {
     render(<CreateMarkdownMaterialDialog topicId="topic-1" position={1} editable />);
     fireEvent.click(screen.getByRole("button", { name: "Добавить материал" }));

@@ -10,7 +10,7 @@ import { Button } from "@/shared/ui/button";
 import { useCreateMaterialMutation } from "../api/create-material";
 
 type Mode = "editor" | "preview";
-type CreateMaterialType = "MARKDOWN" | "CODE_EXAMPLE" | "LINK";
+type CreateMaterialType = "TEXT" | "MARKDOWN" | "CODE_EXAMPLE" | "LINK";
 
 function isExternalUrl(value: string): boolean {
   try {
@@ -123,6 +123,7 @@ export function CreateMarkdownMaterialDialog({
                 setError("");
               }}
             >
+              <option value="TEXT">Текст</option>
               <option value="MARKDOWN">Markdown</option>
               <option value="CODE_EXAMPLE">Пример кода</option>
               <option value="LINK">Ссылка</option>
@@ -165,7 +166,13 @@ export function CreateMarkdownMaterialDialog({
                 </label>
               ) : (
                 <textarea
-                  aria-label={materialType === "MARKDOWN" ? "Содержимое Markdown" : "Содержимое кода"}
+                  aria-label={
+                    materialType === "TEXT"
+                      ? "Содержимое текста"
+                      : materialType === "MARKDOWN"
+                        ? "Содержимое Markdown"
+                        : "Содержимое кода"
+                  }
                   className={`min-h-64 w-full resize-y rounded-md border p-3 text-sm ${materialType === "CODE_EXAMPLE" ? "font-mono" : ""}`}
                   value={value}
                   onChange={(event) => setValue(event.target.value)}
