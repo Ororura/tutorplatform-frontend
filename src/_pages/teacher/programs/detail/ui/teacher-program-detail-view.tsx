@@ -12,7 +12,8 @@ import {
   Layers3,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import {
   type LearningProgramDetails,
@@ -76,6 +77,7 @@ function reorderedIds(ids: string[], index: number, direction: -1 | 1) {
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function TeacherProgramDetailView({ programId }: Readonly<{ programId: string }>) {
+  const router = useRouter();
   const program = useQuery({
     queryKey: UUID_PATTERN.test(programId)
       ? learningProgramQueries.detail(programId).queryKey
@@ -86,6 +88,18 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
   const reorderModules = useReorderLearningProgramModulesMutation(program.data?.id ?? "");
   const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
   const notFound = program.error instanceof ApiClientError && program.error.status === 404;
+
+  useEffect(() => {
+    const slug = program.data?.slug;
+
+    if (!slug || !UUID_PATTERN.test(programId)) {
+      return;
+    }
+
+    const canonicalPath = `/teacher/programs/${slug}`;
+
+    router.replace(`${canonicalPath}${window.location.search}${window.location.hash}`);
+  }, [programId, program.data?.slug, router]);
 
   return (
     <main className="mx-auto max-w-5xl space-y-6">

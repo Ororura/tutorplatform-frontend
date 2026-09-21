@@ -24,6 +24,12 @@ const mocks = vi.hoisted(() => {
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    replace: vi.fn(),
+  }),
+}));
+
 vi.mock("@/entities/learning-program", () => ({
   learningProgramQueries: {
     detail: mocks.detail,
