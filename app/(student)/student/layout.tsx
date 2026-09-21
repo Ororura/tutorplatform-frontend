@@ -1,5 +1,5 @@
 import { StudentGuard } from "@/entities/user";
-import { StudentHeader } from "@/widgets/student-header";
+import { StudentShell } from "@/widgets/student-shell";
 
 export default function StudentLayout({
   children,
@@ -8,11 +8,7 @@ export default function StudentLayout({
 }>) {
   return (
     <StudentGuard>
-      <div className="min-h-screen">
-        <StudentHeader />
-
-        <div className="mx-auto max-w-[1400px] px-3 pb-10 pt-4 sm:px-5">{children}</div>
-      </div>
+      <StudentShell>{children}</StudentShell>
     </StudentGuard>
   );
 }

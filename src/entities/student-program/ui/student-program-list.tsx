@@ -13,19 +13,16 @@ const statusClassNames: Record<StudentProgramSummary["status"], string> = {
 
 export function StudentProgramList({
   programs,
-  studentId,
+  getProgramHref,
 }: Readonly<{
   programs: StudentProgramSummary[];
-  studentId: string;
+  getProgramHref?: (programId: string) => string;
 }>) {
   return (
     <ul className="grid gap-3">
-      {programs.map((program) => (
-        <li key={program.id}>
-          <Link
-            className="group flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 transition hover:border-blue-200 hover:bg-blue-50/20 sm:flex-row sm:items-center sm:justify-between"
-            href={`/teacher/students/${studentId}/programs/${program.id}`}
-          >
+      {programs.map((program) => {
+        const content = (
+          <>
             <span className="flex min-w-0 items-center gap-4">
               <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
                 <BookOpenText size={19} />
@@ -50,14 +47,32 @@ export function StudentProgramList({
                 {programStatusLabels[program.status]}
               </span>
 
-              <ChevronRight
-                size={18}
-                className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-blue-600"
-              />
+              {getProgramHref && (
+                <ChevronRight
+                  size={18}
+                  className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-blue-600"
+                />
+              )}
             </span>
-          </Link>
-        </li>
-      ))}
+          </>
+        );
+        const className = [
+          "flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 sm:flex-row sm:items-center sm:justify-between",
+          getProgramHref ? "group transition hover:border-blue-200 hover:bg-blue-50/20" : "",
+        ].join(" ");
+
+        return (
+          <li key={program.id}>
+            {getProgramHref ? (
+              <Link className={className} href={getProgramHref(program.id)}>
+                {content}
+              </Link>
+            ) : (
+              <div className={className}>{content}</div>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }
