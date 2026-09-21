@@ -79,4 +79,19 @@ describe("UploadMaterialDialog", () => {
       file: script,
     });
   });
+
+  it("accepts browser MIME variants for TypeScript and TSX files", () => {
+    render(<UploadMaterialDialog topicId="topic-1" position={0} editable />);
+    fireEvent.click(screen.getByRole("button", { name: "Загрузить файл" }));
+    const input = screen.getByLabelText("Выберите файл");
+    expect(input).toHaveAttribute("accept", expect.stringContaining(".tsx"));
+
+    const typeScript = new File(["export const lesson = 1"], "har-parser.ts", { type: "video/mp2t" });
+    fireEvent.change(input, { target: { files: [typeScript] } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+    const tsx = new File(["export const Lesson = () => <div />"], "lesson.tsx");
+    fireEvent.change(input, { target: { files: [tsx] } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
 });

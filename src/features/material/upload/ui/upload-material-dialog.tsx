@@ -10,7 +10,7 @@ import { Button } from "@/shared/ui/button";
 import { useUploadMaterialMutation, type UploadMaterialRequest } from "../api/upload-material";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const FILE_ACCEPT = ".py,.sh,.js,.ts,.java,.txt,.md,.json,.csv,.pdf,.zip,.png,.jpg,.jpeg";
+const FILE_ACCEPT = ".py,.sh,.js,.ts,.tsx,.java,.txt,.md,.json,.csv,.pdf,.zip,.png,.jpg,.jpeg";
 const IMAGE_ACCEPT = ".png,.jpg,.jpeg";
 const TEXT_MIME_TYPES = new Set(["text/plain", "application/octet-stream"]);
 const FILE_MIME_TYPES: Readonly<Record<string, ReadonlySet<string>>> = {
@@ -26,7 +26,8 @@ const FILE_MIME_TYPES: Readonly<Record<string, ReadonlySet<string>>> = {
   ".py": new Set([...TEXT_MIME_TYPES, "text/x-python", "application/x-python-code"]),
   ".sh": new Set([...TEXT_MIME_TYPES, "application/x-sh", "text/x-shellscript"]),
   ".js": new Set([...TEXT_MIME_TYPES, "application/javascript", "text/javascript"]),
-  ".ts": new Set([...TEXT_MIME_TYPES, "application/typescript", "text/typescript"]),
+  ".ts": new Set([...TEXT_MIME_TYPES, "application/typescript", "text/typescript", "video/mp2t"]),
+  ".tsx": new Set([...TEXT_MIME_TYPES, "application/typescript", "text/typescript", "text/tsx"]),
   ".java": new Set([...TEXT_MIME_TYPES, "text/x-java-source"]),
 };
 const IMAGE_MIME_TYPES: Readonly<Record<string, string>> = {
@@ -52,7 +53,8 @@ function fileError(file: File, materialType: UploadMaterialType): string | null 
     return null;
   }
   const mimeTypes = FILE_MIME_TYPES[extension];
-  if (!mimeTypes?.has(file.type)) {
+  const effectiveMimeType = file.type || "application/octet-stream";
+  if (!mimeTypes?.has(effectiveMimeType)) {
     return "Неподдерживаемый формат файла или MIME-тип.";
   }
   return null;
