@@ -4,6 +4,7 @@ import { apiClient } from "@/shared/api/client";
 
 import {
   getCurrentStudentProgram,
+  getCurrentStudentProgramTopic,
   getCurrentStudentPrograms,
   getStudentProgram,
   getStudentPrograms,
@@ -53,6 +54,24 @@ describe("studentProgramQueries", () => {
       "detail",
       "current-student",
       "program-2",
+    ]);
+  });
+
+  it("loads a topic through the Student Topic API with an isolated cache key", async () => {
+    const data = { id: "topic-7", materials: [] } as never;
+    getMock.mockResolvedValue({ data, error: undefined, response: new Response(null, { status: 200 }) });
+
+    await expect(getCurrentStudentProgramTopic("program-2", "topic-7")).resolves.toBe(data);
+    expect(getMock).toHaveBeenCalledWith("/api/v1/student/programs/{studentProgramId}/topics/{topicId}", {
+      params: { path: { studentProgramId: "program-2", topicId: "topic-7" } },
+    });
+    expect(studentProgramQueries.currentTopic("program-2", "topic-7").queryKey).toEqual([
+      "student-programs",
+      "detail",
+      "current-student",
+      "program-2",
+      "topic",
+      "topic-7",
     ]);
   });
 
