@@ -118,7 +118,10 @@ function apiError(status: number) {
 }
 
 describe("StudentProgramTopicView", () => {
-  beforeEach(() => mocks.useQuery.mockReset());
+  beforeEach(() => {
+    mocks.useQuery.mockReset();
+    vi.unstubAllGlobals();
+  });
 
   it("renders breadcrumbs, safe topic content, ordered materials and cross-module navigation", () => {
     mockQueries();
@@ -145,14 +148,26 @@ describe("StudentProgramTopicView", () => {
     expect(screen.queryByRole("button", { name: /редактировать|удалить|переместить/i })).not.toBeInTheDocument();
   });
 
-  it("does not expose storage identifiers or a teacher-only file URL", () => {
+  it("uses the student material endpoint without exposing a teacher-only URL", () => {
     mockQueries();
     render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
 
-    expect(screen.getByText("Файл пока недоступен для скачивания.")).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Скачать файл" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Скачать файл" })).toHaveAttribute(
+      "href",
+      "/api/v1/student/programs/program-1/topics/topic-current/materials/private-file-key-must-not-appear/download",
+    );
     expect(document.body.innerHTML).not.toContain("/api/v1/teacher/topics/");
     expect(screen.queryByText("private-file-key-must-not-appear")).not.toBeInTheDocument();
+  });
+
+  it("shows an error when a file download fails", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 500 })));
+    mockQueries();
+    render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
+
+    fireEvent.click(screen.getByRole("link", { name: "Скачать файл" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Не удалось скачать файл. Попробуйте ещё раз.");
   });
 
   it("renders loading and empty-material states", () => {

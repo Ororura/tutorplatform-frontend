@@ -6,7 +6,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { MaterialRenderer, SafeMarkdown } from "@/entities/material";
-import { studentProgramQueries } from "@/entities/student-program";
+import {
+  downloadStudentProgramMaterial,
+  studentMaterialDownloadUrl,
+  studentProgramQueries,
+} from "@/entities/student-program";
 import { studentTopicTaskQueries } from "@/entities/task";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
@@ -18,15 +22,15 @@ function errorStatus(error: unknown): number | undefined {
   return error instanceof ApiClientError ? error.status : (error as { status?: number } | null)?.status;
 }
 
-function unavailableStudentDownload(): undefined {
-  return undefined;
-}
-
 export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<Props>) {
   const topic = useQuery(studentProgramQueries.currentTopic(studentProgramId, topicId));
   const program = useQuery(studentProgramQueries.currentDetail(studentProgramId));
   const tasks = useQuery(studentTopicTaskQueries.list(studentProgramId, topicId));
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [downloadErrorId, setDownloadErrorId] = useState<string | null>(null);
+
+  const getStudentDownloadUrl = (material: { id: string }) =>
+    studentMaterialDownloadUrl(studentProgramId, topicId, material.id);
 
   if (topic.isPending || program.isPending) {
     return (
@@ -149,7 +153,25 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
               <li className="rounded-[22px] border border-slate-200/80 p-5" key={material.id}>
                 <h3 className="mb-3 font-semibold text-slate-950">{material.title}</h3>
                 <div className="text-sm text-slate-700">
-                  <MaterialRenderer material={material} getDownloadUrl={unavailableStudentDownload} />
+                  <MaterialRenderer
+                    material={material}
+                    getDownloadUrl={getStudentDownloadUrl}
+                    onDownload={
+                      material.materialType === "FILE"
+                        ? (_downloadedMaterial, href) => {
+                            setDownloadErrorId(null);
+                            void downloadStudentProgramMaterial(href, material.title).catch(() => {
+                              setDownloadErrorId(material.id);
+                            });
+                          }
+                        : undefined
+                    }
+                  />
+                  {downloadErrorId === material.id && (
+                    <p className="mt-2 text-sm text-red-700" role="alert">
+                      Не удалось скачать файл. Попробуйте ещё раз.
+                    </p>
+                  )}
                 </div>
               </li>
             ))}
