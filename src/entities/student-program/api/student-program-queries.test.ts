@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { apiClient } from "@/shared/api/client";
 
 import {
+  getCurrentStudentProgram,
   getCurrentStudentPrograms,
   getStudentProgram,
   getStudentPrograms,
@@ -37,6 +38,22 @@ describe("studentProgramQueries", () => {
     await expect(getCurrentStudentPrograms()).resolves.toEqual([]);
     expect(getMock).toHaveBeenCalledWith("/api/v1/student/programs");
     expect(studentProgramQueries.currentList().queryKey).toEqual(["student-programs", "list", "current-student"]);
+  });
+
+  it("loads program details owned by the authenticated student", async () => {
+    const data = { id: "program-2" } as never;
+    getMock.mockResolvedValue({ data, error: undefined, response: new Response(null, { status: 200 }) });
+
+    await expect(getCurrentStudentProgram("program-2")).resolves.toBe(data);
+    expect(getMock).toHaveBeenCalledWith("/api/v1/student/programs/{studentProgramId}", {
+      params: { path: { studentProgramId: "program-2" } },
+    });
+    expect(studentProgramQueries.currentDetail("program-2").queryKey).toEqual([
+      "student-programs",
+      "detail",
+      "current-student",
+      "program-2",
+    ]);
   });
 
   it("uses both identifiers for the detail request and cache key", async () => {

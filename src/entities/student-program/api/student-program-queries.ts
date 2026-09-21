@@ -31,6 +31,18 @@ export async function getCurrentStudentPrograms(): Promise<StudentProgramSummary
   return data;
 }
 
+export async function getCurrentStudentProgram(studentProgramId: string): Promise<StudentProgramDetails> {
+  const { data, error, response } = await apiClient.GET("/api/v1/student/programs/{studentProgramId}", {
+    params: { path: { studentProgramId } },
+  });
+
+  if (error) {
+    throw new ApiClientError(response.status, error);
+  }
+
+  return data;
+}
+
 export async function getStudentProgram(studentId: string, studentProgramId: string): Promise<StudentProgramDetails> {
   const { data, error, response } = await apiClient.GET(
     "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}",
@@ -58,6 +70,11 @@ export const studentProgramQueries = {
       queryFn: () => getStudentPrograms(studentId),
     }),
   details: () => [...studentProgramQueries.all(), "detail"] as const,
+  currentDetail: (studentProgramId: string) =>
+    queryOptions({
+      queryKey: [...studentProgramQueries.details(), "current-student", studentProgramId] as const,
+      queryFn: () => getCurrentStudentProgram(studentProgramId),
+    }),
   studentDetails: (studentId: string) => [...studentProgramQueries.details(), studentId] as const,
   detail: (studentId: string, studentProgramId: string) =>
     queryOptions({
