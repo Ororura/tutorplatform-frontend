@@ -1,13 +1,16 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ArrowRight, BookOpenText } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpenText, ChevronRight, Code2 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 import { MaterialRenderer, SafeMarkdown } from "@/entities/material";
 import { studentProgramQueries } from "@/entities/student-program";
+import { studentTopicTaskQueries } from "@/entities/task";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
+import { StudentTaskSolution } from "@/widgets/student-task-solution";
 
 type Props = { studentProgramId: string; topicId: string };
 
@@ -22,6 +25,8 @@ function unavailableStudentDownload(): undefined {
 export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<Props>) {
   const topic = useQuery(studentProgramQueries.currentTopic(studentProgramId, topicId));
   const program = useQuery(studentProgramQueries.currentDetail(studentProgramId));
+  const tasks = useQuery(studentTopicTaskQueries.list(studentProgramId, topicId));
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   if (topic.isPending || program.isPending) {
     return (
@@ -80,6 +85,8 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
   const topicIndex = topics.findIndex((item) => item.id === topic.data.id);
   const previousTopic = topicIndex > 0 ? topics[topicIndex - 1] : undefined;
   const nextTopic = topicIndex >= 0 ? topics[topicIndex + 1] : undefined;
+  const practiceTasks = [...(tasks.data ?? [])].sort((left, right) => left.position - right.position);
+  const selectedTask = practiceTasks.find((task) => task.id === selectedTaskId);
 
   return (
     <main className="space-y-4">
@@ -149,6 +156,83 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
           </ol>
         )}
       </section>
+
+      <section
+        className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6"
+        aria-labelledby="topic-practice-heading"
+      >
+        <div className="flex items-start gap-3">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+            <Code2 size={19} aria-hidden="true" />
+          </span>
+          <div>
+            <p className="text-sm font-medium text-indigo-600">Самостоятельная практика</p>
+            <h2 className="mt-1 text-xl font-semibold text-slate-950" id="topic-practice-heading">
+              Практические задания
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">Выберите задание и проверьте решение по тестам.</p>
+          </div>
+        </div>
+
+        {tasks.isPending && (
+          <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-slate-500" aria-busy="true">
+            Загружаем задания…
+          </p>
+        )}
+
+        {tasks.isError && (
+          <div
+            className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-red-50 p-4"
+            role="alert"
+          >
+            <p className="text-sm text-red-700">Не удалось загрузить практические задания.</p>
+            <Button type="button" variant="secondary" onClick={() => void tasks.refetch()}>
+              Повторить
+            </Button>
+          </div>
+        )}
+
+        {tasks.isSuccess && practiceTasks.length === 0 && (
+          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-slate-500">
+            Для этой темы пока нет практических заданий.
+          </p>
+        )}
+
+        {practiceTasks.length > 0 && (
+          <ol className="mt-5 divide-y divide-slate-100">
+            {practiceTasks.map((task, index) => (
+              <li className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center" key={task.id}>
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-semibold text-slate-500">
+                  {index + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-slate-950">{task.title}</h3>
+                  <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-600">
+                    <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                      {task.taskType === "CODE" ? "Код" : "Текст"}
+                    </span>
+                    <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                      {task.required ? "Обязательное" : "Дополнительное"}
+                    </span>
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant={selectedTaskId === task.id ? "secondary" : "primary"}
+                  onClick={() => setSelectedTaskId(task.id)}
+                >
+                  {selectedTaskId === task.id ? "Открыто" : "Решить"}
+                  <ChevronRight className="ml-2" size={16} aria-hidden="true" />
+                </Button>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
+
+      {selectedTask && (
+        <StudentTaskSolution key={selectedTask.id} practice={{ studentProgramId, topicId, task: selectedTask }} />
+      )}
 
       <nav
         className="grid gap-3 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:grid-cols-2 sm:p-6"

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import type { StudentHomeworkItem } from "@/entities/homework";
+import type { StudentTopicTask } from "@/entities/task";
 import { SafeMarkdown } from "@/entities/material/ui/safe-markdown";
 import {
   executionStatusPresentation,
@@ -19,16 +20,93 @@ import { Button } from "@/shared/ui/button";
 
 type HomeworkStatus = "ASSIGNED" | "COMPLETED" | "CANCELLED";
 
-type SolutionProps = Readonly<{
+type HomeworkSolutionProps = Readonly<{
   homeworkId: string;
   homeworkStatus: HomeworkStatus;
   item: StudentHomeworkItem;
+  practice?: never;
 }>;
 
-export function StudentTaskSolution({ homeworkId, homeworkStatus, item }: SolutionProps) {
-  const submissions = useQuery(studentSubmissionQueries.list(item.taskId, item.id));
+type PracticeSolutionProps = Readonly<{
+  homeworkId?: never;
+  homeworkStatus?: never;
+  item?: never;
+  practice: {
+    studentProgramId: string;
+    topicId: string;
+    task: StudentTopicTask;
+  };
+}>;
 
-  const readOnly = homeworkStatus !== "ASSIGNED";
+type SolutionProps = HomeworkSolutionProps | PracticeSolutionProps;
+
+export function StudentTaskSolution(props: SolutionProps) {
+  const practice = props.practice;
+  const homeworkItem = props.item;
+  const taskId = practice?.task.id ?? homeworkItem?.taskId ?? "";
+  const homeworkItemId = homeworkItem?.id;
+  const submissions = useQuery(studentSubmissionQueries.list(taskId, homeworkItemId));
+  const standaloneSubmissions =
+    submissions.data?.items.filter(
+      (submission) => submission.homeworkItemId === null || submission.homeworkItemId === undefined,
+    ) ?? [];
+  const visibleSubmissions = practice ? standaloneSubmissions : (submissions.data?.items ?? []);
+
+  if (practice) {
+    const { task } = practice;
+    const item: StudentHomeworkItem = {
+      id: task.id,
+      taskId: task.id,
+      position: task.position,
+      required: task.required,
+      passed: standaloneSubmissions.some((submission) => submission.status === "PASSED"),
+      task: {
+        id: task.id,
+        title: task.title,
+        descriptionMarkdown: task.descriptionMarkdown,
+        taskType: task.taskType,
+        difficulty: task.difficulty,
+        codeExecution: task.programmingConfig,
+      },
+    };
+
+    return (
+      <TaskSolutionContent
+        item={item}
+        practice={practice}
+        submissions={visibleSubmissions}
+        submissionsError={submissions.isError}
+      />
+    );
+  }
+
+  return (
+    <TaskSolutionContent
+      homeworkId={props.homeworkId}
+      homeworkStatus={props.homeworkStatus}
+      item={props.item}
+      submissions={visibleSubmissions}
+      submissionsError={submissions.isError}
+    />
+  );
+}
+
+function TaskSolutionContent({
+  homeworkId,
+  homeworkStatus,
+  item,
+  practice,
+  submissions,
+  submissionsError,
+}: Readonly<{
+  homeworkId?: string;
+  homeworkStatus?: HomeworkStatus;
+  item: StudentHomeworkItem;
+  practice?: PracticeSolutionProps["practice"];
+  submissions: StudentSubmission[];
+  submissionsError: boolean;
+}>) {
+  const readOnly = homeworkStatus !== undefined && homeworkStatus !== "ASSIGNED";
 
   return (
     <section
@@ -45,21 +123,31 @@ export function StudentTaskSolution({ homeworkId, homeworkStatus, item }: Soluti
         </p>
       )}
 
-      {item.task.taskType === "TEXT" && <TextSolution disabled={readOnly} homeworkId={homeworkId} item={item} />}
+      {item.task.taskType === "TEXT" && homeworkId && (
+        <TextSolution disabled={readOnly} homeworkId={homeworkId} item={item} />
+      )}
 
-      {item.task.taskType === "CODE" && <CodeSolution disabled={readOnly} homeworkId={homeworkId} item={item} />}
+      {item.task.taskType === "TEXT" && practice && (
+        <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+          Самостоятельная отправка текстовых решений пока недоступна.
+        </p>
+      )}
+
+      {item.task.taskType === "CODE" && (
+        <CodeSolution disabled={readOnly} homeworkId={homeworkId} item={item} practice={practice} />
+      )}
 
       {item.task.taskType !== "TEXT" && item.task.taskType !== "CODE" && (
         <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Этот тип задания пока не поддерживается.</p>
       )}
 
-      {submissions.isError && (
+      {submissionsError && (
         <p className="text-sm text-red-700" role="alert">
           Не удалось загрузить историю попыток.
         </p>
       )}
 
-      <SubmissionHistory submissions={submissions.data?.items ?? []} />
+      <SubmissionHistory submissions={submissions} />
     </section>
   );
 }
@@ -143,10 +231,12 @@ function CodeSolution({
   homeworkId,
   item,
   disabled,
+  practice,
 }: Readonly<{
-  homeworkId: string;
+  homeworkId?: string;
   item: StudentHomeworkItem;
   disabled: boolean;
+  practice?: PracticeSolutionProps["practice"];
 }>) {
   const config = item.task.codeExecution;
 
@@ -177,7 +267,9 @@ function CodeSolution({
 
     run.mutate({
       taskId: item.taskId,
-      homeworkItemId: item.id,
+      ...(practice
+        ? { studentProgramId: practice.studentProgramId, topicId: practice.topicId }
+        : { homeworkItemId: item.id }),
       sourceCode,
     });
   };
@@ -191,7 +283,9 @@ function CodeSolution({
 
     submit.mutate({
       taskId: item.taskId,
-      homeworkItemId: item.id,
+      ...(practice
+        ? { studentProgramId: practice.studentProgramId, topicId: practice.topicId }
+        : { homeworkItemId: item.id }),
       sourceCode,
     });
   };

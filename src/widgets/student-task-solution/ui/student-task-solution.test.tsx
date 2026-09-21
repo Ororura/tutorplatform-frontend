@@ -69,7 +69,7 @@ const base = {
   },
 };
 
-describe("StudentTaskSolution", () => {
+describe("StudentTaskSolution widget", () => {
   beforeEach(() => {
     mocks.useQuery.mockReset();
 
@@ -184,6 +184,101 @@ describe("StudentTaskSolution", () => {
     });
   });
 
+  it("uses the standalone topic context without a homework item", () => {
+    render(
+      <StudentTaskSolution
+        practice={{
+          studentProgramId: "program-1",
+          topicId: "topic-1",
+          task: {
+            id: "task-1",
+            title: "Практика",
+            descriptionMarkdown: "Решите задачу",
+            taskType: "CODE",
+            difficulty: "EASY",
+            position: 0,
+            required: true,
+            programmingConfig: {
+              language: "PYTHON",
+              starterCode: "print('starter')",
+              executionEnabled: true,
+              timeLimitMs: 1000,
+              memoryLimitMb: 128,
+            },
+          },
+        }}
+      />,
+    );
+
+    const editor = screen.getByLabelText("Код решения");
+    expect(editor).toHaveValue("print('starter')");
+    fireEvent.change(editor, { target: { value: "print(42)" } });
+    fireEvent.click(screen.getByRole("button", { name: "Запустить" }));
+    fireEvent.click(screen.getByRole("button", { name: "Отправить решение" }));
+
+    expect(mocks.runCode.mutate).toHaveBeenCalledWith({
+      taskId: "task-1",
+      studentProgramId: "program-1",
+      topicId: "topic-1",
+      sourceCode: "print(42)",
+    });
+    expect(mocks.submitCode.mutate).toHaveBeenCalledWith({
+      taskId: "task-1",
+      studentProgramId: "program-1",
+      topicId: "topic-1",
+      sourceCode: "print(42)",
+    });
+  });
+
+  it("does not mix homework attempts into standalone practice history", () => {
+    mocks.useQuery.mockReturnValue({
+      data: {
+        items: [
+          {
+            id: "homework-submission",
+            taskId: "task-1",
+            homeworkItemId: "homework-item-1",
+            attemptNo: 1,
+            status: "FAILED",
+            submittedAt: "2026-09-01T10:00:00Z",
+          },
+          {
+            id: "practice-submission",
+            taskId: "task-1",
+            homeworkItemId: null,
+            attemptNo: 2,
+            status: "PASSED",
+            submittedAt: "2026-09-01T11:00:00Z",
+          },
+        ],
+      },
+      isPending: false,
+    });
+
+    render(
+      <StudentTaskSolution
+        practice={{
+          studentProgramId: "program-1",
+          topicId: "topic-1",
+          task: {
+            id: "task-1",
+            title: "Практика",
+            descriptionMarkdown: "Решите задачу",
+            taskType: "CODE",
+            difficulty: "EASY",
+            position: 0,
+            required: true,
+            programmingConfig: { language: "PYTHON", executionEnabled: true, timeLimitMs: 1000, memoryLimitMb: 128 },
+          },
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Попытка 2")).toBeInTheDocument();
+    expect(screen.queryByText("Попытка 1")).not.toBeInTheDocument();
+    expect(screen.queryByText("Не принято")).not.toBeInTheDocument();
+  });
+
   it("shows the expanded Python execution guide only for CODE tasks", () => {
     const { rerender } = render(
       <StudentTaskSolution
@@ -244,6 +339,8 @@ describe("StudentTaskSolution", () => {
       status,
       passedTests: status === "PASSED" ? 2 : 1,
       totalTests: 2,
+      stdoutExcerpt: "visible stdout",
+      stderrExcerpt: "visible stderr",
       tests: [
         { position: 0, hidden: false, passed: true },
         { position: 1, hidden: true, passed: status === "PASSED", expectedOutput: "secret" },
@@ -265,6 +362,8 @@ describe("StudentTaskSolution", () => {
     );
     expect(screen.getByText(label)).toBeInTheDocument();
     expect(screen.getByText(/Скрытый тест/)).toBeInTheDocument();
+    expect(screen.getByText("visible stdout")).toBeInTheDocument();
+    expect(screen.getByText("visible stderr")).toBeInTheDocument();
     expect(screen.queryByText("secret")).not.toBeInTheDocument();
   });
 

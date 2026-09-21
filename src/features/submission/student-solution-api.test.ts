@@ -45,4 +45,30 @@ describe("student solution API", () => {
       body: { homeworkItemId: "item-code", sourceCode: "print(1)" },
     });
   });
+
+  it("uses a topic context for standalone CODE practice", async () => {
+    postMock.mockResolvedValue({ data: { status: "PASSED" } as never, error: undefined, response: new Response() });
+
+    await runStudentCode({
+      taskId: "task-code",
+      studentProgramId: "program-1",
+      topicId: "topic-1",
+      sourceCode: "print(1)",
+    });
+    await submitCodeAnswer({
+      taskId: "task-code",
+      studentProgramId: "program-1",
+      topicId: "topic-1",
+      sourceCode: "print(1)",
+    });
+
+    expect(postMock).toHaveBeenNthCalledWith(1, "/api/v1/student/tasks/{taskId}/run", {
+      params: { path: { taskId: "task-code" } },
+      body: { studentProgramId: "program-1", topicId: "topic-1", sourceCode: "print(1)" },
+    });
+    expect(postMock).toHaveBeenNthCalledWith(2, "/api/v1/student/tasks/{taskId}/code-submissions", {
+      params: { path: { taskId: "task-code" } },
+      body: { studentProgramId: "program-1", topicId: "topic-1", sourceCode: "print(1)" },
+    });
+  });
 });

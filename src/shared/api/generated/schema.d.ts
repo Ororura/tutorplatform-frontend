@@ -995,6 +995,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/student/programs/{studentProgramId}/topics/{topicId}/tasks": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List available practice tasks for an assigned program topic */
+    get: operations["listStudentTopicTasks"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/student/homeworks": {
     parameters: {
       query?: never;
@@ -1821,11 +1838,15 @@ export interface components {
       sourceCode?: string | null;
       execution?: components["schemas"]["CodeSubmissionExecutionResponse"];
     };
-    /** @description Transient code run in an assigned homework item context */
+    /** @description Transient code run in an assigned homework or topic context */
     RunCodeRequest: {
       sourceCode: string;
       /** Format: uuid */
-      homeworkItemId: string;
+      homeworkItemId?: string;
+      /** Format: uuid */
+      studentProgramId?: string;
+      /** Format: uuid */
+      topicId?: string;
     };
     /**
      * @description Outcome of isolated code execution
@@ -1854,10 +1875,14 @@ export interface components {
       hidden: boolean;
       passed: boolean;
     };
-    /** @description Student source code for a CODE homework task */
+    /** @description Student source code for a CODE homework or topic practice task */
     SubmitCodeAnswerRequest: {
       /** Format: uuid */
-      homeworkItemId: string;
+      homeworkItemId?: string;
+      /** Format: uuid */
+      studentProgramId?: string;
+      /** Format: uuid */
+      topicId?: string;
       sourceCode: string;
     };
     AcceptTeacherInvitationRequest: {
@@ -2423,6 +2448,39 @@ export interface components {
       /** @enum {string|null} */
       progressStatus?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED" | null;
       materials: components["schemas"]["StudentLessonMaterialResponse"][];
+    };
+    StudentTopicTaskResponse: {
+      /** Format: uuid */
+      id: string;
+      title: string;
+      descriptionMarkdown: string;
+      /** @enum {string} */
+      taskType: "TEXT" | "CODE";
+      /** @enum {string} */
+      difficulty: "EASY" | "MEDIUM" | "HARD";
+      /** Format: int32 */
+      position: number;
+      required: boolean;
+      programmingConfig?: components["schemas"]["ProgrammingConfigResponse"];
+      testCases?: components["schemas"]["PublicTestCaseResponse"][];
+    };
+    ProgrammingConfigResponse: {
+      language: components["schemas"]["ProgrammingLanguage"];
+      starterCode?: string | null;
+      executionEnabled: boolean;
+      /** Format: int32 */
+      timeLimitMs: number;
+      /** Format: int32 */
+      memoryLimitMb: number;
+    };
+    PublicTestCaseResponse: {
+      /** Format: uuid */
+      id: string;
+      inputText?: string | null;
+      expectedOutput: string;
+      comparisonMode: components["schemas"]["ComparisonMode"];
+      /** Format: int32 */
+      position: number;
     };
     StudentHomeworkPageResponse: {
       items: components["schemas"]["StudentHomeworkSummaryResponse"][];
@@ -7143,6 +7201,40 @@ export interface operations {
         content: {
           "*/*": components["schemas"]["ApiError"];
         };
+      };
+    };
+  };
+  listStudentTopicTasks: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        studentProgramId: string;
+        topicId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Available topic tasks */
+      200: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["StudentTopicTaskResponse"][] };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["ApiError"] };
+      };
+      /** @description Student role required */
+      403: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["ApiError"] };
+      };
+      /** @description Student program or topic not found */
+      404: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["ApiError"] };
       };
     };
   };

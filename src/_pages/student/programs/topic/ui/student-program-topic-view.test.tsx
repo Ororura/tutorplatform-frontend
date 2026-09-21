@@ -20,6 +20,18 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+vi.mock("@/widgets/student-task-solution", () => ({
+  StudentTaskSolution: ({
+    practice,
+  }: {
+    practice: { studentProgramId: string; topicId: string; task: { title: string } };
+  }) => (
+    <div data-testid="practice-solution">
+      {practice.studentProgramId}/{practice.topicId}/{practice.task.title}
+    </div>
+  ),
+}));
+
 const program = {
   id: "program-1",
   title: "Python с нуля",
@@ -76,17 +88,23 @@ type QueryState = {
   error: unknown;
   isPending: boolean;
   isError: boolean;
+  isSuccess: boolean;
   refetch: ReturnType<typeof vi.fn>;
 };
 
 function queryState(data: unknown): QueryState {
-  return { data, error: null, isPending: false, isError: false, refetch: vi.fn() };
+  return { data, error: null, isPending: false, isError: false, isSuccess: true, refetch: vi.fn() };
 }
 
-function mockQueries(topicState: QueryState = queryState(topic), programState: QueryState = queryState(program)) {
-  mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) =>
-    options?.queryKey?.includes("topic") ? topicState : programState,
-  );
+function mockQueries(
+  topicState: QueryState = queryState(topic),
+  programState: QueryState = queryState(program),
+  tasksState: QueryState = queryState([]),
+) {
+  mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+    if (options?.queryKey?.[0] === "student-topic-tasks") return tasksState;
+    return options?.queryKey?.includes("topic") ? topicState : programState;
+  });
 }
 
 function apiError(status: number) {
@@ -138,7 +156,14 @@ describe("StudentProgramTopicView", () => {
   });
 
   it("renders loading and empty-material states", () => {
-    const pending = { data: undefined, error: null, isPending: true, isError: false, refetch: vi.fn() };
+    const pending = {
+      data: undefined,
+      error: null,
+      isPending: true,
+      isError: false,
+      isSuccess: false,
+      refetch: vi.fn(),
+    };
     mockQueries(pending);
     const { rerender } = render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
     expect(screen.getByText("Загружаем тему…")).toHaveAttribute("aria-busy", "true");
@@ -152,7 +177,14 @@ describe("StudentProgramTopicView", () => {
     [403, "Нет доступа к теме"],
     [404, "Тема не найдена"],
   ])("renders a dedicated %s error", (status, title) => {
-    mockQueries({ data: undefined, error: apiError(status), isPending: false, isError: true, refetch: vi.fn() });
+    mockQueries({
+      data: undefined,
+      error: apiError(status),
+      isPending: false,
+      isError: true,
+      isSuccess: false,
+      refetch: vi.fn(),
+    });
     render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
 
     expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
@@ -163,7 +195,14 @@ describe("StudentProgramTopicView", () => {
     const topicRefetch = vi.fn();
     const programRefetch = vi.fn();
     mockQueries(
-      { data: undefined, error: new Error("network"), isPending: false, isError: true, refetch: topicRefetch },
+      {
+        data: undefined,
+        error: new Error("network"),
+        isPending: false,
+        isError: true,
+        isSuccess: false,
+        refetch: topicRefetch,
+      },
       { ...queryState(program), refetch: programRefetch },
     );
     render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
@@ -171,5 +210,46 @@ describe("StudentProgramTopicView", () => {
 
     expect(topicRefetch).toHaveBeenCalledOnce();
     expect(programRefetch).toHaveBeenCalledOnce();
+  });
+
+  it("renders ordered practice tasks and opens the selected standalone solution", () => {
+    mockQueries(
+      queryState(topic),
+      queryState(program),
+      queryState([
+        {
+          id: "task-second",
+          title: "Второе задание",
+          descriptionMarkdown: "Описание",
+          taskType: "CODE",
+          difficulty: "EASY",
+          position: 20,
+          required: false,
+          programmingConfig: { language: "PYTHON", starterCode: "print(2)", executionEnabled: true },
+        },
+        {
+          id: "task-first",
+          title: "Первое задание",
+          descriptionMarkdown: "Описание",
+          taskType: "CODE",
+          difficulty: "EASY",
+          position: 10,
+          required: true,
+          programmingConfig: { language: "PYTHON", starterCode: "print(1)", executionEnabled: true },
+        },
+      ]),
+    );
+
+    render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
+
+    const practice = screen.getByRole("heading", { name: "Практические задания" }).closest("section");
+    expect(practice).not.toBeNull();
+    expect(practice!.textContent!.indexOf("Первое задание")).toBeLessThan(
+      practice!.textContent!.indexOf("Второе задание"),
+    );
+
+    fireEvent.click(screen.getAllByRole("button", { name: /Решить/ })[0]);
+
+    expect(screen.getByTestId("practice-solution")).toHaveTextContent("program-1/topic-current/Первое задание");
   });
 });

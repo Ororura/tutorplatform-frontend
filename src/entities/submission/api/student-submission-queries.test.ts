@@ -32,4 +32,24 @@ describe("studentSubmissionQueries", () => {
       "item-1",
     ]);
   });
+
+  it("loads standalone attempts without adding a homework context", async () => {
+    getMock.mockResolvedValue({
+      data: { items: [], page: 0, size: 20, totalElements: 0, totalPages: 0 } as never,
+      error: undefined,
+      response: new Response(null, { status: 200 }),
+    });
+
+    await getStudentTaskSubmissions("task-1");
+
+    expect(getMock).toHaveBeenCalledWith("/api/v1/student/tasks/{taskId}/submissions", {
+      params: { path: { taskId: "task-1" }, query: { page: 0, size: 20 } },
+    });
+    expect(studentSubmissionQueries.list("task-1").queryKey).toEqual([
+      "student-submissions",
+      "list",
+      "task-1",
+      "standalone",
+    ]);
+  });
 });
