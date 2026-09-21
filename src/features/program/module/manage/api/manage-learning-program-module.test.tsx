@@ -39,6 +39,6 @@ describe("learning program module reorder mutation", () => {
       params: { path: { programId: "program-1" } },
       body: { orderedIds: ["module-2", "module-1"] },
     });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: learningProgramQueries.detail("program-1").queryKey });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: learningProgramQueries.all() });
   });
 });

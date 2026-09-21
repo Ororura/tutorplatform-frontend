@@ -31,7 +31,6 @@ describe("useUpdateLearningProgramMutation", () => {
       params: { path: { programId: "program-1" } },
       body: { title: "Алгебра", description: null, version: 3 },
     });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["learning-programs", "detail", "program-1"] });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["learning-programs", "list"] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["learning-programs"] });
   });
 });

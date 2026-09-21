@@ -24,10 +24,9 @@ export function useUpdateLearningProgramMutation(programId: string) {
   return useMutation({
     mutationFn: (body: UpdateLearningProgramRequest) => updateLearningProgram(programId, body),
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: learningProgramQueries.detail(programId).queryKey }),
-        queryClient.invalidateQueries({ queryKey: learningProgramQueries.lists() }),
-      ]);
+      await queryClient.invalidateQueries({
+        queryKey: learningProgramQueries.all(),
+      });
     },
   });
 }

@@ -83,7 +83,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
     queryFn: () => (UUID_PATTERN.test(programId) ? getLearningProgram(programId) : getLearningProgramBySlug(programId)),
   });
 
-  const reorderModules = useReorderLearningProgramModulesMutation(program.data?.id ?? programId);
+  const reorderModules = useReorderLearningProgramModulesMutation(program.data?.id ?? "");
   const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
   const notFound = program.error instanceof ApiClientError && program.error.status === 404;
 

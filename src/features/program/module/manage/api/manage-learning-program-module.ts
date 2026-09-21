@@ -47,13 +47,17 @@ async function reorderLearningProgramModules(programId: string, body: ReorderLea
   if (error) throw new ApiClientError(response.status, error);
 }
 
-function useInvalidateProgramDetail(programId: string) {
+function useInvalidateProgramDetail() {
   const queryClient = useQueryClient();
-  return () => queryClient.invalidateQueries({ queryKey: learningProgramQueries.detail(programId).queryKey });
+
+  return () =>
+    queryClient.invalidateQueries({
+      queryKey: learningProgramQueries.all(),
+    });
 }
 
 export function useCreateLearningProgramModuleMutation(programId: string) {
-  const invalidate = useInvalidateProgramDetail(programId);
+  const invalidate = useInvalidateProgramDetail();
   return useMutation({
     mutationFn: (body: CreateLearningProgramModuleRequest) => createLearningProgramModule(programId, body),
     onSuccess: invalidate,
@@ -61,7 +65,7 @@ export function useCreateLearningProgramModuleMutation(programId: string) {
 }
 
 export function useUpdateLearningProgramModuleMutation(programId: string, moduleId: string) {
-  const invalidate = useInvalidateProgramDetail(programId);
+  const invalidate = useInvalidateProgramDetail();
   return useMutation({
     mutationFn: (body: UpdateLearningProgramModuleRequest) => updateLearningProgramModule(programId, moduleId, body),
     onSuccess: invalidate,
@@ -69,7 +73,7 @@ export function useUpdateLearningProgramModuleMutation(programId: string, module
 }
 
 export function useDeleteLearningProgramModuleMutation(programId: string, moduleId: string) {
-  const invalidate = useInvalidateProgramDetail(programId);
+  const invalidate = useInvalidateProgramDetail();
   return useMutation({ mutationFn: () => deleteLearningProgramModule(programId, moduleId), onSuccess: invalidate });
 }
 
@@ -102,6 +106,6 @@ export function useReorderLearningProgramModulesMutation(programId: string) {
     onError: (_error, _body, context) => {
       if (context?.previousProgram) queryClient.setQueryData(queryKey, context.previousProgram);
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: learningProgramQueries.all() }),
   });
 }
