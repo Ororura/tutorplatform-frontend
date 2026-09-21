@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+echo "Running pre-push checks..."
+
+echo "1/5 TypeScript"
+npm run typecheck
+
+echo "2/5 Prettier"
+npm run format
+
+echo "3/5 ESLint"
+npm run lint
+
+echo "4/5 Unit tests"
+npm run test
+
+echo "5/5 Production build"
+npm run build
+
+echo "All pre-push checks passed."

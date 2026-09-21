@@ -15,7 +15,8 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "api:generate": "openapi-typescript http://localhost:8080/v3/api-docs -o src/shared/api/generated/schema.d.ts"
+    "api:generate": "openapi-typescript http://localhost:8080/v3/api-docs -o src/shared/api/generated/schema.d.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -41,11 +42,22 @@
     "eslint": "^10.10.0",
     "eslint-config-next": "^16.3.5",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "jsdom": "^30.0.1",
+    "lint-staged": "^17.5.1",
     "openapi-typescript": "7.13.0",
     "prettier": "^3.9.8",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,css,md,mdx,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }
