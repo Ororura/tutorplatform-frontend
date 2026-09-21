@@ -111,7 +111,7 @@ export function TeacherProgramsView() {
                     >
                       <Link
                         className="absolute inset-0 rounded-[22px] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        href={`/teacher/programs/${program.id}`}
+                        href={`/teacher/programs/${program.slug}`}
                         aria-label={`Открыть программу: ${program.title}`}
                       />
 

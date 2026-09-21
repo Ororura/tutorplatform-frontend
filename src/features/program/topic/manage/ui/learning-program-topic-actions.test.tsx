@@ -14,6 +14,7 @@ vi.mock("../api/manage-learning-program-topic", () => ({
 
 const topic = {
   id: "topic-1",
+  slug: "tema",
   title: "Тема",
   description: "Описание",
   position: 0,

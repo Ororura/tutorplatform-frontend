@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => {
   return {
     useQuery: vi.fn(),
     detail: vi.fn((programId: string) => ({ queryKey: ["learning-programs", "detail", programId] })),
+    bySlug: vi.fn((slug: string) => ({ queryKey: ["learning-programs", "slug", slug] })),
     refetch: vi.fn(),
     reorderModules: vi.fn(),
     reorderTopics: vi.fn(),
@@ -26,6 +27,7 @@ vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery }));
 vi.mock("@/entities/learning-program", () => ({
   learningProgramQueries: {
     detail: mocks.detail,
+    bySlug: mocks.bySlug,
   },
 }));
 
@@ -69,6 +71,7 @@ vi.mock("next/link", () => ({
 
 const program = {
   id: "program-1",
+  slug: "algebra",
   subject: { id: "subject-1", name: "Математика" },
   title: "Алгебра",
   description: "Программа по алгебре",
@@ -94,6 +97,7 @@ const program = {
       topics: [
         {
           id: "topic-1",
+          slug: "naturalnye-chisla",
           title: "Натуральные числа",
           description: "Первый урок",
           position: 0,
@@ -102,6 +106,7 @@ const program = {
         },
         {
           id: "topic-2",
+          slug: "tselye-chisla",
           title: "Целые числа",
           description: null,
           position: 1,
@@ -116,6 +121,7 @@ const program = {
 describe("TeacherProgramDetailView", () => {
   beforeEach(() => {
     mocks.detail.mockClear();
+    mocks.bySlug.mockClear();
     mocks.refetch.mockReset();
     mocks.reorderModules.mockReset();
     mocks.reorderTopics.mockReset();
@@ -124,16 +130,16 @@ describe("TeacherProgramDetailView", () => {
   });
 
   it("loads and renders the program with ordered modules and topics", () => {
-    render(<TeacherProgramDetailView programId="program-1" />);
+    render(<TeacherProgramDetailView programId="algebra" />);
 
-    expect(mocks.detail).toHaveBeenCalledWith("program-1");
+    expect(mocks.bySlug).toHaveBeenCalledWith("algebra");
     expect(screen.getByRole("heading", { name: "Алгебра" })).toBeInTheDocument();
     expect(screen.getByText("Математика")).toBeInTheDocument();
     expect(screen.getAllByText("Активна")).toHaveLength(2);
     expect(screen.getByText("Натуральные числа")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Натуральные числа" })).toHaveAttribute(
       "href",
-      "/teacher/programs/program-1/topics/topic-1",
+      "/teacher/programs/algebra/topics/naturalnye-chisla",
     );
     expect(screen.getAllByRole("button", { name: "Добавить тему" })).toHaveLength(2);
     expect(screen.getByText("В этом модуле пока нет тем.")).toBeInTheDocument();
@@ -145,7 +151,7 @@ describe("TeacherProgramDetailView", () => {
   });
 
   it("reorders modules and topics with complete ordered IDs", () => {
-    render(<TeacherProgramDetailView programId="program-1" />);
+    render(<TeacherProgramDetailView programId="algebra" />);
 
     const moduleUp = screen.getAllByRole("button", { name: "Переместить модуль вверх" });
     const moduleDown = screen.getAllByRole("button", { name: "Переместить модуль вниз" });
@@ -164,7 +170,7 @@ describe("TeacherProgramDetailView", () => {
 
   it("blocks all order controls while a reorder request is pending", () => {
     mocks.reorderPending = true;
-    render(<TeacherProgramDetailView programId="program-1" />);
+    render(<TeacherProgramDetailView programId="algebra" />);
 
     screen
       .getAllByRole("button", { name: "Переместить модуль вверх" })
@@ -180,7 +186,7 @@ describe("TeacherProgramDetailView", () => {
 
   it("renders loading state", () => {
     mocks.useQuery.mockReturnValue({ data: undefined, isPending: true, isError: false, refetch: mocks.refetch });
-    render(<TeacherProgramDetailView programId="program-1" />);
+    render(<TeacherProgramDetailView programId="algebra" />);
     expect(screen.getByText("Загружаем программу…")).toHaveAttribute("aria-busy", "true");
   });
 
@@ -191,7 +197,7 @@ describe("TeacherProgramDetailView", () => {
       isError: false,
       refetch: mocks.refetch,
     });
-    render(<TeacherProgramDetailView programId="program-1" />);
+    render(<TeacherProgramDetailView programId="algebra" />);
     expect(screen.getByText("Модулей пока нет")).toBeInTheDocument();
   });
 
@@ -202,7 +208,7 @@ describe("TeacherProgramDetailView", () => {
       isError: false,
       refetch: mocks.refetch,
     });
-    const { rerender } = render(<TeacherProgramDetailView programId="program-1" />);
+    const { rerender } = render(<TeacherProgramDetailView programId="algebra" />);
 
     expect(screen.getByRole("button", { name: "Редактировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Добавить модуль" })).toBeInTheDocument();
@@ -216,7 +222,7 @@ describe("TeacherProgramDetailView", () => {
       isError: false,
       refetch: mocks.refetch,
     });
-    rerender(<TeacherProgramDetailView programId="program-1" />);
+    rerender(<TeacherProgramDetailView programId="algebra" />);
 
     expect(screen.queryByRole("button", { name: "Редактировать" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Добавить модуль" })).not.toBeInTheDocument();
@@ -246,7 +252,7 @@ describe("TeacherProgramDetailView", () => {
       error: new mocks.ApiClientError(500),
       refetch: mocks.refetch,
     });
-    render(<TeacherProgramDetailView programId="program-1" />);
+    render(<TeacherProgramDetailView programId="algebra" />);
     fireEvent.click(screen.getByRole("button", { name: "Повторить" }));
     expect(mocks.refetch).toHaveBeenCalled();
   });

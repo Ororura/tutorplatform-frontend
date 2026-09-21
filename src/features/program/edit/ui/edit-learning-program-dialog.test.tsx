@@ -11,6 +11,7 @@ vi.mock("../api/update-learning-program", () => ({
 
 const program = {
   id: "program-1",
+  slug: "algebra",
   subject: { id: "subject-1", name: "Математика" },
   title: "Алгебра",
   description: "Описание",
