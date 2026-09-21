@@ -111,18 +111,13 @@ export function TeacherStudentHomeworkDetailView({
           {homework.data.status === "ASSIGNED" && (
             <div className="flex gap-3">
               <Link
-                className="inline-flex h-10 items-center rounded-md border border-neutral-300 px-4 text-sm font-medium"
+                className="inline-flex h-10 items-center rounded-xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 active:bg-slate-100 active:text-slate-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600"
                 href={`/teacher/students/${studentId}/homework/${homeworkId}/edit`}
               >
                 Редактировать
               </Link>
 
-              <Button
-                className="bg-red-700 hover:bg-red-600"
-                disabled={cancel.isPending}
-                type="button"
-                onClick={onCancel}
-              >
+              <Button variant="danger" disabled={cancel.isPending} type="button" onClick={onCancel}>
                 {cancel.isPending ? "Отменяем…" : "Отменить домашнее задание"}
               </Button>
             </div>
@@ -272,7 +267,7 @@ function TextSubmissionReview({
             </Button>
 
             <Button
-              className="bg-red-700 hover:bg-red-600"
+              variant="danger"
               disabled={review.isPending}
               type="button"
               onClick={() =>

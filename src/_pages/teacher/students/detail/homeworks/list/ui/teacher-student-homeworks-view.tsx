@@ -13,7 +13,7 @@ import { Button } from "@/shared/ui/button";
 const statuses: HomeworkStatus[] = ["ASSIGNED", "COMPLETED", "CANCELLED"];
 
 const primaryLinkClassName =
-  "inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200";
+  "inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:bg-blue-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600";
 
 function pageFrom(value: string | null) {
   const parsed = Number(value);

@@ -303,11 +303,7 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
         <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? "Сохраняем…" : session ? "Сохранить изменения" : "Создать занятие"}
         </Button>
-        <Button
-          className="border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-100"
-          type="button"
-          onClick={() => router.back()}
-        >
+        <Button variant="secondary" type="button" onClick={() => router.back()}>
           Отмена
         </Button>
       </div>
