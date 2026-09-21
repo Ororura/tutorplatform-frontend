@@ -10,8 +10,30 @@ import { Button } from "@/shared/ui/button";
 import { useUploadMaterialMutation, type UploadMaterialRequest } from "../api/upload-material";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const FILE_MIME_TYPES = new Set(["application/pdf", "image/png", "image/jpeg", "text/plain"]);
-const IMAGE_MIME_TYPES = new Set(["image/png", "image/jpeg"]);
+const FILE_ACCEPT = ".py,.sh,.js,.ts,.java,.txt,.md,.json,.csv,.pdf,.zip,.png,.jpg,.jpeg";
+const IMAGE_ACCEPT = ".png,.jpg,.jpeg";
+const TEXT_MIME_TYPES = new Set(["text/plain", "application/octet-stream"]);
+const FILE_MIME_TYPES: Readonly<Record<string, ReadonlySet<string>>> = {
+  ".pdf": new Set(["application/pdf"]),
+  ".zip": new Set(["application/zip", "application/x-zip-compressed", "application/octet-stream"]),
+  ".png": new Set(["image/png"]),
+  ".jpg": new Set(["image/jpeg"]),
+  ".jpeg": new Set(["image/jpeg"]),
+  ".txt": TEXT_MIME_TYPES,
+  ".md": new Set([...TEXT_MIME_TYPES, "text/markdown"]),
+  ".csv": new Set([...TEXT_MIME_TYPES, "text/csv"]),
+  ".json": new Set([...TEXT_MIME_TYPES, "application/json", "text/json"]),
+  ".py": new Set([...TEXT_MIME_TYPES, "text/x-python", "application/x-python-code"]),
+  ".sh": new Set([...TEXT_MIME_TYPES, "application/x-sh", "text/x-shellscript"]),
+  ".js": new Set([...TEXT_MIME_TYPES, "application/javascript", "text/javascript"]),
+  ".ts": new Set([...TEXT_MIME_TYPES, "application/typescript", "text/typescript"]),
+  ".java": new Set([...TEXT_MIME_TYPES, "text/x-java-source"]),
+};
+const IMAGE_MIME_TYPES: Readonly<Record<string, string>> = {
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+};
 
 type UploadMaterialType = UploadMaterialRequest["materialType"];
 
@@ -23,9 +45,15 @@ function formatFileSize(bytes: number): string {
 
 function fileError(file: File, materialType: UploadMaterialType): string | null {
   if (file.size > MAX_FILE_SIZE) return "Размер файла не должен превышать 10 МиБ.";
-  if (!FILE_MIME_TYPES.has(file.type)) return "Разрешены только PDF, PNG, JPEG и текстовые файлы.";
-  if (materialType === "IMAGE" && !IMAGE_MIME_TYPES.has(file.type)) {
-    return "Для изображения разрешены только PNG и JPEG.";
+  const dot = file.name.lastIndexOf(".");
+  const extension = dot >= 0 ? file.name.slice(dot).toLowerCase() : "";
+  if (materialType === "IMAGE") {
+    if (IMAGE_MIME_TYPES[extension] !== file.type) return "Для изображения разрешены только PNG и JPEG.";
+    return null;
+  }
+  const mimeTypes = FILE_MIME_TYPES[extension];
+  if (!mimeTypes?.has(file.type)) {
+    return "Неподдерживаемый формат файла или MIME-тип.";
   }
   return null;
 }
@@ -72,7 +100,7 @@ export function UploadMaterialDialog({
   const selectFile = (nextFile: File | null) => {
     setFile(nextFile);
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
-    const nextPreviewUrl = nextFile && IMAGE_MIME_TYPES.has(nextFile.type) ? URL.createObjectURL(nextFile) : null;
+    const nextPreviewUrl = nextFile && nextFile.type.startsWith("image/") ? URL.createObjectURL(nextFile) : null;
     previewUrlRef.current = nextPreviewUrl;
     setPreviewUrl(nextPreviewUrl);
     setError(nextFile ? (fileError(nextFile, materialType) ?? "") : "");
@@ -155,7 +183,7 @@ export function UploadMaterialDialog({
             <input
               aria-label="Выберите файл"
               type="file"
-              accept="application/pdf,image/png,image/jpeg,text/plain"
+              accept={materialType === "IMAGE" ? IMAGE_ACCEPT : FILE_ACCEPT}
               onChange={(event) => selectFile(event.target.files?.[0] ?? null)}
             />
           </label>
