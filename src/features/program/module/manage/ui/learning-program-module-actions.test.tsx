@@ -64,7 +64,9 @@ describe("learning program module actions", () => {
         programId="program-1"
         module={{
           ...programModule,
-          topics: [{ id: "topic-1", title: "Тема", description: null, position: 0, status: "DRAFT", version: 1 }],
+          topics: [
+            { id: "topic-1", slug: "tema", title: "Тема", description: null, position: 0, status: "DRAFT", version: 1 },
+          ],
         }}
         editable
       />,

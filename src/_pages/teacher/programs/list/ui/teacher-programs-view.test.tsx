@@ -48,6 +48,7 @@ vi.mock("next/link", () => ({
 const programs = [
   {
     id: "draft-program",
+    slug: "python-s-nulya",
     subject: {
       id: "subject-1",
       name: "Python",
@@ -60,6 +61,7 @@ const programs = [
   },
   {
     id: "active-program",
+    slug: "python-advanced",
     subject: {
       id: "subject-1",
       name: "Python",
@@ -112,7 +114,7 @@ describe("TeacherProgramsView", () => {
 
     expect(screen.getByRole("link", { name: "Открыть программу: Python с нуля" })).toHaveAttribute(
       "href",
-      "/teacher/programs/draft-program",
+      "/teacher/programs/python-s-nulya",
     );
   });
 

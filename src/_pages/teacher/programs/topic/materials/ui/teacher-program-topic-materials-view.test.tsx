@@ -23,7 +23,20 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery }));
-vi.mock("@/entities/learning-program", () => ({ learningProgramQueries: { detail: mocks.programDetail } }));
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    replace: vi.fn(),
+  }),
+}));
+vi.mock("@/entities/learning-program", () => ({
+  learningProgramQueries: {
+    detail: mocks.programDetail,
+    bySlug: mocks.programDetail,
+  },
+  getLearningProgram: vi.fn(),
+  getLearningProgramBySlug: vi.fn(),
+}));
 vi.mock("@/entities/task", () => ({
   taskQueries: {
     list: (params: unknown) => ({ queryKey: ["tasks", params] }),
@@ -82,13 +95,21 @@ vi.mock("next/link", () => ({
 
 const program = {
   id: "program-1",
+  slug: "algebra",
   title: "Алгебра",
   status: "DRAFT" as const,
   modules: [
     {
       id: "module-1",
       title: "Уравнения",
-      topics: [{ id: "topic-1", title: "Линейные уравнения", description: "Научимся решать уравнения." }],
+      topics: [
+        {
+          id: "topic-1",
+          slug: "lineynye-uravneniya",
+          title: "Линейные уравнения",
+          description: "Научимся решать уравнения.",
+        },
+      ],
     },
   ],
 };
@@ -126,7 +147,7 @@ describe("TeacherProgramTopicMaterialsView", () => {
     expect(mocks.programDetail).toHaveBeenCalledWith("program-1");
     expect(mocks.materialsList).toHaveBeenCalledWith("topic-1");
     expect(screen.getByRole("navigation", { name: "Хлебные крошки" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Алгебра" })).toHaveAttribute("href", "/teacher/programs/program-1");
+    expect(screen.getByRole("link", { name: "Алгебра" })).toHaveAttribute("href", "/teacher/programs/algebra");
     expect(screen.getByRole("heading", { name: "Линейные уравнения" })).toBeInTheDocument();
     expect(screen.getByText("Научимся решать уравнения.")).toBeInTheDocument();
     expect(screen.getAllByRole("listitem").map((item) => item.firstChild?.textContent)).toEqual(["Первый", "Второй"]);

@@ -42,7 +42,7 @@ describe("learning program topic mutations", () => {
       params: { path: { programId: "program-1", moduleId: "module-1" } },
       body: { title: "Тема", description: null },
     });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["learning-programs", "detail", "program-1"] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["learning-programs"] });
   });
 
   it("updates a topic with its version", async () => {

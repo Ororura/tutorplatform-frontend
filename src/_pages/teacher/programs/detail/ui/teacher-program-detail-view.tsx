@@ -12,11 +12,14 @@ import {
   Layers3,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import {
   type LearningProgramDetails,
   type LearningProgramStatus,
+  getLearningProgram,
+  getLearningProgramBySlug,
   learningProgramQueries,
 } from "@/entities/learning-program";
 import { ActivateLearningProgramButton } from "@/features/program/activate";
@@ -71,11 +74,32 @@ function reorderedIds(ids: string[], index: number, direction: -1 | 1) {
   return nextIds;
 }
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export function TeacherProgramDetailView({ programId }: Readonly<{ programId: string }>) {
-  const program = useQuery(learningProgramQueries.detail(programId));
-  const reorderModules = useReorderLearningProgramModulesMutation(programId);
+  const router = useRouter();
+  const program = useQuery({
+    queryKey: UUID_PATTERN.test(programId)
+      ? learningProgramQueries.detail(programId).queryKey
+      : learningProgramQueries.bySlug(programId).queryKey,
+    queryFn: () => (UUID_PATTERN.test(programId) ? getLearningProgram(programId) : getLearningProgramBySlug(programId)),
+  });
+
+  const reorderModules = useReorderLearningProgramModulesMutation(program.data?.id ?? "");
   const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
   const notFound = program.error instanceof ApiClientError && program.error.status === 404;
+
+  useEffect(() => {
+    const slug = program.data?.slug;
+
+    if (!slug || !UUID_PATTERN.test(programId)) {
+      return;
+    }
+
+    const canonicalPath = `/teacher/programs/${slug}`;
+
+    router.replace(`${canonicalPath}${window.location.search}${window.location.hash}`);
+  }, [programId, program.data?.slug, router]);
 
   return (
     <main className="mx-auto max-w-5xl space-y-6">
@@ -258,6 +282,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                               ) : (
                                 <TopicList
                                   programId={program.data.id}
+                                  programSlug={program.data.slug}
                                   moduleId={module.id}
                                   topics={topics}
                                   editable={program.data.editable}
@@ -285,11 +310,13 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
 
 function TopicList({
   programId,
+  programSlug,
   moduleId,
   topics,
   editable,
 }: Readonly<{
   programId: string;
+  programSlug: string;
   moduleId: string;
   topics: LearningProgramDetails["modules"][number]["topics"];
   editable: boolean;
@@ -306,7 +333,7 @@ function TopicList({
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 className="font-medium text-slate-950 hover:text-blue-600 hover:underline hover:underline-offset-4"
-                href={`/teacher/programs/${programId}/topics/${topic.id}`}
+                href={`/teacher/programs/${programSlug}/topics/${topic.slug}`}
               >
                 {topic.title}
               </Link>

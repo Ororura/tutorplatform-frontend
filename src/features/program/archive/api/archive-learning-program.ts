@@ -15,11 +15,10 @@ export function useArchiveLearningProgramMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: archiveLearningProgram,
-    onSuccess: async (_updated, programId) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: learningProgramQueries.detail(programId).queryKey }),
-        queryClient.invalidateQueries({ queryKey: learningProgramQueries.lists() }),
-      ]);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: learningProgramQueries.all(),
+      });
     },
   });
 }

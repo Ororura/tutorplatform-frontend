@@ -37,6 +37,20 @@ export async function getLearningProgram(programId: string): Promise<LearningPro
   return data;
 }
 
+export async function getLearningProgramBySlug(slug: string): Promise<LearningProgramDetails> {
+  const { data, error, response } = await apiClient.GET("/api/v1/teacher/programs/by-slug/{slug}", {
+    params: {
+      path: { slug },
+    },
+  });
+
+  if (error) {
+    throw new ApiClientError(response.status, error);
+  }
+
+  return data;
+}
+
 export const learningProgramQueries = {
   all: () => ["learning-programs"] as const,
 
@@ -46,6 +60,12 @@ export const learningProgramQueries = {
     queryOptions({
       queryKey: [...learningProgramQueries.lists(), status ?? "ALL"] as const,
       queryFn: () => getLearningPrograms(status),
+    }),
+
+  bySlug: (slug: string) =>
+    queryOptions({
+      queryKey: [...learningProgramQueries.all(), "slug", slug] as const,
+      queryFn: () => getLearningProgramBySlug(slug),
     }),
 
   detail: (programId: string) =>

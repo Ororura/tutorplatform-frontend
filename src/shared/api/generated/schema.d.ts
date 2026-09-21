@@ -485,7 +485,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Submit and execute a CODE solution for a homework task */
+    /** Submit and execute a CODE solution for a homework or topic task */
     post: operations["submitCodeAnswer"];
     delete?: never;
     options?: never;
@@ -910,6 +910,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/teacher/programs/by-slug/{slug}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get an owned learning program template by slug */
+    get: operations["getTeacherLearningProgramBySlug"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/student/submissions/{submissionId}": {
     parameters: {
       query?: never;
@@ -995,23 +1012,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/v1/student/programs/{studentProgramId}/topics/{topicId}/materials/{materialId}/download": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Download a material from a program assigned to the current student */
-    get: operations["downloadStudentProgramMaterial"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/v1/student/programs/{studentProgramId}/topics/{topicId}/tasks": {
     parameters: {
       query?: never;
@@ -1021,6 +1021,23 @@ export interface paths {
     };
     /** List available practice tasks for an assigned program topic */
     get: operations["listStudentTopicTasks"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/student/programs/{studentProgramId}/topics/{topicId}/materials/{materialId}/download": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Download a material from a program assigned to the current student */
+    get: operations["downloadStudentProgramMaterial"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1781,6 +1798,7 @@ export interface components {
     LearningProgramSummaryResponse: {
       /** Format: uuid */
       id: string;
+      slug: string;
       subject: components["schemas"]["ProgramSubjectResponse"];
       title: string;
       description?: string | null;
@@ -1810,6 +1828,7 @@ export interface components {
     LearningProgramTopicDetailsResponse: {
       /** Format: uuid */
       id: string;
+      slug: string;
       title: string;
       description?: string | null;
       /** Format: int32 */
@@ -2069,6 +2088,7 @@ export interface components {
     LearningProgramDetailsResponse: {
       /** Format: uuid */
       id: string;
+      slug: string;
       subject: components["schemas"]["ProgramSubjectResponse"];
       title: string;
       description?: string | null;
@@ -2466,21 +2486,6 @@ export interface components {
       progressStatus?: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED" | null;
       materials: components["schemas"]["StudentLessonMaterialResponse"][];
     };
-    StudentTopicTaskResponse: {
-      /** Format: uuid */
-      id: string;
-      title: string;
-      descriptionMarkdown: string;
-      /** @enum {string} */
-      taskType: "TEXT" | "CODE";
-      /** @enum {string} */
-      difficulty: "EASY" | "MEDIUM" | "HARD";
-      /** Format: int32 */
-      position: number;
-      required: boolean;
-      programmingConfig?: components["schemas"]["ProgrammingConfigResponse"];
-      testCases?: components["schemas"]["PublicTestCaseResponse"][];
-    };
     ProgrammingConfigResponse: {
       language: components["schemas"]["ProgrammingLanguage"];
       starterCode?: string | null;
@@ -2498,6 +2503,21 @@ export interface components {
       comparisonMode: components["schemas"]["ComparisonMode"];
       /** Format: int32 */
       position: number;
+    };
+    StudentTopicTaskResponse: {
+      /** Format: uuid */
+      id: string;
+      title: string;
+      descriptionMarkdown: string;
+      /** @enum {string} */
+      taskType: "TEXT" | "CODE";
+      /** @enum {string} */
+      difficulty: "EASY" | "MEDIUM" | "HARD";
+      /** Format: int32 */
+      position: number;
+      required: boolean;
+      programmingConfig?: components["schemas"]["ProgrammingConfigResponse"];
+      testCases?: components["schemas"]["PublicTestCaseResponse"][];
     };
     StudentHomeworkPageResponse: {
       items: components["schemas"]["StudentHomeworkSummaryResponse"][];
@@ -5155,7 +5175,7 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
-      /** @description Task or homework item not found */
+      /** @description Task, homework item, student program, or topic not found */
       404: {
         headers: {
           [name: string]: unknown;
@@ -6976,6 +6996,55 @@ export interface operations {
       };
     };
   };
+  getTeacherLearningProgramBySlug: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        slug: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Learning program template */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["LearningProgramDetailsResponse"];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Learning program not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
   getStudentSubmission: {
     parameters: {
       query?: never;
@@ -7221,6 +7290,56 @@ export interface operations {
       };
     };
   };
+  listStudentTopicTasks: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        studentProgramId: string;
+        topicId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Available topic tasks */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["StudentTopicTaskResponse"][];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Student role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Student program or topic not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
   downloadStudentProgramMaterial: {
     parameters: {
       query?: never;
@@ -7269,40 +7388,6 @@ export interface operations {
         content: {
           "*/*": string;
         };
-      };
-    };
-  };
-  listStudentTopicTasks: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentProgramId: string;
-        topicId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Available topic tasks */
-      200: {
-        headers: { [name: string]: unknown };
-        content: { "*/*": components["schemas"]["StudentTopicTaskResponse"][] };
-      };
-      /** @description Authentication required */
-      401: {
-        headers: { [name: string]: unknown };
-        content: { "*/*": components["schemas"]["ApiError"] };
-      };
-      /** @description Student role required */
-      403: {
-        headers: { [name: string]: unknown };
-        content: { "*/*": components["schemas"]["ApiError"] };
-      };
-      /** @description Student program or topic not found */
-      404: {
-        headers: { [name: string]: unknown };
-        content: { "*/*": components["schemas"]["ApiError"] };
       };
     };
   };

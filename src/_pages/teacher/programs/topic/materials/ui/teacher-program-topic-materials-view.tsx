@@ -2,11 +2,13 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { MaterialList, topicMaterialQueries } from "@/entities/material";
 import { taskDifficultyPresentation, taskQueries, taskTypePresentation, topicTaskQueries } from "@/entities/task";
 import { AttachTaskToTopicDialog } from "@/features/task/attach";
-import { learningProgramQueries } from "@/entities/learning-program";
+import { getLearningProgram, getLearningProgramBySlug, learningProgramQueries } from "@/entities/learning-program";
 import { CreateMarkdownMaterialDialog } from "@/features/material/create";
 import { EditMaterialDialog, isEditableMaterial } from "@/features/material/edit";
 import { useReorderLessonMaterialsMutation } from "@/features/material/reorder";
@@ -16,11 +18,37 @@ import { Button } from "@/shared/ui/button";
 
 type Props = { programId: string; topicId: string };
 
-export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonly<Props>) {
-  const program = useQuery(learningProgramQueries.detail(programId));
+const UUID_PATTERN = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
+
+export function TeacherProgramTopicMaterialsView({ programId: programRoute, topicId: topicRoute }: Readonly<Props>) {
+  const router = useRouter();
+
+  const program = useQuery({
+    queryKey: UUID_PATTERN.test(programRoute)
+      ? learningProgramQueries.detail(programRoute).queryKey
+      : learningProgramQueries.bySlug(programRoute).queryKey,
+
+    queryFn: () =>
+      UUID_PATTERN.test(programRoute) ? getLearningProgram(programRoute) : getLearningProgramBySlug(programRoute),
+  });
   const topicContext = program.data?.modules
     .flatMap((module) => module.topics.map((topic) => ({ module, topic })))
-    .find(({ topic }) => topic.id === topicId);
+    .find(({ topic }) => topic.id === topicRoute || topic.slug === topicRoute);
+
+  const topicId = topicContext?.topic.id ?? "";
+
+  useEffect(() => {
+    if (!program.data || !topicContext) return;
+
+    const canonicalProgramSlug = program.data.slug;
+    const canonicalTopicSlug = topicContext.topic.slug;
+
+    if (programRoute === canonicalProgramSlug && topicRoute === canonicalTopicSlug) {
+      return;
+    }
+
+    router.replace(`/teacher/programs/${canonicalProgramSlug}/topics/${canonicalTopicSlug}${window.location.search}`);
+  }, [program.data, topicContext, programRoute, topicRoute, router]);
   const materials = useQuery({
     ...topicMaterialQueries.list(topicId),
     enabled: Boolean(topicContext),
@@ -58,7 +86,10 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
           Программы обучения
         </Link>
         <span aria-hidden="true">/</span>
-        <Link className="font-medium hover:text-blue-600" href={`/teacher/programs/${programId}`}>
+        <Link
+          className="font-medium hover:text-blue-600"
+          href={`/teacher/programs/${program.data?.slug ?? programRoute}`}
+        >
           {program.data?.title ?? "Программа"}
         </Link>
         <span aria-hidden="true">/</span>

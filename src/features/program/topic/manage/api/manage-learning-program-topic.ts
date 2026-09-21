@@ -52,13 +52,17 @@ async function reorderLearningProgramTopics(
   if (error) throw new ApiClientError(response.status, error);
 }
 
-function useInvalidateProgramDetail(programId: string) {
+function useInvalidateProgramDetail() {
   const queryClient = useQueryClient();
-  return () => queryClient.invalidateQueries({ queryKey: learningProgramQueries.detail(programId).queryKey });
+
+  return () =>
+    queryClient.invalidateQueries({
+      queryKey: learningProgramQueries.all(),
+    });
 }
 
 export function useCreateLearningProgramTopicMutation(programId: string, moduleId: string) {
-  const invalidate = useInvalidateProgramDetail(programId);
+  const invalidate = useInvalidateProgramDetail();
   return useMutation({
     mutationFn: (body: CreateLearningProgramTopicRequest) => createLearningProgramTopic(programId, moduleId, body),
     onSuccess: invalidate,
@@ -66,7 +70,7 @@ export function useCreateLearningProgramTopicMutation(programId: string, moduleI
 }
 
 export function useUpdateLearningProgramTopicMutation(programId: string, moduleId: string, topicId: string) {
-  const invalidate = useInvalidateProgramDetail(programId);
+  const invalidate = useInvalidateProgramDetail();
   return useMutation({
     mutationFn: (body: UpdateLearningProgramTopicRequest) =>
       updateLearningProgramTopic(programId, moduleId, topicId, body),
@@ -108,6 +112,6 @@ export function useReorderLearningProgramTopicsMutation(programId: string, modul
     onError: (_error, _body, context) => {
       if (context?.previousProgram) queryClient.setQueryData(queryKey, context.previousProgram);
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: learningProgramQueries.all() }),
   });
 }

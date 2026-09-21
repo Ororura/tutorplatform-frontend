@@ -30,7 +30,6 @@ describe("useArchiveLearningProgramMutation", () => {
     expect(mocks.post).toHaveBeenCalledWith("/api/v1/teacher/programs/{programId}/archive", {
       params: { path: { programId: "program-1" } },
     });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["learning-programs", "detail", "program-1"] });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["learning-programs", "list"] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["learning-programs"] });
   });
 });
