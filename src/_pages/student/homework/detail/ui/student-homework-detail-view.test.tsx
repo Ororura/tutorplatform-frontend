@@ -25,7 +25,7 @@ vi.mock("@/entities/homework", () => ({
   },
   formatHomeworkDate: () => "1 сентября 2026",
 }));
-vi.mock("./student-task-solution", () => ({
+vi.mock("@/widgets/student-task-solution", () => ({
   StudentTaskSolution: (props: { item: { task: { title: string } } }) => (
     <div data-testid="solution">{props.item.task.title}</div>
   ),

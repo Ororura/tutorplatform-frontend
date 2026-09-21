@@ -14,8 +14,7 @@ import {
 import { submissionStatusPresentation } from "@/entities/submission";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
-
-import { StudentTaskSolution } from "./student-task-solution";
+import { StudentTaskSolution } from "@/widgets/student-task-solution";
 
 function getStatusClassName(state: string) {
   switch (state) {
