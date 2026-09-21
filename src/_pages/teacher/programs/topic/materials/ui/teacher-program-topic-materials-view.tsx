@@ -209,7 +209,8 @@ export function TeacherProgramTopicMaterialsView({ programId, topicId }: Readonl
                         <div>
                           <p className="font-semibold text-slate-900">{task.title}</p>
                           <p className="mt-1 text-sm text-slate-500">
-                            {taskTypePresentation[task.taskType]} · {taskDifficultyPresentation[task.difficulty]}
+                            {taskTypePresentation[task.taskType as keyof typeof taskTypePresentation] ?? task.taskType}{" "}
+                            · {taskDifficultyPresentation[task.difficulty]}
                             {!task.required && " · Необязательное"}
                           </p>
                         </div>

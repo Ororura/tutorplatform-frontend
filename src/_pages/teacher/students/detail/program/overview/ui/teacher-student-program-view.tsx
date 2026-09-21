@@ -110,7 +110,10 @@ export function TeacherStudentProgramView({
                 />
               </div>
 
-              <StudentProgramList programs={programs.data} studentId={studentId} />
+              <StudentProgramList
+                programs={programs.data}
+                getProgramHref={(programId) => `/teacher/students/${studentId}/programs/${programId}`}
+              />
             </div>
           )}
         </section>

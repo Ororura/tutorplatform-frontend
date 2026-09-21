@@ -2,7 +2,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { apiClient } from "@/shared/api/client";
 
-import { getStudentProgram, getStudentPrograms, studentProgramQueries } from "./student-program-queries";
+import {
+  getCurrentStudentPrograms,
+  getStudentProgram,
+  getStudentPrograms,
+  studentProgramQueries,
+} from "./student-program-queries";
 
 vi.mock("@/shared/api/client", () => ({
   ApiClientError: class ApiClientError extends Error {},
@@ -24,6 +29,14 @@ describe("studentProgramQueries", () => {
     expect(studentProgramQueries.list("student-alex").queryKey).not.toEqual(
       studentProgramQueries.list("student-maria").queryKey,
     );
+  });
+
+  it("loads programs owned by the authenticated student", async () => {
+    getMock.mockResolvedValue({ data: [], error: undefined, response: new Response(null, { status: 200 }) });
+
+    await expect(getCurrentStudentPrograms()).resolves.toEqual([]);
+    expect(getMock).toHaveBeenCalledWith("/api/v1/student/programs");
+    expect(studentProgramQueries.currentList().queryKey).toEqual(["student-programs", "list", "current-student"]);
   });
 
   it("uses both identifiers for the detail request and cache key", async () => {
