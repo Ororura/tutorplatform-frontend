@@ -53,4 +53,30 @@ describe("UploadMaterialDialog", () => {
     expect(screen.getByRole("alert")).toHaveTextContent("PNG и JPEG");
     expect(mocks.mutateAsync).not.toHaveBeenCalled();
   });
+
+  it("accepts a shell script as FILE but rejects it as IMAGE", async () => {
+    render(<UploadMaterialDialog topicId="topic-1" position={1} editable />);
+    fireEvent.click(screen.getByRole("button", { name: "Загрузить файл" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Название" }), { target: { value: "Скрипт" } });
+    const input = screen.getByLabelText("Выберите файл");
+    expect(input).toHaveAttribute("accept", expect.stringContaining(".sh"));
+
+    const script = new File(["#!/bin/sh\necho lesson"], "lesson.sh", { type: "application/octet-stream" });
+    fireEvent.change(input, { target: { files: [script] } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Тип файла" }), { target: { value: "IMAGE" } });
+    expect(screen.getByRole("alert")).toHaveTextContent("PNG и JPEG");
+    expect(input).toHaveAttribute("accept", ".png,.jpg,.jpeg");
+    fireEvent.change(screen.getByRole("combobox", { name: "Тип файла" }), { target: { value: "FILE" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Загрузить" }));
+    expect(mocks.mutateAsync).toHaveBeenCalledWith({
+      materialType: "FILE",
+      title: "Скрипт",
+      position: 1,
+      file: script,
+    });
+  });
 });

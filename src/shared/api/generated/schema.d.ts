@@ -995,6 +995,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/student/programs/{studentProgramId}/topics/{topicId}/materials/{materialId}/download": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Download a material from a program assigned to the current student */
+    get: operations["downloadStudentProgramMaterial"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/student/programs/{studentProgramId}/topics/{topicId}/tasks": {
     parameters: {
       query?: never;
@@ -7200,6 +7217,57 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  downloadStudentProgramMaterial: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        studentProgramId: string;
+        topicId: string;
+        materialId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Material content */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": string;
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": string;
+        };
+      };
+      /** @description Student role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": string;
+        };
+      };
+      /** @description Student program, topic, or material not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": string;
         };
       };
     };

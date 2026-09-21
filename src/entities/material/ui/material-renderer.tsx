@@ -27,9 +27,10 @@ function externalUrl(value?: string | null): string | undefined {
 type Props = {
   material: RenderableMaterial;
   getDownloadUrl?: (material: RenderableMaterial) => string | undefined;
+  onDownload?: (material: RenderableMaterial, href: string) => void;
 };
 
-export function MaterialRenderer({ material, getDownloadUrl = downloadUrl }: Readonly<Props>) {
+export function MaterialRenderer({ material, getDownloadUrl = downloadUrl, onDownload }: Readonly<Props>) {
   switch (material.materialType) {
     case "TEXT":
       return <p className="whitespace-pre-wrap leading-7">{material.content ?? ""}</p>;
@@ -59,7 +60,18 @@ export function MaterialRenderer({ material, getDownloadUrl = downloadUrl }: Rea
     case "FILE": {
       const href = getDownloadUrl(material);
       return href ? (
-        <a className="underline underline-offset-4" href={href}>
+        <a
+          className="underline underline-offset-4"
+          href={href}
+          onClick={
+            onDownload
+              ? (event) => {
+                  event.preventDefault();
+                  onDownload(material, href);
+                }
+              : undefined
+          }
+        >
           Скачать файл
         </a>
       ) : (
