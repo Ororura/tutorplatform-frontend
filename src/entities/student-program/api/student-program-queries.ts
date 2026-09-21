@@ -8,6 +8,8 @@ export type StudentProgramDetails = components["schemas"]["StudentProgramDetails
 export type ProgramModule = components["schemas"]["ProgramModuleResponse"];
 export type ProgramTopic = components["schemas"]["ProgramTopicResponse"];
 export type TopicProgressStatus = ProgramTopic["progressStatus"];
+export type StudentProgramTopic = components["schemas"]["StudentProgramTopicResponse"];
+export type StudentLessonMaterial = components["schemas"]["StudentLessonMaterialResponse"];
 
 export async function getStudentPrograms(studentId: string): Promise<StudentProgramSummary[]> {
   const { data, error, response } = await apiClient.GET("/api/v1/teacher/students/{studentId}/programs", {
@@ -35,6 +37,22 @@ export async function getCurrentStudentProgram(studentProgramId: string): Promis
   const { data, error, response } = await apiClient.GET("/api/v1/student/programs/{studentProgramId}", {
     params: { path: { studentProgramId } },
   });
+
+  if (error) {
+    throw new ApiClientError(response.status, error);
+  }
+
+  return data;
+}
+
+export async function getCurrentStudentProgramTopic(
+  studentProgramId: string,
+  topicId: string,
+): Promise<StudentProgramTopic> {
+  const { data, error, response } = await apiClient.GET(
+    "/api/v1/student/programs/{studentProgramId}/topics/{topicId}",
+    { params: { path: { studentProgramId, topicId } } },
+  );
 
   if (error) {
     throw new ApiClientError(response.status, error);
@@ -74,6 +92,11 @@ export const studentProgramQueries = {
     queryOptions({
       queryKey: [...studentProgramQueries.details(), "current-student", studentProgramId] as const,
       queryFn: () => getCurrentStudentProgram(studentProgramId),
+    }),
+  currentTopic: (studentProgramId: string, topicId: string) =>
+    queryOptions({
+      queryKey: [...studentProgramQueries.details(), "current-student", studentProgramId, "topic", topicId] as const,
+      queryFn: () => getCurrentStudentProgramTopic(studentProgramId, topicId),
     }),
   studentDetails: (studentId: string) => [...studentProgramQueries.details(), studentId] as const,
   detail: (studentId: string, studentProgramId: string) =>

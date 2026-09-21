@@ -1,7 +1,14 @@
 import type { LessonMaterial } from "../api/material-queries";
 import { SafeMarkdown } from "./safe-markdown";
 
-function downloadUrl(material: LessonMaterial): string {
+export type RenderableMaterial = Pick<
+  LessonMaterial,
+  "id" | "materialType" | "title" | "content" | "externalUrl" | "position"
+> &
+  Partial<Pick<LessonMaterial, "topicId">>;
+
+function downloadUrl(material: RenderableMaterial): string | undefined {
+  if (!material.topicId) return undefined;
   return `/api/v1/teacher/topics/${encodeURIComponent(material.topicId)}/materials/${encodeURIComponent(
     material.id,
   )}/download`;
@@ -17,7 +24,12 @@ function externalUrl(value?: string | null): string | undefined {
   }
 }
 
-export function MaterialRenderer({ material }: Readonly<{ material: LessonMaterial }>) {
+type Props = {
+  material: RenderableMaterial;
+  getDownloadUrl?: (material: RenderableMaterial) => string | undefined;
+};
+
+export function MaterialRenderer({ material, getDownloadUrl = downloadUrl }: Readonly<Props>) {
   switch (material.materialType) {
     case "TEXT":
       return <p className="whitespace-pre-wrap leading-7">{material.content ?? ""}</p>;
@@ -44,18 +56,26 @@ export function MaterialRenderer({ material }: Readonly<{ material: LessonMateri
         <p className="text-sm text-neutral-500">Ссылка на материал недоступна.</p>
       );
     }
-    case "FILE":
-      return (
-        <a className="underline underline-offset-4" href={downloadUrl(material)}>
+    case "FILE": {
+      const href = getDownloadUrl(material);
+      return href ? (
+        <a className="underline underline-offset-4" href={href}>
           Скачать файл
         </a>
+      ) : (
+        <p className="text-sm text-neutral-500">Файл пока недоступен для скачивания.</p>
       );
-    case "IMAGE":
-      return (
-        <a className="underline underline-offset-4" href={downloadUrl(material)} target="_blank">
+    }
+    case "IMAGE": {
+      const href = getDownloadUrl(material);
+      return href ? (
+        <a className="underline underline-offset-4" href={href} rel="noopener noreferrer" target="_blank">
           Открыть изображение
         </a>
+      ) : (
+        <p className="text-sm text-neutral-500">Изображение пока недоступно для просмотра.</p>
       );
+    }
     default:
       return <p className="text-sm text-neutral-500">Этот тип материала пока не поддерживается.</p>;
   }
