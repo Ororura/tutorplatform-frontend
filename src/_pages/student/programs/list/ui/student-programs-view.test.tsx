@@ -15,13 +15,14 @@ describe("StudentProgramsView", () => {
     mocks.useQuery.mockReset();
   });
 
-  it("renders programs assigned to the current student without teacher links", () => {
+  it("renders assigned program cards with student links and without edit actions", () => {
     mocks.useQuery.mockReturnValue({
       data: [
         {
           id: "program-1",
           learningProgramId: "learning-1",
           title: "Python с нуля",
+          description: "Практическая программа для начинающих",
           status: "ACTIVE",
           startedAt: "2026-09-01T00:00:00Z",
           subject: { id: "subject-1", name: "Программирование", code: "PROGRAMMING" },
@@ -36,7 +37,20 @@ describe("StudentProgramsView", () => {
 
     expect(screen.getByText("Python с нуля")).toBeInTheDocument();
     expect(screen.getByText("Программирование")).toBeInTheDocument();
-    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.getByText("Практическая программа для начинающих")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Открыть программу" })).toHaveAttribute(
+      "href",
+      "/student/programs/program-1",
+    );
+    expect(screen.queryByRole("button", { name: /редактировать/i })).not.toBeInTheDocument();
+  });
+
+  it("renders a loading state", () => {
+    mocks.useQuery.mockReturnValue({ data: undefined, isPending: true, isError: false, refetch: vi.fn() });
+
+    render(<StudentProgramsView />);
+
+    expect(screen.getByText("Загружаем программы…")).toHaveAttribute("aria-busy", "true");
   });
 
   it("renders the real empty state", () => {

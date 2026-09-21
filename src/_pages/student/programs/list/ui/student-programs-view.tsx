@@ -1,10 +1,18 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { BookOpenText, Layers3 } from "lucide-react";
+import { ArrowRight, BookOpenText, Layers3 } from "lucide-react";
+import Link from "next/link";
 
-import { StudentProgramList, studentProgramQueries } from "@/entities/student-program";
+import { programStatusLabels, studentProgramQueries } from "@/entities/student-program";
 import { Button } from "@/shared/ui/button";
+
+const statusClassNames = {
+  ACTIVE: "bg-emerald-50 text-emerald-700",
+  PAUSED: "bg-amber-50 text-amber-700",
+  COMPLETED: "bg-blue-50 text-blue-700",
+  ARCHIVED: "bg-slate-100 text-slate-600",
+} as const;
 
 export function StudentProgramsView() {
   const programs = useQuery(studentProgramQueries.currentList());
@@ -57,9 +65,47 @@ export function StudentProgramsView() {
             <div className="space-y-5">
               <div>
                 <h2 className="text-xl font-semibold text-slate-950">Назначенные программы</h2>
-                <p className="mt-1 text-sm text-slate-500">Ваш текущий учебный план и его статус.</p>
+                <p className="mt-1 text-sm text-slate-500">Откройте программу, чтобы посмотреть её содержание.</p>
               </div>
-              <StudentProgramList programs={programs.data} />
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {programs.data.map((program) => (
+                  <article
+                    key={program.id}
+                    className="flex min-h-64 flex-col rounded-[22px] border border-slate-200/80 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_35px_rgba(45,79,135,0.08)]"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                        <BookOpenText size={20} aria-hidden="true" />
+                      </span>
+
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusClassNames[program.status]}`}
+                      >
+                        {programStatusLabels[program.status]}
+                      </span>
+                    </div>
+
+                    <div className="mt-5 flex-1">
+                      <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
+                        {program.subject.name}
+                      </p>
+                      <h3 className="mt-1 text-lg font-semibold text-slate-950">{program.title}</h3>
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-500">
+                        {program.description || "Описание программы пока не добавлено."}
+                      </p>
+                    </div>
+
+                    <Link
+                      className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200"
+                      href={`/student/programs/${program.id}`}
+                    >
+                      Открыть программу
+                      <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                  </article>
+                ))}
+              </div>
             </div>
           )}
         </section>
