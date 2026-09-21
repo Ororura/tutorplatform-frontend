@@ -68,7 +68,7 @@ export function TeacherStudentSessionDetailView({
             <h1 className="mt-1 text-3xl font-semibold">{formatSessionDateTime(session.data.startedAt)}</h1>
           </div>
           <Link
-            className="inline-flex h-10 items-center rounded-md bg-neutral-900 px-4 text-sm font-medium text-white"
+            className="inline-flex h-10 items-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:bg-blue-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600"
             href={`/teacher/students/${studentId}/sessions/${sessionId}/edit`}
           >
             Редактировать

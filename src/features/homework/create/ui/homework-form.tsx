@@ -331,11 +331,7 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
         <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? "Сохраняем…" : homework ? "Сохранить изменения" : "Назначить"}
         </Button>
-        <Button
-          className="border border-neutral-300 bg-white text-neutral-900"
-          type="button"
-          onClick={() => router.back()}
-        >
+        <Button variant="secondary" type="button" onClick={() => router.back()}>
           Отмена
         </Button>
       </div>
