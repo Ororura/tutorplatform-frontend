@@ -20,11 +20,13 @@ const assessmentItems = [
 
 type Props = {
   progress: CurrentProgress;
-  audience?: "student" | "teacher";
+  audience?: "student" | "teacher" | "parent";
 };
 
 export function CurrentProgressOverview({ progress, audience = "teacher" }: Readonly<Props>) {
   const isStudent = audience === "student";
+  const isParent = audience === "parent";
+  const completedTopicsCount = progress.topics?.completed?.length;
 
   return (
     <div className="space-y-5">
@@ -38,7 +40,7 @@ export function CurrentProgressOverview({ progress, audience = "teacher" }: Read
             icon={Clock3}
             label={isStudent ? "Пройдено учебных часов" : "Время обучения"}
             value={
-              isStudent
+              isStudent || isParent
                 ? formatLearningDuration(progress.totalLearningMinutes)
                 : formatProgressValue(progress.totalLearningMinutes, " мин")
             }
@@ -65,7 +67,11 @@ export function CurrentProgressOverview({ progress, audience = "teacher" }: Read
             value={formatCompletedMetric(progress.practice?.completed, progress.practice?.assigned)}
             hint="Выполнено из назначенных"
           />
-          <ProgressMetricCard icon={BookCheck} label="Всего тем" value={formatProgressValue(progress.totalTopics)} />
+          <ProgressMetricCard
+            icon={BookCheck}
+            label={isParent ? "Завершённые темы" : "Всего тем"}
+            value={formatProgressValue(isParent ? completedTopicsCount : progress.totalTopics)}
+          />
         </div>
       </section>
 
@@ -92,7 +98,7 @@ export function CurrentProgressOverview({ progress, audience = "teacher" }: Read
 
       <section className="rounded-2xl border border-slate-200/80 bg-white p-5" aria-labelledby="assessment-heading">
         <h2 id="assessment-heading" className="text-xl font-semibold text-slate-950">
-          {isStudent ? "Оценки преподавателя" : "Средние оценки преподавателя"}
+          {isStudent || isParent ? "Оценки преподавателя" : "Средние оценки преподавателя"}
         </h2>
 
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
