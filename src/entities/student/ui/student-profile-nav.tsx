@@ -1,9 +1,9 @@
-import { BookOpenText, CalendarDays, ClipboardCheck, UserRound } from "lucide-react";
+import { BookOpenText, CalendarDays, ChartNoAxesCombined, ClipboardCheck, UserRound } from "lucide-react";
 import Link from "next/link";
 
 import { cn } from "@/shared/lib/cn";
 
-type StudentProfileSection = "overview" | "program" | "sessions" | "homework";
+type StudentProfileSection = "overview" | "program" | "progress" | "sessions" | "homework";
 
 const items = [
   {
@@ -17,6 +17,12 @@ const items = [
     label: "Программа",
     icon: BookOpenText,
     href: (studentId: string) => `/teacher/students/${studentId}/program`,
+  },
+  {
+    id: "progress",
+    label: "Прогресс",
+    icon: ChartNoAxesCombined,
+    href: (studentId: string) => `/teacher/students/${studentId}/progress`,
   },
   {
     id: "sessions",

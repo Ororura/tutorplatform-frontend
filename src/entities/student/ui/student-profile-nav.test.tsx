@@ -29,4 +29,13 @@ describe("StudentProfileNav", () => {
 
     expect(link).toHaveAttribute("aria-current", "page");
   });
+
+  it("links the progress tab to the student progress page", () => {
+    render(<StudentProfileNav studentId="student-1" active="progress" />);
+
+    const link = screen.getByRole("link", { name: "Прогресс" });
+
+    expect(link).toHaveAttribute("href", "/teacher/students/student-1/progress");
+    expect(link).toHaveAttribute("aria-current", "page");
+  });
 });
