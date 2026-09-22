@@ -24,6 +24,13 @@ vi.mock("next/link", () => ({
     </a>
   ),
 }));
+vi.mock("./progress-share-management", () => ({
+  ProgressShareManagement: ({ studentId, studentProgramId }: { studentId: string; studentProgramId: string }) => (
+    <div data-testid="progress-share-management">
+      {studentId}/{studentProgramId}
+    </div>
+  ),
+}));
 
 const program = (id: string, title: string) => ({
   id,
@@ -153,6 +160,7 @@ describe("TeacherStudentProgressView", () => {
     expect(screen.getByText("240 мин")).toBeInTheDocument();
     const progressCalls = mocks.useQuery.mock.calls.filter(([options]) => options.queryKey[0] === "progress");
     expect(progressCalls.at(-1)?.[0].queryKey).toContain("program-2");
+    expect(screen.getByTestId("progress-share-management")).toHaveTextContent("student-1/program-2");
   });
 
   it("shows missing metrics and empty topic lists without inventing values", () => {

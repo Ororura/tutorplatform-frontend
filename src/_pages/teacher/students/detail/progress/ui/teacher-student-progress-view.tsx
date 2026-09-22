@@ -10,6 +10,8 @@ import { StudentProfileNav } from "@/entities/student";
 import { studentProgramQueries } from "@/entities/student-program";
 import { Button } from "@/shared/ui/button";
 
+import { ProgressShareManagement } from "./progress-share-management";
+
 export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: string }>) {
   const [selectedProgramId, setSelectedProgramId] = useState("");
   const programs = useQuery(studentProgramQueries.list(studentId));
@@ -120,6 +122,8 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
           </div>
         )}
       </section>
+
+      {activeProgramId && <ProgressShareManagement studentId={studentId} studentProgramId={activeProgramId} />}
     </main>
   );
 }
