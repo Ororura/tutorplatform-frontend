@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenText, ClipboardCheck, Home } from "lucide-react";
+import { BookOpenText, ChartNoAxesCombined, ClipboardCheck, Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,6 +19,11 @@ const navigation = [
     href: "/student/homework",
     label: "Домашние задания",
     icon: ClipboardCheck,
+  },
+  {
+    href: "/student/progress",
+    label: "Прогресс",
+    icon: ChartNoAxesCombined,
   },
 ] as const;
 

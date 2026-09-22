@@ -5,6 +5,7 @@ import {
   formatAssessmentAverage,
   formatAttendanceRate,
   formatCompletedMetric,
+  formatLearningDuration,
   formatProgressValue,
 } from "../model/progress-presentation";
 import { ProgressMetricCard } from "./progress-metric-card";
@@ -17,39 +18,50 @@ const assessmentItems = [
   ["Домашние задания", "homeworkAverage"],
 ] as const;
 
-export function CurrentProgressOverview({ progress }: Readonly<{ progress: CurrentProgress }>) {
+type Props = {
+  progress: CurrentProgress;
+  audience?: "student" | "teacher";
+};
+
+export function CurrentProgressOverview({ progress, audience = "teacher" }: Readonly<Props>) {
+  const isStudent = audience === "student";
+
   return (
     <div className="space-y-5">
       <section aria-labelledby="progress-metrics-heading">
         <h2 id="progress-metrics-heading" className="text-xl font-semibold text-slate-950">
-          Основные показатели
+          {isStudent ? "Ваши результаты" : "Основные показатели"}
         </h2>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           <ProgressMetricCard
             icon={Clock3}
-            label="Время обучения"
-            value={formatProgressValue(progress.totalLearningMinutes, " мин")}
+            label={isStudent ? "Пройдено учебных часов" : "Время обучения"}
+            value={
+              isStudent
+                ? formatLearningDuration(progress.totalLearningMinutes)
+                : formatProgressValue(progress.totalLearningMinutes, " мин")
+            }
           />
           <ProgressMetricCard
             icon={GraduationCap}
-            label="Занятия"
+            label={isStudent ? "Пройденные занятия" : "Занятия"}
             value={formatProgressValue(progress.sessionsCount)}
           />
           <ProgressMetricCard
             icon={CalendarCheck2}
-            label="Посещаемость"
+            label={isStudent ? "Посещаемость занятий" : "Посещаемость"}
             value={formatAttendanceRate(progress.attendanceRate)}
           />
           <ProgressMetricCard
             icon={ClipboardCheck}
-            label="Домашние задания"
+            label={isStudent ? "Выполненные домашние задания" : "Домашние задания"}
             value={formatCompletedMetric(progress.homework?.completed, progress.homework?.assigned)}
             hint="Выполнено из назначенных"
           />
           <ProgressMetricCard
             icon={Dumbbell}
-            label="Практика"
+            label={isStudent ? "Выполненная практика" : "Практика"}
             value={formatCompletedMetric(progress.practice?.completed, progress.practice?.assigned)}
             hint="Выполнено из назначенных"
           />
@@ -80,7 +92,7 @@ export function CurrentProgressOverview({ progress }: Readonly<{ progress: Curre
 
       <section className="rounded-2xl border border-slate-200/80 bg-white p-5" aria-labelledby="assessment-heading">
         <h2 id="assessment-heading" className="text-xl font-semibold text-slate-950">
-          Средние оценки преподавателя
+          {isStudent ? "Оценки преподавателя" : "Средние оценки преподавателя"}
         </h2>
 
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
