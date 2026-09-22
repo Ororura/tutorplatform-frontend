@@ -25,6 +25,18 @@ export async function getTeacherStudentProgress(studentId: string, studentProgra
   return data;
 }
 
+export async function getCurrentStudentProgress(studentProgramId: string): Promise<CurrentProgress> {
+  const { data, error, response } = await apiClient.GET("/api/v1/student/progress", {
+    params: { query: { studentProgramId } },
+  });
+
+  if (error) {
+    throw new ApiClientError(response.status, error);
+  }
+
+  return data;
+}
+
 export const progressQueries = {
   all: () => ["progress"] as const,
   student: (studentId: string) => [...progressQueries.all(), "student", studentId] as const,
@@ -32,5 +44,10 @@ export const progressQueries = {
     queryOptions({
       queryKey: [...progressQueries.student(studentId), "program", studentProgramId] as const,
       queryFn: () => getTeacherStudentProgress(studentId, studentProgramId),
+    }),
+  currentStudent: (studentProgramId: string) =>
+    queryOptions({
+      queryKey: [...progressQueries.all(), "current-student", "program", studentProgramId] as const,
+      queryFn: () => getCurrentStudentProgress(studentProgramId),
     }),
 };

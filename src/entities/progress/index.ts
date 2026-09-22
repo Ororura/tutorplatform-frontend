@@ -1,4 +1,5 @@
 export {
+  getCurrentStudentProgress,
   getTeacherStudentProgress,
   progressQueries,
   type CurrentProgress,

@@ -15,6 +15,15 @@ export function formatProgressValue(value: number | null | undefined, suffix = "
   return isMissing(value) ? "—" : `${value}${suffix}`;
 }
 
+export function formatLearningDuration(minutes: number | null | undefined): string {
+  if (isMissing(minutes)) return "—";
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  return remainingMinutes > 0 ? `${hours} ч ${remainingMinutes} мин` : `${hours} ч`;
+}
+
 export function formatAttendanceRate(value: number | null | undefined): string {
   return isMissing(value) ? "—" : percentageFormatter.format(value);
 }
