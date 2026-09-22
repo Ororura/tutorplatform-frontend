@@ -2,9 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useState } from "react";
 
+import { AssessmentDetails, assessmentQueries } from "@/entities/assessment";
 import { AttendanceBadge, formatSessionDateTime, formatSessionDuration, sessionQueries } from "@/entities/session";
 import { studentProgramQueries } from "@/entities/student-program";
+import { AssessmentForm } from "@/features/assessment/save";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -15,10 +18,15 @@ export function TeacherStudentSessionDetailView({
   studentId: string;
   sessionId: string;
 }>) {
+  const [editingAssessment, setEditingAssessment] = useState(false);
   const session = useQuery(sessionQueries.detail(studentId, sessionId));
   const program = useQuery({
     ...studentProgramQueries.detail(studentId, session.data?.studentProgramId ?? ""),
     enabled: Boolean(session.data?.studentProgramId),
+  });
+  const assessment = useQuery({
+    ...assessmentQueries.detail(studentId, sessionId),
+    enabled: Boolean(session.data),
   });
 
   if (session.isPending)
@@ -49,6 +57,8 @@ export function TeacherStudentSessionDetailView({
   const topicMap = new Map(
     program.data?.modules.flatMap((module) => module.topics.map((topic) => [topic.id, topic.title] as const)) ?? [],
   );
+  const assessmentMissing =
+    assessment.isError && assessment.error instanceof ApiClientError && assessment.error.status === 404;
   return (
     <main className="mx-auto max-w-4xl space-y-8 px-6 py-12">
       <div>
@@ -118,6 +128,51 @@ export function TeacherStudentSessionDetailView({
           <p className="mt-1 text-xs text-neutral-500">Видны только преподавателю</p>
           <p className="mt-2 whitespace-pre-line text-neutral-700">{session.data.privateNotes || "Не указаны"}</p>
         </div>
+      </section>
+      <section
+        className="space-y-5 rounded-lg border border-neutral-200 bg-white p-6"
+        aria-labelledby="assessment-heading"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold" id="assessment-heading">
+              Оценка занятия
+            </h2>
+            <p className="mt-1 text-sm text-neutral-500">Оценки и комментарий будут доступны ученику.</p>
+          </div>
+          {assessment.data && !editingAssessment && (
+            <Button type="button" variant="secondary" onClick={() => setEditingAssessment(true)}>
+              Редактировать оценку
+            </Button>
+          )}
+        </div>
+        {assessment.isPending && <p aria-busy="true">Загружаем оценку…</p>}
+        {assessment.isError && !assessmentMissing && (
+          <div className="space-y-3" role="alert">
+            <p>Не удалось загрузить оценку занятия.</p>
+            <Button type="button" variant="secondary" onClick={() => assessment.refetch()}>
+              Повторить
+            </Button>
+          </div>
+        )}
+        {assessment.data && !editingAssessment && <AssessmentDetails assessment={assessment.data} />}
+        {assessmentMissing && !editingAssessment && (
+          <div className="space-y-4 rounded-lg border border-dashed border-neutral-300 p-5">
+            <p className="text-neutral-700">Оцените проведённое занятие и оставьте комментарий для ученика.</p>
+            <Button type="button" onClick={() => setEditingAssessment(true)}>
+              Оценить занятие
+            </Button>
+          </div>
+        )}
+        {editingAssessment && (
+          <AssessmentForm
+            assessment={assessment.data}
+            sessionId={sessionId}
+            studentId={studentId}
+            onCancel={() => setEditingAssessment(false)}
+            onSaved={() => setEditingAssessment(false)}
+          />
+        )}
       </section>
     </main>
   );
