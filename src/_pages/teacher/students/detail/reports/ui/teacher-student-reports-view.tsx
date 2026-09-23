@@ -3,15 +3,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, FileText, Flag } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ProgressReportList, formatReportDate, reportQueries } from "@/entities/report";
 import { StudentProfileNav } from "@/entities/student";
 import { studentProgramQueries } from "@/entities/student-program";
+import { useCreateProgressReportMutation } from "@/features/report/manage";
+import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
 export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: string }>) {
+  const router = useRouter();
   const [selectedProgramId, setSelectedProgramId] = useState("");
+  const [createError, setCreateError] = useState("");
+  const createReport = useCreateProgressReportMutation();
   const programs = useQuery(studentProgramQueries.list(studentId));
   const selectedProgramExists = programs.data?.some((program) => program.id === selectedProgramId) ?? false;
   const activeProgramId = selectedProgramExists ? selectedProgramId : (programs.data?.[0]?.id ?? "");
@@ -24,6 +30,28 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
     enabled: activeProgramId.length > 0,
   });
   const pendingPeriods = periods.data?.filter((period) => period.status === "COMPLETED" && !period.reportId) ?? [];
+
+  const handleCreate = async (learningPeriodId: string) => {
+    setCreateError("");
+    try {
+      const created = await createReport.mutateAsync({
+        studentProgramId: activeProgramId,
+        learningPeriodId,
+      });
+      router.push(`/teacher/students/${studentId}/reports/${created.id}`);
+    } catch (error) {
+      if (error instanceof ApiClientError && error.status === 409) {
+        if (error.body.code === "PROGRESS_REPORT_ALREADY_EXISTS") {
+          setCreateError("Отчёт для этого периода уже существует. Список отчётов обновлён.");
+          await Promise.all([reports.refetch(), periods.refetch()]);
+          return;
+        }
+        setCreateError("Для этого периода нельзя создать отчёт. Обновите данные и попробуйте снова.");
+        return;
+      }
+      setCreateError("Не удалось создать черновик отчёта.");
+    }
+  };
 
   return (
     <main className="mx-auto max-w-[1280px] space-y-4">
@@ -152,9 +180,23 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
                     <p className="mt-1 text-sm text-slate-500">
                       Завершён {period.completedAt ? formatReportDate(period.completedAt) : "—"}
                     </p>
+                    <Button
+                      type="button"
+                      className="mt-3 w-full"
+                      aria-label={`Создать черновик для периода ${period.sequenceNo}`}
+                      disabled={createReport.isPending}
+                      onClick={() => handleCreate(period.id)}
+                    >
+                      {createReport.isPending ? "Создаём…" : "Создать черновик"}
+                    </Button>
                   </li>
                 ))}
               </ol>
+            )}
+            {createError && (
+              <p className="mt-4 text-sm text-red-700" role="alert">
+                {createError}
+              </p>
             )}
           </section>
         </aside>
