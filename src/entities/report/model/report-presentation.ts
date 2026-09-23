@@ -31,3 +31,23 @@ export function formatReportLearningDuration(minutes: number): string {
   if (hours === 0) return `${remainingMinutes} мин`;
   return remainingMinutes === 0 ? `${hours} ч` : `${hours} ч ${remainingMinutes} мин`;
 }
+
+const percentageFormatter = new Intl.NumberFormat("ru-RU", {
+  style: "percent",
+  maximumFractionDigits: 1,
+});
+
+const averageFormatter = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 });
+
+export function formatReportAttendance(value?: number): string {
+  return value === undefined ? "—" : percentageFormatter.format(value);
+}
+
+export function formatReportCompleted(completed?: number, assigned?: number): string {
+  if (completed === undefined && assigned === undefined) return "—";
+  return `${completed ?? "—"} из ${assigned ?? "—"}`;
+}
+
+export function formatReportAssessment(value?: number): string {
+  return value === undefined ? "—" : averageFormatter.format(value);
+}
