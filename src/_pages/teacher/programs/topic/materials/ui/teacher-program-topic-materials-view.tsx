@@ -10,6 +10,7 @@ import { taskDifficultyPresentation, taskQueries, taskTypePresentation, topicTas
 import { AttachTaskToTopicDialog } from "@/features/task/attach";
 import { getLearningProgram, getLearningProgramBySlug, learningProgramQueries } from "@/entities/learning-program";
 import { CreateMarkdownMaterialDialog } from "@/features/material/create";
+import { DeleteMaterialDialog } from "@/features/material/delete";
 import { EditMaterialDialog, isEditableMaterial } from "@/features/material/edit";
 import { useReorderLessonMaterialsMutation } from "@/features/material/reorder";
 import { UploadMaterialDialog } from "@/features/material/upload";
@@ -187,6 +188,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
                         Вниз
                       </Button>
                       {isEditableMaterial(material) && <EditMaterialDialog material={material} />}
+                      <DeleteMaterialDialog material={material} />
                     </div>
                   ) : null
                 }
