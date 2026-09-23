@@ -68,6 +68,12 @@ vi.mock("@/entities/material", () => ({
     </ol>
   ),
 }));
+vi.mock("@/features/material/delete", () => ({
+  DeleteMaterialDialog: ({ material }: { material: { title: string } }) => (
+    <button type="button">Удалить «{material.title}»</button>
+  ),
+}));
+
 vi.mock("@/features/material/edit", () => ({
   isEditableMaterial: (material: { materialType?: string }) =>
     ["TEXT", "MARKDOWN", "CODE_EXAMPLE", "LINK"].includes(material.materialType ?? ""),
