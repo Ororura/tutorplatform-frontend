@@ -91,7 +91,7 @@ export function StudentHomeworksView() {
         </section>
 
         <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
-          <section className="rounded-[28px] border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-[28px] border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
             <ClipboardCheck size={21} className="text-blue-600" />
 
             <h2 className="mt-4 font-semibold text-slate-950">Ваша нагрузка</h2>

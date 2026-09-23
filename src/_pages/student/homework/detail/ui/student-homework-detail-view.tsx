@@ -240,7 +240,7 @@ export function StudentHomeworkDetailView({
         </div>
 
         <aside className="xl:sticky xl:top-24 xl:self-start">
-          <section className="rounded-[28px] border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-[28px] border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
             <CheckCircle2 size={21} className="text-blue-600" />
 
             <h2 className="mt-4 font-semibold text-slate-950">Прогресс работы</h2>
