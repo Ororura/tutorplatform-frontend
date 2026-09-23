@@ -249,6 +249,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}/learning-periods": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List persisted learning periods for an owned student program */
+    get: operations["listTeacherStudentLearningPeriods"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/teacher/students/{studentId}/invites": {
     parameters: {
       query?: never;
@@ -2434,6 +2451,21 @@ export interface components {
       /** Format: date-time */
       updatedAt: string;
     };
+    LearningPeriodResponse: {
+      /** Format: uuid */
+      id: string;
+      sequenceNo: number;
+      status: "ACTIVE" | "COMPLETED";
+      startCumulativeMinutes: number;
+      endCumulativeMinutes?: number | null;
+      targetDurationMinutes: number;
+      /** Format: date-time */
+      startedAt?: string | null;
+      /** Format: date-time */
+      completedAt?: string | null;
+      /** Format: uuid */
+      reportId?: string | null;
+    };
     ReportShareListResponse: {
       items?: components["schemas"]["ReportShareSummaryResponse"][];
     };
@@ -3945,6 +3977,27 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
+    };
+  };
+  listTeacherStudentLearningPeriods: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        studentId: string;
+        studentProgramId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: { [name: string]: unknown };
+        content: { "*/*": components["schemas"]["LearningPeriodResponse"][] };
+      };
+      401: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      403: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
+      404: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
     };
   };
   assignTeacherStudentProgram: {
