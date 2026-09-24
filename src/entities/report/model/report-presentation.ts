@@ -48,6 +48,6 @@ export function formatReportCompleted(completed?: number, assigned?: number): st
   return `${completed ?? "—"} из ${assigned ?? "—"}`;
 }
 
-export function formatReportAssessment(value?: number): string {
-  return value === undefined ? "—" : averageFormatter.format(value);
+export function formatReportAssessment(value?: number | null): string {
+  return value === null || value === undefined ? "—" : averageFormatter.format(value);
 }
