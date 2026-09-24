@@ -23,7 +23,11 @@ function metric(section: Locator, label: string): Locator {
 }
 
 function average(section: Locator, label: string): Locator {
-  return section.locator("dt").getByText(label, { exact: true }).locator("..").locator("dd");
+  return section
+    .locator("dt")
+    .filter({ hasText: new RegExp(`^${label}$`) })
+    .locator("..")
+    .locator("dd");
 }
 
 function formattedAverage(value: number | null | undefined): string {
@@ -161,16 +165,14 @@ test("demo teacher assessment flows through teacher, student and public current 
   await page.getByRole("button", { name: "Сохранить оценку" }).click();
   await expect(page.getByRole("button", { name: "Редактировать оценку" })).toBeVisible();
   await page.reload();
-  const assessmentSection = page.getByRole("heading", { name: "Оценка занятия" }).locator("..").locator("..");
+  const assessmentSection = page.getByRole("region", { name: "Оценка занятия" });
   for (const [label, value] of [
     ["Понимание материала", scores.understandingScore],
     ["Самостоятельность", scores.independenceScore],
     ["Практика", scores.practiceScore],
     ["Домашняя работа", scores.homeworkScore],
   ] as const) {
-    await expect(
-      assessmentSection.locator("dt").getByText(label, { exact: true }).locator("..").locator("dd"),
-    ).toHaveText(`${value} из 5`);
+    await expect(average(assessmentSection, label)).toHaveText(`${value} из 5`);
   }
   await expect(assessmentSection.getByText(comment)).toBeVisible();
   const assessmentResponse = await page.request.get(
@@ -219,9 +221,12 @@ test("demo teacher assessment flows through teacher, student and public current 
   const publicPath = new URL(await shareInput.inputValue()).pathname;
   expect(publicPath).toMatch(/^\/progress\/[^/]+$/);
   const token = publicPath.split("/").at(-1)!;
-  const share = (await getShares(page.request, studentId, programId)).find((item) => !oldIds.has(item.id));
+  const shares = await getShares(page.request, studentId, programId);
+  const shareIndex = shares.findIndex((item) => !oldIds.has(item.id));
+  const share = shares[shareIndex];
   expect(share?.status).toBe("ACTIVE");
   await page.reload(); // The one-time bearer URL is no longer rendered.
+  await page.getByLabel("Программа обучения").selectOption(programId);
 
   const publicContext = await browser.newContext({ baseURL: new URL(page.url()).origin });
   try {
@@ -266,7 +271,9 @@ test("demo teacher assessment flows through teacher, student and public current 
     await expect(publicPage.locator("body")).not.toContainText(comment);
 
     page.once("dialog", (dialog) => dialog.accept());
-    await page.getByRole("button", { name: "Отозвать" }).last().click();
+    const revokeButton = page.getByRole("button", { name: "Отозвать" }).nth(shareIndex);
+    await expect(revokeButton).toBeVisible();
+    await revokeButton.click();
     await expect
       .poll(
         async () => (await getShares(page.request, studentId, programId)).find((item) => item.id === share?.id)?.status,
