@@ -2,11 +2,13 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { StudentPage } from "@/entities/student";
+import type { TeacherDashboard } from "@/entities/dashboard";
 
 import { TeacherHomePage } from "./teacher-home-page";
 
 const mocks = vi.hoisted(() => ({
   currentUser: vi.fn(),
+  refetchDashboard: vi.fn(),
   refetchStudents: vi.fn(),
   refetchUser: vi.fn(),
   useQuery: vi.fn(),
@@ -68,8 +70,30 @@ const studentPage: StudentPage = {
   totalPages: 1,
 };
 
+const dashboard: TeacherDashboard = {
+  activeStudentsCount: 1,
+  needsReviewSubmissionsCount: 1,
+  overdueHomeworksCount: 0,
+  completedLearningPeriodsWithoutPublishedReportCount: 0,
+  attentionItems: [
+    {
+      type: "SUBMISSION_NEEDS_REVIEW",
+      studentId: "student-1",
+      displayName: "Анна Смирнова",
+      resourceId: "submission-1",
+      eventAt: "2026-09-21T12:30:00Z",
+      navigation: {
+        studentProgramId: "student-program-1",
+        homeworkId: "homework-1",
+        submissionId: "submission-1",
+      },
+    },
+  ],
+};
+
 describe("TeacherHomePage", () => {
   beforeEach(() => {
+    mocks.refetchDashboard.mockReset();
     mocks.refetchStudents.mockReset();
     mocks.refetchUser.mockReset();
 
@@ -85,11 +109,22 @@ describe("TeacherHomePage", () => {
       refetch: mocks.refetchUser,
     });
 
-    mocks.useQuery.mockReturnValue({
-      data: studentPage,
-      isPending: false,
-      isError: false,
-      refetch: mocks.refetchStudents,
+    mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[0] === "dashboard") {
+        return {
+          data: dashboard,
+          isPending: false,
+          isError: false,
+          refetch: mocks.refetchDashboard,
+        };
+      }
+
+      return {
+        data: studentPage,
+        isPending: false,
+        isError: false,
+        refetch: mocks.refetchStudents,
+      };
     });
   });
 
@@ -99,10 +134,17 @@ describe("TeacherHomePage", () => {
     expect(screen.getByRole("heading", { name: "Добрый день, Елена!" })).toBeInTheDocument();
     expect(mocks.useQuery).toHaveBeenCalledWith(
       expect.objectContaining({
+        queryKey: ["dashboard", "teacher"],
+      }),
+    );
+    expect(mocks.useQuery).toHaveBeenCalledWith(
+      expect.objectContaining({
         queryKey: ["students", "list", { page: 0, size: 6, sort: "createdAt,desc" }],
       }),
     );
     expect(screen.getByRole("heading", { name: "Требует внимания" })).toBeInTheDocument();
+    expect(screen.getByText("Работа ожидает проверки")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /1\s*Активные ученики/ })).toHaveAttribute("href", "/teacher/students");
     expect(screen.getByRole("heading", { name: "Мои ученики" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Быстрые действия" })).toBeInTheDocument();
     expect(screen.getByText("Анна Смирнова")).toBeInTheDocument();
@@ -151,11 +193,22 @@ describe("TeacherHomePage", () => {
   });
 
   it("keeps the rest of the workspace usable when students fail to load", () => {
-    mocks.useQuery.mockReturnValue({
-      data: undefined,
-      isPending: false,
-      isError: true,
-      refetch: mocks.refetchStudents,
+    mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[0] === "dashboard") {
+        return {
+          data: dashboard,
+          isPending: false,
+          isError: false,
+          refetch: mocks.refetchDashboard,
+        };
+      }
+
+      return {
+        data: undefined,
+        isPending: false,
+        isError: true,
+        refetch: mocks.refetchStudents,
+      };
     });
 
     render(<TeacherHomePage />);
@@ -167,5 +220,56 @@ describe("TeacherHomePage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Повторить" }));
     expect(mocks.refetchStudents).toHaveBeenCalledOnce();
+  });
+
+  it("shows dashboard loading without hiding students", () => {
+    mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[0] === "dashboard") {
+        return {
+          data: undefined,
+          isPending: true,
+          isError: false,
+          refetch: mocks.refetchDashboard,
+        };
+      }
+
+      return {
+        data: studentPage,
+        isPending: false,
+        isError: false,
+        refetch: mocks.refetchStudents,
+      };
+    });
+
+    render(<TeacherHomePage />);
+
+    expect(screen.getByText("Загружаем сводку…")).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByText("Анна Смирнова")).toBeInTheDocument();
+  });
+
+  it("allows retry after a dashboard error", () => {
+    mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[0] === "dashboard") {
+        return {
+          data: undefined,
+          isPending: false,
+          isError: true,
+          refetch: mocks.refetchDashboard,
+        };
+      }
+
+      return {
+        data: studentPage,
+        isPending: false,
+        isError: false,
+        refetch: mocks.refetchStudents,
+      };
+    });
+
+    render(<TeacherHomePage />);
+    fireEvent.click(screen.getByRole("button", { name: "Повторить загрузку сводки" }));
+
+    expect(mocks.refetchDashboard).toHaveBeenCalledOnce();
+    expect(screen.getByText("Анна Смирнова")).toBeInTheDocument();
   });
 });

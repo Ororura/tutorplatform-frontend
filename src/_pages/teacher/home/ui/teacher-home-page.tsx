@@ -2,10 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 
+import { dashboardQueries, type TeacherDashboard } from "@/entities/dashboard";
 import { studentQueries } from "@/entities/student";
 import { useCurrentUserQuery } from "@/entities/user";
 import { Button } from "@/shared/ui/button";
 import { TeacherAttention } from "@/widgets/teacher-attention";
+import { TeacherDashboardStats } from "@/widgets/teacher-dashboard-stats";
 import { TeacherQuickActions } from "@/widgets/teacher-quick-actions";
 import { TeacherStudentsOverview } from "@/widgets/teacher-students-overview";
 
@@ -17,6 +19,7 @@ const studentListParams = {
 
 export function TeacherHomePage() {
   const currentUser = useCurrentUserQuery();
+  const dashboard = useQuery(dashboardQueries.teacher());
   const students = useQuery(studentQueries.list(studentListParams));
 
   if (currentUser.isPending) {
@@ -45,9 +48,17 @@ export function TeacherHomePage() {
         </p>
       </section>
 
+      <TeacherDashboardContent
+        data={dashboard.data}
+        isPending={dashboard.isPending}
+        isError={dashboard.isError}
+        onRetry={() => {
+          void dashboard.refetch();
+        }}
+      />
+
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-4">
-          <TeacherAttention />
           <TeacherStudentsOverview
             data={students.data}
             isPending={students.isPending}
@@ -61,6 +72,48 @@ export function TeacherHomePage() {
         <TeacherQuickActions />
       </div>
     </main>
+  );
+}
+
+type DashboardContentProps = {
+  data?: TeacherDashboard;
+  isPending: boolean;
+  isError: boolean;
+  onRetry: () => void;
+};
+
+function TeacherDashboardContent({ data, isPending, isError, onRetry }: Readonly<DashboardContentProps>) {
+  if (isPending) {
+    return (
+      <section
+        aria-busy="true"
+        className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
+      >
+        Загружаем сводку…
+      </section>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <section
+        className="rounded-[28px] border border-red-100 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
+        role="alert"
+      >
+        <h2 className="text-lg font-semibold text-slate-950">Не удалось загрузить сводку</h2>
+        <p className="mt-2 text-sm text-slate-500">Проверьте соединение и попробуйте ещё раз.</p>
+        <Button className="mt-4" type="button" variant="secondary" onClick={onRetry}>
+          Повторить загрузку сводки
+        </Button>
+      </section>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <TeacherDashboardStats data={data} />
+      <TeacherAttention items={data.attentionItems} />
+    </div>
   );
 }
 
