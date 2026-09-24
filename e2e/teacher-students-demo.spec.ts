@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("demo teacher completes the real students vertical slice", async ({ page }, testInfo) => {
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"], {
-    origin: "http://localhost:3000",
+    origin: new URL(testInfo.project.use.baseURL ?? "http://127.0.0.1:3000").origin,
   });
   await page.goto("/login?next=%2Fteacher%2Fstudents");
   await page.getByLabel("Email", { exact: true }).fill("teacher.demo@tutor.local");
