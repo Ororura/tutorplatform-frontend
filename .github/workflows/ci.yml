@@ -120,7 +120,7 @@ jobs:
   docker:
     name: Build Docker image
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: checks
+    needs: [checks, e2e]
     runs-on: ubuntu-latest
 
     steps:
