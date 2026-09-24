@@ -46,7 +46,12 @@ test("demo teacher reads Task Library and atomically assigns TEXT + CODE homewor
 
   await page.getByRole("link", { name: "Домашние задания" }).click();
   await page.getByRole("link", { name: "Назначить домашнее задание" }).first().click();
-  await expect(page.getByLabel("Программа обучения")).toHaveValue(/.+/);
+  const program = page.getByLabel("Программа обучения");
+  const pythonProgram = program.locator("option").filter({ hasText: /Python с нуля/ });
+  await expect(pythonProgram).toBeAttached();
+  const programId = await pythonProgram.getAttribute("value");
+  expect(programId).toBeTruthy();
+  await program.selectOption(programId!);
   const title = `E2E TEXT CODE ${Date.now()}`;
   await page.getByLabel("Название").fill(title);
   const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
