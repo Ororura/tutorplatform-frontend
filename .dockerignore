@@ -1,4 +1,5 @@
 .git
+.e2e-dependencies
 node_modules
 .next
 out

@@ -52,3 +52,24 @@ npm run typecheck
 npm test
 npm run build
 ```
+
+## Critical Playwright E2E
+
+The critical E2E suite runs only against a loopback frontend backed by an isolated PostgreSQL,
+backend, and execution worker. It enables the backend's `demo` profile and demo seed; the
+Playwright configuration rejects production and public demo URLs.
+
+Clone the public `main` branches of `tutorplatform-backend` and
+`tutor-learning-platform-execution-worker` next to this repository, then run:
+
+```bash
+npm ci
+npx playwright install --with-deps chromium
+docker compose -f .github/e2e/compose.yml up --build --detach --wait --wait-timeout 300
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npm run e2e:critical
+docker compose -f .github/e2e/compose.yml down --volumes --remove-orphans
+```
+
+The suite covers authentication, teacher students, the learning program editor, materials, the
+student learning journey, and homework/submissions. Traces and screenshots for failed tests are
+written to `test-results/`; CI also uploads them together with the HTML report.
