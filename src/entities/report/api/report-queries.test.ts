@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { apiClient } from "@/shared/api/client";
 
-import { getLearningPeriods, getProgressReports, reportQueries } from "./report-queries";
+import { getLearningPeriods, getProgressReports, getPublicProgressReport, reportQueries } from "./report-queries";
 
 vi.mock("@/shared/api/client", () => ({
   ApiClientError: class ApiClientError extends Error {},
@@ -35,5 +35,16 @@ describe("reportQueries", () => {
       "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}/learning-periods",
       { params: { path: { studentId: "student-1", studentProgramId: "program-1" } } },
     );
+  });
+
+  it("loads a public historical report without retrying terminal share errors", async () => {
+    const data = { periodStartedAt: "2026-09-01", periodEndedAt: "2026-09-30", snapshot: {} } as never;
+    getMock.mockResolvedValue({ data, error: undefined, response: new Response(null, { status: 200 }) });
+
+    await expect(getPublicProgressReport("share-token")).resolves.toBe(data);
+    expect(getMock).toHaveBeenCalledWith("/api/v1/public/reports/{token}", {
+      params: { path: { token: "share-token" } },
+    });
+    expect(reportQueries.publicDetail("share-token").retry).toBe(false);
   });
 });
