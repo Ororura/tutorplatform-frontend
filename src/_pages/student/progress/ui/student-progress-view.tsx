@@ -20,7 +20,7 @@ export function StudentProgressView() {
   });
 
   return (
-    <main className="mx-auto max-w-[1280px] space-y-4">
+    <main className="mx-auto max-w-7xl space-y-4">
       <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
         <div className="flex items-center gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
