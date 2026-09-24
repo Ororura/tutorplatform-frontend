@@ -1,0 +1,87 @@
+name: tutorplatform-e2e
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: tutor_learning_e2e
+      POSTGRES_USER: tutor_e2e
+      POSTGRES_PASSWORD: tutor_e2e
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tutor_e2e -d tutor_learning_e2e"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  execution-worker:
+    build:
+      context: ${E2E_WORKER_CONTEXT:-../../../execution-worker}
+    environment:
+      EXECUTION_RUNTIME_WORKSPACE_DIRECTORY: /workspaces
+      EXECUTION_RUNTIME_WORKSPACE_VOLUME: tutorplatform-e2e-workspaces
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - execution-workspaces:/workspaces
+    ports:
+      - "127.0.0.1:8090:8090"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8090/actuator/health/readiness"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+      start_period: 20s
+
+  backend:
+    build:
+      context: ${E2E_BACKEND_CONTEXT:-../../../backend}
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
+      APP_DEMO_DATA_ENABLED: "true"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tutor_learning_e2e
+      SPRING_DATASOURCE_USERNAME: tutor_e2e
+      SPRING_DATASOURCE_PASSWORD: tutor_e2e
+      EXECUTION_WORKER_BASE_URL: http://execution-worker:8090
+      FILE_STORAGE_PROVIDER: LOCAL
+      FILE_STORAGE_DIRECTORY: /tmp/tutor-files
+      PUBLIC_FRONTEND_BASE_URL: http://127.0.0.1:3000
+      SESSION_COOKIE_SECURE: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      execution-worker:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080/actuator/health/readiness"]
+      interval: 2s
+      timeout: 5s
+      retries: 90
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ../..
+      args:
+        BACKEND_INTERNAL_URL: http://backend:8080
+    environment:
+      BACKEND_INTERNAL_URL: http://backend:8080
+      DEMO_MODE: "true"
+      HOSTNAME: 0.0.0.0
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/login"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+      start_period: 20s
+
+volumes:
+  execution-workspaces:
+    name: tutorplatform-e2e-workspaces
