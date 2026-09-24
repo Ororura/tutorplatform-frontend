@@ -23,7 +23,7 @@ describe("report PDF download", () => {
 
   it("downloads a teacher PDF using the backend filename", async () => {
     transport.mockResolvedValue(
-      new Response(new Blob(["pdf"]), {
+      new Response("pdf", {
         status: 200,
         headers: { "Content-Disposition": 'attachment; filename="report-september.pdf"' },
       }),
