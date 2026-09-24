@@ -21,6 +21,9 @@ vi.mock("@/features/report/manage", () => ({
   useUpdateProgressReportMutation: () => ({ mutateAsync: mocks.update, isPending: false }),
   usePublishProgressReportMutation: () => ({ mutateAsync: mocks.publish, isPending: false }),
 }));
+vi.mock("./report-publication-management", () => ({
+  ReportPublicationManagement: () => <div data-testid="report-publication-management" />,
+}));
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
     <a href={href} {...props}>

@@ -20,6 +20,8 @@ import { usePublishProgressReportMutation, useUpdateProgressReportMutation } fro
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
+import { ReportPublicationManagement } from "./report-publication-management";
+
 const assessmentItems = [
   ["Понимание", "understandingAverage"],
   ["Самостоятельность", "independenceAverage"],
@@ -186,6 +188,8 @@ function ReportDetails({
           </p>
         )}
       </section>
+
+      <ReportPublicationManagement reportId={report.id} status={report.status} />
 
       <section
         className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"

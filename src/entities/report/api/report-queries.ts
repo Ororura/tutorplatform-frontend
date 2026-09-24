@@ -5,6 +5,7 @@ import type { components, operations } from "@/shared/api/generated/schema";
 
 export type ProgressReportSummary = components["schemas"]["ProgressReportSummaryResponse"];
 export type ProgressReportDetails = components["schemas"]["ProgressReportDetailsResponse"];
+export type PublicProgressReport = components["schemas"]["PublicProgressReportResponse"];
 export type LearningPeriod = components["schemas"]["LearningPeriodResponse"];
 export type ProgressReportsPage = components["schemas"]["ProgressReportPageResponse"];
 export type ProgressReportsParams = NonNullable<operations["listProgressReports"]["parameters"]["query"]>;
@@ -38,6 +39,16 @@ export async function getProgressReport(reportId: string): Promise<ProgressRepor
   return data;
 }
 
+export async function getPublicProgressReport(token: string): Promise<PublicProgressReport> {
+  const { data, error, response } = await apiClient.GET("/api/v1/public/reports/{token}", {
+    params: { path: { token } },
+  });
+
+  if (error) throw new ApiClientError(response.status, error);
+
+  return data;
+}
+
 export const reportQueries = {
   all: () => ["progress-reports"] as const,
   lists: () => [...reportQueries.all(), "list"] as const,
@@ -55,5 +66,11 @@ export const reportQueries = {
     queryOptions({
       queryKey: [...reportQueries.all(), "learning-periods", studentId, studentProgramId] as const,
       queryFn: () => getLearningPeriods(studentId, studentProgramId),
+    }),
+  publicDetail: (token: string) =>
+    queryOptions({
+      queryKey: [...reportQueries.all(), "public", token] as const,
+      queryFn: () => getPublicProgressReport(token),
+      retry: false,
     }),
 };
