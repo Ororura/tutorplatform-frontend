@@ -249,23 +249,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}/learning-periods": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** List persisted learning periods for an owned student program */
-    get: operations["listTeacherStudentLearningPeriods"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/v1/teacher/students/{studentId}/invites": {
     parameters: {
       query?: never;
@@ -418,6 +401,46 @@ export interface paths {
     put?: never;
     /** Create a topic in a module of an owned editable learning program */
     post: operations["createTeacherLearningProgramTopic"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/teacher/programs/{programId}/imports": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Confirm a YAML content package import
+     * @description Imports a previously previewed YAML file (maximum 1 MiB) into an owned editable program. Requires a teacher session and CSRF token. Repeating a successful confirmation with the same digest returns the stored result without creating content.
+     */
+    post: operations["importTutorContentPackage"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/teacher/programs/{programId}/imports/preview": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Preview a YAML content package for an owned editable learning program
+     * @description Checks a .yaml or .yml file (maximum 1 MiB) using the package parser and validator without importing content. Invalid YAML and content return HTTP 400 with code, path, and message for each error.
+     */
+    post: operations["previewTutorContentPackage"];
     delete?: never;
     options?: never;
     head?: never;
@@ -624,7 +647,8 @@ export interface paths {
     get: operations["getLessonMaterial"];
     put?: never;
     post?: never;
-    delete?: never;
+    /** Delete an owned lesson material */
+    delete: operations["deleteLessonMaterial"];
     options?: never;
     head?: never;
     /** Update a lesson material */
@@ -902,6 +926,23 @@ export interface paths {
     };
     /** Get a program structure for a student owned by the current teacher */
     get: operations["getTeacherStudentProgram"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}/learning-periods": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List persisted learning periods for an owned student program */
+    get: operations["listTeacherStudentLearningPeriods"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1794,9 +1835,9 @@ export interface components {
       progress?: number;
     };
     Topic: {
-      /** Format: uuid */
-      id?: string;
       title?: string;
+      description?: string;
+      materials?: components["schemas"]["Material"][];
     };
     Topics: {
       completed?: components["schemas"]["Topic"][];
@@ -1871,6 +1912,77 @@ export interface components {
       status: "DRAFT" | "ACTIVE" | "ARCHIVED";
       /** Format: int64 */
       version: number;
+    };
+    ContentPackageImportUpload: {
+      /**
+       * Format: binary
+       * @description Required YAML file, maximum 1 MiB
+       */
+      file: string;
+      /**
+       * Format: uuid
+       * @description UUID of the import confirmation
+       */
+      confirmationId: string;
+      /** @description Lowercase SHA-256 digest returned by Preview API */
+      digest: string;
+    };
+    ContentPackageImportResponse: {
+      /** Format: uuid */
+      programId?: string;
+      /** Format: uuid */
+      confirmationId?: string;
+      digest?: string;
+      /** Format: int32 */
+      moduleCount?: number;
+      /** Format: int32 */
+      topicCount?: number;
+      /** Format: int32 */
+      materialCount?: number;
+      createdModuleIds?: string[];
+    };
+    ContentPackagePreviewUpload: {
+      /**
+       * Format: binary
+       * @description Required YAML file; .yaml or .yml; maximum 1 MiB
+       */
+      file: string;
+    };
+    /** @description Individual YAML parser or content validation error */
+    ContentPackagePreviewError: {
+      code?: string;
+      path?: string;
+      message?: string;
+    };
+    ContentPackagePreviewResponse: {
+      valid?: boolean;
+      /** Format: uuid */
+      programId?: string;
+      digest?: string;
+      /** Format: int32 */
+      moduleCount?: number;
+      /** Format: int32 */
+      topicCount?: number;
+      /** Format: int32 */
+      materialCount?: number;
+      modules?: components["schemas"]["Module"][];
+      errors?: components["schemas"]["ContentPackagePreviewError"][];
+    };
+    Material: {
+      title?: string;
+      /** @enum {string} */
+      materialType?: "MARKDOWN" | "TEXT" | "IMAGE" | "FILE" | "LINK" | "CODE_EXAMPLE";
+      content?: string;
+      externalUrl?: string;
+    };
+    Module: {
+      title?: string;
+      description?: string;
+      topics?: components["schemas"]["Topic"][];
+    };
+    ContentPackagePreviewFailureResponse: {
+      valid?: boolean;
+      errors?: components["schemas"]["ContentPackagePreviewError"][];
     };
     /** @description Student answer for a TEXT homework task */
     SubmitTextAnswerRequest: {
@@ -2393,6 +2505,26 @@ export interface components {
       subject: components["schemas"]["ProgramSubjectResponse"];
       modules: components["schemas"]["ProgramModuleResponse"][];
     };
+    LearningPeriodResponse: {
+      /** Format: uuid */
+      id: string;
+      /** Format: int32 */
+      sequenceNo: number;
+      /** @enum {string} */
+      status: "ACTIVE" | "COMPLETED";
+      /** Format: int32 */
+      startCumulativeMinutes: number;
+      /** Format: int32 */
+      endCumulativeMinutes?: number | null;
+      /** Format: int32 */
+      targetDurationMinutes: number;
+      /** Format: date-time */
+      startedAt?: string | null;
+      /** Format: date-time */
+      completedAt?: string | null;
+      /** Format: uuid */
+      reportId?: string | null;
+    };
     StudentInviteListResponse: {
       items: components["schemas"]["StudentInviteSummaryResponse"][];
     };
@@ -2467,21 +2599,6 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
-    };
-    LearningPeriodResponse: {
-      /** Format: uuid */
-      id: string;
-      sequenceNo: number;
-      status: "ACTIVE" | "COMPLETED";
-      startCumulativeMinutes: number;
-      endCumulativeMinutes?: number | null;
-      targetDurationMinutes: number;
-      /** Format: date-time */
-      startedAt?: string | null;
-      /** Format: date-time */
-      completedAt?: string | null;
-      /** Format: uuid */
-      reportId?: string | null;
     };
     ReportShareListResponse: {
       items?: components["schemas"]["ReportShareSummaryResponse"][];
@@ -4035,27 +4152,6 @@ export interface operations {
       };
     };
   };
-  listTeacherStudentLearningPeriods: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        studentId: string;
-        studentProgramId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: { [name: string]: unknown };
-        content: { "*/*": components["schemas"]["LearningPeriodResponse"][] };
-      };
-      401: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
-      403: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
-      404: { headers: { [name: string]: unknown }; content: { "*/*": components["schemas"]["ApiError"] } };
-    };
-  };
   assignTeacherStudentProgram: {
     parameters: {
       query?: never;
@@ -4949,6 +5045,178 @@ export interface operations {
       };
     };
   };
+  importTutorContentPackage: {
+    parameters: {
+      query: {
+        confirmationId: string;
+        digest: string;
+      };
+      header?: never;
+      path: {
+        programId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["ContentPackageImportUpload"];
+      };
+    };
+    responses: {
+      /** @description Idempotent replay of the stored import result */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ContentPackageImportResponse"];
+        };
+      };
+      /** @description Content imported */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ContentPackageImportResponse"];
+        };
+      };
+      /** @description Invalid request, YAML, or package content */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Session authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role and CSRF token required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Program absent or owned by another teacher */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Digest or confirmation conflict, or program cannot be edited */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description File exceeds 1 MiB or configured multipart limit */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  previewTutorContentPackage: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        programId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["ContentPackagePreviewUpload"];
+      };
+    };
+    responses: {
+      /** @description Preview formed */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ContentPackagePreviewResponse"];
+        };
+      };
+      /** @description Invalid YAML, file, or package content */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ContentPackagePreviewFailureResponse"];
+        };
+      };
+      /** @description Session authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role and CSRF token required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Program absent or owned by another teacher */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Program cannot be edited */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description File exceeds 1 MiB or configured multipart limit */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
   archiveTeacherLearningProgram: {
     parameters: {
       query?: never;
@@ -5695,6 +5963,48 @@ export interface operations {
         content: {
           "*/*": components["schemas"]["ApiError"];
         };
+      };
+    };
+  };
+  deleteLessonMaterial: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        topicId: string;
+        materialId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Material deleted */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Teacher role and CSRF required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Lesson material not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
       };
     };
   };
@@ -7007,6 +7317,56 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["StudentProgramDetailsResponse"];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Student or student program not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  listTeacherStudentLearningPeriods: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        studentId: string;
+        studentProgramId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Learning periods in sequence order */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["LearningPeriodResponse"][];
         };
       };
       /** @description Authentication required */

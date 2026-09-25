@@ -32,7 +32,8 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-const draftReport: ProgressReportDetails = {
+// SpringDoc reuses the package-import Topic schema for report snapshots.
+const draftReport = {
   id: "report-1",
   studentProgramId: "program-1",
   learningPeriodId: "period-1",
@@ -69,7 +70,7 @@ const draftReport: ProgressReportDetails = {
   version: 7,
   createdAt: "2026-09-30T10:00:00Z",
   updatedAt: "2026-09-30T10:00:00Z",
-};
+} as unknown as ProgressReportDetails;
 
 function queryResult(data = draftReport) {
   return { data, isPending: false, isError: false, refetch: mocks.refetch };
