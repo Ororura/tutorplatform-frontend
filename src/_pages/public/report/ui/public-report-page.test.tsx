@@ -13,7 +13,8 @@ vi.mock("@/features/report/download", () => ({
   ReportPdfDownloadButton: ({ token }: { token: string }) => <button type="button">Скачать PDF {token}</button>,
 }));
 
-const publicReport: PublicProgressReport = {
+// SpringDoc reuses the package-import Topic schema here; keep internal IDs in this privacy fixture.
+const publicReport = {
   periodStartedAt: "2026-09-01T10:00:00Z",
   periodEndedAt: "2026-09-30T10:00:00Z",
   learningMinutes: 90,
@@ -37,7 +38,7 @@ const publicReport: PublicProgressReport = {
   teacherSummary: "Хороший прогресс",
   nextPeriodPlan: "Изучить функции",
   publishedAt: "2026-10-01T10:00:00Z",
-};
+} as unknown as PublicProgressReport;
 
 function result(overrides: Record<string, unknown> = {}) {
   return {
