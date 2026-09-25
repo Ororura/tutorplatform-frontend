@@ -13,6 +13,7 @@ import {
   type ContentPackageImportResponse,
   type ContentPackagePreviewResponse,
 } from "../model/content-package";
+import { ContentPackagePromptDialog } from "./content-package-prompt-dialog";
 
 const MAX_FILE_SIZE = 1_048_576;
 type Preview = ContentPackagePreviewResponse & { valid: true; digest: string };
@@ -126,6 +127,7 @@ export function ImportContentPackageDialog({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const busyRef = useRef(false);
   const [open, setOpen] = useState(false);
+  const [promptOpen, setPromptOpen] = useState(false);
   const [flow, setFlow] = useState<Flow>({ phase: "SELECT_FILE", file: null });
   const previewMutation = usePreviewContentPackageMutation(programId);
   const importMutation = useImportContentPackageMutation(programId);
@@ -144,6 +146,7 @@ export function ImportContentPackageDialog({
   const close = () => {
     if (busyRef.current) return;
     setOpen(false);
+    setPromptOpen(false);
     setFlow({ phase: "SELECT_FILE", file: null });
   };
 
@@ -242,6 +245,9 @@ export function ImportContentPackageDialog({
               <p id="import-content-package-description" className="text-sm leading-6 text-slate-600">
                 Загрузите YAML-файл, чтобы добавить готовые модули, темы и материалы в текущую программу.
               </p>
+              <Button type="button" variant="secondary" disabled={busy} onClick={() => setPromptOpen(true)}>
+                Создать с помощью нейросети
+              </Button>
               <label className="block space-y-2">
                 <span className="text-sm font-medium text-slate-950">
                   {file ? "Заменить файл" : "Выберите YAML-файл"}
@@ -338,6 +344,7 @@ export function ImportContentPackageDialog({
           )}
         </form>
       </dialog>
+      {promptOpen && <ContentPackagePromptDialog onClose={() => setPromptOpen(false)} />}
     </>
   );
 }
