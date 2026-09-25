@@ -1,0 +1,14 @@
+schemaVersion: 1
+kind: modules
+modules:
+  - title: "Название модуля"
+    description: "Описание модуля"
+    topics:
+      - title: "Название темы"
+        description: "Описание темы"
+        materials:
+          - title: "Теория"
+            materialType: MARKDOWN
+            content: |
+              # Название темы
+              Напишите здесь учебный материал.

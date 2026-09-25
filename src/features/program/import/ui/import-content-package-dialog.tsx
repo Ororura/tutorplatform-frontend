@@ -297,7 +297,26 @@ export function ImportContentPackageDialog({
               {!preview && (
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
                   <p className="font-medium text-slate-950">Готового файла нет?</p>
-                  <p className="mt-1">Можно подготовить YAML самостоятельно или с помощью нейросети.</p>
+                  <p className="mt-1">
+                    Шаблон содержит структуру модулей, тем и материалов. Замените примерное содержимое своим и загрузите
+                    файл обратно.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+                    <a
+                      className="font-medium text-blue-700 underline"
+                      href="/templates/tutor-content-package.yaml"
+                      download
+                    >
+                      Скачать шаблон YAML
+                    </a>
+                    <a
+                      className="font-medium text-blue-700 underline"
+                      href="/templates/python-conditions.yaml"
+                      download
+                    >
+                      Скачать заполненный пример
+                    </a>
+                  </div>
                 </div>
               )}
               <div className="flex justify-end gap-3">
