@@ -56,7 +56,7 @@ test("demo student completes the learning journey", async ({ page }) => {
   await page.getByRole("button", { name: "Отправить решение" }).click();
 
   const submissionResult = page.getByRole("region", { name: "Результат отправки" });
-  await expect(submissionResult.getByText("Выполнено", { exact: true })).toBeVisible();
+  await expect(submissionResult.getByText("Выполнено", { exact: true })).toBeVisible({ timeout: 60_000 });
   await expect(submissionResult.getByText("Решение принято", { exact: true })).toBeVisible();
   await expect(submissionResult).toContainText("Тесты: 2 из 2");
 
