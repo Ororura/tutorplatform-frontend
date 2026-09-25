@@ -52,8 +52,12 @@ vi.mock("@/features/program/edit", () => ({
 }));
 
 vi.mock("@/features/program/import", () => ({
-  ImportContentPackageDialog: ({ editable }: { editable: boolean }) =>
-    editable ? <button type="button">Импортировать модули</button> : null,
+  ImportContentPackageDialog: ({ programId, editable }: { programId: string; editable: boolean }) =>
+    editable ? (
+      <button type="button" data-program-id={programId}>
+        Импортировать модули
+      </button>
+    ) : null,
 }));
 
 vi.mock("@/features/program/module/manage", () => ({
@@ -223,7 +227,7 @@ describe("TeacherProgramDetailView", () => {
 
     expect(screen.getByRole("button", { name: "Редактировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Добавить модуль" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Импортировать модули" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Импортировать модули" })).toHaveAttribute("data-program-id", program.id);
     expect(screen.getAllByRole("button", { name: "Добавить тему" })).toHaveLength(2);
     expect(screen.getByRole("button", { name: "Активировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Архивировать" })).toBeInTheDocument();

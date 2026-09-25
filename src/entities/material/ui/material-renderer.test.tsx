@@ -54,6 +54,19 @@ describe("MaterialRenderer", () => {
     expect(screen.getByRole("link", { name: "Открыть материал" })).toHaveAttribute("rel", "noopener noreferrer");
   });
 
+  it("renders draft links safely and never offers downloads for draft files", () => {
+    const { rerender } = render(
+      <MaterialRenderer
+        preview
+        material={{ materialType: "LINK", title: "Draft link", externalUrl: "javascript:alert(1)" }}
+      />,
+    );
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    rerender(<MaterialRenderer preview material={{ materialType: "FILE", title: "Draft file" }} />);
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.getByText("Файл пока недоступен для скачивания.")).toBeInTheDocument();
+  });
+
   it.each([
     ["FILE" as const, "Скачать файл"],
     ["IMAGE" as const, "Открыть изображение"],
