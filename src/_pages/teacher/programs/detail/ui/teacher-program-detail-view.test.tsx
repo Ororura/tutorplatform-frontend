@@ -51,6 +51,11 @@ vi.mock("@/features/program/edit", () => ({
   EditLearningProgramDialog: () => <button type="button">Редактировать</button>,
 }));
 
+vi.mock("@/features/program/import", () => ({
+  ImportContentPackageDialog: ({ editable }: { editable: boolean }) =>
+    editable ? <button type="button">Импортировать модули</button> : null,
+}));
+
 vi.mock("@/features/program/module/manage", () => ({
   CreateLearningProgramModuleDialog: ({ editable }: { editable: boolean }) =>
     editable ? <button type="button">Добавить модуль</button> : null,
@@ -218,6 +223,7 @@ describe("TeacherProgramDetailView", () => {
 
     expect(screen.getByRole("button", { name: "Редактировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Добавить модуль" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Импортировать модули" })).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Добавить тему" })).toHaveLength(2);
     expect(screen.getByRole("button", { name: "Активировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Архивировать" })).toBeInTheDocument();
@@ -232,9 +238,21 @@ describe("TeacherProgramDetailView", () => {
 
     expect(screen.queryByRole("button", { name: "Редактировать" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Добавить модуль" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Импортировать модули" })).not.toBeInTheDocument();
     expect(screen.queryAllByRole("button", { name: "Добавить тему" })).toHaveLength(0);
     expect(screen.queryByRole("button", { name: "Активировать" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Архивировать" })).not.toBeInTheDocument();
+  });
+
+  it("hides import for an assigned program even if editable is stale", () => {
+    mocks.useQuery.mockReturnValue({
+      data: { ...program, hasAssignments: true },
+      isPending: false,
+      isError: false,
+      refetch: mocks.refetch,
+    });
+    render(<TeacherProgramDetailView programId="algebra" />);
+    expect(screen.queryByRole("button", { name: "Импортировать модули" })).not.toBeInTheDocument();
   });
 
   it("renders a not found state without retry", () => {

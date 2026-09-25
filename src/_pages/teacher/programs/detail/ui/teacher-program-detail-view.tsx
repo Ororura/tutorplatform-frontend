@@ -25,6 +25,7 @@ import {
 import { ActivateLearningProgramButton } from "@/features/program/activate";
 import { ArchiveLearningProgramButton } from "@/features/program/archive";
 import { EditLearningProgramDialog } from "@/features/program/edit";
+import { ImportContentPackageDialog } from "@/features/program/import";
 import {
   CreateLearningProgramModuleDialog,
   LearningProgramModuleActions,
@@ -193,11 +194,19 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                       </p>
                     </div>
                   </div>
-                  <CreateLearningProgramModuleDialog
-                    programId={program.data.id}
-                    editable={program.data.editable}
-                    onCreated={setExpandedModuleId}
-                  />
+                  <div className="flex flex-wrap gap-2">
+                    <ImportContentPackageDialog
+                      programId={program.data.id}
+                      editable={
+                        program.data.editable && program.data.status !== "ARCHIVED" && !program.data.hasAssignments
+                      }
+                    />
+                    <CreateLearningProgramModuleDialog
+                      programId={program.data.id}
+                      editable={program.data.editable}
+                      onCreated={setExpandedModuleId}
+                    />
+                  </div>
                 </div>
 
                 {modules.length === 0 ? (
