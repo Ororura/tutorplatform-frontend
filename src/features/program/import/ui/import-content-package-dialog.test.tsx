@@ -121,6 +121,30 @@ describe("ImportContentPackageDialog", () => {
     expect(screen.getByRole("alert")).toHaveTextContent("1 МиБ");
   });
 
+  it("offers both downloads without clearing the selected file", () => {
+    const dialog = openDialog();
+    const file = selectFile();
+    const template = within(dialog).getByRole("link", { name: "Скачать шаблон YAML" });
+    const example = within(dialog).getByRole("link", { name: "Скачать заполненный пример" });
+
+    expect(template).toHaveAttribute("href", "/templates/tutor-content-package.yaml");
+    expect(example).toHaveAttribute("href", "/templates/python-conditions.yaml");
+    expect(template).toHaveAttribute("download");
+    expect(example).toHaveAttribute("download");
+    expect(dialog).toHaveTextContent(
+      "Шаблон содержит структуру модулей, тем и материалов. Замените примерное содержимое своим и загрузите файл обратно.",
+    );
+
+    template.addEventListener("click", (event) => event.preventDefault());
+    example.addEventListener("click", (event) => event.preventDefault());
+    fireEvent.click(template);
+    fireEvent.click(example);
+    expect(dialog).toBeInTheDocument();
+    expect(dialog).toHaveTextContent("modules.yaml · 11 Б");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Проверить файл" }));
+    expect(mocks.preview).toHaveBeenCalledWith(file);
+  });
+
   it("shows preview loading, counts, tree and draft material rendering", async () => {
     const pending = deferred<typeof preview>();
     mocks.preview.mockReturnValueOnce(pending.promise);
@@ -194,6 +218,8 @@ describe("ImportContentPackageDialog", () => {
     await waitFor(() =>
       expect(screen.getByRole("status")).toHaveTextContent("Создано модулей: 1, тем: 1, материалов: 4"),
     );
+    expect(screen.queryByRole("link", { name: "Скачать шаблон YAML" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Скачать заполненный пример" })).not.toBeInTheDocument();
     expect(mocks.importPackage).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: "Вернуться к программе" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
