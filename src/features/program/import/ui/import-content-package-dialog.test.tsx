@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -149,6 +152,20 @@ describe("ImportContentPackageDialog", () => {
     expect(dialog).toHaveTextContent("modules.yaml · 11 Б");
     fireEvent.click(within(dialog).getByRole("button", { name: "Проверить файл" }));
     expect(mocks.preview).toHaveBeenCalledWith(file);
+  });
+
+  it("serves nonempty v1 YAML files at both download links", () => {
+    const dialog = openDialog();
+    for (const label of ["Скачать шаблон YAML", "Скачать заполненный пример"]) {
+      const href = within(dialog).getByRole("link", { name: label }).getAttribute("href");
+      expect(href).toMatch(/^\/templates\/[a-z-]+\.yaml$/);
+      const yaml = readFileSync(resolve(process.cwd(), "public", href!.slice(1)), "utf8");
+      expect(yaml).toMatch(/^schemaVersion: 1\nkind: modules\nmodules:\n/);
+      expect(yaml).toMatch(/\n  - title: /);
+      expect(yaml).toMatch(/\n      - title: /);
+      expect(yaml).toMatch(/\n          - title: /);
+      expect(Buffer.byteLength(yaml, "utf8")).toBeLessThanOrEqual(1_048_576);
+    }
   });
 
   it("shows validation errors for empty fields and out-of-range topic counts", () => {

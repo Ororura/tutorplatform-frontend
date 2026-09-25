@@ -52,6 +52,23 @@ describe("generateContentPackagePrompt", () => {
   });
 
   it.each([
+    [true, false, false, ["MARKDOWN"]],
+    [false, true, false, ["CODE_EXAMPLE"]],
+    [false, false, true, ["LINK"]],
+    [true, true, false, ["MARKDOWN", "CODE_EXAMPLE"]],
+    [true, false, true, ["MARKDOWN", "LINK"]],
+    [false, true, true, ["CODE_EXAMPLE", "LINK"]],
+  ])("keeps the YAML example within the v1 contract for selected types %#", (theory, codeExamples, links, types) => {
+    const prompt = generateContentPackagePrompt({ ...config, theory, codeExamples, links });
+    const example = prompt.slice(prompt.lastIndexOf("schemaVersion: 1\nkind: modules\nmodules:"));
+    expect([...example.matchAll(/materialType: (\w+)/g)].map((match) => match[1])).toEqual(types);
+    expect(example).not.toMatch(/^\s*(?:type|body|url|uuid|slug|position|tasks|homework):/m);
+    expect(example).not.toMatch(/materialType: (?:IMAGE|FILE)/);
+    expect(prompt).toContain("Для TEXT, MARKDOWN и CODE_EXAMPLE используй content");
+    expect(prompt).toContain("для LINK — только externalUrl");
+  });
+
+  it.each([
     [{ ...config, subject: " " }, "Укажите предмет"],
     [{ ...config, moduleTitle: " " }, "Укажите предмет"],
     [{ ...config, topicCount: 0 }, "от 1 до 25"],

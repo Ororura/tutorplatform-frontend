@@ -113,3 +113,86 @@ modules:
   await secondModule.getByRole("heading", { name: secondModuleTitle }).click();
   await expect(secondModule.getByRole("link", { name: secondTopicTitle })).toBeVisible();
 });
+
+test("teacher prepares a package and imports the downloaded example", async ({ page, context }, testInfo) => {
+  test.setTimeout(120_000);
+  const hostname = new URL(testInfo.project.use.baseURL ?? "").hostname;
+  expect(["localhost", "127.0.0.1", "::1"], "E2E writes require a local test environment").toContain(hostname);
+
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("/login?next=%2Fteacher%2Fprograms");
+  await page.getByLabel("Email", { exact: true }).fill(teacherEmail);
+  await page.getByLabel("Пароль", { exact: true }).fill(teacherPassword);
+  await page.getByRole("button", { name: "Войти" }).click();
+  await expect(page).toHaveURL(/\/teacher\/programs$/);
+
+  await page.getByRole("button", { name: "Создать программу" }).click();
+  const createDialog = page.getByRole("dialog", { name: "Создать программу" });
+  await createDialog.getByLabel("Предмет", { exact: true }).selectOption({ index: 1 });
+  await createDialog.getByLabel("Название", { exact: true }).fill(`E2E подготовка ${Date.now()}`);
+  await createDialog.getByRole("button", { name: "Создать", exact: true }).click();
+  await page.getByRole("link", { name: /Открыть программу: E2E подготовка/ }).click();
+
+  const modules = page.getByRole("region", { name: "Модули программы" });
+  await modules.getByRole("button", { name: "Импортировать модули" }).click();
+  const importer = page.getByRole("dialog", { name: "Импорт учебных модулей" });
+  await expect(importer.getByText("Готового файла нет?")).toBeVisible();
+
+  const templateDownloadPromise = page.waitForEvent("download");
+  await importer.getByRole("link", { name: "Скачать шаблон YAML" }).click();
+  const templateDownload = await templateDownloadPromise;
+  expect(templateDownload.suggestedFilename()).toBe("tutor-content-package.yaml");
+  const templatePath = await templateDownload.path();
+  expect(templatePath).not.toBeNull();
+
+  const exampleDownloadPromise = page.waitForEvent("download");
+  await importer.getByRole("link", { name: "Скачать заполненный пример" }).click();
+  const exampleDownload = await exampleDownloadPromise;
+  expect(exampleDownload.suggestedFilename()).toBe("python-conditions.yaml");
+  const examplePath = await exampleDownload.path();
+  expect(examplePath).not.toBeNull();
+
+  await importer.getByRole("button", { name: "Создать с помощью нейросети" }).click();
+  const generator = page.getByRole("dialog", { name: "Подготовка учебных материалов с помощью ИИ" });
+  await generator.getByLabel("Предмет").fill("Python");
+  await generator.getByLabel("Название модуля").fill("Условные конструкции");
+  await generator.getByRole("button", { name: "Скопировать промпт" }).click();
+  await expect(generator.getByRole("status")).toContainText("Промпт скопирован");
+  const prompt = await page.evaluate(() => navigator.clipboard.readText());
+  expect(prompt).toContain("schemaVersion: 1\nkind: modules\nmodules:");
+  expect(prompt).toContain("materialType: MARKDOWN");
+  await generator.getByRole("button", { name: "Вернуться к импорту" }).click();
+
+  await importer.getByLabel("Выберите YAML-файл").setInputFiles({
+    name: templateDownload.suggestedFilename(),
+    mimeType: "application/yaml",
+    buffer: await import("node:fs/promises").then((fs) => fs.readFile(templatePath!)),
+  });
+  await importer.getByRole("button", { name: "Проверить файл" }).click();
+  const preview = importer.getByRole("region", { name: "Предварительный просмотр модулей" });
+  await expect(preview.getByText("Модулей: 1")).toBeVisible();
+  await expect(preview.getByText("Тем: 1")).toBeVisible();
+  await expect(preview.getByText("Материалов: 1")).toBeVisible();
+
+  await importer.getByLabel("Заменить файл").setInputFiles({
+    name: exampleDownload.suggestedFilename(),
+    mimeType: "application/yaml",
+    buffer: await import("node:fs/promises").then((fs) => fs.readFile(examplePath!)),
+  });
+  await importer.getByRole("button", { name: "Проверить файл" }).click();
+  await expect(preview.getByText("Модулей: 1")).toBeVisible();
+  await expect(preview.getByText("Тем: 2")).toBeVisible();
+  await expect(preview.getByText("Материалов: 4")).toBeVisible();
+  await expect(preview.getByRole("heading", { name: "Условные конструкции в Python" })).toBeVisible();
+
+  await importer.getByRole("button", { name: "Импортировать 1 модулей" }).click();
+  await expect(importer.getByRole("status")).toContainText("Создано модулей: 1, тем: 2, материалов: 4");
+  await importer.getByRole("button", { name: "Вернуться к программе" }).click();
+  const importedModule = modules.getByRole("heading", { name: "Условные конструкции в Python" });
+  await expect(importedModule).toBeVisible();
+  await importedModule.click();
+  await modules.getByRole("link", { name: "Условие if" }).click();
+  await expect(
+    page.getByRole("region", { name: "Материалы" }).getByRole("heading", { name: "Теория: if" }),
+  ).toBeVisible();
+});
