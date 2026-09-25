@@ -7,6 +7,8 @@ export type RenderableMaterial = Pick<
 > &
   Partial<Pick<LessonMaterial, "topicId">>;
 
+type PreviewMaterial = Pick<LessonMaterial, "materialType" | "title" | "content" | "externalUrl">;
+
 function downloadUrl(material: RenderableMaterial): string | undefined {
   if (!material.topicId) return undefined;
   return `/api/v1/teacher/topics/${encodeURIComponent(material.topicId)}/materials/${encodeURIComponent(
@@ -24,13 +26,22 @@ function externalUrl(value?: string | null): string | undefined {
   }
 }
 
-type Props = {
-  material: RenderableMaterial;
-  getDownloadUrl?: (material: RenderableMaterial) => string | undefined;
-  onDownload?: (material: RenderableMaterial, href: string) => void;
-};
+type Props =
+  | {
+      material: RenderableMaterial;
+      preview?: false;
+      getDownloadUrl?: (material: RenderableMaterial) => string | undefined;
+      onDownload?: (material: RenderableMaterial, href: string) => void;
+    }
+  | {
+      material: PreviewMaterial;
+      preview: true;
+      getDownloadUrl?: never;
+      onDownload?: never;
+    };
 
-export function MaterialRenderer({ material, getDownloadUrl = downloadUrl, onDownload }: Readonly<Props>) {
+export function MaterialRenderer(props: Readonly<Props>) {
+  const { material } = props;
   switch (material.materialType) {
     case "TEXT":
       return <p className="whitespace-pre-wrap leading-7">{material.content ?? ""}</p>;
@@ -51,23 +62,23 @@ export function MaterialRenderer({ material, getDownloadUrl = downloadUrl, onDow
           rel="noopener noreferrer"
           target="_blank"
         >
-          Открыть материал
+          {props.preview ? material.externalUrl : "Открыть материал"}
         </a>
       ) : (
         <p className="text-sm text-neutral-500">Ссылка на материал недоступна.</p>
       );
     }
     case "FILE": {
-      const href = getDownloadUrl(material);
+      const href = props.preview ? undefined : (props.getDownloadUrl ?? downloadUrl)(props.material);
       return href ? (
         <a
           className="underline underline-offset-4"
           href={href}
           onClick={
-            onDownload
+            !props.preview && props.onDownload
               ? (event) => {
                   event.preventDefault();
-                  onDownload(material, href);
+                  props.onDownload?.(props.material, href);
                 }
               : undefined
           }
@@ -79,7 +90,7 @@ export function MaterialRenderer({ material, getDownloadUrl = downloadUrl, onDow
       );
     }
     case "IMAGE": {
-      const href = getDownloadUrl(material);
+      const href = props.preview ? undefined : (props.getDownloadUrl ?? downloadUrl)(props.material);
       return href ? (
         <a className="underline underline-offset-4" href={href} rel="noopener noreferrer" target="_blank">
           Открыть изображение
