@@ -82,6 +82,24 @@ describe("EditMaterialDialog", () => {
     );
   });
 
+  it("allows an existing TEXT material to be corrected to MARKDOWN without changing its content", async () => {
+    const content = "Нужна версия **3.11 или новее**.";
+    render(<EditMaterialDialog material={material("TEXT", { content })} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Редактировать" }));
+    fireEvent.change(screen.getByRole("combobox", { name: "Тип материала" }), {
+      target: { value: "MARKDOWN" },
+    });
+    expect(screen.getByRole("textbox", { name: "Содержимое Markdown" })).toHaveValue(content);
+    fireEvent.click(screen.getByRole("button", { name: "Сохранить" }));
+
+    await waitFor(() =>
+      expect(mocks.mutateAsync).toHaveBeenCalledWith(
+        expect.objectContaining({ materialType: "MARKDOWN", content, version: 12 }),
+      ),
+    );
+  });
+
   it("saves LINK in externalUrl and shows the current type", async () => {
     render(
       <EditMaterialDialog material={material("LINK", { content: null, externalUrl: "https://example.com/old" })} />,

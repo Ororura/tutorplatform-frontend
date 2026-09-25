@@ -35,7 +35,7 @@ const preview = {
           title: "Тема 1",
           materials: [
             { title: "Текст", materialType: "TEXT", content: "Первая строка\nВторая строка" },
-            { title: "Разметка", materialType: "MARKDOWN", content: "## Заголовок Markdown" },
+            { title: "Разметка", materialType: "MARKDOWN", content: "## Заголовок Markdown\n\n**Важный текст**" },
             { title: "Код", materialType: "CODE_EXAMPLE", content: "console.log('safe')" },
             { title: "Ссылка", materialType: "LINK", externalUrl: "https://example.org/lesson" },
           ],
@@ -170,6 +170,7 @@ describe("ImportContentPackageDialog", () => {
     expect(within(tree).getByText("LINK")).toBeInTheDocument();
     expect(within(tree).getByText(/Первая строка/)).toHaveClass("whitespace-pre-wrap");
     expect(within(tree).getByRole("heading", { name: "Заголовок Markdown" })).toBeInTheDocument();
+    expect(within(tree).getByText("Важный текст", { selector: "strong" })).toBeInTheDocument();
     expect(within(tree).getByText("console.log('safe')").closest("pre")).toHaveClass("overflow-x-auto");
     expect(within(tree).getByRole("link", { name: "https://example.org/lesson" })).toHaveAttribute(
       "href",
