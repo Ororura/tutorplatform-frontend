@@ -18,6 +18,10 @@ const mocks = vi.hoisted(() => {
     reorderModules: vi.fn(),
     reorderTopics: vi.fn(),
     reorderPending: false,
+    previewPackage: vi.fn(),
+    importPackage: vi.fn(),
+    previewHook: vi.fn(),
+    importHook: vi.fn(),
     ApiClientError,
   };
 });
@@ -51,13 +55,12 @@ vi.mock("@/features/program/edit", () => ({
   EditLearningProgramDialog: () => <button type="button">Редактировать</button>,
 }));
 
-vi.mock("@/features/program/import", () => ({
-  ImportContentPackageDialog: ({ programId, editable }: { programId: string; editable: boolean }) =>
-    editable ? (
-      <button type="button" data-program-id={programId}>
-        Импортировать модули
-      </button>
-    ) : null,
+vi.mock("@/features/program/import/api/preview-content-package", () => ({
+  usePreviewContentPackageMutation: mocks.previewHook,
+}));
+
+vi.mock("@/features/program/import/api/import-content-package", () => ({
+  useImportContentPackageMutation: mocks.importHook,
 }));
 
 vi.mock("@/features/program/module/manage", () => ({
@@ -141,6 +144,10 @@ describe("TeacherProgramDetailView", () => {
     mocks.reorderModules.mockReset();
     mocks.reorderTopics.mockReset();
     mocks.reorderPending = false;
+    mocks.previewPackage.mockReset();
+    mocks.importPackage.mockReset();
+    mocks.previewHook.mockReset().mockReturnValue({ mutateAsync: mocks.previewPackage });
+    mocks.importHook.mockReset().mockReturnValue({ mutateAsync: mocks.importPackage });
     mocks.useQuery.mockReturnValue({ data: program, isPending: false, isError: false, refetch: mocks.refetch });
   });
 
@@ -227,7 +234,12 @@ describe("TeacherProgramDetailView", () => {
 
     expect(screen.getByRole("button", { name: "Редактировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Добавить модуль" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Импортировать модули" })).toHaveAttribute("data-program-id", program.id);
+    expect(screen.getByRole("button", { name: "Импортировать модули" })).toBeInTheDocument();
+    expect(mocks.previewHook).toHaveBeenCalledWith(program.id);
+    expect(mocks.importHook).toHaveBeenCalledWith(program.id);
+    fireEvent.click(screen.getByRole("button", { name: "Импортировать модули" }));
+    expect(screen.getByRole("dialog", { name: "Импорт учебных модулей" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Выберите YAML-файл")).toHaveAttribute("accept", ".yaml,.yml");
     expect(screen.getAllByRole("button", { name: "Добавить тему" })).toHaveLength(2);
     expect(screen.getByRole("button", { name: "Активировать" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Архивировать" })).toBeInTheDocument();
