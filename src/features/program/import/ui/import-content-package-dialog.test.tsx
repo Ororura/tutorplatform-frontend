@@ -92,12 +92,18 @@ async function checkFile() {
 }
 
 describe("ImportContentPackageDialog", () => {
+  let clipboardDescriptor: PropertyDescriptor | undefined;
   beforeEach(() => {
+    clipboardDescriptor = Object.getOwnPropertyDescriptor(navigator, "clipboard");
     mocks.preview.mockReset().mockResolvedValue(preview);
     mocks.importPackage.mockReset().mockResolvedValue(imported);
     vi.stubGlobal("crypto", { randomUUID: vi.fn(() => confirmationId) });
   });
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    if (clipboardDescriptor) Object.defineProperty(navigator, "clipboard", clipboardDescriptor);
+    else Reflect.deleteProperty(navigator, "clipboard");
+    vi.unstubAllGlobals();
+  });
 
   it("opens, validates file choice and clears errors on close", () => {
     openDialog();
@@ -145,6 +151,65 @@ describe("ImportContentPackageDialog", () => {
     expect(mocks.preview).toHaveBeenCalledWith(file);
   });
 
+  it("shows validation errors for empty fields and out-of-range topic counts", () => {
+    openDialog();
+    fireEvent.click(screen.getByRole("button", { name: "Создать с помощью нейросети" }));
+    const generator = screen.getByRole("dialog", { name: "Подготовка учебных материалов с помощью ИИ" });
+    expect(within(generator).getByLabelText("Теория")).toBeChecked();
+    fireEvent.click(within(generator).getByRole("button", { name: "Показать промпт" }));
+    expect(within(generator).getByRole("alert")).toHaveTextContent("Укажите предмет и название модуля");
+    fireEvent.change(within(generator).getByLabelText("Предмет"), { target: { value: "Python" } });
+    fireEvent.change(within(generator).getByLabelText("Название модуля"), { target: { value: "Условия" } });
+    fireEvent.change(within(generator).getByLabelText("Количество тем"), { target: { value: "26" } });
+    fireEvent.click(within(generator).getByRole("button", { name: "Показать промпт" }));
+    expect(within(generator).getByRole("alert")).toHaveTextContent("от 1 до 25");
+    expect(within(generator).queryByLabelText("Готовый промпт")).not.toBeInTheDocument();
+  });
+
+  it("copies the prompt and returns to import with the selected file and preview intact", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    openDialog();
+    selectFile();
+    await checkFile();
+    fireEvent.click(screen.getByRole("button", { name: "Создать с помощью нейросети" }));
+    const generator = screen.getByRole("dialog", { name: "Подготовка учебных материалов с помощью ИИ" });
+    fireEvent.change(within(generator).getByLabelText("Предмет"), { target: { value: "Python" } });
+    fireEvent.change(within(generator).getByLabelText("Название модуля"), { target: { value: "Условия" } });
+    fireEvent.click(within(generator).getByRole("button", { name: "Показать промпт" }));
+    const prompt = within(generator).getByLabelText("Готовый промпт") as HTMLTextAreaElement;
+    expect(prompt.value).toContain('Предмет: "Python"');
+    fireEvent.click(within(generator).getByRole("button", { name: "Скопировать промпт" }));
+    await waitFor(() => expect(within(generator).getByRole("status")).toHaveTextContent("Промпт скопирован"));
+    expect(writeText).toHaveBeenCalledWith(prompt.value);
+    fireEvent.click(within(generator).getByRole("button", { name: "Вернуться к импорту" }));
+    expect(
+      screen.queryByRole("dialog", { name: "Подготовка учебных материалов с помощью ИИ" }),
+    ).not.toBeInTheDocument();
+    const importer = screen.getByRole("dialog", { name: "Импорт учебных модулей" });
+    expect(importer).toHaveTextContent("modules.yaml · 11 Б");
+    expect(importer).toHaveTextContent("Модулей: 1");
+    expect(within(importer).getByRole("button", { name: "Импортировать 1 модулей" })).toBeEnabled();
+  });
+
+  it("keeps the prompt selectable when Clipboard API fails", async () => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: vi.fn().mockRejectedValue(new Error("Denied")) },
+    });
+    openDialog();
+    fireEvent.click(screen.getByRole("button", { name: "Создать с помощью нейросети" }));
+    const generator = screen.getByRole("dialog", { name: "Подготовка учебных материалов с помощью ИИ" });
+    fireEvent.change(within(generator).getByLabelText("Предмет"), { target: { value: "Python" } });
+    fireEvent.change(within(generator).getByLabelText("Название модуля"), { target: { value: "Условия" } });
+    fireEvent.click(within(generator).getByRole("button", { name: "Скопировать промпт" }));
+    await waitFor(() => expect(within(generator).getByRole("alert")).toHaveTextContent("скопируйте его вручную"));
+    expect(within(generator).getByLabelText("Готовый промпт")).toHaveAttribute("readonly");
+    expect((within(generator).getByLabelText("Готовый промпт") as HTMLTextAreaElement).value).toContain(
+      "schemaVersion: 1",
+    );
+  });
+
   it("shows preview loading, counts, tree and draft material rendering", async () => {
     const pending = deferred<typeof preview>();
     mocks.preview.mockReturnValueOnce(pending.promise);
@@ -178,7 +243,7 @@ describe("ImportContentPackageDialog", () => {
     );
   });
 
-  it("shows YAML validation paths without closing the dialog", async () => {
+  it("shows a readable required field error and preserves technical details", async () => {
     mocks.preview.mockRejectedValueOnce(
       new ContentPackagePreviewValidationError(400, [
         { code: "REQUIRED_FIELD", path: "modules[0].topics[1].materials[2].content", message: "Content is required" },
@@ -187,10 +252,15 @@ describe("ImportContentPackageDialog", () => {
     openDialog();
     selectFile();
     fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
-    await waitFor(() =>
-      expect(screen.getByRole("alert")).toHaveTextContent("modules[0].topics[1].materials[2].content"),
-    );
-    expect(screen.getByRole("alert")).toHaveTextContent("Content is required");
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("во втором уроке первого модуля"));
+    expect(screen.getByRole("alert")).toHaveTextContent("в материале №3, отсутствует содержимое");
+    expect(screen.getByRole("alert")).toHaveTextContent("Путь: modules[0].topics[1].materials[2].content");
+    const details = screen.getByText("Технические подробности").closest("details")!;
+    expect(details).not.toHaveAttribute("open");
+    fireEvent.click(screen.getByText("Технические подробности"));
+    expect(details).toHaveTextContent("code: REQUIRED_FIELD");
+    expect(details).toHaveTextContent("path: modules[0].topics[1].materials[2].content");
+    expect(details).toHaveTextContent("message: Content is required");
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Проверить файл" })).toBeEnabled();
   });
@@ -202,7 +272,59 @@ describe("ImportContentPackageDialog", () => {
     openDialog();
     selectFile();
     fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
-    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("modules[0].title: Required"));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Проверьте технические подробности"));
+    expect(screen.getByText("Технические подробности").closest("details")).toHaveTextContent("modules[0].title");
+  });
+
+  it("shows multiple errors and copies code, path and message", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    mocks.preview.mockRejectedValueOnce(
+      new ContentPackagePreviewValidationError(400, [
+        {
+          code: "INVALID_MATERIAL_TYPE",
+          path: "modules[0].topics[0].materials[0].materialType",
+          message: "Unsupported material type",
+        },
+        {
+          code: "INVALID_EXTERNAL_URL",
+          path: "modules[0].topics[0].materials[1].externalUrl",
+          message: "External URL must be absolute",
+        },
+        { code: "LIMIT_EXCEEDED", path: "modules[0].topics", message: "A module supports at most 25 topics" },
+      ]),
+    );
+    openDialog();
+    selectFile();
+    fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("неподдерживаемый тип материала"));
+    expect(screen.getByRole("alert")).toHaveTextContent("полным адресом HTTP или HTTPS");
+    expect(screen.getByRole("alert")).toHaveTextContent("не более 25 уроков");
+    fireEvent.click(screen.getByRole("button", { name: "Скопировать ошибки" }));
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Ошибки скопированы"));
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "code: INVALID_MATERIAL_TYPE\npath: modules[0].topics[0].materials[0].materialType\nmessage: Unsupported material type",
+      ),
+    );
+    expect(writeText.mock.calls[0][0]).toContain("code: INVALID_EXTERNAL_URL");
+    expect(writeText.mock.calls[0][0]).toContain("code: LIMIT_EXCEEDED");
+  });
+
+  it("shows a safe message for an unknown code", async () => {
+    mocks.preview.mockRejectedValueOnce(
+      new ContentPackagePreviewValidationError(400, [
+        { code: "FUTURE_ERROR", path: "modules[0].title", message: "Unexpected backend detail" },
+      ]),
+    );
+    openDialog();
+    selectFile();
+    fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Проверьте технические подробности"));
+    expect(screen.getByRole("alert")).not.toHaveTextContent("Unexpected backend detail");
+    expect(screen.getByText("Технические подробности").closest("details")).toHaveTextContent(
+      "Unexpected backend detail",
+    );
   });
 
   it("confirms exactly once, sends the original file and digest, and shows success", async () => {

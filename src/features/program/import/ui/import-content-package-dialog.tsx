@@ -11,8 +11,11 @@ import { usePreviewContentPackageMutation } from "../api/preview-content-package
 import {
   ContentPackagePreviewValidationError,
   type ContentPackageImportResponse,
+  type ContentPackagePreviewError,
   type ContentPackagePreviewResponse,
 } from "../model/content-package";
+import { formatContentPackageError, serializeContentPackageErrors } from "../model/format-content-package-error";
+import { ContentPackagePromptDialog } from "./content-package-prompt-dialog";
 
 const MAX_FILE_SIZE = 1_048_576;
 type Preview = ContentPackagePreviewResponse & { valid: true; digest: string };
@@ -126,6 +129,8 @@ export function ImportContentPackageDialog({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const busyRef = useRef(false);
   const [open, setOpen] = useState(false);
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [copyStatus, setCopyStatus] = useState("");
   const [flow, setFlow] = useState<Flow>({ phase: "SELECT_FILE", file: null });
   const previewMutation = usePreviewContentPackageMutation(programId);
   const importMutation = useImportContentPackageMutation(programId);
@@ -133,6 +138,20 @@ export function ImportContentPackageDialog({
   const file = flow.phase === "IMPORT_SUCCESS" ? null : flow.file;
   const preview = "preview" in flow ? flow.preview : undefined;
   const retryImport = flow.phase === "ERROR" && !!flow.preview && !!flow.confirmationId && canRetryImport(flow.error);
+  const validationErrors: ContentPackagePreviewError[] =
+    flow.phase !== "ERROR"
+      ? []
+      : flow.error instanceof ContentPackagePreviewValidationError
+        ? flow.error.errors
+        : flow.error instanceof ApiClientError
+          ? [
+              {
+                code: flow.error.body.code,
+                path: flow.error.body.details[0]?.field ?? "",
+                message: flow.error.body.message,
+              },
+            ]
+          : [];
 
   useEffect(() => {
     if (open && editable && !dialogRef.current?.open) dialogRef.current?.showModal();
@@ -144,11 +163,14 @@ export function ImportContentPackageDialog({
   const close = () => {
     if (busyRef.current) return;
     setOpen(false);
+    setPromptOpen(false);
+    setCopyStatus("");
     setFlow({ phase: "SELECT_FILE", file: null });
   };
 
   const selectFile = (nextFile: File | null) => {
     if (busyRef.current) return;
+    setCopyStatus("");
     setFlow({ phase: "SELECT_FILE", file: nextFile, error: nextFile ? fileError(nextFile) : undefined });
   };
 
@@ -201,6 +223,19 @@ export function ImportContentPackageDialog({
     }
   };
 
+  const copyErrors = async () => {
+    const details = flow.phase === "ERROR" && flow.error instanceof ApiClientError ? flow.error.body.details : [];
+    const text =
+      serializeContentPackageErrors(validationErrors) +
+      details.map((detail) => `\nfield: ${detail.field}\nmessage: ${detail.message}`).join("");
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyStatus("Ошибки скопированы.");
+    } catch {
+      setCopyStatus("Не удалось скопировать ошибки. Выделите текст в технических подробностях вручную.");
+    }
+  };
+
   return (
     <>
       <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
@@ -242,6 +277,9 @@ export function ImportContentPackageDialog({
               <p id="import-content-package-description" className="text-sm leading-6 text-slate-600">
                 Загрузите YAML-файл, чтобы добавить готовые модули, темы и материалы в текущую программу.
               </p>
+              <Button type="button" variant="secondary" disabled={busy} onClick={() => setPromptOpen(true)}>
+                Создать с помощью нейросети
+              </Button>
               <label className="block space-y-2">
                 <span className="text-sm font-medium text-slate-950">
                   {file ? "Заменить файл" : "Выберите YAML-файл"}
@@ -268,26 +306,40 @@ export function ImportContentPackageDialog({
                 </p>
               )}
               {flow.phase === "ERROR" && (
-                <div className="space-y-2 text-sm text-red-700" role="alert">
-                  <p>{errorMessage(flow.error)}</p>
-                  {flow.error instanceof ContentPackagePreviewValidationError && (
-                    <ul className="list-inside list-disc">
-                      {flow.error.errors.map((item, index) => (
-                        <li key={index}>
-                          {item.path && <strong>{item.path}: </strong>}
-                          {item.message}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {flow.error instanceof ApiClientError && flow.error.body.details.length > 0 && (
-                    <ul className="list-inside list-disc">
-                      {flow.error.body.details.map((item, index) => (
-                        <li key={index}>
-                          {item.field}: {item.message}
-                        </li>
-                      ))}
-                    </ul>
+                <div className="space-y-3 text-sm">
+                  <div className="space-y-2 text-red-700" role="alert">
+                    <p>{errorMessage(flow.error)}</p>
+                    {validationErrors.length > 0 && (
+                      <ul className="list-inside list-disc">
+                        {validationErrors.map((item, index) => (
+                          <li key={index}>{formatContentPackageError(item, preview)}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  {validationErrors.length > 0 && (
+                    <>
+                      <details className="rounded-md border border-slate-200 p-3 text-slate-700">
+                        <summary className="cursor-pointer font-medium">Технические подробности</summary>
+                        <pre className="mt-2 overflow-x-auto whitespace-pre-wrap select-text">
+                          {serializeContentPackageErrors(validationErrors)}
+                        </pre>
+                        {flow.error instanceof ApiClientError &&
+                          flow.error.body.details.map((detail, index) => (
+                            <p key={index}>
+                              field: {detail.field}; message: {detail.message}
+                            </p>
+                          ))}
+                      </details>
+                      <Button type="button" variant="secondary" onClick={() => void copyErrors()}>
+                        Скопировать ошибки
+                      </Button>
+                      {copyStatus && (
+                        <p role="status" className="text-slate-700">
+                          {copyStatus}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -338,6 +390,7 @@ export function ImportContentPackageDialog({
           )}
         </form>
       </dialog>
+      {promptOpen && <ContentPackagePromptDialog onClose={() => setPromptOpen(false)} />}
     </>
   );
 }
