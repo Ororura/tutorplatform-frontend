@@ -242,7 +242,7 @@ describe("ImportContentPackageDialog", () => {
     );
   });
 
-  it("shows YAML validation paths without closing the dialog", async () => {
+  it("shows a readable required field error and preserves technical details", async () => {
     mocks.preview.mockRejectedValueOnce(
       new ContentPackagePreviewValidationError(400, [
         { code: "REQUIRED_FIELD", path: "modules[0].topics[1].materials[2].content", message: "Content is required" },
@@ -251,10 +251,15 @@ describe("ImportContentPackageDialog", () => {
     openDialog();
     selectFile();
     fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
-    await waitFor(() =>
-      expect(screen.getByRole("alert")).toHaveTextContent("modules[0].topics[1].materials[2].content"),
-    );
-    expect(screen.getByRole("alert")).toHaveTextContent("Content is required");
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("во втором уроке первого модуля"));
+    expect(screen.getByRole("alert")).toHaveTextContent("в материале №3, отсутствует содержимое");
+    expect(screen.getByRole("alert")).toHaveTextContent("Путь: modules[0].topics[1].materials[2].content");
+    const details = screen.getByText("Технические подробности").closest("details")!;
+    expect(details).not.toHaveAttribute("open");
+    fireEvent.click(screen.getByText("Технические подробности"));
+    expect(details).toHaveTextContent("code: REQUIRED_FIELD");
+    expect(details).toHaveTextContent("path: modules[0].topics[1].materials[2].content");
+    expect(details).toHaveTextContent("message: Content is required");
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Проверить файл" })).toBeEnabled();
   });
@@ -266,7 +271,59 @@ describe("ImportContentPackageDialog", () => {
     openDialog();
     selectFile();
     fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
-    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("modules[0].title: Required"));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Проверьте технические подробности"));
+    expect(screen.getByText("Технические подробности").closest("details")).toHaveTextContent("modules[0].title");
+  });
+
+  it("shows multiple errors and copies code, path and message", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    mocks.preview.mockRejectedValueOnce(
+      new ContentPackagePreviewValidationError(400, [
+        {
+          code: "INVALID_MATERIAL_TYPE",
+          path: "modules[0].topics[0].materials[0].materialType",
+          message: "Unsupported material type",
+        },
+        {
+          code: "INVALID_EXTERNAL_URL",
+          path: "modules[0].topics[0].materials[1].externalUrl",
+          message: "External URL must be absolute",
+        },
+        { code: "LIMIT_EXCEEDED", path: "modules[0].topics", message: "A module supports at most 25 topics" },
+      ]),
+    );
+    openDialog();
+    selectFile();
+    fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("неподдерживаемый тип материала"));
+    expect(screen.getByRole("alert")).toHaveTextContent("полным адресом HTTP или HTTPS");
+    expect(screen.getByRole("alert")).toHaveTextContent("не более 25 уроков");
+    fireEvent.click(screen.getByRole("button", { name: "Скопировать ошибки" }));
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Ошибки скопированы"));
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "code: INVALID_MATERIAL_TYPE\npath: modules[0].topics[0].materials[0].materialType\nmessage: Unsupported material type",
+      ),
+    );
+    expect(writeText.mock.calls[0][0]).toContain("code: INVALID_EXTERNAL_URL");
+    expect(writeText.mock.calls[0][0]).toContain("code: LIMIT_EXCEEDED");
+  });
+
+  it("shows a safe message for an unknown code", async () => {
+    mocks.preview.mockRejectedValueOnce(
+      new ContentPackagePreviewValidationError(400, [
+        { code: "FUTURE_ERROR", path: "modules[0].title", message: "Unexpected backend detail" },
+      ]),
+    );
+    openDialog();
+    selectFile();
+    fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Проверьте технические подробности"));
+    expect(screen.getByRole("alert")).not.toHaveTextContent("Unexpected backend detail");
+    expect(screen.getByText("Технические подробности").closest("details")).toHaveTextContent(
+      "Unexpected backend detail",
+    );
   });
 
   it("confirms exactly once, sends the original file and digest, and shows success", async () => {
