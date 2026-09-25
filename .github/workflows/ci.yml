@@ -70,17 +70,6 @@ jobs:
           ref: main
           path: .e2e-dependencies/backend
 
-      - name: Include LearningPeriod read API for report E2E
-        working-directory: .e2e-dependencies/backend
-        run: |
-          set -euo pipefail
-          # Backend main has the demo period; apply its pending read API until it lands there.
-          if [ ! -f src/main/java/com/tutorplatform/report/api/TeacherLearningPeriodController.java ]; then
-            read_api_commit=821f038b7adb9918f70e7898d86b96920509f2e7
-            git fetch origin "$read_api_commit" --depth=2
-            git diff "$read_api_commit^" "$read_api_commit" -- src/main/java | git apply
-          fi
-
       - name: Checkout execution worker main
         uses: actions/checkout@v7
         with:
