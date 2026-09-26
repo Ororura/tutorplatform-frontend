@@ -28,6 +28,8 @@ export function BulkTopicStatusToolbar({
 }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [confirming, setConfirming] = useState(false);
+  const exceedsLimit = count > 375;
+  const cannotSubmit = pending || !count || exceedsLimit;
   return (
     <div className="mt-4 space-y-3 rounded-xl bg-slate-50 p-3" role="region" aria-label="Выбор тем" aria-busy={pending}>
       <div className="flex flex-wrap items-center gap-2">
@@ -37,16 +39,16 @@ export function BulkTopicStatusToolbar({
         <span className="text-sm" aria-live="polite">
           Выбрано: {count}
         </span>
-        <Button type="button" disabled={pending || !count} onClick={() => void onSubmit("ACTIVE")}>
+        <Button type="button" disabled={cannotSubmit} onClick={() => void onSubmit("ACTIVE")}>
           Активировать
         </Button>
-        <Button type="button" variant="secondary" disabled={pending || !count} onClick={() => void onSubmit("DRAFT")}>
+        <Button type="button" variant="secondary" disabled={cannotSubmit} onClick={() => void onSubmit("DRAFT")}>
           В черновик
         </Button>
         <Button
           type="button"
           variant="secondary"
-          disabled={pending || !count}
+          disabled={cannotSubmit}
           onClick={() => {
             setConfirming(true);
             dialog.current?.showModal();
@@ -58,6 +60,11 @@ export function BulkTopicStatusToolbar({
           Отменить выбор
         </Button>
       </div>
+      {exceedsLimit && (
+        <p role="alert" className="text-sm text-red-700">
+          За один раз можно изменить статус не более 375 тем. Уменьшите выбор.
+        </p>
+      )}
       {pending && (
         <p role="status" className="text-sm text-slate-500">
           Сохраняем…
@@ -90,7 +97,7 @@ export function BulkTopicStatusToolbar({
           <Button type="button" variant="secondary" disabled={pending} onClick={() => dialog.current?.close()}>
             Отмена
           </Button>
-          <Button type="button" disabled={pending || !count} onClick={() => void onSubmit("ARCHIVED")}>
+          <Button type="button" disabled={cannotSubmit} onClick={() => void onSubmit("ARCHIVED")}>
             {pending ? "Сохраняем…" : "Архивировать"}
           </Button>
         </div>

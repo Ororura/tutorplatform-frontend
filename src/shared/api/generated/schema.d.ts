@@ -6910,6 +6910,24 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role and valid CSRF token required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
       /** @description Learning program or topic not found */
       404: {
         headers: {
