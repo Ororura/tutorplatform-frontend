@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { TeacherProgramDetailView } from "./teacher-program-detail-view";
@@ -12,6 +12,8 @@ const mocks = vi.hoisted(() => {
 
   return {
     useQuery: vi.fn(),
+    bulkStatus: vi.fn(),
+    bulkPending: false,
     detail: vi.fn((programId: string) => ({ queryKey: ["learning-programs", "detail", programId] })),
     bySlug: vi.fn((slug: string) => ({ queryKey: ["learning-programs", "slug", slug] })),
     refetch: vi.fn(),
@@ -27,6 +29,10 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery }));
+
+vi.mock("@/features/program/topic/bulk-status/api/bulk-topic-status", () => ({
+  useBulkTopicStatusMutation: () => ({ mutateAsync: mocks.bulkStatus, isPending: mocks.bulkPending }),
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -138,6 +144,8 @@ const program = {
 
 describe("TeacherProgramDetailView", () => {
   beforeEach(() => {
+    mocks.bulkStatus.mockReset().mockResolvedValue(undefined);
+    mocks.bulkPending = false;
     mocks.detail.mockClear();
     mocks.bySlug.mockClear();
     mocks.refetch.mockReset();
@@ -295,5 +303,172 @@ describe("TeacherProgramDetailView", () => {
     render(<TeacherProgramDetailView programId="algebra" />);
     fireEvent.click(screen.getByRole("button", { name: "Повторить" }));
     expect(mocks.refetch).toHaveBeenCalled();
+  });
+});
+
+describe("bulk topic selection", () => {
+  const multiModuleProgram = {
+    ...program,
+    modules: [
+      {
+        ...program.modules[0],
+        topics: [{ ...program.modules[1].topics[0], id: "topic-3", title: "Уравнения", version: 3 }],
+      },
+      program.modules[1],
+    ],
+  };
+  const showProgram = (data = multiModuleProgram) =>
+    mocks.useQuery.mockReturnValue({ data, isPending: false, isError: false, refetch: mocks.refetch });
+  const start = () => fireEvent.click(screen.getByRole("button", { name: "Выбрать темы" }));
+  const toolbar = () => within(screen.getByRole("region", { name: "Выбор тем" }));
+  const choose = (title: string) => fireEvent.click(screen.getByLabelText(`Выбрать тему «${title}»`));
+
+  beforeEach(() => {
+    mocks.bulkStatus.mockReset().mockResolvedValue(undefined);
+    mocks.bulkPending = false;
+    showProgram();
+  });
+
+  it("enables selection and shows topic checkboxes only in selection mode", () => {
+    render(<TeacherProgramDetailView programId="algebra" />);
+    expect(screen.queryAllByRole("checkbox")).toHaveLength(0);
+    start();
+    expect(screen.getAllByRole("checkbox")).toHaveLength(3);
+    expect(toolbar().getByText("Выбрано: 0")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Выбрать темы" })).not.toBeInTheDocument();
+  });
+
+  it("selects individual topics across modules and counts them", () => {
+    render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    choose("Натуральные числа");
+    expect(toolbar().getByText("Выбрано: 1")).toBeInTheDocument();
+    expect(screen.getByLabelText("Выбрать тему «Натуральные числа»")).toBeChecked();
+    choose("Уравнения");
+    expect(toolbar().getByText("Выбрано: 2")).toBeInTheDocument();
+    choose("Натуральные числа");
+    expect(toolbar().getByText("Выбрано: 1")).toBeInTheDocument();
+  });
+
+  it("selects all topics including collapsed modules and clears all on the next action", () => {
+    const { container } = render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    expect([...container.querySelectorAll("details")].every((item) => !item.open)).toBe(true);
+    fireEvent.click(toolbar().getByRole("button", { name: "Выбрать все" }));
+    expect(toolbar().getByText("Выбрано: 3")).toBeInTheDocument();
+    screen.getAllByRole("checkbox").forEach((checkbox) => expect(checkbox).toBeChecked());
+    fireEvent.click(toolbar().getByRole("button", { name: "Снять все" }));
+    expect(toolbar().getByText("Выбрано: 0")).toBeInTheDocument();
+    screen.getAllByRole("checkbox").forEach((checkbox) => expect(checkbox).not.toBeChecked());
+  });
+
+  it.each([
+    ["Активировать", "ACTIVE"],
+    ["В черновик", "DRAFT"],
+  ])("sends %s with current versions and clears selection on success", async (label, status) => {
+    const { rerender } = render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    choose("Натуральные числа");
+    choose("Уравнения");
+    showProgram({
+      ...multiModuleProgram,
+      modules: multiModuleProgram.modules.map((module) => ({
+        ...module,
+        topics: module.topics.map((topic) => ({ ...topic, version: topic.version + 10 })),
+      })),
+    });
+    rerender(<TeacherProgramDetailView programId="algebra" />);
+    fireEvent.click(toolbar().getByRole("button", { name: label }));
+    await waitFor(() =>
+      expect(mocks.bulkStatus).toHaveBeenCalledWith({
+        status,
+        topics: [
+          { id: "topic-3", version: 13 },
+          { id: "topic-1", version: 11 },
+        ],
+      }),
+    );
+    await waitFor(() => expect(screen.getByRole("button", { name: "Выбрать темы" })).toBeInTheDocument());
+    start();
+    expect(toolbar().getByText("Выбрано: 0")).toBeInTheDocument();
+  });
+
+  it("confirms archive before sending ARCHIVED", async () => {
+    render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    choose("Натуральные числа");
+    fireEvent.click(toolbar().getByRole("button", { name: "Архивировать" }));
+    const confirmation = within(screen.getByRole("dialog", { name: "Архивировать выбранные темы?" }));
+    expect(confirmation.getByText("Будут архивированы 1 тем.")).toBeInTheDocument();
+    expect(mocks.bulkStatus).not.toHaveBeenCalled();
+    fireEvent.click(confirmation.getByRole("button", { name: "Архивировать" }));
+    await waitFor(() =>
+      expect(mocks.bulkStatus).toHaveBeenCalledWith({ status: "ARCHIVED", topics: [{ id: "topic-1", version: 1 }] }),
+    );
+  });
+
+  it("cancels archive without submitting or clearing selection", () => {
+    render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    choose("Натуральные числа");
+    fireEvent.click(toolbar().getByRole("button", { name: "Архивировать" }));
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Отмена" }));
+    expect(mocks.bulkStatus).not.toHaveBeenCalled();
+    expect(toolbar().getByText("Выбрано: 1")).toBeInTheDocument();
+  });
+
+  it("preserves selection and presents errors", async () => {
+    mocks.bulkStatus.mockRejectedValue(new Error("network"));
+    render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    choose("Натуральные числа");
+    fireEvent.click(toolbar().getByRole("button", { name: "Активировать" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Не удалось изменить статус выбранных тем.");
+    expect(toolbar().getByText("Выбрано: 1")).toBeInTheDocument();
+    expect(screen.getByLabelText("Выбрать тему «Натуральные числа»")).toBeChecked();
+  });
+
+  it("prunes deleted topics from selection when the query changes", () => {
+    const { rerender } = render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    fireEvent.click(toolbar().getByRole("button", { name: "Выбрать все" }));
+    showProgram({ ...multiModuleProgram, modules: [multiModuleProgram.modules[1]] });
+    rerender(<TeacherProgramDetailView programId="algebra" />);
+    expect(toolbar().getByText("Выбрано: 2")).toBeInTheDocument();
+  });
+
+  it("hides all selection controls when the program becomes read-only", () => {
+    const { rerender } = render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    showProgram({ ...multiModuleProgram, editable: false });
+    rerender(<TeacherProgramDetailView programId="algebra" />);
+    expect(screen.queryByRole("region", { name: "Выбор тем" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Выбрать темы" })).not.toBeInTheDocument();
+    expect(screen.queryAllByRole("checkbox")).toHaveLength(0);
+  });
+
+  it("disables actions without selection and while pending, preventing duplicate submission", async () => {
+    let resolve!: () => void;
+    mocks.bulkStatus.mockImplementation(
+      () =>
+        new Promise<void>((done) => {
+          resolve = done;
+        }),
+    );
+    const { rerender } = render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    expect(toolbar().getByRole("button", { name: "Активировать" })).toBeDisabled();
+    choose("Натуральные числа");
+    fireEvent.click(toolbar().getByRole("button", { name: "Активировать" }));
+    fireEvent.click(toolbar().getByRole("button", { name: "Активировать" }));
+    expect(mocks.bulkStatus).toHaveBeenCalledTimes(1);
+    mocks.bulkPending = true;
+    rerender(<TeacherProgramDetailView programId="algebra" />);
+    toolbar()
+      .getAllByRole("button")
+      .forEach((button) => expect(button).toBeDisabled());
+    screen.getAllByRole("checkbox").forEach((checkbox) => expect(checkbox).toBeDisabled());
+    expect(screen.getByRole("status")).toHaveTextContent("Сохраняем…");
+    await act(async () => resolve());
   });
 });
