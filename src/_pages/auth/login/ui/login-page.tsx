@@ -39,7 +39,7 @@ export function LoginPage() {
           aria-hidden="true"
         />
 
-        <header className="relative z-10 mx-auto flex w-full max-w-[1500px] items-center justify-between px-5 py-5 sm:px-8 lg:px-10 lg:py-7">
+        <header className="relative z-10 mx-auto flex w-full max-w-[1500px] shrink-0 items-center justify-between px-5 py-5 sm:px-8 lg:px-10 lg:py-7">
           <div className="flex items-center gap-3">
             <span className="grid size-11 place-items-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-200/70">
               <BookOpen className="size-6" strokeWidth={2.2} aria-hidden="true" />
@@ -57,7 +57,7 @@ export function LoginPage() {
           </div>
         </header>
 
-        <div className="relative z-10 mx-auto grid w-full max-w-[1500px] flex-1 items-center px-5 pb-8 sm:px-8 lg:grid-cols-[minmax(250px,0.72fr)_minmax(430px,510px)] lg:gap-10 lg:px-10 xl:grid-cols-[minmax(280px,0.72fr)_minmax(450px,510px)_minmax(350px,0.95fr)] xl:gap-12">
+        <div className="relative z-10 mx-auto grid w-full max-w-[1500px] flex-none items-start px-5 pt-4 pb-8 sm:px-8 sm:pt-6 lg:flex-1 lg:grid-cols-[minmax(250px,0.72fr)_minmax(430px,510px)] lg:items-center lg:gap-10 lg:px-10 lg:pt-0 xl:grid-cols-[minmax(280px,0.72fr)_minmax(450px,510px)_minmax(350px,0.95fr)] xl:gap-12">
           <section className="hidden max-w-[350px] lg:block" aria-labelledby="login-intro-title">
             <h1
               id="login-intro-title"
@@ -111,7 +111,7 @@ export function LoginPage() {
           </aside>
         </div>
 
-        <footer className="relative z-10 mx-auto flex w-full max-w-[1500px] flex-col gap-2 px-5 pb-5 text-center text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10 lg:pb-7">
+        <footer className="relative z-10 mx-auto mt-auto flex w-full max-w-[1500px] shrink-0 flex-col gap-2 px-5 pb-5 text-center text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10 lg:pb-7">
           <p>© {new Date().getFullYear()} Tutor Learning Platform. Все права защищены.</p>
           <p>Обучение, которое открывает возможности</p>
         </footer>
