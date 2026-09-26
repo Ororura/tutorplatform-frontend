@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { TeacherProgramsView } from "./teacher-programs-view";
@@ -134,10 +134,35 @@ describe("TeacherProgramsView", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("explains that draft cannot yet be assigned", () => {
+  it("explains activation once above the list", () => {
     render(<TeacherProgramsView />);
 
-    expect(screen.getByText("Черновик нельзя назначить ученику. Сначала активируйте программу.")).toBeInTheDocument();
+    expect(screen.getByText("Черновик нужно активировать перед назначением ученику.")).toBeInTheDocument();
+  });
+
+  it("shows inline counts without sidebar navigation", () => {
+    render(<TeacherProgramsView />);
+    const summary = screen.getByLabelText("Состояние программ");
+    for (const [label, count] of [
+      ["Все", "2"],
+      ["Активные", "1"],
+      ["Черновики", "1"],
+      ["Архив", "0"],
+    ]) {
+      expect(within(within(summary).getByText(label).parentElement!).getByText(count)).toBeInTheDocument();
+    }
+    expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
+    expect(screen.queryByText("Рабочий процесс")).not.toBeInTheDocument();
+    expect(screen.getByText("Базовая программа")).toBeInTheDocument();
+    expect(screen.getAllByText("Python")).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "Активировать draft-program" }).closest("a")).toBeNull();
+  });
+
+  it("renders loading without reporting zero counts", () => {
+    mocks.useQuery.mockReturnValue({ isPending: true, isFetching: true, isError: false });
+    render(<TeacherProgramsView />);
+    expect(screen.getByText("Загружаем программы…")).toHaveAttribute("aria-busy", "true");
+    expect(within(screen.getByLabelText("Состояние программ")).getAllByText("—")).toHaveLength(4);
   });
 
   it("renders empty state", () => {
