@@ -14,25 +14,25 @@ export function StudentList({
   students: StudentSummary[];
 }>) {
   return (
-    <ul className="divide-y divide-slate-100">
+    <ul className="divide-y divide-[var(--border)]">
       {students.map((student) => (
         <li key={student.id}>
           <Link
-            className="group grid gap-4 px-1 py-5 transition first:pt-2 last:pb-2 hover:bg-slate-50/70 sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] sm:items-center sm:px-3"
+            className="group grid gap-3 px-2 py-3 transition hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] sm:items-center sm:px-3"
             href={`/teacher/students/${student.id}`}
           >
-            <span className="flex min-w-0 items-center gap-4">
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-50 to-indigo-100 text-sm font-semibold text-blue-700 ring-1 ring-blue-100">
+            <span className="flex min-w-0 items-center gap-3">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">
                 {getStudentInitials(student)}
               </span>
 
               <span className="min-w-0">
-                <span className="block truncate font-semibold text-slate-900">
+                <span className="block truncate font-medium text-slate-900">
                   {student.firstName} {student.lastName ?? ""}
                 </span>
 
-                <span className="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
-                  <CalendarDays size={14} />
+                <span className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+                  <CalendarDays size={14} aria-hidden="true" />
                   Добавлен {new Date(student.createdAt).toLocaleDateString("ru-RU")}
                 </span>
               </span>
@@ -48,9 +48,9 @@ export function StudentList({
               </span>
             </span>
 
-            <span className="flex items-center gap-2 text-sm font-medium text-blue-600">
+            <span className="flex items-center gap-2 text-sm font-medium text-slate-500 group-hover:text-blue-600">
               Открыть
-              <ChevronRight size={17} className="transition group-hover:translate-x-0.5" />
+              <ChevronRight aria-hidden="true" size={17} className="transition group-hover:translate-x-0.5" />
             </span>
           </Link>
         </li>
