@@ -50,12 +50,22 @@ describe("TeacherAttention", () => {
   it("shows the empty state from real dashboard data", () => {
     render(<TeacherAttention items={[]} />);
 
-    expect(screen.getByRole("heading", { name: "Требует внимания" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Всё спокойно" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Требует внимания" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Всё спокойно" }).closest("section")).toHaveAttribute(
+      "id",
+      "teacher-attention",
+    );
     expect(screen.getByText("Сейчас нет работ и отчётов, требующих действий.")).toBeInTheDocument();
   });
 
   it("links every attention item to its corresponding resource", () => {
     render(<TeacherAttention items={items} />);
+
+    expect(screen.getByRole("heading", { name: "Требует внимания" })).toBeInTheDocument();
+    expect(screen.queryByText("Всё спокойно")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).toHaveLength(items.length);
 
     expect(screen.getByRole("link", { name: /Работа ожидает проверки.*Анна Смирнова/ })).toHaveAttribute(
       "href",

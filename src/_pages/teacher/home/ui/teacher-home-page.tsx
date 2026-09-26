@@ -38,15 +38,15 @@ export function TeacherHomePage() {
 
   return (
     <main className="space-y-4">
-      <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-8">
-        <p className="text-sm font-medium text-blue-600">Рабочее пространство</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+      <header className="py-2">
+        <p className="text-sm font-medium text-[var(--text-secondary)]">Рабочее пространство</p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
           Добрый день, {currentUser.data.displayName}!
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
           Здесь собраны ученики и быстрые действия для ежедневной работы.
         </p>
-      </section>
+      </header>
 
       <TeacherDashboardContent
         data={dashboard.data}
@@ -57,17 +57,15 @@ export function TeacherHomePage() {
         }}
       />
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="space-y-4">
-          <TeacherStudentsOverview
-            data={students.data}
-            isPending={students.isPending}
-            isError={students.isError}
-            onRetry={() => {
-              void students.refetch();
-            }}
-          />
-        </div>
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
+        <TeacherStudentsOverview
+          data={students.data}
+          isPending={students.isPending}
+          isError={students.isError}
+          onRetry={() => {
+            void students.refetch();
+          }}
+        />
 
         <TeacherQuickActions />
       </div>
