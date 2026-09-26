@@ -393,6 +393,36 @@ describe("bulk topic selection", () => {
     expect(toolbar().getByText("Выбрано: 0")).toBeInTheDocument();
   });
 
+  it("keeps select-all across modules but prevents requests above the 375-topic limit", async () => {
+    showProgram({
+      ...multiModuleProgram,
+      modules: multiModuleProgram.modules.map((module, moduleIndex) => ({
+        ...module,
+        topics: Array.from({ length: 188 }, (_, index) => ({
+          ...module.topics[0],
+          id: `limit-${moduleIndex}-${index}`,
+          title: `Тема ${moduleIndex}-${index}`,
+        })),
+      })),
+    });
+    render(<TeacherProgramDetailView programId="algebra" />);
+    start();
+    fireEvent.click(toolbar().getByRole("button", { name: "Выбрать все" }));
+    expect(toolbar().getByText("Выбрано: 376")).toBeInTheDocument();
+    expect(toolbar().getByRole("alert")).toHaveTextContent("не более 375 тем");
+    for (const name of ["Активировать", "В черновик", "Архивировать"]) {
+      const button = toolbar().getByRole("button", { name });
+      expect(button).toBeDisabled();
+      fireEvent.click(button);
+    }
+    expect(mocks.bulkStatus).not.toHaveBeenCalled();
+    choose("Тема 0-0");
+    expect(toolbar().queryByRole("alert")).not.toBeInTheDocument();
+    fireEvent.click(toolbar().getByRole("button", { name: "Активировать" }));
+    await waitFor(() => expect(mocks.bulkStatus).toHaveBeenCalledTimes(1));
+    expect(mocks.bulkStatus.mock.calls[0][0].topics).toHaveLength(375);
+  });
+
   it("confirms archive before sending ARCHIVED", async () => {
     render(<TeacherProgramDetailView programId="algebra" />);
     start();
