@@ -120,7 +120,10 @@ function RegistrationContent() {
               href="/login"
               className="mt-3 inline-flex font-semibold text-blue-600 transition hover:text-blue-700 focus-visible:rounded focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-100"
             >
-              Перейти ко входу <span className="ml-1" aria-hidden="true">→</span>
+              Перейти ко входу{" "}
+              <span className="ml-1" aria-hidden="true">
+                →
+              </span>
             </Link>
           </div>
         </section>
