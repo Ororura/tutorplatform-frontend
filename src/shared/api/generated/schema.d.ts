@@ -780,6 +780,23 @@ export interface paths {
     patch: operations["updateTeacherLearningProgram"];
     trace?: never;
   };
+  "/api/v1/teacher/programs/{programId}/topics/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Atomically update topic statuses in an owned editable learning program */
+    patch: operations["bulkUpdateTeacherLearningProgramTopicStatus"];
+    trace?: never;
+  };
   "/api/v1/teacher/programs/{programId}/modules/{moduleId}": {
     parameters: {
       query?: never;
@@ -2258,6 +2275,17 @@ export interface components {
       /** Format: int32 */
       position: number;
       topics: components["schemas"]["LearningProgramTopicDetailsResponse"][];
+    };
+    BulkUpdateLearningProgramTopicStatusItem: {
+      /** Format: uuid */
+      id: string;
+      /** Format: int64 */
+      version: number;
+    };
+    BulkUpdateLearningProgramTopicStatusRequest: {
+      /** @enum {string} */
+      status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+      topics: components["schemas"]["BulkUpdateLearningProgramTopicStatusItem"][];
     };
     UpdateLearningProgramModuleRequest: {
       title: string;
@@ -6841,6 +6869,57 @@ export interface operations {
         };
       };
       /** @description Program cannot be edited or version is stale */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  bulkUpdateTeacherLearningProgramTopicStatus: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        programId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BulkUpdateLearningProgramTopicStatusRequest"];
+      };
+    };
+    responses: {
+      /** @description Topic statuses updated */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Invalid request or duplicate topic IDs */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Learning program or topic not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Learning program cannot be edited or topic version is stale */
       409: {
         headers: {
           [name: string]: unknown;

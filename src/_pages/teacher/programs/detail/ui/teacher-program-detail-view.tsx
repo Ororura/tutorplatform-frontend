@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   type LearningProgramDetails,
@@ -36,6 +36,11 @@ import {
   LearningProgramTopicActions,
   useReorderLearningProgramTopicsMutation,
 } from "@/features/program/topic/manage";
+import {
+  BulkTopicStatusToolbar,
+  useBulkTopicStatusMutation,
+  type BulkTopicStatusRequest,
+} from "@/features/program/topic/bulk-status";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -88,6 +93,60 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
 
   const reorderModules = useReorderLearningProgramModulesMutation(program.data?.id ?? "");
   const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
+  const bulkStatus = useBulkTopicStatusMutation(program.data?.id ?? "");
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+  const [selectionProgram, setSelectionProgram] = useState(program.data);
+  const [bulkError, setBulkError] = useState("");
+  const submitting = useRef(false);
+  const allTopics = program.data?.modules.flatMap((module) => module.topics) ?? [];
+  const selecting = selectionMode && Boolean(program.data?.editable);
+
+  // Reconcile IDs with query data; versions always come from the latest query.
+  if (selectionProgram !== program.data) {
+    setSelectionProgram(program.data);
+    if (selectionProgram?.id !== program.data?.id || !program.data?.editable) {
+      setSelectedIds(new Set());
+      setSelectionMode(false);
+    } else {
+      const availableIds = new Set(allTopics.map((topic) => topic.id));
+      setSelectedIds(new Set([...selectedIds].filter((id) => availableIds.has(id))));
+    }
+  }
+
+  const cancelSelection = () => {
+    setSelectedIds(new Set());
+    setSelectionMode(false);
+    setBulkError("");
+  };
+  const toggleTopic = (id: string) => {
+    if (submitting.current) return;
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+  const submitBulkStatus = async (status: BulkTopicStatusRequest["status"]) => {
+    if (submitting.current || !program.data?.editable) return;
+    const topics = allTopics.filter((topic) => selectedIds.has(topic.id)).map(({ id, version }) => ({ id, version }));
+    if (!topics.length) return;
+    submitting.current = true;
+    setBulkError("");
+    try {
+      await bulkStatus.mutateAsync({ status, topics });
+      cancelSelection();
+    } catch (error) {
+      setBulkError(
+        error instanceof ApiClientError && error.status === 409
+          ? "Темы были изменены или больше недоступны. Данные программы обновлены. Повторите попытку."
+          : "Не удалось изменить статус выбранных тем.",
+      );
+    } finally {
+      submitting.current = false;
+    }
+  };
   const notFound = program.error instanceof ApiClientError && program.error.status === 404;
 
   useEffect(() => {
@@ -195,6 +254,11 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
+                    {program.data.editable && !selecting && (
+                      <Button type="button" variant="secondary" onClick={() => setSelectionMode(true)}>
+                        Выбрать темы
+                      </Button>
+                    )}
                     <ImportContentPackageDialog
                       programId={program.data.id}
                       editable={
@@ -208,6 +272,23 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     />
                   </div>
                 </div>
+
+                {selecting && (
+                  <BulkTopicStatusToolbar
+                    count={selectedIds.size}
+                    allSelected={allTopics.length > 0 && selectedIds.size === allTopics.length}
+                    empty={allTopics.length === 0}
+                    pending={bulkStatus.isPending}
+                    error={bulkError}
+                    onToggleAll={() =>
+                      setSelectedIds(
+                        selectedIds.size === allTopics.length ? new Set() : new Set(allTopics.map((topic) => topic.id)),
+                      )
+                    }
+                    onCancel={cancelSelection}
+                    onSubmit={submitBulkStatus}
+                  />
+                )}
 
                 {modules.length === 0 ? (
                   <div className="mt-6 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
@@ -294,6 +375,10 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                                   programSlug={program.data.slug}
                                   moduleId={module.id}
                                   topics={topics}
+                                  selecting={selecting}
+                                  selectedIds={selectedIds}
+                                  selectionPending={bulkStatus.isPending}
+                                  onToggleTopic={toggleTopic}
                                   editable={program.data.editable}
                                 />
                               )}
@@ -323,12 +408,20 @@ function TopicList({
   moduleId,
   topics,
   editable,
+  selecting,
+  selectedIds,
+  selectionPending,
+  onToggleTopic,
 }: Readonly<{
   programId: string;
   programSlug: string;
   moduleId: string;
   topics: LearningProgramDetails["modules"][number]["topics"];
   editable: boolean;
+  selecting: boolean;
+  selectedIds: Set<string>;
+  selectionPending: boolean;
+  onToggleTopic: (id: string) => void;
 }>) {
   const reorderTopics = useReorderLearningProgramTopicsMutation(programId, moduleId);
   const topicIds = topics.map((topic) => topic.id);
@@ -337,7 +430,18 @@ function TopicList({
     <ol className="mt-3 space-y-2">
       {topics.map((topic, topicIndex) => (
         <li key={topic.id} className="flex items-start gap-2 text-sm text-slate-700">
-          <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
+          {selecting ? (
+            <input
+              type="checkbox"
+              className="mt-1 size-4 shrink-0 accent-blue-600"
+              aria-label={`Выбрать тему «${topic.title}»`}
+              checked={selectedIds.has(topic.id)}
+              disabled={selectionPending}
+              onChange={() => onToggleTopic(topic.id)}
+            />
+          ) : (
+            <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
+          )}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <Link
@@ -349,7 +453,7 @@ function TopicList({
               <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${topicStatusClassName[topic.status]}`}>
                 {topicStatusPresentation[topic.status]}
               </span>
-              {editable && (
+              {editable && !selecting && (
                 <span className="flex gap-1">
                   <Button
                     type="button"
@@ -377,7 +481,7 @@ function TopicList({
                 programId={programId}
                 moduleId={moduleId}
                 topic={topic}
-                editable={editable}
+                editable={editable && !selecting}
               />
             </div>
             {topic.description && <p className="mt-0.5 text-slate-500">{topic.description}</p>}
