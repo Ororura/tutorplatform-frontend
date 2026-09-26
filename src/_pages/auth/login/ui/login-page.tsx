@@ -33,7 +33,7 @@ const benefits = [
 export function LoginPage() {
   return (
     <GuestGuard>
-      <main className="relative flex min-h-svh flex-col overflow-hidden bg-[linear-gradient(125deg,#f8fbff_0%,#eef6ff_47%,#f7faff_100%)] text-slate-950">
+      <main className="relative flex min-h-svh flex-col overflow-x-hidden bg-[linear-gradient(125deg,#f8fbff_0%,#eef6ff_47%,#f7faff_100%)] text-slate-950">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_53%_15%,rgba(255,255,255,0.96),transparent_28%),radial-gradient(circle_at_8%_74%,rgba(219,234,254,0.66),transparent_30%)]"
           aria-hidden="true"
