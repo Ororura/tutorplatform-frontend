@@ -3,7 +3,9 @@ import { expect, test } from "@playwright/test";
 const teacherEmail = "teacher.demo@tutor.local";
 const teacherPassword = "DemoTeacher123!";
 
-test("demo teacher previews and imports YAML modules into a new program", async ({ page }, testInfo) => {
+test("demo teacher imports YAML modules, bulk activates topics and drafts a partial selection", async ({
+  page,
+}, testInfo) => {
   test.setTimeout(120_000);
 
   const hostname = new URL(testInfo.project.use.baseURL ?? "").hostname;
@@ -17,6 +19,7 @@ test("demo teacher previews and imports YAML modules into a new program", async 
   const topicTitle = `Введение ${suffix}`;
   const editedTopicTitle = `Введение обновлено ${suffix}`;
   const secondTopicTitle = `Упражнения ${suffix}`;
+  const unselectedTopicTitle = `Самостоятельная работа ${suffix}`;
   const notesTitle = `Конспект ${suffix}`;
   const codeTitle = `Пример кода ${suffix}`;
   const linkTitle = `Справочник ${suffix}`;
@@ -36,6 +39,8 @@ modules:
             materialType: CODE_EXAMPLE
             content: |
               print('imported')
+      - title: ${unselectedTopicTitle}
+        materials: []
   - title: ${secondModuleTitle}
     topics:
       - title: ${secondTopicTitle}
@@ -73,7 +78,7 @@ modules:
 
   const preview = importDialog.getByRole("region", { name: "Предварительный просмотр модулей" });
   await expect(preview.getByText("Модулей: 2")).toBeVisible();
-  await expect(preview.getByText("Тем: 2")).toBeVisible();
+  await expect(preview.getByText("Тем: 3")).toBeVisible();
   await expect(preview.getByText("Материалов: 3")).toBeVisible();
   await expect(preview.getByRole("heading", { name: moduleTitle })).toBeVisible();
   await expect(preview.getByRole("heading", { name: topicTitle })).toBeVisible();
@@ -81,11 +86,82 @@ modules:
   await expect(preview.getByRole("heading", { name: secondTopicTitle })).toBeVisible();
 
   await importDialog.getByRole("button", { name: "Импортировать 2 модулей" }).click();
-  await expect(importDialog.getByRole("status")).toContainText("Создано модулей: 2, тем: 2, материалов: 3");
+  await expect(importDialog.getByRole("status")).toContainText("Создано модулей: 2, тем: 3, материалов: 3");
   await importDialog.getByRole("button", { name: "Вернуться к программе" }).click();
 
   const moduleItems = modules.locator(":scope > ol > li");
   await expect(moduleItems.locator(":scope > details > summary h3")).toHaveText([moduleTitle, secondModuleTitle]);
+  const importedModules = [
+    { title: moduleTitle, topics: [topicTitle, unselectedTopicTitle] },
+    { title: secondModuleTitle, topics: [secondTopicTitle] },
+  ];
+  const selection = modules.getByRole("region", { name: "Выбор тем" });
+
+  async function expectTopicStatuses(draftTitles: string[]) {
+    for (const importedModule of importedModules) {
+      const moduleItem = moduleItems.filter({
+        has: page.getByRole("heading", { name: importedModule.title, exact: true }),
+      });
+      const heading = moduleItem.getByRole("heading", { name: importedModule.title, exact: true });
+      await heading.click();
+      for (const title of importedModule.topics) {
+        const topic = moduleItem.locator("ol > li").filter({
+          has: page.getByRole("link", { name: title, exact: true }),
+        });
+        await expect(
+          topic.locator("span").filter({ hasText: draftTitles.includes(title) ? /^Черновик$/ : /^Активна$/ }),
+        ).toBeVisible();
+      }
+      await heading.click();
+    }
+  }
+
+  await test.step("Imported topics are drafts; select all and activate", async () => {
+    await expectTopicStatuses([topicTitle, unselectedTopicTitle, secondTopicTitle]);
+    await modules.getByRole("button", { name: "Выбрать темы", exact: true }).click();
+    await selection.getByRole("button", { name: "Выбрать все", exact: true }).click();
+    await expect(selection.getByText("Выбрано: 3", { exact: true })).toBeVisible();
+
+    const bulkResponse = page.waitForResponse(
+      (response) =>
+        response.request().method() === "PATCH" &&
+        /\/api\/v1\/teacher\/programs\/[^/]+\/topics\/status$/.test(new URL(response.url()).pathname),
+    );
+    await selection.getByRole("button", { name: "Активировать", exact: true }).click();
+    expect((await bulkResponse).ok()).toBe(true);
+    await expect(selection).toHaveCount(0);
+    await expectTopicStatuses([]);
+    await page.reload();
+    await expectTopicStatuses([]);
+  });
+
+  await test.step("Draft topics from different modules while keeping the unselected topic active", async () => {
+    await modules.getByRole("button", { name: "Выбрать темы", exact: true }).click();
+    for (const [index, title] of [topicTitle, secondTopicTitle].entries()) {
+      const heading = modules.getByRole("heading", { name: importedModules[index].title, exact: true });
+      await heading.click();
+      await modules.getByRole("checkbox", { name: `Выбрать тему «${title}»`, exact: true }).check();
+      if (index === 0) {
+        await expect(
+          modules.getByRole("checkbox", { name: `Выбрать тему «${unselectedTopicTitle}»`, exact: true }),
+        ).not.toBeChecked();
+      }
+      await heading.click();
+    }
+    await expect(selection.getByText("Выбрано: 2", { exact: true })).toBeVisible();
+    const bulkResponse = page.waitForResponse(
+      (response) =>
+        response.request().method() === "PATCH" &&
+        /\/api\/v1\/teacher\/programs\/[^/]+\/topics\/status$/.test(new URL(response.url()).pathname),
+    );
+    await selection.getByRole("button", { name: "В черновик", exact: true }).click();
+    expect((await bulkResponse).ok()).toBe(true);
+    await expect(selection).toHaveCount(0);
+    await expectTopicStatuses([topicTitle, secondTopicTitle]);
+    await page.reload();
+    await expectTopicStatuses([topicTitle, secondTopicTitle]);
+  });
+
   const firstModule = moduleItems.first();
   await firstModule.getByRole("heading", { name: moduleTitle }).click();
   await firstModule.getByRole("button", { name: "Изменить", exact: true }).last().click();
@@ -129,9 +205,10 @@ test("teacher prepares a package and imports the downloaded example", async ({ p
   await page.getByRole("button", { name: "Создать программу" }).click();
   const createDialog = page.getByRole("dialog", { name: "Создать программу" });
   await createDialog.getByLabel("Предмет", { exact: true }).selectOption({ index: 1 });
-  await createDialog.getByLabel("Название", { exact: true }).fill(`E2E подготовка ${Date.now()}`);
+  const programTitle = `E2E подготовка ${Date.now()}-${testInfo.workerIndex}`;
+  await createDialog.getByLabel("Название", { exact: true }).fill(programTitle);
   await createDialog.getByRole("button", { name: "Создать", exact: true }).click();
-  await page.getByRole("link", { name: /Открыть программу: E2E подготовка/ }).click();
+  await page.getByRole("link", { name: `Открыть программу: ${programTitle}`, exact: true }).click();
 
   const modules = page.getByRole("region", { name: "Модули программы" });
   await modules.getByRole("button", { name: "Импортировать модули" }).click();
