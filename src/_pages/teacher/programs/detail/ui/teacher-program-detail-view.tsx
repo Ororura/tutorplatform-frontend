@@ -171,16 +171,13 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
       </Link>
 
       {program.isPending && (
-        <div
-          className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
-          aria-busy="true"
-        >
+        <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
           Загружаем программу…
         </div>
       )}
 
       {program.isError && (
-        <section className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+        <section className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">
             {notFound ? "Программа не найдена" : "Не удалось загрузить программу."}
           </h1>
@@ -204,7 +201,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
 
           return (
             <>
-              <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+              <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
                 <div className="flex items-start justify-between gap-4">
                   <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
                     <BookOpenText size={23} />
@@ -236,7 +233,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
               </section>
 
               <section
-                className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7"
+                className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7"
                 aria-labelledby="program-modules-heading"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">

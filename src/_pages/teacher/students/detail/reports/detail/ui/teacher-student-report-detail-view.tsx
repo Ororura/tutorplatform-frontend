@@ -163,7 +163,7 @@ function ReportDetails({
         <ArrowLeft size={16} /> Все отчёты
       </Link>
 
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <span className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
@@ -192,7 +192,7 @@ function ReportDetails({
       <ReportPublicationManagement reportId={report.id} status={report.status} />
 
       <section
-        className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
+        className="rounded-2xl border border-[var(--border)] bg-white p-6"
         aria-labelledby="report-snapshot-heading"
       >
         <h2 id="report-snapshot-heading" className="text-xl font-semibold text-slate-950">
@@ -236,7 +236,7 @@ function ReportDetails({
         </section>
       </section>
 
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
         <h2 className="text-xl font-semibold text-slate-950">Комментарий преподавателя</h2>
         {editable ? (
           <form className="mt-5 space-y-5" onSubmit={save}>

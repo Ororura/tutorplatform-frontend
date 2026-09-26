@@ -41,10 +41,7 @@ export function StudentHomeworkDetailView({
   if (homework.isPending) {
     return (
       <main>
-        <div
-          className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
-          aria-busy="true"
-        >
+        <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
           Загружаем домашнее задание…
         </div>
       </main>
@@ -59,7 +56,7 @@ export function StudentHomeworkDetailView({
 
     return (
       <main className="space-y-4">
-        <div className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+        <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <p className="text-sm text-red-700">
             {notFound ? "Домашнее задание не найдено" : "Не удалось загрузить домашнее задание."}
           </p>
@@ -92,7 +89,7 @@ export function StudentHomeworkDetailView({
 
   return (
     <main className="space-y-4">
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
         <Link
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
           href="/student/homework"
@@ -122,7 +119,7 @@ export function StudentHomeworkDetailView({
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 space-y-4">
-          <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]">
+          <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
             <dl className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-2xl bg-slate-50 p-4">
                 <dt className="text-sm text-slate-500">Назначено</dt>
@@ -154,7 +151,7 @@ export function StudentHomeworkDetailView({
             )}
           </section>
 
-          <section className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+          <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
             <div>
               <p className="text-sm font-medium text-blue-600">Практика</p>
 
@@ -240,7 +237,7 @@ export function StudentHomeworkDetailView({
         </div>
 
         <aside className="xl:sticky xl:top-24 xl:self-start">
-          <section className="rounded-[28px] border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
             <CheckCircle2 size={21} className="text-blue-600" />
 
             <h2 className="mt-4 font-semibold text-slate-950">Прогресс работы</h2>

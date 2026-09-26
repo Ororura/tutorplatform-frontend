@@ -35,10 +35,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
   if (topic.isPending || program.isPending) {
     return (
       <main>
-        <p
-          className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
-          aria-busy="true"
-        >
+        <p className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
           Загружаем тему…
         </p>
       </main>
@@ -52,7 +49,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
 
     return (
       <main className="space-y-4">
-        <section className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+        <section className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">{title}</h1>
           <p className="text-sm leading-6 text-red-700">
             {status === 403
@@ -94,7 +91,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
 
   return (
     <main className="space-y-4">
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
         <nav aria-label="Хлебные крошки">
           <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
             <li>
@@ -136,7 +133,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
       </section>
 
       <section
-        className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6"
+        className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6"
         aria-labelledby="topic-materials-heading"
       >
         <h2 className="text-xl font-semibold text-slate-950" id="topic-materials-heading">
@@ -150,7 +147,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         ) : (
           <ol className="mt-5 space-y-4">
             {topic.data.materials.map((material) => (
-              <li className="rounded-[22px] border border-slate-200/80 p-5" key={material.id}>
+              <li className="rounded-[14px] border border-slate-200/80 p-5" key={material.id}>
                 <h3 className="mb-3 font-semibold text-slate-950">{material.title}</h3>
                 <div className="text-sm text-slate-700">
                   <MaterialRenderer
@@ -180,7 +177,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
       </section>
 
       <section
-        className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6"
+        className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6"
         aria-labelledby="topic-practice-heading"
       >
         <div className="flex items-start gap-3">
@@ -257,7 +254,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
       )}
 
       <nav
-        className="grid gap-3 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:grid-cols-2 sm:p-6"
+        className="grid gap-3 rounded-2xl border border-[var(--border)] bg-white p-5 sm:grid-cols-2 sm:p-6"
         aria-label="Навигация по темам"
       >
         {previousTopic ? (

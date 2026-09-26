@@ -22,10 +22,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
   if (program.isPending) {
     return (
       <main>
-        <div
-          className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
-          aria-busy="true"
-        >
+        <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
           Загружаем программу…
         </div>
       </main>
@@ -43,7 +40,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
 
     return (
       <main className="space-y-4">
-        <div className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+        <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">{title}</h1>
           <p className="text-sm leading-6 text-red-700">
             {status === 403
@@ -74,7 +71,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
 
   return (
     <main className="space-y-4">
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
         <Link
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
           href="/student/programs"
@@ -103,7 +100,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
         <div className="flex items-start gap-3">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
             <Layers3 size={19} aria-hidden="true" />
@@ -123,7 +120,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
         ) : (
           <ol className="mt-5 space-y-4" aria-labelledby="program-modules-heading">
             {data.modules.map((module, moduleIndex) => (
-              <li className="overflow-hidden rounded-[22px] border border-slate-200/80" key={module.id}>
+              <li className="overflow-hidden rounded-[14px] border border-slate-200/80" key={module.id}>
                 <div className="bg-slate-50/70 px-5 py-4 sm:px-6">
                   <div className="flex items-start gap-3">
                     <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-semibold text-blue-600 shadow-sm">

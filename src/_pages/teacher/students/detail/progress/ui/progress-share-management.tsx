@@ -15,7 +15,7 @@ export function ProgressShareManagement({
   const shares = useQuery(progressShareQueries.list(studentId, studentProgramId));
 
   return (
-    <section className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+    <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
       <div className="flex items-start gap-3">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
           <Link2 size={18} />

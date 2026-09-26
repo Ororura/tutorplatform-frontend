@@ -12,7 +12,7 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
   return (
     <section
       id="teacher-attention"
-      className="scroll-mt-28 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6"
+      className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6"
     >
       <div className="flex items-start gap-4">
         <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
@@ -22,7 +22,9 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
         <div className="min-w-0 flex-1">
           <h2 className="text-xl font-semibold tracking-tight text-slate-950">Требует внимания</h2>
           {items.length === 0 ? (
-            <p className="mt-2 text-sm leading-6 text-slate-500">Сейчас нет работ и отчётов, требующих действий.</p>
+            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+              Сейчас нет работ и отчётов, требующих действий.
+            </p>
           ) : (
             <ul className="mt-4 divide-y divide-slate-100">
               {items.map((item) => {
@@ -36,7 +38,7 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
                     >
                       <span className="min-w-0">
                         <span className="block font-medium text-slate-900">{presentation.title}</span>
-                        <span className="mt-1 block truncate text-sm text-slate-500">
+                        <span className="mt-1 block truncate text-sm text-[var(--text-secondary)]">
                           {item.displayName} · {presentation.dateLabel} {dateFormatter.format(new Date(item.eventAt))}
                         </span>
                       </span>

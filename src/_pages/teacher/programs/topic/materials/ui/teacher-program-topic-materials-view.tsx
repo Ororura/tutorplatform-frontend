@@ -98,15 +98,12 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
       </nav>
 
       {program.isPending && (
-        <div
-          className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
-          aria-busy="true"
-        >
+        <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
           Загружаем тему…
         </div>
       )}
       {program.isError && (
-        <section className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+        <section className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">
             {programNotFound ? "Программа не найдена" : "Не удалось загрузить тему."}
           </h1>
@@ -118,17 +115,14 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
         </section>
       )}
       {program.data && !topicContext && (
-        <section
-          className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
-          role="alert"
-        >
+        <section className="rounded-2xl border border-[var(--border)] bg-white p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">Тема не найдена</h1>
           <p className="mt-2 text-sm text-slate-600">Эта тема не входит в выбранную программу.</p>
         </section>
       )}
       {topicContext && (
         <>
-          <header className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]">
+          <header className="rounded-2xl border border-[var(--border)] bg-white p-6">
             <p className="text-sm text-slate-500">{topicContext.module.title}</p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-950">{topicContext.topic.title}</h1>
             {topicContext.topic.description && (
@@ -149,12 +143,15 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               )}
             </div>
             {materials.isPending && (
-              <p className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500" aria-busy="true">
+              <p
+                className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500"
+                aria-busy="true"
+              >
                 Загружаем материалы…
               </p>
             )}
             {materials.isError && (
-              <div className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
                 <p>{materialsNotFound ? "Тема не найдена" : "Не удалось загрузить материалы."}</p>
                 {!materialsNotFound && (
                   <Button type="button" variant="secondary" onClick={() => void materials.refetch()}>
@@ -209,12 +206,15 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               )}
             </div>
             {topicTasks.isPending && (
-              <p className="rounded-[28px] border border-white/80 bg-white p-6 text-sm text-slate-500" aria-busy="true">
+              <p
+                className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500"
+                aria-busy="true"
+              >
                 Загружаем задания…
               </p>
             )}
             {topicTasks.isError && (
-              <div className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
                 <p>{topicTasksNotFound ? "Тема недоступна." : "Не удалось загрузить практические задания."}</p>
                 {!topicTasksNotFound && (
                   <Button type="button" variant="secondary" onClick={() => void topicTasks.refetch()}>
@@ -224,7 +224,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               </div>
             )}
             {taskBank.isError && (
-              <div className="space-y-3 rounded-[28px] border border-red-100 bg-red-50 p-6" role="alert">
+              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
                 <p>Не удалось загрузить банк заданий.</p>
                 <Button type="button" variant="secondary" onClick={() => void taskBank.refetch()}>
                   Повторить
@@ -232,7 +232,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               </div>
             )}
             {topicTasks.data && (
-              <div className="overflow-hidden rounded-[28px] border border-white/80 bg-white shadow-[0_12px_40px_rgba(45,79,135,0.06)]">
+              <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
                 {topicTasks.data.length === 0 ? (
                   <p className="p-6 text-sm text-slate-500">К теме пока не прикреплены задания.</p>
                 ) : (
