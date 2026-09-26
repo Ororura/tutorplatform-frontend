@@ -191,11 +191,7 @@ export function RegisterTeacherForm() {
             disabled={registration.isPending}
             aria-invalid={Boolean(errors.passwordConfirmation)}
             aria-describedby={errors.passwordConfirmation ? "register-passwordConfirmation-error" : undefined}
-            className={cn(
-              inputClassName,
-              "pr-12",
-              errors.passwordConfirmation ? "border-red-400" : "border-slate-200",
-            )}
+            className={cn(inputClassName, "pr-12", errors.passwordConfirmation ? "border-red-400" : "border-slate-200")}
             {...register("passwordConfirmation")}
           />
           <button
