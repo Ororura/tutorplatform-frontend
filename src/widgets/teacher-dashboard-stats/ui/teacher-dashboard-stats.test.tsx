@@ -22,18 +22,31 @@ const dashboard: TeacherDashboard = {
 };
 
 describe("TeacherDashboardStats", () => {
-  it("renders all aggregate cards with navigation", () => {
-    render(<TeacherDashboardStats data={dashboard} />);
+  it.each([
+    dashboard,
+    {
+      ...dashboard,
+      activeStudentsCount: 0,
+      needsReviewSubmissionsCount: 0,
+      overdueHomeworksCount: 0,
+      completedLearningPeriodsWithoutPublishedReportCount: 0,
+    },
+  ])("preserves aggregate values and navigation: %j", (data) => {
+    render(<TeacherDashboardStats data={data} />);
 
-    expect(screen.getByRole("link", { name: /12\s*Активные ученики/ })).toHaveAttribute("href", "/teacher/students");
-    expect(screen.getByRole("link", { name: /3\s*Ожидают проверки/ })).toHaveAttribute("href", "#teacher-attention");
-    expect(screen.getByRole("link", { name: /2\s*Просроченные задания/ })).toHaveAttribute(
-      "href",
-      "#teacher-attention",
-    );
-    expect(screen.getByRole("link", { name: /4\s*Готовые отчётные периоды/ })).toHaveAttribute(
-      "href",
-      "#teacher-attention",
-    );
+    expect(
+      screen.getByRole("link", { name: new RegExp(`${data.activeStudentsCount}\\s*Активные ученики`) }),
+    ).toHaveAttribute("href", "/teacher/students");
+    expect(
+      screen.getByRole("link", { name: new RegExp(`${data.needsReviewSubmissionsCount}\\s*Ожидают проверки`) }),
+    ).toHaveAttribute("href", "#teacher-attention");
+    expect(
+      screen.getByRole("link", { name: new RegExp(`${data.overdueHomeworksCount}\\s*Просроченные задания`) }),
+    ).toHaveAttribute("href", "#teacher-attention");
+    expect(
+      screen.getByRole("link", {
+        name: new RegExp(`${data.completedLearningPeriodsWithoutPublishedReportCount}\\s*Готовые отчётные периоды`),
+      }),
+    ).toHaveAttribute("href", "#teacher-attention");
   });
 });

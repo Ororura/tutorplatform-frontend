@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { type ComponentProps, useEffect, useRef, useState } from "react";
 
 import { type TaskDifficulty, taskQueries, type TaskType } from "@/entities/task";
 import { ApiClientError } from "@/shared/api/client";
@@ -12,7 +12,11 @@ import { useCreateTaskMutation } from "../api/create-task";
 
 type TestCaseDraft = { inputText: string; expectedOutput: string; hidden: boolean };
 
-export function CreateTaskDialog() {
+type Props = {
+  triggerVariant?: ComponentProps<typeof Button>["variant"];
+};
+
+export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>) {
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
@@ -82,7 +86,7 @@ export function CreateTaskDialog() {
 
   return (
     <>
-      <Button type="button" onClick={() => setOpen(true)}>
+      <Button type="button" variant={triggerVariant} onClick={() => setOpen(true)}>
         Создать задание
       </Button>
       <dialog

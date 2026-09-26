@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { type ComponentProps, useEffect, useRef, useState } from "react";
 
 import { taskQueries } from "@/entities/task";
 import { ApiClientError } from "@/shared/api/client";
@@ -9,7 +9,11 @@ import { Button } from "@/shared/ui/button";
 
 import { useCreateLearningProgramMutation } from "../api/create-learning-program";
 
-export function CreateLearningProgramDialog() {
+type Props = {
+  triggerVariant?: ComponentProps<typeof Button>["variant"];
+};
+
+export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Readonly<Props>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -107,6 +111,7 @@ export function CreateLearningProgramDialog() {
     <>
       <Button
         ref={triggerRef}
+        variant={triggerVariant}
         type="button"
         onClick={() => {
           setError("");

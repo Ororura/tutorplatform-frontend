@@ -1,4 +1,4 @@
-import { ArrowRight, CircleAlert } from "lucide-react";
+import { ArrowRight, Check, CircleAlert } from "lucide-react";
 import Link from "next/link";
 
 import type { TeacherDashboardAttentionItem } from "@/entities/dashboard";
@@ -9,6 +9,18 @@ const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
 });
 
 export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAttentionItem[] }>) {
+  if (items.length === 0) {
+    return (
+      <section id="teacher-attention" className="flex scroll-mt-28 items-start gap-3 py-3">
+        <Check aria-hidden="true" className="mt-0.5 shrink-0 text-slate-500" size={20} />
+        <div>
+          <h2 className="text-sm font-semibold text-slate-900">Всё спокойно</h2>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">Сейчас нет работ и отчётов, требующих действий.</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="teacher-attention"
@@ -21,34 +33,28 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
 
         <div className="min-w-0 flex-1">
           <h2 className="text-xl font-semibold tracking-tight text-slate-950">Требует внимания</h2>
-          {items.length === 0 ? (
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-              Сейчас нет работ и отчётов, требующих действий.
-            </p>
-          ) : (
-            <ul className="mt-4 divide-y divide-slate-100">
-              {items.map((item) => {
-                const presentation = getAttentionPresentation(item);
+          <ul className="mt-4 divide-y divide-slate-100">
+            {items.map((item) => {
+              const presentation = getAttentionPresentation(item);
 
-                return (
-                  <li key={`${item.type}-${item.resourceId}`} className="py-4 first:pt-1 last:pb-0">
-                    <Link
-                      className="group flex items-center justify-between gap-4 rounded-2xl transition hover:bg-slate-50 sm:px-3 sm:py-2"
-                      href={presentation.href}
-                    >
-                      <span className="min-w-0">
-                        <span className="block font-medium text-slate-900">{presentation.title}</span>
-                        <span className="mt-1 block truncate text-sm text-[var(--text-secondary)]">
-                          {item.displayName} · {presentation.dateLabel} {dateFormatter.format(new Date(item.eventAt))}
-                        </span>
+              return (
+                <li key={`${item.type}-${item.resourceId}`} className="py-4 first:pt-1 last:pb-0">
+                  <Link
+                    className="group flex items-center justify-between gap-4 rounded-2xl transition hover:bg-slate-50 sm:px-3 sm:py-2"
+                    href={presentation.href}
+                  >
+                    <span className="min-w-0">
+                      <span className="block font-medium text-slate-900">{presentation.title}</span>
+                      <span className="mt-1 block truncate text-sm text-[var(--text-secondary)]">
+                        {item.displayName} · {presentation.dateLabel} {dateFormatter.format(new Date(item.eventAt))}
                       </span>
-                      <ArrowRight className="shrink-0 text-slate-300 transition group-hover:text-blue-600" size={17} />
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                    </span>
+                    <ArrowRight className="shrink-0 text-slate-300 transition group-hover:text-blue-600" size={17} />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </section>
