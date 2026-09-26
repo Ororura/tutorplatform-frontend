@@ -58,7 +58,7 @@ export function TeacherStudentHomeworksView({
 
   return (
     <main className="mx-auto max-w-[1280px] space-y-4">
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
         <Link
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
           href={`/teacher/students/${studentId}`}
@@ -94,7 +94,7 @@ export function TeacherStudentHomeworksView({
       <StudentProfileNav active="homework" studentId={studentId} />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-semibold text-slate-950">Задания ученика</h2>
@@ -230,7 +230,7 @@ export function TeacherStudentHomeworksView({
         </section>
 
         <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-[28px] border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
             <ClipboardCheck size={20} className="text-blue-600" />
 
             <h2 className="mt-4 font-semibold text-slate-950">Домашняя работа</h2>

@@ -21,7 +21,7 @@ export function StudentProgressView() {
 
   return (
     <main className="mx-auto max-w-7xl space-y-4">
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
         <div className="flex items-center gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
             <ChartNoAxesCombined size={22} aria-hidden="true" />
@@ -36,7 +36,7 @@ export function StudentProgressView() {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
         {programs.isPending && <Loading label="Загружаем программы…" />}
 
         {programs.isError && (

@@ -19,7 +19,7 @@ export function StudentProgramsView() {
 
   return (
     <main className="space-y-4">
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
         <div className="flex items-center gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
             <BookOpenText size={22} aria-hidden="true" />
@@ -35,7 +35,7 @@ export function StudentProgramsView() {
       </section>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
           {programs.isPending && (
             <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
               Загружаем программы…
@@ -72,7 +72,7 @@ export function StudentProgramsView() {
                 {programs.data.map((program) => (
                   <article
                     key={program.id}
-                    className="flex min-h-64 flex-col rounded-[22px] border border-slate-200/80 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_35px_rgba(45,79,135,0.08)]"
+                    className="flex min-h-64 flex-col rounded-[14px] border border-slate-200/80 bg-[var(--surface-muted)] p-5 transition hover:border-blue-200 hover:bg-blue-50/40"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
@@ -111,7 +111,7 @@ export function StudentProgramsView() {
         </section>
 
         <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-[28px] border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
             <span className="flex size-10 items-center justify-center rounded-xl bg-white text-blue-600">
               <Layers3 size={19} aria-hidden="true" />
             </span>

@@ -65,7 +65,7 @@ export function TeacherStudentView({
 
   return (
     <main className="mx-auto max-w-[1280px] space-y-4">
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
         <Link
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
           href="/teacher/students"
@@ -118,7 +118,7 @@ export function TeacherStudentView({
           )}
 
           <section
-            className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
+            className="rounded-2xl border border-[var(--border)] bg-white p-6"
             aria-labelledby="invite-history-heading"
           >
             <div>
@@ -168,7 +168,7 @@ export function TeacherStudentView({
         </div>
 
         <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-[28px] border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
             <span className="flex size-11 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
               {student.data.account.status === "REGISTERED" ? <ShieldCheck size={20} /> : <UserRound size={20} />}
             </span>

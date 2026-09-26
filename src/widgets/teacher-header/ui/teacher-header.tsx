@@ -57,16 +57,20 @@ export function TeacherHeader() {
   return (
     <header className="sticky top-0 z-40 pt-3">
       <div className="mx-auto max-w-[1600px] px-3 sm:px-5">
-        <div className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-[0_12px_40px_rgba(45,79,135,0.08)] backdrop-blur-xl">
-          <div className="flex h-16 items-center gap-5 px-4 sm:px-5">
-            <Link className="flex shrink-0 items-center gap-3" href="/teacher">
-              <span className="flex size-10 items-center justify-center rounded-[14px] bg-linear-to-br from-blue-500 to-blue-600 text-white shadow-sm shadow-blue-200">
+        <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white/95 shadow-[var(--shadow-header)] backdrop-blur-xl">
+          <div className="flex h-15 items-center gap-5 px-4 sm:px-5">
+            <Link
+              aria-label="Умнее Вместе — главная"
+              className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              href="/teacher"
+            >
+              <span className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 text-white">
                 <BookOpen size={21} strokeWidth={2.1} />
               </span>
 
               <span className="hidden leading-tight sm:block">
                 <span className="block text-[15px] font-semibold tracking-tight text-slate-950">Умнее Вместе</span>
-                <span className="mt-0.5 block text-[11px] text-slate-500">Платформа для репетиторов</span>
+                <span className="mt-0.5 block text-[11px] text-[var(--text-secondary)]">Платформа для репетиторов</span>
               </span>
             </Link>
 
@@ -80,8 +84,8 @@ export function TeacherHeader() {
                     href={href}
                     aria-current={active ? "page" : undefined}
                     className={[
-                      "flex h-10 items-center gap-2 rounded-xl px-3.5 text-sm font-medium transition",
-                      active ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950",
+                      "flex h-9 items-center gap-2 rounded-[10px] px-3 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600",
+                      active ? "bg-blue-50/70 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950",
                     ].join(" ")}
                   >
                     <Icon size={17} />
@@ -99,14 +103,14 @@ export function TeacherHeader() {
 
                 <span className="hidden leading-tight xl:block">
                   <span className="block max-w-40 truncate text-sm font-medium text-slate-900">{displayName}</span>
-                  <span className="block text-xs text-slate-500">Преподаватель</span>
+                  <span className="block text-xs text-[var(--text-secondary)]">Преподаватель</span>
                 </span>
               </div>
 
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 xl:inline-flex"
+                  className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 hover:bg-slate-50 xl:inline-flex"
                 >
                   <ShieldCheck size={17} />
                   Администрирование
@@ -130,8 +134,8 @@ export function TeacherHeader() {
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={[
-                    "flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition",
-                    active ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50",
+                    "flex shrink-0 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600",
+                    active ? "bg-blue-50/70 text-blue-700" : "text-slate-600 hover:bg-slate-50",
                   ].join(" ")}
                 >
                   <Icon size={16} />
@@ -142,7 +146,7 @@ export function TeacherHeader() {
             {isAdmin && (
               <Link
                 href="/admin"
-                className="flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                className="flex shrink-0 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 hover:bg-slate-50"
               >
                 <ShieldCheck size={16} />
                 Администрирование

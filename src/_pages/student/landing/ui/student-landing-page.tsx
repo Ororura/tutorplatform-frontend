@@ -34,7 +34,7 @@ export function StudentLandingPage() {
 
   return (
     <main className="space-y-4">
-      <section className="overflow-hidden rounded-[28px] border border-white/80 bg-white shadow-[0_12px_40px_rgba(45,79,135,0.06)]">
+      <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
         <div className="bg-linear-to-br from-blue-600 to-indigo-600 px-6 py-8 text-white sm:px-8 sm:py-10">
           <p className="text-sm font-medium text-blue-100">Учебный кабинет</p>
 
@@ -66,7 +66,7 @@ export function StudentLandingPage() {
       </section>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <section className="min-w-0 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-xl font-semibold text-slate-950">Мои программы</h2>
@@ -107,7 +107,7 @@ export function StudentLandingPage() {
           </div>
         </section>
 
-        <section className="min-w-0 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-xl font-semibold text-slate-950">Домашние задания</h2>
@@ -147,7 +147,7 @@ export function StudentLandingPage() {
         </section>
       </div>
 
-      <section className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
         <h2 className="text-xl font-semibold text-slate-950">Быстрые действия</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <Link

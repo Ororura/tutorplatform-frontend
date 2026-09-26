@@ -29,7 +29,7 @@ export function StudentHomeworksView() {
 
   return (
     <main className="space-y-4">
-      <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
         <div className="flex items-center gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
             <ClipboardCheck size={22} />
@@ -48,7 +48,7 @@ export function StudentHomeworksView() {
       </section>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
           <div>
             <h2 className="text-xl font-semibold text-slate-950">Ваши задания</h2>
 
@@ -91,7 +91,7 @@ export function StudentHomeworksView() {
         </section>
 
         <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
-          <section className="rounded-[28px] border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
             <ClipboardCheck size={21} className="text-blue-600" />
 
             <h2 className="mt-4 font-semibold text-slate-950">Ваша нагрузка</h2>

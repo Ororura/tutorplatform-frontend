@@ -38,7 +38,7 @@ export function TeacherProgramsView() {
 
   return (
     <main className="space-y-4">
-      <section className="flex flex-col justify-between gap-6 rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:flex-row sm:items-center sm:p-7">
+      <section className="flex flex-col justify-between gap-6 rounded-2xl border border-[var(--border)] bg-white p-6 sm:flex-row sm:items-center sm:p-7">
         <div>
           <p className="text-sm font-medium text-blue-600">Учебный процесс</p>
 
@@ -53,7 +53,7 @@ export function TeacherProgramsView() {
       </section>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-6">
+        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4">
             <div>
               <h2 id="program-list-title" className="text-xl font-semibold text-slate-950">
@@ -107,10 +107,10 @@ export function TeacherProgramsView() {
                   return (
                     <article
                       key={program.id}
-                      className="group relative flex min-h-56 flex-col rounded-[22px] border border-slate-200/80 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_35px_rgba(45,79,135,0.08)]"
+                      className="group relative flex min-h-56 flex-col rounded-[14px] border border-slate-200/80 bg-[var(--surface-muted)] p-5 transition hover:border-blue-200 hover:bg-blue-50/40"
                     >
                       <Link
-                        className="absolute inset-0 rounded-[22px] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        className="absolute inset-0 rounded-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                         href={`/teacher/programs/${program.slug}`}
                         aria-label={`Открыть программу: ${program.title}`}
                       />
@@ -163,7 +163,7 @@ export function TeacherProgramsView() {
         </section>
 
         <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]">
+          <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                 <BookOpenText size={19} />
@@ -197,7 +197,7 @@ export function TeacherProgramsView() {
             </dl>
           </section>
 
-          <section className="rounded-[28px] border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
             <FilePenLine size={21} className="text-blue-600" />
 
             <h2 className="mt-4 font-semibold text-slate-950">Рабочий процесс</h2>

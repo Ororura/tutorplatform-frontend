@@ -58,7 +58,7 @@ export function StudentProfileNav({
 }>) {
   return (
     <nav
-      className="flex gap-1 overflow-x-auto rounded-[22px] border border-white/80 bg-white p-2 shadow-[0_10px_30px_rgba(45,79,135,0.05)]"
+      className="flex gap-1 overflow-x-auto rounded-2xl border border-[var(--border)] bg-white p-2"
       aria-label="Разделы ученика"
     >
       {items.map(({ id, label, icon: Icon, href }) => {

@@ -56,17 +56,17 @@ export function TeacherDashboardStats({ data }: Readonly<Props>) {
         return (
           <Link
             key={card.label}
-            className="group rounded-[24px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] transition hover:-translate-y-0.5 hover:border-blue-100"
+            className="group rounded-[14px] border border-[var(--border)] bg-white p-5 transition hover:border-blue-200"
             href={card.href}
           >
             <div className="flex items-start justify-between gap-3">
-              <span className={`flex size-10 items-center justify-center rounded-2xl ${card.iconClassName}`}>
+              <span className={`flex size-10 items-center justify-center rounded-xl ${card.iconClassName}`}>
                 <Icon size={19} />
               </span>
               <ArrowRight className="text-slate-300 transition group-hover:text-blue-600" size={17} />
             </div>
             <p className="mt-5 text-3xl font-semibold tracking-tight text-slate-950">{card.value}</p>
-            <p className="mt-1 text-sm leading-5 text-slate-500">{card.label}</p>
+            <p className="mt-1 text-sm leading-5 text-[var(--text-secondary)]">{card.label}</p>
           </Link>
         );
       })}

@@ -12,7 +12,7 @@ export function PublicProgressPage({ token }: Readonly<{ token: string }>) {
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-      <header className="rounded-[28px] border border-white/80 bg-white p-5 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:p-7">
+      <header className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-7">
         <div className="flex items-start gap-4">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 sm:size-12">
             <ChartNoAxesCombined size={22} aria-hidden="true" />
@@ -29,7 +29,7 @@ export function PublicProgressPage({ token }: Readonly<{ token: string }>) {
         </div>
       </header>
 
-      <section className="mt-4 rounded-[28px] border border-white/80 bg-white/70 p-4 shadow-[0_12px_40px_rgba(45,79,135,0.06)] sm:mt-6 sm:p-6">
+      <section className="mt-4 rounded-2xl border border-[var(--border)] bg-white/70 p-4 sm:mt-6 sm:p-6">
         {progress.isPending && <LoadingState />}
         {progress.isError && <ErrorState error={progress.error} onRetry={() => progress.refetch()} />}
         {progress.data && !hasLearningData(progress.data) && <EmptyState />}
