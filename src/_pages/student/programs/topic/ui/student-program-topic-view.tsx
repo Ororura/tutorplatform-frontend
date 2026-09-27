@@ -1,15 +1,16 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight, BookOpenText, ChevronRight, Code2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { MaterialRenderer, SafeMarkdown } from "@/entities/material";
 import {
   downloadStudentProgramMaterial,
   studentMaterialDownloadUrl,
   studentProgramQueries,
+  type StudentProgramDetails,
 } from "@/entities/student-program";
 import { studentTopicTaskQueries } from "@/entities/task";
 import { ApiClientError } from "@/shared/api/client";
@@ -22,12 +23,66 @@ function errorStatus(error: unknown): number | undefined {
   return error instanceof ApiClientError ? error.status : (error as { status?: number } | null)?.status;
 }
 
+function errorCode(error: unknown): string | undefined {
+  return error instanceof ApiClientError ? error.body.code : undefined;
+}
+
 export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<Props>) {
+  const queryClient = useQueryClient();
+
   const topic = useQuery(studentProgramQueries.currentTopic(studentProgramId, topicId));
+
   const program = useQuery(studentProgramQueries.currentDetail(studentProgramId));
-  const tasks = useQuery(studentTopicTaskQueries.list(studentProgramId, topicId));
+
+  const tasks = useQuery({
+    ...studentTopicTaskQueries.list(studentProgramId, topicId),
+    enabled: topic.isSuccess,
+  });
+
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [downloadErrorId, setDownloadErrorId] = useState<string | null>(null);
+
+  const topicProgressStatus = topic.data?.progressStatus;
+
+  useEffect(() => {
+    if (!topicProgressStatus) {
+      return;
+    }
+
+    queryClient.setQueryData<StudentProgramDetails>(
+      studentProgramQueries.currentDetail(studentProgramId).queryKey,
+      (current) => {
+        if (!current) {
+          return current;
+        }
+
+        let changed = false;
+
+        const modules = current.modules.map((module) => ({
+          ...module,
+          topics: module.topics.map((item) => {
+            if (item.id !== topicId || item.progressStatus === topicProgressStatus) {
+              return item;
+            }
+
+            changed = true;
+
+            return {
+              ...item,
+              progressStatus: topicProgressStatus,
+            };
+          }),
+        }));
+
+        return changed
+          ? {
+              ...current,
+              modules,
+            }
+          : current;
+      },
+    );
+  }, [queryClient, studentProgramId, topicId, topicProgressStatus]);
 
   const getStudentDownloadUrl = (material: { id: string }) =>
     studentMaterialDownloadUrl(studentProgramId, topicId, material.id);
@@ -47,19 +102,31 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
 
   if (topic.isError || program.isError) {
     const status = errorStatus(topic.error) ?? errorStatus(program.error);
-    const title =
-      status === 403 ? "Нет доступа к теме" : status === 404 ? "Тема не найдена" : "Не удалось загрузить тему";
+
+    const code = errorCode(topic.error) ?? errorCode(program.error);
+
+    const locked = code === "STUDENT_TOPIC_LOCKED";
+
+    const title = locked
+      ? "Тема пока заблокирована"
+      : status === 403
+        ? "Нет доступа к теме"
+        : status === 404
+          ? "Тема не найдена"
+          : "Не удалось загрузить тему";
 
     return (
       <main className="mx-auto min-w-0 max-w-5xl space-y-5">
         <section className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">{title}</h1>
           <p className="text-sm leading-6 text-red-700">
-            {status === 403
-              ? "Эта тема недоступна для вашей учётной записи."
-              : status === 404
-                ? "Возможно, тема больше не входит в назначенную программу или ссылка устарела."
-                : "Попробуйте повторить запрос."}
+            {locked
+              ? "Преподаватель ещё не открыл доступ к этой теме."
+              : status === 403
+                ? "Эта тема недоступна для вашей учётной записи."
+                : status === 404
+                  ? "Возможно, тема больше не входит в назначенную программу или ссылка устарела."
+                  : "Попробуйте повторить запрос."}
           </p>
           {status !== 403 && status !== 404 && (
             <Button
@@ -88,7 +155,12 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
   const topics = program.data.modules.flatMap((module) => module.topics);
   const topicIndex = topics.findIndex((item) => item.id === topic.data.id);
   const previousTopic = topicIndex > 0 ? topics[topicIndex - 1] : undefined;
+
   const nextTopic = topicIndex >= 0 ? topics[topicIndex + 1] : undefined;
+
+  const previousTopicLocked = previousTopic?.progressStatus === "LOCKED";
+
+  const nextTopicLocked = nextTopic?.progressStatus === "LOCKED";
   const practiceTasks = [...(tasks.data ?? [])].sort((left, right) => left.position - right.position);
   const selectedTask = practiceTasks.find((task) => task.id === selectedTaskId);
 
@@ -258,34 +330,46 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         className="grid gap-3 rounded-2xl border border-[var(--border)] bg-white p-5 sm:grid-cols-2 sm:p-6"
         aria-label="Навигация по темам"
       >
-        {previousTopic ? (
+        {previousTopic && !previousTopicLocked ? (
           <Link
             className="flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-blue-200 hover:bg-blue-50/40"
             href={`/student/programs/${studentProgramId}/topics/${previousTopic.id}`}
           >
             <ArrowLeft className="shrink-0 text-blue-600" size={18} aria-hidden="true" />
+
             <span className="min-w-0">
               <span className="block text-xs text-[var(--text-secondary)]">Предыдущая тема</span>
+
               <span className="mt-1 block truncate font-medium text-slate-900">{previousTopic.title}</span>
             </span>
           </Link>
+        ) : previousTopicLocked ? (
+          <p className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+            Предыдущая тема заблокирована
+          </p>
         ) : (
           <p className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm text-slate-400">
             Предыдущей темы нет
           </p>
         )}
 
-        {nextTopic ? (
+        {nextTopic && !nextTopicLocked ? (
           <Link
             className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 p-4 text-right transition hover:border-blue-200 hover:bg-blue-50/40"
             href={`/student/programs/${studentProgramId}/topics/${nextTopic.id}`}
           >
             <span className="min-w-0">
               <span className="block text-xs text-[var(--text-secondary)]">Следующая тема</span>
+
               <span className="mt-1 block truncate font-medium text-slate-900">{nextTopic.title}</span>
             </span>
+
             <ArrowRight className="shrink-0 text-blue-600" size={18} aria-hidden="true" />
           </Link>
+        ) : nextTopicLocked ? (
+          <p className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-right text-sm text-slate-500">
+            Следующая тема заблокирована
+          </p>
         ) : (
           <p className="rounded-2xl border border-dashed border-slate-200 p-4 text-right text-sm text-slate-400">
             Следующей темы нет

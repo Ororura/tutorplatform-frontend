@@ -53,6 +53,14 @@ const program = {
           topicStatus: "ACTIVE" as const,
           progressStatus: null,
         },
+        {
+          id: "topic-locked",
+          title: "Закрытая тема",
+          description: null,
+          position: 30,
+          topicStatus: "ACTIVE" as const,
+          progressStatus: "LOCKED" as const,
+        },
       ],
     },
     {
@@ -107,6 +115,24 @@ describe("StudentProgramDetailView", () => {
     expect(screen.getByText("В процессе")).toBeInTheDocument();
     expect(screen.queryByText("Статус не задан")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /редактировать|назначить|архивировать/i })).not.toBeInTheDocument();
+  });
+
+  it("does not make a locked topic navigable", () => {
+    mocks.useQuery.mockReturnValue({
+      data: program,
+      error: null,
+      isPending: false,
+      isError: false,
+      refetch: vi.fn(),
+    });
+
+    render(<StudentProgramDetailView studentProgramId="program-1" />);
+
+    expect(screen.queryByRole("link", { name: /Закрытая тема/ })).not.toBeInTheDocument();
+
+    expect(screen.getByLabelText("Тема «Закрытая тема» заблокирована")).toBeInTheDocument();
+
+    expect(screen.getByText("Заблокирована")).toBeInTheDocument();
   });
 
   it("renders a loading state", () => {
