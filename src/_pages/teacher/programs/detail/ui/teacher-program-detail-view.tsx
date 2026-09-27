@@ -15,6 +15,7 @@ import {
 } from "@/entities/learning-program";
 import { ActivateLearningProgramButton } from "@/features/program/activate";
 import { ArchiveLearningProgramButton } from "@/features/program/archive";
+import { DuplicateLearningProgramButton } from "@/features/program/duplicate";
 import { EditLearningProgramDialog } from "@/features/program/edit";
 import { ImportContentPackageDialog } from "@/features/program/import";
 import {
@@ -213,13 +214,16 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     {program.data.description || "Описание программы пока не добавлено."}
                   </p>
                 </section>
-                {program.data.status !== "ARCHIVED" && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {program.data.editable && <EditLearningProgramDialog program={program.data} />}
-                    {program.data.status === "DRAFT" && <ActivateLearningProgramButton programId={program.data.id} />}
-                    <ArchiveLearningProgramButton programId={program.data.id} />
-                  </div>
-                )}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {program.data.status !== "ARCHIVED" && (
+                    <>
+                      {program.data.editable && <EditLearningProgramDialog program={program.data} />}
+                      {program.data.status === "DRAFT" && <ActivateLearningProgramButton programId={program.data.id} />}
+                      <ArchiveLearningProgramButton programId={program.data.id} />
+                    </>
+                  )}
+                  <DuplicateLearningProgramButton key={program.data.id} programId={program.data.id} />
+                </div>
               </section>
 
               <section

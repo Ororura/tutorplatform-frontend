@@ -447,6 +447,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/teacher/programs/{programId}/duplicate": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Duplicate an owned learning program into a new editable draft */
+    post: operations["duplicateTeacherLearningProgram"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/teacher/programs/{programId}/archive": {
     parameters: {
       query?: never;
@@ -724,6 +741,23 @@ export interface paths {
     head?: never;
     /** Update a lesson session */
     patch: operations["updateLessonSession"];
+    trace?: never;
+  };
+  "/api/v1/teacher/students/{studentId}/programs/{studentProgramId}/topics/access": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Open or lock selected topics in a student's assigned program */
+    patch: operations["bulkUpdateTeacherStudentTopicAccess"];
     trace?: never;
   };
   "/api/v1/teacher/students/{studentId}/homeworks/{homeworkId}": {
@@ -2226,6 +2260,11 @@ export interface components {
       /** Format: int64 */
       version: number;
       topics: components["schemas"]["LessonSessionTopicRequest"][];
+    };
+    BulkUpdateStudentTopicAccessRequest: {
+      /** @enum {string} */
+      status: "LOCKED" | "AVAILABLE";
+      topicIds: string[];
     };
     UpdateHomeworkRequest: {
       title: string;
@@ -5245,6 +5284,55 @@ export interface operations {
       };
     };
   };
+  duplicateTeacherLearningProgram: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        programId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Learning program duplicated */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["LearningProgramSummaryResponse"];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role and valid CSRF token required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Learning program or subject not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
   archiveTeacherLearningProgram: {
     parameters: {
       query?: never;
@@ -5429,7 +5517,7 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
-      /** @description Student role or CSRF token required */
+      /** @description Student role or CSRF token required; topic context may also be locked */
       403: {
         headers: {
           [name: string]: unknown;
@@ -5500,7 +5588,7 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
-      /** @description Student role and CSRF token required */
+      /** @description Student role, CSRF token, and unlocked topic required for topic context */
       403: {
         headers: {
           [name: string]: unknown;
@@ -6525,6 +6613,76 @@ export interface operations {
         };
       };
       /** @description Version conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  bulkUpdateTeacherStudentTopicAccess: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        studentId: string;
+        studentProgramId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BulkUpdateStudentTopicAccessRequest"];
+      };
+    };
+    responses: {
+      /** @description Topic access updated */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Invalid request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Student, student program, or topic not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Topic access transition is not allowed */
       409: {
         headers: {
           [name: string]: unknown;
@@ -7874,7 +8032,7 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
-      /** @description Student role required */
+      /** @description Student role required or topic is locked */
       403: {
         headers: {
           [name: string]: unknown;
@@ -7924,7 +8082,7 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
-      /** @description Student role required */
+      /** @description Student role required or topic is locked */
       403: {
         headers: {
           [name: string]: unknown;
@@ -7975,7 +8133,7 @@ export interface operations {
           "*/*": string;
         };
       };
-      /** @description Student role required */
+      /** @description Student role required or topic is locked */
       403: {
         headers: {
           [name: string]: unknown;
