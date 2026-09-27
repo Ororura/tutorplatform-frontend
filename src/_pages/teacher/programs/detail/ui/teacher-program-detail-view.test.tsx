@@ -69,21 +69,41 @@ vi.mock("@/features/program/import/api/import-content-package", () => ({
   useImportContentPackageMutation: mocks.importHook,
 }));
 
-vi.mock("@/features/program/module/manage", () => ({
-  CreateLearningProgramModuleDialog: ({ editable }: { editable: boolean }) =>
-    editable ? <button type="button">Добавить модуль</button> : null,
-  LearningProgramModuleActions: ({ editable }: { editable: boolean }) =>
-    editable ? <button type="button">Изменить</button> : null,
-  useReorderLearningProgramModulesMutation: () => ({ mutate: mocks.reorderModules, isPending: mocks.reorderPending }),
-}));
+vi.mock("@/features/program/module/manage", async () => {
+  const { ActionMenu } = await import("@/shared/ui/action-menu");
+  return {
+    CreateLearningProgramModuleDialog: ({ editable }: { editable: boolean }) =>
+      editable ? <button type="button">Добавить модуль</button> : null,
+    LearningProgramModuleActions: ({
+      editable,
+      module,
+      reorderActions,
+    }: {
+      editable: boolean;
+      module: { title: string };
+      reorderActions: import("@/shared/ui/action-menu").ActionMenuItem[];
+    }) => (editable ? <ActionMenu label={`Действия модуля «${module.title}»`} items={reorderActions} /> : null),
+    useReorderLearningProgramModulesMutation: () => ({ mutate: mocks.reorderModules, isPending: mocks.reorderPending }),
+  };
+});
 
-vi.mock("@/features/program/topic/manage", () => ({
-  CreateLearningProgramTopicDialog: ({ editable }: { editable: boolean }) =>
-    editable ? <button type="button">Добавить тему</button> : null,
-  LearningProgramTopicActions: ({ editable }: { editable: boolean }) =>
-    editable ? <button type="button">Изменить тему</button> : null,
-  useReorderLearningProgramTopicsMutation: () => ({ mutate: mocks.reorderTopics, isPending: mocks.reorderPending }),
-}));
+vi.mock("@/features/program/topic/manage", async () => {
+  const { ActionMenu } = await import("@/shared/ui/action-menu");
+  return {
+    CreateLearningProgramTopicDialog: ({ editable }: { editable: boolean }) =>
+      editable ? <button type="button">Добавить тему</button> : null,
+    LearningProgramTopicActions: ({
+      editable,
+      topic,
+      reorderActions,
+    }: {
+      editable: boolean;
+      topic: { title: string };
+      reorderActions: import("@/shared/ui/action-menu").ActionMenuItem[];
+    }) => (editable ? <ActionMenu label={`Действия темы «${topic.title}»`} items={reorderActions} /> : null),
+    useReorderLearningProgramTopicsMutation: () => ({ mutate: mocks.reorderTopics, isPending: mocks.reorderPending }),
+  };
+});
 
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
@@ -175,7 +195,7 @@ describe("TeacherProgramDetailView", () => {
     expect(screen.getByText("В этом модуле пока нет тем.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "← Программы обучения" })).toHaveAttribute("href", "/teacher/programs");
 
-    const modules = screen.getAllByRole("listitem").filter((item) => item.textContent?.includes("Модуль"));
+    const modules = screen.getAllByRole("listitem").filter((item) => item.querySelector("details"));
     expect(modules[0]).toHaveTextContent("Числа");
     expect(modules[1]).toHaveTextContent("Уравнения");
   });
@@ -183,35 +203,30 @@ describe("TeacherProgramDetailView", () => {
   it("reorders modules and topics with complete ordered IDs", () => {
     render(<TeacherProgramDetailView programId="algebra" />);
 
-    const moduleUp = screen.getAllByRole("button", { name: "Переместить модуль вверх" });
-    const moduleDown = screen.getAllByRole("button", { name: "Переместить модуль вниз" });
-    expect(moduleUp[0]).toBeDisabled();
-    expect(moduleDown[1]).toBeDisabled();
-    fireEvent.click(moduleDown[0]);
+    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Числа»" }));
+    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("menuitem", { name: "Переместить вниз" }));
     expect(mocks.reorderModules).toHaveBeenCalledWith({ orderedIds: ["module-2", "module-1"] });
+    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Уравнения»" }));
+    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
 
-    const topicUp = screen.getAllByRole("button", { name: "Переместить тему вверх" });
-    const topicDown = screen.getAllByRole("button", { name: "Переместить тему вниз" });
-    expect(topicUp[0]).toBeDisabled();
-    expect(topicDown[1]).toBeDisabled();
-    fireEvent.click(topicDown[0]);
+    fireEvent.click(screen.getByRole("button", { name: "Действия темы «Натуральные числа»" }));
+    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("menuitem", { name: "Переместить вниз" }));
     expect(mocks.reorderTopics).toHaveBeenCalledWith({ orderedIds: ["topic-2", "topic-1"] });
+    fireEvent.click(screen.getByRole("button", { name: "Действия темы «Целые числа»" }));
+    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toBeDisabled();
   });
 
   it("blocks all order controls while a reorder request is pending", () => {
     mocks.reorderPending = true;
     render(<TeacherProgramDetailView programId="algebra" />);
-
-    screen
-      .getAllByRole("button", { name: "Переместить модуль вверх" })
-      .forEach((button) => expect(button).toBeDisabled());
-    screen
-      .getAllByRole("button", { name: "Переместить модуль вниз" })
-      .forEach((button) => expect(button).toBeDisabled());
-    screen
-      .getAllByRole("button", { name: "Переместить тему вверх" })
-      .forEach((button) => expect(button).toBeDisabled());
-    screen.getAllByRole("button", { name: "Переместить тему вниз" }).forEach((button) => expect(button).toBeDisabled());
+    for (const trigger of screen.getAllByRole("button", { name: /^Действия (модуля|темы)/ })) {
+      fireEvent.click(trigger);
+      screen.getAllByRole("menuitem").forEach((item) => expect(item).toBeDisabled());
+      fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
+    }
   });
 
   it("renders loading state", () => {
@@ -335,6 +350,7 @@ describe("bulk topic selection", () => {
     start();
     expect(screen.getAllByRole("checkbox")).toHaveLength(3);
     expect(toolbar().getByText("Выбрано: 0")).toBeInTheDocument();
+    expect(screen.queryAllByRole("button", { name: /^Действия (модуля|темы)/ })).toHaveLength(0);
     expect(screen.queryByRole("button", { name: "Выбрать темы" })).not.toBeInTheDocument();
   });
 
@@ -475,6 +491,7 @@ describe("bulk topic selection", () => {
     expect(screen.queryByRole("region", { name: "Выбор тем" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Выбрать темы" })).not.toBeInTheDocument();
     expect(screen.queryAllByRole("checkbox")).toHaveLength(0);
+    expect(screen.queryAllByRole("button", { name: /^Действия (модуля|темы)/ })).toHaveLength(0);
   });
 
   it("disables actions without selection and while pending, preventing duplicate submission", async () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import type { LessonMaterial } from "@/entities/material";
 import { ApiClientError } from "@/shared/api/client";
@@ -8,7 +8,10 @@ import { Button } from "@/shared/ui/button";
 
 import { useDeleteMaterialMutation } from "../api/delete-material";
 
-export function DeleteMaterialDialog({ material }: Readonly<{ material: LessonMaterial }>) {
+export function DeleteMaterialDialog({
+  material,
+  renderTrigger,
+}: Readonly<{ material: LessonMaterial; renderTrigger?: (open: () => void) => ReactNode }>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
@@ -36,17 +39,24 @@ export function DeleteMaterialDialog({ material }: Readonly<{ material: LessonMa
 
   return (
     <>
-      <Button
-        type="button"
-        variant="secondary"
-        aria-label={`Удалить «${material.title}»`}
-        onClick={() => {
+      {renderTrigger ? (
+        renderTrigger(() => {
           setError("");
           setOpen(true);
-        }}
-      >
-        Удалить
-      </Button>
+        })
+      ) : (
+        <Button
+          type="button"
+          variant="secondary"
+          aria-label={`Удалить «${material.title}»`}
+          onClick={() => {
+            setError("");
+            setOpen(true);
+          }}
+        >
+          Удалить
+        </Button>
+      )}
       <dialog
         ref={dialogRef}
         aria-labelledby={`delete-material-title-${material.id}`}

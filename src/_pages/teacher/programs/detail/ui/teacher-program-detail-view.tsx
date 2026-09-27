@@ -1,16 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  Archive,
-  ArrowDown,
-  ArrowUp,
-  BookOpenText,
-  CheckCircle2,
-  ChevronRight,
-  FilePenLine,
-  Layers3,
-} from "lucide-react";
+import { Archive, CheckCircle2, ChevronRight, FilePenLine, Layers3 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -162,7 +153,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
   }, [programId, program.data?.slug, router]);
 
   return (
-    <main className="mx-auto max-w-5xl space-y-6">
+    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
       <Link
         className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600"
         href="/teacher/programs"
@@ -201,30 +192,29 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
 
           return (
             <>
-              <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+              <section className="rounded-xl border border-[var(--border)] bg-white p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-4">
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-                    <BookOpenText size={23} />
-                  </span>
+                  <p className="min-w-0 break-words text-sm font-medium text-blue-600">{program.data.subject.name}</p>
                   <span
-                    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusClassName[program.data.status]}`}
+                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusClassName[program.data.status]}`}
                   >
                     <StatusIcon size={13} />
                     {statusPresentation[program.data.status]}
                   </span>
                 </div>
-                <p className="mt-6 text-sm font-medium text-blue-600">{program.data.subject.name}</p>
-                <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">{program.data.title}</h1>
-                <section className="mt-6" aria-labelledby="program-description-heading">
-                  <h2 id="program-description-heading" className="text-sm font-semibold text-slate-950">
+                <h1 className="mt-2 break-words text-2xl font-semibold tracking-tight text-slate-950">
+                  {program.data.title}
+                </h1>
+                <section className="mt-2" aria-labelledby="program-description-heading">
+                  <h2 id="program-description-heading" className="sr-only">
                     Описание
                   </h2>
-                  <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-500">
+                  <p className="break-words whitespace-pre-wrap text-sm leading-6 text-slate-500">
                     {program.data.description || "Описание программы пока не добавлено."}
                   </p>
                 </section>
                 {program.data.status !== "ARCHIVED" && (
-                  <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-100 pt-5">
+                  <div className="mt-3 flex flex-wrap gap-2">
                     {program.data.editable && <EditLearningProgramDialog program={program.data} />}
                     {program.data.status === "DRAFT" && <ActivateLearningProgramButton programId={program.data.id} />}
                     <ArchiveLearningProgramButton programId={program.data.id} />
@@ -233,7 +223,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
               </section>
 
               <section
-                className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7"
+                className="rounded-xl border border-[var(--border)] bg-white p-4 sm:p-5"
                 aria-labelledby="program-modules-heading"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -259,12 +249,15 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     <ImportContentPackageDialog
                       programId={program.data.id}
                       editable={
-                        program.data.editable && program.data.status !== "ARCHIVED" && !program.data.hasAssignments
+                        program.data.editable &&
+                        !selecting &&
+                        program.data.status !== "ARCHIVED" &&
+                        !program.data.hasAssignments
                       }
                     />
                     <CreateLearningProgramModuleDialog
                       programId={program.data.id}
-                      editable={program.data.editable}
+                      editable={program.data.editable && !selecting}
                       onCreated={setExpandedModuleId}
                     />
                   </div>
@@ -293,75 +286,49 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     <p className="mt-2 text-sm text-slate-500">Структура программы ещё не заполнена.</p>
                   </div>
                 ) : (
-                  <ol className="mt-6 space-y-4">
+                  <ol className="mt-4 divide-y divide-slate-200 border-y border-slate-200">
                     {modules.map((module, moduleIndex) => {
                       const topics = [...module.topics].sort((a, b) => a.position - b.position);
                       return (
-                        <li key={module.id} className="rounded-2xl border border-slate-200/80">
+                        <li key={module.id} className="relative">
                           <details
+                            className="group"
                             open={expandedModuleId === module.id}
                             onToggle={(event) => setExpandedModuleId(event.currentTarget.open ? module.id : null)}
                           >
-                            <summary className="cursor-pointer list-none p-5">
-                              <div className="flex items-start justify-between gap-3">
-                                <div>
-                                  <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
-                                    Модуль {module.position + 1}
-                                  </p>
-                                  <h3 className="mt-1 text-lg font-semibold text-slate-950">{module.title}</h3>
+                            <summary
+                              className={`cursor-pointer list-none rounded-md py-4 focus-visible:outline-2 focus-visible:outline-blue-600 ${program.data.editable && !selecting ? "pr-12" : ""}`}
+                            >
+                              <div className="flex items-start gap-2 sm:gap-3">
+                                <ChevronRight
+                                  size={16}
+                                  aria-hidden="true"
+                                  className="mt-1 shrink-0 text-slate-400 transition-transform group-open:rotate-90"
+                                />
+                                <span aria-hidden="true" className="mt-0.5 text-sm tabular-nums text-slate-400">
+                                  {String(module.position + 1).padStart(2, "0")}.
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                  <h3 className="break-words font-semibold text-slate-950">{module.title}</h3>
                                   {module.description && (
-                                    <p className="mt-2 text-sm leading-6 text-slate-500">{module.description}</p>
+                                    <p className="mt-1 break-words text-sm leading-5 text-slate-500">
+                                      {module.description}
+                                    </p>
                                   )}
+                                  <p className="mt-1 text-xs text-slate-500 sm:hidden">{topics.length} тем</p>
                                 </div>
-                                {program.data.editable && (
-                                  <div className="flex shrink-0 gap-1" onClick={(event) => event.stopPropagation()}>
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      className="size-8 rounded-lg p-0"
-                                      aria-label="Переместить модуль вверх"
-                                      disabled={reorderModules.isPending || moduleIndex === 0}
-                                      onClick={() =>
-                                        reorderModules.mutate({
-                                          orderedIds: reorderedIds(
-                                            modules.map((item) => item.id),
-                                            moduleIndex,
-                                            -1,
-                                          ),
-                                        })
-                                      }
-                                    >
-                                      <ArrowUp size={16} />
-                                    </Button>
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      className="size-8 rounded-lg p-0"
-                                      aria-label="Переместить модуль вниз"
-                                      disabled={reorderModules.isPending || moduleIndex === modules.length - 1}
-                                      onClick={() =>
-                                        reorderModules.mutate({
-                                          orderedIds: reorderedIds(
-                                            modules.map((item) => item.id),
-                                            moduleIndex,
-                                            1,
-                                          ),
-                                        })
-                                      }
-                                    >
-                                      <ArrowDown size={16} />
-                                    </Button>
-                                  </div>
-                                )}
+                                <span className="mt-0.5 hidden shrink-0 text-xs text-slate-500 sm:block">
+                                  {topics.length} тем
+                                </span>
                               </div>
                             </summary>
-                            <div className="border-t border-slate-100 px-5 pb-5 pt-4">
+                            <div className="ml-2 border-l border-slate-200 pb-3 pl-3 sm:ml-5 sm:pl-5">
                               <div className="flex flex-wrap items-center justify-between gap-3">
                                 <h4 className="text-sm font-semibold text-slate-950">Темы</h4>
                                 <CreateLearningProgramTopicDialog
                                   programId={program.data.id}
                                   moduleId={module.id}
-                                  editable={program.data.editable}
+                                  editable={program.data.editable && !selecting}
                                 />
                               </div>
                               {topics.length === 0 ? (
@@ -376,16 +343,46 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                                   selectedIds={selectedIds}
                                   selectionPending={bulkStatus.isPending}
                                   onToggleTopic={toggleTopic}
-                                  editable={program.data.editable}
+                                  editable={program.data.editable && !selecting}
                                 />
                               )}
+                            </div>
+                          </details>
+                          {program.data.editable && !selecting && (
+                            <div className="absolute right-0 top-2">
                               <LearningProgramModuleActions
                                 programId={program.data.id}
                                 module={module}
                                 editable={program.data.editable}
+                                reorderActions={[
+                                  {
+                                    label: "Переместить вверх",
+                                    disabled: reorderModules.isPending || moduleIndex === 0,
+                                    onSelect: () =>
+                                      reorderModules.mutate({
+                                        orderedIds: reorderedIds(
+                                          modules.map((item) => item.id),
+                                          moduleIndex,
+                                          -1,
+                                        ),
+                                      }),
+                                  },
+                                  {
+                                    label: "Переместить вниз",
+                                    disabled: reorderModules.isPending || moduleIndex === modules.length - 1,
+                                    onSelect: () =>
+                                      reorderModules.mutate({
+                                        orderedIds: reorderedIds(
+                                          modules.map((item) => item.id),
+                                          moduleIndex,
+                                          1,
+                                        ),
+                                      }),
+                                  },
+                                ]}
                               />
                             </div>
-                          </details>
+                          )}
                         </li>
                       );
                     })}
@@ -424,9 +421,9 @@ function TopicList({
   const topicIds = topics.map((topic) => topic.id);
 
   return (
-    <ol className="mt-3 space-y-2">
+    <ol className="mt-2 divide-y divide-slate-100">
       {topics.map((topic, topicIndex) => (
-        <li key={topic.id} className="flex items-start gap-2 text-sm text-slate-700">
+        <li key={topic.id} className="flex items-start gap-2 py-3 text-sm text-slate-700">
           {selecting ? (
             <input
               type="checkbox"
@@ -442,47 +439,37 @@ function TopicList({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <Link
-                className="font-medium text-slate-950 hover:text-blue-600 hover:underline hover:underline-offset-4"
+                className="min-w-0 break-words font-medium text-slate-950 hover:text-blue-600 hover:underline hover:underline-offset-4"
                 href={`/teacher/programs/${programSlug}/topics/${topic.slug}`}
               >
                 {topic.title}
               </Link>
-              <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${topicStatusClassName[topic.status]}`}>
+              <span
+                className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${topicStatusClassName[topic.status]}`}
+              >
                 {topicStatusPresentation[topic.status]}
               </span>
-              {editable && !selecting && (
-                <span className="flex gap-1">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="size-8 rounded-lg p-0"
-                    aria-label="Переместить тему вверх"
-                    disabled={reorderTopics.isPending || topicIndex === 0}
-                    onClick={() => reorderTopics.mutate({ orderedIds: reorderedIds(topicIds, topicIndex, -1) })}
-                  >
-                    <ArrowUp size={16} />
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="size-8 rounded-lg p-0"
-                    aria-label="Переместить тему вниз"
-                    disabled={reorderTopics.isPending || topicIndex === topics.length - 1}
-                    onClick={() => reorderTopics.mutate({ orderedIds: reorderedIds(topicIds, topicIndex, 1) })}
-                  >
-                    <ArrowDown size={16} />
-                  </Button>
-                </span>
-              )}
-              <LearningProgramTopicActions
-                programId={programId}
-                moduleId={moduleId}
-                topic={topic}
-                editable={editable && !selecting}
-              />
             </div>
-            {topic.description && <p className="mt-0.5 text-slate-500">{topic.description}</p>}
+            {topic.description && <p className="mt-1 break-words leading-5 text-slate-500">{topic.description}</p>}
           </div>
+          <LearningProgramTopicActions
+            programId={programId}
+            moduleId={moduleId}
+            topic={topic}
+            editable={editable && !selecting}
+            reorderActions={[
+              {
+                label: "Переместить вверх",
+                disabled: reorderTopics.isPending || topicIndex === 0,
+                onSelect: () => reorderTopics.mutate({ orderedIds: reorderedIds(topicIds, topicIndex, -1) }),
+              },
+              {
+                label: "Переместить вниз",
+                disabled: reorderTopics.isPending || topicIndex === topics.length - 1,
+                onSelect: () => reorderTopics.mutate({ orderedIds: reorderedIds(topicIds, topicIndex, 1) }),
+              },
+            ]}
+          />
         </li>
       ))}
     </ol>

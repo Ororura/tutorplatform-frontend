@@ -31,19 +31,26 @@ export function BulkTopicStatusToolbar({
   const exceedsLimit = count > 375;
   const cannotSubmit = pending || !count || exceedsLimit;
   return (
-    <div className="mt-4 space-y-3 rounded-xl bg-slate-50 p-3" role="region" aria-label="Выбор тем" aria-busy={pending}>
+    <div
+      className="sticky top-32 z-20 mt-4 space-y-2 rounded-lg border border-slate-200 bg-white p-3 shadow-sm xl:top-20"
+      role="region"
+      aria-label="Выбор тем"
+      aria-busy={pending}
+    >
       <div className="flex flex-wrap items-center gap-2">
-        <Button type="button" variant="secondary" disabled={pending || empty} onClick={onToggleAll}>
-          {allSelected ? "Снять все" : "Выбрать все"}
-        </Button>
-        <span className="text-sm" aria-live="polite">
+        <span className="text-sm font-medium" aria-live="polite">
           Выбрано: {count}
         </span>
-        <Button type="button" disabled={cannotSubmit} onClick={() => void onSubmit("ACTIVE")}>
-          Активировать
+        <Button type="button" variant="ghost" disabled={pending || empty} onClick={onToggleAll}>
+          {allSelected ? "Снять все" : "Выбрать все"}
         </Button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
         <Button type="button" variant="secondary" disabled={cannotSubmit} onClick={() => void onSubmit("DRAFT")}>
           В черновик
+        </Button>
+        <Button type="button" disabled={cannotSubmit} onClick={() => void onSubmit("ACTIVE")}>
+          Активировать
         </Button>
         <Button
           type="button"

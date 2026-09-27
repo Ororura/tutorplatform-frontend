@@ -164,13 +164,15 @@ modules:
 
   const firstModule = moduleItems.first();
   await firstModule.getByRole("heading", { name: moduleTitle }).click();
-  await firstModule.getByRole("button", { name: "Изменить", exact: true }).last().click();
+  await firstModule.getByRole("button", { name: `Действия модуля «${moduleTitle}»` }).click();
+  await firstModule.getByRole("menuitem", { name: "Редактировать" }).click();
   const editModuleDialog = page.getByRole("dialog", { name: "Изменить модуль" });
   await editModuleDialog.getByLabel("Название", { exact: true }).fill(editedModuleTitle);
   await editModuleDialog.getByRole("button", { name: "Сохранить" }).click();
   await expect(firstModule.getByRole("heading", { name: editedModuleTitle })).toBeVisible();
 
-  await firstModule.getByRole("button", { name: "Изменить", exact: true }).first().click();
+  await firstModule.getByRole("button", { name: `Действия темы «${topicTitle}»` }).click();
+  await firstModule.getByRole("menuitem", { name: "Редактировать" }).click();
   const editTopicDialog = page.getByRole("dialog", { name: "Изменить тему" });
   await editTopicDialog.getByLabel("Название", { exact: true }).fill(editedTopicTitle);
   await editTopicDialog.getByRole("button", { name: "Сохранить" }).click();

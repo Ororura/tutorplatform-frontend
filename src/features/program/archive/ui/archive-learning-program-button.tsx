@@ -37,7 +37,8 @@ export function ArchiveLearningProgramButton({ programId }: Readonly<{ programId
     <>
       <Button
         type="button"
-        variant="danger"
+        variant="ghost"
+        className="text-red-700 hover:bg-red-50 hover:text-red-800"
         onClick={() => {
           setError("");
           setOpen(true);

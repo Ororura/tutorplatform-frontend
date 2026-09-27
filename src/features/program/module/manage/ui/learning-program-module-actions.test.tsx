@@ -38,7 +38,8 @@ describe("learning program module actions", () => {
 
   it("edits an empty module only after opening the form", async () => {
     render(<LearningProgramModuleActions programId="program-1" module={programModule} editable />);
-    fireEvent.click(screen.getByRole("button", { name: "Изменить" }));
+    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Основы»" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Редактировать" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Название" }), { target: { value: " Обновлённый " } });
     fireEvent.click(screen.getByRole("button", { name: "Сохранить" }));
 
@@ -47,7 +48,8 @@ describe("learning program module actions", () => {
 
   it("asks for confirmation before deleting an empty module", async () => {
     render(<LearningProgramModuleActions programId="program-1" module={programModule} editable />);
-    fireEvent.click(screen.getAllByRole("button", { name: "Удалить" }).at(-1)!);
+    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Основы»" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Удалить" }));
     expect(mocks.remove).not.toHaveBeenCalled();
     expect(screen.getByRole("heading", { name: "Удалить модуль?" })).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("button", { name: "Удалить" }).at(-1)!);
@@ -58,7 +60,7 @@ describe("learning program module actions", () => {
     const { rerender } = render(
       <LearningProgramModuleActions programId="program-1" module={programModule} editable={false} />,
     );
-    expect(screen.queryByRole("button", { name: "Изменить" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Действия модуля «Основы»" })).not.toBeInTheDocument();
     rerender(
       <LearningProgramModuleActions
         programId="program-1"
@@ -71,7 +73,8 @@ describe("learning program module actions", () => {
         editable
       />,
     );
-    expect(screen.getByRole("button", { name: "Изменить" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Удалить" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Основы»" }));
+    expect(screen.getByRole("menuitem", { name: "Редактировать" })).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: "Удалить" })).not.toBeInTheDocument();
   });
 });

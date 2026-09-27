@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { ApiClientError } from "@/shared/api/client";
+import { ActionMenu, type ActionMenuItem } from "@/shared/ui/action-menu";
 import { Button } from "@/shared/ui/button";
 
 import {
@@ -147,7 +148,13 @@ export function LearningProgramModuleActions({
   programId,
   module,
   editable,
-}: Readonly<{ programId: string; module: LearningProgramModule; editable: boolean }>) {
+  reorderActions = [],
+}: Readonly<{
+  programId: string;
+  module: LearningProgramModule;
+  editable: boolean;
+  reorderActions?: ActionMenuItem[];
+}>) {
   const editDialogRef = useRef<HTMLDialogElement>(null);
   const deleteDialogRef = useRef<HTMLDialogElement>(null);
   const [editing, setEditing] = useState(false);
@@ -199,32 +206,34 @@ export function LearningProgramModuleActions({
 
   return (
     <>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => {
-            setTitle(module.title);
-            setDescription(module.description ?? "");
-            setError("");
-            setEditing(true);
-          }}
-        >
-          Изменить
-        </Button>
-        {module.topics.length === 0 && (
-          <Button
-            type="button"
-            variant="danger"
-            onClick={() => {
+      <ActionMenu
+        label={`Действия модуля «${module.title}»`}
+        items={[
+          ...reorderActions,
+          {
+            label: "Редактировать",
+            onSelect: () => {
+              setTitle(module.title);
+              setDescription(module.description ?? "");
               setError("");
-              setDeleting(true);
-            }}
-          >
-            Удалить
-          </Button>
-        )}
-      </div>
+              setEditing(true);
+            },
+          },
+          ...(module.topics.length === 0
+            ? [
+                {
+                  label: "Удалить",
+                  destructive: true,
+                  separator: true,
+                  onSelect: () => {
+                    setError("");
+                    setDeleting(true);
+                  },
+                },
+              ]
+            : []),
+        ]}
+      />
       <dialog
         ref={editDialogRef}
         aria-labelledby={`edit-module-${module.id}`}
