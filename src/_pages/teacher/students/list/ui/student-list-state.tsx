@@ -40,7 +40,7 @@ export function StudentListState({
 
   if (data.items.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
+      <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
         <p className="font-semibold text-slate-900">
           {hasActiveFilters ? "Ученики не найдены" : "У вас пока нет учеников"}
         </p>
@@ -50,7 +50,7 @@ export function StudentListState({
         </p>
 
         {!hasActiveFilters && onAddStudent && (
-          <Button className="mt-5" type="button" onClick={onAddStudent}>
+          <Button className="mt-4" type="button" onClick={onAddStudent}>
             Добавить ученика
           </Button>
         )}

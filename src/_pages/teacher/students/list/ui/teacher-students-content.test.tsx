@@ -41,6 +41,39 @@ describe("TeacherStudentsContent", () => {
     mocks.searchParams = "page=2&size=20";
   });
 
+  it("keeps the create action and count beside the list without a sidebar", () => {
+    render(<TeacherStudentsContent />);
+    expect(screen.getByRole("button", { name: "Добавить ученика" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Список учеников · 80" })).toBeInTheDocument();
+    expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
+    expect(screen.queryByText("Быстрый переход")).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ["Сортировка", "lastName,asc", "size=20&sort=lastName%2Casc"],
+    ["На странице", "50", "size=50"],
+  ])("resets page for %s while preserving other URL parameters", (label, value, expected) => {
+    mocks.searchParams = "page=2&size=20&search=Anna&accountStatus=INVITED";
+    render(<TeacherStudentsContent />);
+    fireEvent.change(screen.getByLabelText(label), { target: { value } });
+    const url = new URL(mocks.replace.mock.calls[0][0], "http://localhost");
+    expect(url.searchParams.has("page")).toBe(false);
+    expect(url.searchParams.get("search")).toBe("Anna");
+    expect(url.searchParams.get("accountStatus")).toBe("INVITED");
+    for (const [key, item] of new URLSearchParams(expected)) expect(url.searchParams.get(key)).toBe(item);
+  });
+
+  it("submits search immediately and preserves sort and account status", () => {
+    mocks.searchParams = "page=2&sort=firstName%2Casc&accountStatus=REGISTERED";
+    render(<TeacherStudentsContent />);
+    fireEvent.change(screen.getByLabelText("Поиск ученика"), { target: { value: "  Анна  " } });
+    fireEvent.click(screen.getByRole("button", { name: "Найти" }));
+    expect(mocks.replace).toHaveBeenCalledWith(
+      "/teacher/students?sort=firstName%2Casc&accountStatus=REGISTERED&search=%D0%90%D0%BD%D0%BD%D0%B0",
+      { scroll: false },
+    );
+  });
+
   it("passes URL pagination and the allow-listed defaults to the backend query", () => {
     render(<TeacherStudentsContent />);
     expect(mocks.list).toHaveBeenCalledWith({ page: 2, size: 20, sort: "createdAt,desc" });

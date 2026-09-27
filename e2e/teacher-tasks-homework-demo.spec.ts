@@ -8,7 +8,8 @@ test("demo teacher reads Task Library and atomically assigns TEXT + CODE homewor
   await page.getByRole("button", { name: "Войти" }).click();
   await expect(page).toHaveURL(/\/teacher\/students$/);
 
-  await page.getByRole("link", { name: "Банк заданий" }).click();
+  await page.getByRole("link", { name: "Задания", exact: true }).click();
+  await expect(page).toHaveURL(/\/teacher\/tasks$/);
   await expect(page.getByRole("heading", { name: "Банк заданий", level: 1 })).toBeVisible();
   await expect(page.getByRole("link", { name: /Когда использовать цикл while.*Текстовый ответ/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Сумма двух чисел.*Код/ })).toBeVisible();

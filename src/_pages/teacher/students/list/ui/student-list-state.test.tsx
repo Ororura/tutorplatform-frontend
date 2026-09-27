@@ -31,6 +31,21 @@ describe("StudentListState", () => {
     expect(screen.getByText("У вас пока нет учеников")).toBeInTheDocument();
   });
 
+  it("keeps the create action in the empty state", () => {
+    const onAddStudent = vi.fn();
+    render(
+      <StudentListState
+        isPending={false}
+        isError={false}
+        data={emptyPage}
+        onRetry={vi.fn()}
+        onAddStudent={onAddStudent}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Добавить ученика" }));
+    expect(onAddStudent).toHaveBeenCalledOnce();
+  });
+
   it("distinguishes an empty search result", () => {
     render(<StudentListState isPending={false} isError={false} data={emptyPage} hasActiveFilters onRetry={vi.fn()} />);
     expect(screen.getByText("Ученики не найдены")).toBeInTheDocument();
