@@ -113,7 +113,7 @@ export function LoginForm() {
             {...register("password")}
           />
           <button
-            className="absolute top-1/2 right-2.5 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="absolute top-1/2 right-2.5 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
             type="button"
             disabled={login.isPending}
             aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
@@ -141,7 +141,7 @@ export function LoginForm() {
       )}
 
       <Button
-        className="h-12 w-full gap-2 rounded-xl bg-blue-600 text-base shadow-lg shadow-blue-200/80 hover:bg-blue-700"
+        className="h-12 w-full gap-2 text-base"
         type="submit"
         disabled={login.isPending}
         aria-busy={login.isPending}

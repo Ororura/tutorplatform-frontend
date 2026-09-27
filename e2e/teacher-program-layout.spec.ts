@@ -44,6 +44,7 @@ async function fitsViewport(page: Page, locator: Locator) {
 
 for (const viewport of [
   { width: 1440, height: 1000 },
+  { width: 1024, height: 768 },
   { width: 768, height: 1024 },
   { width: 375, height: 812 },
 ]) {

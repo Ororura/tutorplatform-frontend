@@ -22,7 +22,10 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
   if (program.isPending) {
     return (
       <main>
-        <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
+        <div
+          className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-[var(--text-secondary)]"
+          aria-busy="true"
+        >
           Загружаем программу…
         </div>
       </main>
@@ -39,7 +42,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
           : "Не удалось загрузить программу";
 
     return (
-      <main className="space-y-4">
+      <main className="mx-auto min-w-0 max-w-5xl space-y-5">
         <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">{title}</h1>
           <p className="text-sm leading-6 text-red-700">
@@ -57,7 +60,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
         </div>
 
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] transition hover:text-blue-600"
           href="/student/programs"
         >
           <ArrowLeft size={16} aria-hidden="true" />
@@ -70,10 +73,10 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
   const data = program.data;
 
   return (
-    <main className="space-y-4">
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+      <section className="py-2">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] transition hover:text-blue-600"
           href="/student/programs"
         >
           <ArrowLeft size={16} aria-hidden="true" />
@@ -87,7 +90,9 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
             </span>
             <div className="min-w-0">
               <p className="text-sm font-medium text-blue-600">{data.subject.name}</p>
-              <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">{data.title}</h1>
+              <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+                {data.title}
+              </h1>
               <p className="mt-3 max-w-3xl whitespace-pre-line text-sm leading-7 text-slate-600">
                 {data.description || "Описание программы пока не добавлено."}
               </p>
@@ -114,22 +119,25 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
         </div>
 
         {data.modules.length === 0 ? (
-          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-slate-500">
+          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-[var(--text-secondary)]">
             В программе пока нет модулей.
           </p>
         ) : (
-          <ol className="mt-5 space-y-4" aria-labelledby="program-modules-heading">
+          <ol
+            className="mt-4 divide-y divide-slate-200 border-y border-slate-200"
+            aria-labelledby="program-modules-heading"
+          >
             {data.modules.map((module, moduleIndex) => (
-              <li className="overflow-hidden rounded-[14px] border border-slate-200/80" key={module.id}>
-                <div className="bg-slate-50/70 px-5 py-4 sm:px-6">
+              <li className="min-w-0 py-2" key={module.id}>
+                <div className="py-3">
                   <div className="flex items-start gap-3">
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-semibold text-blue-600 shadow-sm">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-semibold text-slate-600">
                       {moduleIndex + 1}
                     </span>
                     <div className="min-w-0">
-                      <h3 className="font-semibold text-slate-950">{module.title}</h3>
+                      <h3 className="break-words font-semibold text-slate-950">{module.title}</h3>
                       {module.description && (
-                        <p className="mt-1 whitespace-pre-line text-sm leading-6 text-slate-500">
+                        <p className="mt-1 break-words whitespace-pre-line text-sm leading-6 text-[var(--text-secondary)]">
                           {module.description}
                         </p>
                       )}
@@ -138,7 +146,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
                 </div>
 
                 {module.topics.length === 0 ? (
-                  <p className="px-5 py-4 text-sm text-slate-500 sm:px-6">В модуле пока нет тем.</p>
+                  <p className="px-5 py-4 text-sm text-[var(--text-secondary)] sm:px-6">В модуле пока нет тем.</p>
                 ) : (
                   <ol className="divide-y divide-slate-100">
                     {module.topics.map((topic, topicIndex) => (
@@ -148,10 +156,10 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
                           href={`/student/programs/${data.id}/topics/${topic.id}`}
                         >
                           <span className="flex min-w-0 items-center gap-3">
-                            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs font-semibold text-slate-500">
+                            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs font-semibold text-[var(--text-secondary)]">
                               {topicIndex + 1}
                             </span>
-                            <span className="font-medium text-slate-900">{topic.title}</span>
+                            <span className="min-w-0 break-words font-medium text-slate-900">{topic.title}</span>
                           </span>
                           <span className="flex items-center gap-3 self-end sm:self-auto">
                             {topic.progressStatus && <TopicProgressBadge status={topic.progressStatus} />}

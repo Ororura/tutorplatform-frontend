@@ -25,10 +25,14 @@ export function StudentHeader() {
   return (
     <header className="sticky top-0 z-40 pt-3">
       <div className="mx-auto max-w-[1600px] px-3 sm:px-5">
-        <div className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-[0_12px_40px_rgba(45,79,135,0.08)] backdrop-blur-xl">
-          <div className="flex h-16 items-center gap-5 px-4 sm:px-5">
-            <Link className="flex shrink-0 items-center gap-3" href="/student">
-              <span className="flex size-10 items-center justify-center rounded-[14px] bg-linear-to-br from-blue-500 to-blue-600 text-white shadow-sm shadow-blue-200">
+        <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white/95 shadow-[var(--shadow-header)] backdrop-blur-xl">
+          <div className="flex h-15 items-center gap-5 px-4 sm:px-5">
+            <Link
+              aria-label="Умнее Вместе — главная"
+              className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              href="/student"
+            >
+              <span className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 text-white">
                 <BookOpen size={21} strokeWidth={2.1} aria-hidden="true" />
               </span>
 

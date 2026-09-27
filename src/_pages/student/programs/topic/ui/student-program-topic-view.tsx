@@ -35,7 +35,10 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
   if (topic.isPending || program.isPending) {
     return (
       <main>
-        <p className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
+        <p
+          className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-[var(--text-secondary)]"
+          aria-busy="true"
+        >
           Загружаем тему…
         </p>
       </main>
@@ -48,7 +51,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
       status === 403 ? "Нет доступа к теме" : status === 404 ? "Тема не найдена" : "Не удалось загрузить тему";
 
     return (
-      <main className="space-y-4">
+      <main className="mx-auto min-w-0 max-w-5xl space-y-5">
         <section className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">{title}</h1>
           <p className="text-sm leading-6 text-red-700">
@@ -72,7 +75,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
           )}
         </section>
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] transition hover:text-blue-600"
           href={`/student/programs/${studentProgramId}`}
         >
           <ArrowLeft size={16} aria-hidden="true" />
@@ -90,17 +93,17 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
   const selectedTask = practiceTasks.find((task) => task.id === selectedTaskId);
 
   return (
-    <main className="space-y-4">
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+      <section className="py-2">
         <nav aria-label="Хлебные крошки">
-          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
-            <li>
+          <ol className="flex flex-wrap items-center break-words gap-x-2 gap-y-1 text-sm text-[var(--text-secondary)]">
+            <li className="min-w-0">
               <Link className="transition hover:text-blue-600" href="/student/programs">
                 Мои программы
               </Link>
             </li>
             <li aria-hidden="true">/</li>
-            <li>
+            <li className="min-w-0">
               <Link className="transition hover:text-blue-600" href={`/student/programs/${studentProgramId}`}>
                 {program.data.title}
               </Link>
@@ -120,7 +123,9 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
           </span>
           <div className="min-w-0">
             <p className="text-sm font-medium text-blue-600">{topic.data.moduleTitle}</p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">{topic.data.title}</h1>
+            <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+              {topic.data.title}
+            </h1>
             <div className="mt-4 text-sm text-slate-600">
               {topic.data.description ? (
                 <SafeMarkdown>{topic.data.description}</SafeMarkdown>
@@ -141,13 +146,13 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         </h2>
 
         {topic.data.materials.length === 0 ? (
-          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-slate-500">
+          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-[var(--text-secondary)]">
             Для этой темы пока нет материалов.
           </p>
         ) : (
-          <ol className="mt-5 space-y-4">
+          <ol className="mt-4 divide-y divide-slate-200">
             {topic.data.materials.map((material) => (
-              <li className="rounded-[14px] border border-slate-200/80 p-5" key={material.id}>
+              <li className="min-w-0 py-4" key={material.id}>
                 <h3 className="mb-3 font-semibold text-slate-950">{material.title}</h3>
                 <div className="text-sm text-slate-700">
                   <MaterialRenderer
@@ -189,12 +194,12 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
             <h2 className="mt-1 text-xl font-semibold text-slate-950" id="topic-practice-heading">
               Практические задания
             </h2>
-            <p className="mt-1 text-sm text-slate-500">Выберите задание и проверьте решение по тестам.</p>
+            <p className="mt-1 text-sm text-[var(--text-secondary)]">Выберите задание и проверьте решение по тестам.</p>
           </div>
         </div>
 
         {tasks.isPending && (
-          <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-slate-500" aria-busy="true">
+          <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-[var(--text-secondary)]" aria-busy="true">
             Загружаем задания…
           </p>
         )}
@@ -212,7 +217,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         )}
 
         {tasks.isSuccess && practiceTasks.length === 0 && (
-          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-slate-500">
+          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-[var(--text-secondary)]">
             Для этой темы пока нет практических заданий.
           </p>
         )}
@@ -221,7 +226,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
           <ol className="mt-5 divide-y divide-slate-100">
             {practiceTasks.map((task, index) => (
               <li className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center" key={task.id}>
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-semibold text-slate-500">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-semibold text-[var(--text-secondary)]">
                   {index + 1}
                 </span>
                 <div className="min-w-0 flex-1">
@@ -235,11 +240,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
                     </span>
                   </div>
                 </div>
-                <Button
-                  type="button"
-                  variant={selectedTaskId === task.id ? "secondary" : "primary"}
-                  onClick={() => setSelectedTaskId(task.id)}
-                >
+                <Button type="button" variant="secondary" onClick={() => setSelectedTaskId(task.id)}>
                   {selectedTaskId === task.id ? "Открыто" : "Решить"}
                   <ChevronRight className="ml-2" size={16} aria-hidden="true" />
                 </Button>
@@ -264,7 +265,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
           >
             <ArrowLeft className="shrink-0 text-blue-600" size={18} aria-hidden="true" />
             <span className="min-w-0">
-              <span className="block text-xs text-slate-500">Предыдущая тема</span>
+              <span className="block text-xs text-[var(--text-secondary)]">Предыдущая тема</span>
               <span className="mt-1 block truncate font-medium text-slate-900">{previousTopic.title}</span>
             </span>
           </Link>
@@ -280,7 +281,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
             href={`/student/programs/${studentProgramId}/topics/${nextTopic.id}`}
           >
             <span className="min-w-0">
-              <span className="block text-xs text-slate-500">Следующая тема</span>
+              <span className="block text-xs text-[var(--text-secondary)]">Следующая тема</span>
               <span className="mt-1 block truncate font-medium text-slate-900">{nextTopic.title}</span>
             </span>
             <ArrowRight className="shrink-0 text-blue-600" size={18} aria-hidden="true" />

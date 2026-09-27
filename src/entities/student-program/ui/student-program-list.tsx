@@ -19,12 +19,12 @@ export function StudentProgramList({
   getProgramHref?: (programId: string) => string;
 }>) {
   return (
-    <ul className="grid gap-3">
+    <ul className="min-w-0 divide-y divide-slate-100">
       {programs.map((program) => {
         const content = (
           <>
             <span className="flex min-w-0 items-center gap-4">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
                 <BookOpenText size={19} />
               </span>
 
@@ -57,8 +57,8 @@ export function StudentProgramList({
           </>
         );
         const className = [
-          "flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 sm:flex-row sm:items-center sm:justify-between",
-          getProgramHref ? "group transition hover:border-blue-200 hover:bg-blue-50/20" : "",
+          "flex min-w-0 flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between",
+          getProgramHref ? "group transition hover:bg-slate-50" : "",
         ].join(" ");
 
         return (

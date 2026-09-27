@@ -150,7 +150,7 @@ export function TeacherProgramsView() {
                       </span>
                       {program.status === "DRAFT" && (
                         <div className="relative z-10 max-w-60">
-                          <ActivateLearningProgramButton programId={program.id} />
+                          <ActivateLearningProgramButton programId={program.id} triggerVariant="secondary" />
                         </div>
                       )}
                       <ChevronRight size={17} aria-hidden="true" className="text-slate-400" />

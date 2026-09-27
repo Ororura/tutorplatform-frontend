@@ -17,7 +17,7 @@ export function AdminSettingsPage() {
       </Link>
 
       <header className="mt-8 border-b border-neutral-200 pb-8">
-        <p className="text-sm text-neutral-500">Tutor Learning Platform / Settings</p>
+        <p className="text-sm text-neutral-500">Умнее Вместе / Settings</p>
 
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">Настройки платформы</h1>
 

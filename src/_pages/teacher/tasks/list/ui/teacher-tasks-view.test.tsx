@@ -63,6 +63,9 @@ describe("TeacherTasksView", () => {
   });
   it("renders backend task list and create action", () => {
     render(<TeacherTasksView />);
+    expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Банк заданий", level: 1 })).toBeInTheDocument();
+    expect(screen.getByText("Найдено заданий")).toBeInTheDocument();
     expect(screen.getByText("Задача")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Создать задание" })).toBeInTheDocument();
   });

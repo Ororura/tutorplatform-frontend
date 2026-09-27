@@ -81,7 +81,7 @@ function InvitationContent({ token }: Readonly<Props>) {
   return (
     <main className="mx-auto max-w-xl px-6 py-12 sm:py-16">
       <header className="border-b border-neutral-200 pb-8">
-        <p className="text-sm text-neutral-500">Tutor Learning Platform</p>
+        <p className="text-sm text-neutral-500">Умнее Вместе</p>
 
         <h1 className="mt-4 text-3xl font-semibold tracking-tight">Присоединиться к платформе</h1>
 

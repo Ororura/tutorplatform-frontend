@@ -55,7 +55,7 @@ function RegistrationContent() {
     return (
       <main className="mx-auto max-w-md px-6 py-16">
         <div className="rounded-2xl border border-neutral-200 bg-white p-7">
-          <p className="text-sm text-neutral-500">Tutor Learning Platform</p>
+          <p className="text-sm text-neutral-500">Умнее Вместе</p>
 
           <h1 className="mt-4 text-3xl font-semibold tracking-tight">Регистрация по приглашению</h1>
 

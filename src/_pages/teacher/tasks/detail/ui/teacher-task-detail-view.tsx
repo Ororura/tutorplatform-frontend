@@ -14,18 +14,20 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
   const subjects = useQuery(taskQueries.subjects());
   if (task.isPending)
     return (
-      <main className="mx-auto max-w-4xl px-6 py-12">
-        <p aria-busy="true">Загружаем задание…</p>
+      <main className="mx-auto min-w-0 max-w-5xl">
+        <p className="rounded-2xl bg-slate-50 p-6 text-sm text-slate-500" aria-busy="true">
+          Загружаем задание…
+        </p>
       </main>
     );
   if (task.isError) {
     const notFound = task.error instanceof ApiClientError && task.error.status === 404;
     return (
-      <main className="mx-auto max-w-4xl space-y-4 px-6 py-12">
-        <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-5" role="alert">
+      <main className="mx-auto min-w-0 max-w-5xl space-y-4">
+        <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5 text-sm text-red-700" role="alert">
           <p>{notFound ? "Задание не найдено" : "Не удалось загрузить задание."}</p>
           {!notFound && (
-            <Button type="button" onClick={() => task.refetch()}>
+            <Button type="button" variant="secondary" onClick={() => task.refetch()}>
               Повторить
             </Button>
           )}
@@ -39,14 +41,16 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
   const subject = subjects.data?.find((item) => item.id === task.data.subjectId);
   const tests = [...(task.data.testCases ?? [])].sort((a, b) => a.position - b.position);
   return (
-    <main className="mx-auto max-w-4xl space-y-8 px-6 py-12">
+    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
       <div>
         <Link className="text-sm text-neutral-600 underline" href="/teacher/tasks">
           ← Банк заданий
         </Link>
-        <div className="mt-4 flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-semibold">{task.data.title}</h1>
+        <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+              {task.data.title}
+            </h1>
             <div className="mt-3 flex flex-wrap gap-2 text-sm">
               <span>{taskTypePresentation[task.data.taskType]}</span>
               <span>·</span>
