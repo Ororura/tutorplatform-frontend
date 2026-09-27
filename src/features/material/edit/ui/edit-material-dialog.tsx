@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { type LessonMaterial, SafeMarkdown, topicMaterialQueries } from "@/entities/material";
@@ -25,7 +25,10 @@ export function isEditableMaterial(material: LessonMaterial): material is Editab
   return ["TEXT", "MARKDOWN", "CODE_EXAMPLE", "LINK"].includes(material.materialType);
 }
 
-export function EditMaterialDialog({ material }: Readonly<{ material: EditableMaterial }>) {
+export function EditMaterialDialog({
+  material,
+  renderTrigger,
+}: Readonly<{ material: EditableMaterial; renderTrigger?: (open: () => void) => ReactNode }>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const queryClient = useQueryClient();
   const mutation = useUpdateMaterialMutation(material.topicId, material.id);
@@ -94,9 +97,13 @@ export function EditMaterialDialog({ material }: Readonly<{ material: EditableMa
 
   return (
     <>
-      <Button type="button" variant="secondary" onClick={showDialog}>
-        Редактировать
-      </Button>
+      {renderTrigger ? (
+        renderTrigger(showDialog)
+      ) : (
+        <Button type="button" variant="secondary" onClick={showDialog}>
+          Редактировать
+        </Button>
+      )}
       <dialog
         ref={dialogRef}
         aria-labelledby={`edit-material-title-${material.id}`}

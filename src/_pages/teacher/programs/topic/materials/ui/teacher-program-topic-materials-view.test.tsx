@@ -69,17 +69,15 @@ vi.mock("@/entities/material", () => ({
   ),
 }));
 vi.mock("@/features/material/delete", () => ({
-  DeleteMaterialDialog: ({ material }: { material: { title: string } }) => (
-    <button type="button">Удалить «{material.title}»</button>
-  ),
+  DeleteMaterialDialog: ({ renderTrigger }: { renderTrigger: (open: () => void) => React.ReactNode }) =>
+    renderTrigger(vi.fn()),
 }));
 
 vi.mock("@/features/material/edit", () => ({
   isEditableMaterial: (material: { materialType?: string }) =>
     ["TEXT", "MARKDOWN", "CODE_EXAMPLE", "LINK"].includes(material.materialType ?? ""),
-  EditMaterialDialog: ({ material }: { material: { id: string } }) => (
-    <button type="button">Редактировать {material.id}</button>
-  ),
+  EditMaterialDialog: ({ renderTrigger }: { renderTrigger: (open: () => void) => React.ReactNode }) =>
+    renderTrigger(vi.fn()),
 }));
 vi.mock("@/features/material/reorder", () => ({
   useReorderLessonMaterialsMutation: () => mocks.reorderMutation,
@@ -232,9 +230,15 @@ describe("TeacherProgramTopicMaterialsView", () => {
 
     render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
 
-    expect(screen.getByRole("button", { name: "Редактировать text" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Редактировать file" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Редактировать image" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Действия материала «Текст»" }));
+    expect(screen.getByRole("menuitem", { name: "Редактировать" })).toBeInTheDocument();
+    fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
+    for (const title of ["Файл", "Изображение"]) {
+      fireEvent.click(screen.getByRole("button", { name: `Действия материала «${title}»` }));
+      expect(screen.queryByRole("menuitem", { name: "Редактировать" })).not.toBeInTheDocument();
+      expect(screen.getByRole("menuitem", { name: "Удалить" })).toBeInTheDocument();
+      fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
+    }
     expect(screen.getByRole("button", { name: "Загрузить файл" })).toBeInTheDocument();
   });
 
@@ -250,8 +254,7 @@ describe("TeacherProgramTopicMaterialsView", () => {
 
     expect(screen.queryByRole("button", { name: "Добавить материал" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Загрузить файл" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Переместить «Текст» вверх" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Редактировать text" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Действия материала «Текст»" })).not.toBeInTheDocument();
   });
 
   it("moves materials with buttons, disables boundary actions, and blocks actions while reordering", () => {
@@ -271,9 +274,12 @@ describe("TeacherProgramTopicMaterialsView", () => {
 
     const { rerender } = render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
 
-    expect(screen.getByRole("button", { name: "Переместить «Первый» вверх" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Переместить «Второй» вниз" })).toBeDisabled();
-    fireEvent.click(screen.getByRole("button", { name: "Переместить «Первый» вниз" }));
+    fireEvent.click(screen.getByRole("button", { name: "Действия материала «Второй»" }));
+    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
+    fireEvent.click(screen.getByRole("button", { name: "Действия материала «Первый»" }));
+    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("menuitem", { name: "Переместить вниз" }));
     expect(mocks.reorderMutate).toHaveBeenCalledWith({ orderedIds: ["material-2", "material-1"] });
 
     mocks.reorderMutation = { isPending: true, mutate: mocks.reorderMutate };
@@ -290,6 +296,7 @@ describe("TeacherProgramTopicMaterialsView", () => {
       .mockReturnValueOnce(queryResult())
       .mockReturnValueOnce(queryResult());
     rerender(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
-    expect(screen.getByRole("button", { name: "Переместить «Первый» вниз" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Действия материала «Первый»" }));
+    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toBeDisabled();
   });
 });

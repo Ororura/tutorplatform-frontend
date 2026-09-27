@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { ApiClientError } from "@/shared/api/client";
+import { ActionMenu, type ActionMenuItem } from "@/shared/ui/action-menu";
 import { Button } from "@/shared/ui/button";
 
 import {
@@ -178,7 +179,14 @@ export function LearningProgramTopicActions({
   moduleId,
   topic,
   editable,
-}: Readonly<{ programId: string; moduleId: string; topic: LearningProgramTopic; editable: boolean }>) {
+  reorderActions = [],
+}: Readonly<{
+  programId: string;
+  moduleId: string;
+  topic: LearningProgramTopic;
+  editable: boolean;
+  reorderActions?: ActionMenuItem[];
+}>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(topic.title);
@@ -218,20 +226,22 @@ export function LearningProgramTopicActions({
 
   return (
     <>
-      <Button
-        type="button"
-        variant="ghost"
-        className="h-8 px-2"
-        onClick={() => {
-          setTitle(topic.title);
-          setDescription(topic.description ?? "");
-          setStatus(topic.status);
-          setError("");
-          setOpen(true);
-        }}
-      >
-        Изменить
-      </Button>
+      <ActionMenu
+        label={`Действия темы «${topic.title}»`}
+        items={[
+          ...reorderActions,
+          {
+            label: "Редактировать",
+            onSelect: () => {
+              setTitle(topic.title);
+              setDescription(topic.description ?? "");
+              setStatus(topic.status);
+              setError("");
+              setOpen(true);
+            },
+          },
+        ]}
+      />
       <dialog
         ref={dialogRef}
         aria-labelledby={`edit-topic-${topic.id}`}

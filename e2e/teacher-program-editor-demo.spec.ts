@@ -76,16 +76,19 @@ test("demo teacher creates, edits, reorders, activates and archives a program", 
   await createTopic(firstModule, secondTopicTitle, "Описание второй темы");
 
   const firstTopic = firstModule.locator("ol > li").filter({ hasText: firstTopicTitle });
-  await firstTopic.getByRole("button", { name: "Изменить" }).click();
+  await firstTopic.getByRole("button", { name: `Действия темы «${firstTopicTitle}»` }).click();
+  await firstTopic.getByRole("menuitem", { name: "Редактировать" }).click();
   const editTopicDialog = page.locator("dialog[open]");
   await editTopicDialog.locator("select").selectOption("ACTIVE");
   await editTopicDialog.getByRole("button", { name: "Сохранить" }).click();
   await expect(firstTopic.locator("span").filter({ hasText: /^Активна$/ })).toBeVisible();
 
-  await firstModule.getByRole("button", { name: "Переместить модуль вниз" }).click();
+  await firstModule.getByRole("button", { name: `Действия модуля «${firstModuleTitle}»` }).click();
+  await firstModule.getByRole("menuitem", { name: "Переместить вниз" }).click();
   await expect(moduleItems.locator(":scope > details > summary h3")).toHaveText([secondModuleTitle, firstModuleTitle]);
 
-  await firstTopic.getByRole("button", { name: "Переместить тему вниз" }).click();
+  await firstTopic.getByRole("button", { name: `Действия темы «${firstTopicTitle}»` }).click();
+  await firstTopic.getByRole("menuitem", { name: "Переместить вниз" }).click();
   const topicItems = firstModule.locator("ol > li");
   await expect(topicItems.nth(0)).toContainText(secondTopicTitle);
   await expect(topicItems.nth(1)).toContainText(firstTopicTitle);
@@ -118,8 +121,7 @@ test("demo teacher creates, edits, reorders, activates and archives a program", 
   await expect(page.getByRole("button", { name: "Редактировать" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Добавить модуль" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Добавить тему" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Изменить" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /Переместить (модуль|тему)/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /^Действия (модуля|темы)/ })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Активировать" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Архивировать" })).toHaveCount(0);
 });

@@ -15,6 +15,7 @@ import { EditMaterialDialog, isEditableMaterial } from "@/features/material/edit
 import { useReorderLessonMaterialsMutation } from "@/features/material/reorder";
 import { UploadMaterialDialog } from "@/features/material/upload";
 import { ApiClientError } from "@/shared/api/client";
+import { ActionMenu } from "@/shared/ui/action-menu";
 import { Button } from "@/shared/ui/button";
 
 type Props = { programId: string; topicId: string };
@@ -123,10 +124,12 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
       {topicContext && (
         <>
           <header className="rounded-2xl border border-[var(--border)] bg-white p-6">
-            <p className="text-sm text-slate-500">{topicContext.module.title}</p>
-            <h1 className="mt-2 text-3xl font-semibold text-slate-950">{topicContext.topic.title}</h1>
+            <p className="break-words text-sm text-slate-500">{topicContext.module.title}</p>
+            <h1 className="mt-2 break-words text-3xl font-semibold text-slate-950">{topicContext.topic.title}</h1>
             {topicContext.topic.description && (
-              <p className="mt-4 whitespace-pre-line leading-7 text-slate-600">{topicContext.topic.description}</p>
+              <p className="mt-4 break-words whitespace-pre-line leading-7 text-slate-600">
+                {topicContext.topic.description}
+              </p>
             )}
           </header>
 
@@ -163,32 +166,43 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
             {sortedMaterials && (
               <MaterialList
                 materials={sortedMaterials}
-                renderActions={(material, index) =>
-                  materialsEditable ? (
-                    <div className="flex flex-wrap items-center justify-end gap-2">
-                      <Button
-                        aria-label={`Переместить «${material.title}» вверх`}
-                        disabled={index === 0 || reorderMaterials.isPending}
-                        onClick={() => moveMaterial(index, -1)}
-                        type="button"
-                        variant="secondary"
-                      >
-                        Вверх
-                      </Button>
-                      <Button
-                        aria-label={`Переместить «${material.title}» вниз`}
-                        disabled={index === sortedMaterials.length - 1 || reorderMaterials.isPending}
-                        onClick={() => moveMaterial(index, 1)}
-                        type="button"
-                        variant="secondary"
-                      >
-                        Вниз
-                      </Button>
-                      {isEditableMaterial(material) && <EditMaterialDialog material={material} />}
-                      <DeleteMaterialDialog material={material} />
-                    </div>
-                  ) : null
-                }
+                renderActions={(material, index) => {
+                  if (!materialsEditable) return null;
+                  const renderMenu = (onDelete: () => void, onEdit?: () => void) => (
+                    <ActionMenu
+                      label={`Действия материала «${material.title}»`}
+                      items={[
+                        {
+                          label: "Переместить вверх",
+                          disabled: index === 0 || reorderMaterials.isPending,
+                          onSelect: () => moveMaterial(index, -1),
+                        },
+                        {
+                          label: "Переместить вниз",
+                          disabled: index === sortedMaterials.length - 1 || reorderMaterials.isPending,
+                          onSelect: () => moveMaterial(index, 1),
+                        },
+                        ...(onEdit ? [{ label: "Редактировать", onSelect: onEdit }] : []),
+                        { label: "Удалить", destructive: true, separator: true, onSelect: onDelete },
+                      ]}
+                    />
+                  );
+                  return (
+                    <DeleteMaterialDialog
+                      material={material}
+                      renderTrigger={(onDelete) =>
+                        isEditableMaterial(material) ? (
+                          <EditMaterialDialog
+                            material={material}
+                            renderTrigger={(onEdit) => renderMenu(onDelete, onEdit)}
+                          />
+                        ) : (
+                          renderMenu(onDelete)
+                        )
+                      }
+                    />
+                  );
+                }}
               />
             )}
           </section>

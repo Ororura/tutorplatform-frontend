@@ -40,7 +40,8 @@ describe("learning program topic actions", () => {
 
   it("updates title, description, status and version", async () => {
     render(<LearningProgramTopicActions programId="program-1" moduleId="module-1" topic={topic} editable />);
-    fireEvent.click(screen.getByRole("button", { name: "Изменить" }));
+    fireEvent.click(screen.getByRole("button", { name: "Действия темы «Тема»" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Редактировать" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Название" }), { target: { value: " Обновлённая тема " } });
     fireEvent.change(screen.getByRole("combobox", { name: "Статус" }), { target: { value: "ACTIVE" } });
     fireEvent.click(screen.getByRole("button", { name: "Сохранить" }));
@@ -69,11 +70,12 @@ describe("learning program topic actions", () => {
     const { rerender } = render(
       <LearningProgramTopicActions programId="program-1" moduleId="module-1" topic={topic} editable />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Изменить" }));
+    fireEvent.click(screen.getByRole("button", { name: "Действия темы «Тема»" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Редактировать" }));
     fireEvent.click(screen.getByRole("button", { name: "Сохранить" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Тема больше не может быть изменена");
 
     rerender(<LearningProgramTopicActions programId="program-1" moduleId="module-1" topic={topic} editable={false} />);
-    expect(screen.queryByRole("button", { name: "Изменить" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Действия темы «Тема»" })).not.toBeInTheDocument();
   });
 });
