@@ -41,7 +41,10 @@ export function StudentHomeworkDetailView({
   if (homework.isPending) {
     return (
       <main>
-        <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
+        <div
+          className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-[var(--text-secondary)]"
+          aria-busy="true"
+        >
           Загружаем домашнее задание…
         </div>
       </main>
@@ -55,7 +58,7 @@ export function StudentHomeworkDetailView({
         : (homework.error as { status?: number }).status === 404;
 
     return (
-      <main className="space-y-4">
+      <main className="mx-auto min-w-0 max-w-5xl space-y-5">
         <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <p className="text-sm text-red-700">
             {notFound ? "Домашнее задание не найдено" : "Не удалось загрузить домашнее задание."}
@@ -69,7 +72,7 @@ export function StudentHomeworkDetailView({
         </div>
 
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-blue-600"
           href="/student/homework"
         >
           <ArrowLeft size={16} />
@@ -88,10 +91,10 @@ export function StudentHomeworkDetailView({
   const openedItem = items.find((item) => item.id === openedItemId);
 
   return (
-    <main className="space-y-4">
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+      <section className="py-2">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] transition hover:text-blue-600"
           href="/student/homework"
         >
           <ArrowLeft size={16} />
@@ -107,7 +110,9 @@ export function StudentHomeworkDetailView({
             <div className="min-w-0">
               <p className="text-sm font-medium text-blue-600">Домашняя работа</p>
 
-              <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">{data.title}</h1>
+              <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+                {data.title}
+              </h1>
             </div>
           </div>
 
@@ -117,26 +122,26 @@ export function StudentHomeworkDetailView({
         </div>
       </section>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="space-y-5">
         <div className="min-w-0 space-y-4">
           <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
             <dl className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <dt className="text-sm text-slate-500">Назначено</dt>
+              <div className="py-2">
+                <dt className="text-sm text-[var(--text-secondary)]">Назначено</dt>
 
                 <dd className="mt-2 text-sm font-medium text-slate-900">{formatHomeworkDate(data.assignedAt)}</dd>
               </div>
 
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <dt className="text-sm text-slate-500">Срок</dt>
+              <div className="py-2">
+                <dt className="text-sm text-[var(--text-secondary)]">Срок</dt>
 
                 <dd className="mt-2 text-sm font-medium text-slate-900">
                   {data.dueAt ? formatHomeworkDate(data.dueAt) : "Без срока"}
                 </dd>
               </div>
 
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <dt className="text-sm text-slate-500">Выполнено</dt>
+              <div className="py-2">
+                <dt className="text-sm text-[var(--text-secondary)]">Выполнено</dt>
 
                 <dd className="mt-2 text-sm font-medium text-slate-900">
                   {data.completedAt ? formatHomeworkDate(data.completedAt) : "—"}
@@ -159,7 +164,7 @@ export function StudentHomeworkDetailView({
                 Задания
               </h2>
 
-              <p className="mt-1 text-sm text-slate-500">Выполняйте задания по порядку.</p>
+              <p className="mt-1 text-sm text-[var(--text-secondary)]">Выполняйте задания по порядку.</p>
             </div>
 
             <ol className="mt-5 divide-y divide-slate-100" aria-labelledby="items-heading">
@@ -177,12 +182,12 @@ export function StudentHomeworkDetailView({
                     className="flex flex-col gap-4 py-5 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
                     key={item.id}
                   >
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-semibold text-slate-500">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-semibold text-[var(--text-secondary)]">
                       {item.position + 1}
                     </span>
 
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-slate-950">{item.task.title}</h3>
+                      <h3 className="break-words font-semibold text-slate-950">{item.task.title}</h3>
 
                       <div className="mt-2 flex flex-wrap gap-2 text-xs">
                         <span className="rounded-full bg-slate-100 px-2.5 py-1 text-slate-600">
@@ -208,11 +213,7 @@ export function StudentHomeworkDetailView({
                     </div>
 
                     {supported ? (
-                      <Button
-                        type="button"
-                        variant={openedItemId === item.id ? "secondary" : "primary"}
-                        onClick={() => setOpenedItemId(item.id)}
-                      >
+                      <Button type="button" variant="secondary" onClick={() => setOpenedItemId(item.id)}>
                         {openedItemId === item.id ? "Открыто" : "Решить"}
 
                         <ChevronRight size={16} className="ml-2" />
@@ -236,15 +237,15 @@ export function StudentHomeworkDetailView({
           )}
         </div>
 
-        <aside className="xl:sticky xl:top-24 xl:self-start">
-          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
+        <aside>
+          <section className="border-t border-[var(--border)] pt-4">
             <CheckCircle2 size={21} className="text-blue-600" />
 
             <h2 className="mt-4 font-semibold text-slate-950">Прогресс работы</h2>
 
-            <div className="mt-5 rounded-2xl bg-white/80 p-4">
+            <div className="mt-5 py-2">
               <div className="flex items-end justify-between">
-                <span className="text-sm text-slate-500">Выполнено</span>
+                <span className="text-sm text-[var(--text-secondary)]">Выполнено</span>
 
                 <span className="text-2xl font-semibold text-slate-950">
                   {items.filter((item) => item.passed).length}
@@ -253,7 +254,7 @@ export function StudentHomeworkDetailView({
               </div>
             </div>
 
-            <div className="mt-3 rounded-2xl bg-white/80 p-4">
+            <div className="mt-3 py-2">
               <div className="flex items-center gap-2 text-sm text-slate-600">
                 <CalendarClock size={16} />
 

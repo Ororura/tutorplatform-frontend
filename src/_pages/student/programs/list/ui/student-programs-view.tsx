@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, BookOpenText, Layers3 } from "lucide-react";
+import { ArrowRight, BookOpenText } from "lucide-react";
 import Link from "next/link";
 
 import { programStatusLabels, studentProgramQueries } from "@/entities/student-program";
@@ -18,26 +18,28 @@ export function StudentProgramsView() {
   const programs = useQuery(studentProgramQueries.currentList());
 
   return (
-    <main className="space-y-4">
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+    <main className="space-y-6">
+      <section className="py-2">
         <div className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[var(--text-secondary)]">
             <BookOpenText size={22} aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm font-medium text-blue-600">Учебный кабинет</p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Мои программы</h1>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <p className="text-sm font-medium text-[var(--text-secondary)]">Учебный кабинет</p>
+            <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+              Мои программы
+            </h1>
+            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
               Программы обучения, назначенные вашим преподавателем.
             </p>
           </div>
         </div>
       </section>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
+      <div className="space-y-5">
+        <section className="min-w-0">
           {programs.isPending && (
-            <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+            <p className="rounded-2xl bg-slate-50 p-5 text-sm text-[var(--text-secondary)]" aria-busy="true">
               Загружаем программы…
             </p>
           )}
@@ -52,10 +54,10 @@ export function StudentProgramsView() {
           )}
 
           {programs.data?.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
+            <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
               <BookOpenText size={30} className="mx-auto text-blue-500" aria-hidden="true" />
               <p className="mt-4 font-semibold text-slate-950">Программ пока нет</p>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">
                 Когда преподаватель назначит программу обучения, она появится здесь.
               </p>
             </div>
@@ -64,21 +66,19 @@ export function StudentProgramsView() {
           {programs.data && programs.data.length > 0 && (
             <div className="space-y-5">
               <div>
-                <h2 className="text-xl font-semibold text-slate-950">Назначенные программы</h2>
-                <p className="mt-1 text-sm text-slate-500">Откройте программу, чтобы посмотреть её содержание.</p>
+                <h2 className="text-base font-semibold text-slate-950">Назначенные программы</h2>
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                  Откройте программу, чтобы посмотреть её содержание.
+                </p>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
                 {programs.data.map((program) => (
                   <article
                     key={program.id}
-                    className="flex min-h-64 flex-col rounded-[14px] border border-slate-200/80 bg-[var(--surface-muted)] p-5 transition hover:border-blue-200 hover:bg-blue-50/40"
+                    className="grid min-w-0 gap-3 px-3 py-4 transition hover:bg-white/80 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-                        <BookOpenText size={20} aria-hidden="true" />
-                      </span>
-
+                    <div className="flex items-center gap-3 sm:col-start-2 sm:row-start-1">
                       <span
                         className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusClassNames[program.status]}`}
                       >
@@ -86,18 +86,16 @@ export function StudentProgramsView() {
                       </span>
                     </div>
 
-                    <div className="mt-5 flex-1">
-                      <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
-                        {program.subject.name}
-                      </p>
-                      <h3 className="mt-1 text-lg font-semibold text-slate-950">{program.title}</h3>
-                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-500">
+                    <div className="min-w-0 sm:col-start-1 sm:row-start-1">
+                      <p className="text-sm font-medium text-[var(--text-secondary)]">{program.subject.name}</p>
+                      <h3 className="mt-1 break-words font-semibold text-slate-950">{program.title}</h3>
+                      <p className="mt-1 line-clamp-2 break-words text-sm leading-6 text-[var(--text-secondary)]">
                         {program.description || "Описание программы пока не добавлено."}
                       </p>
                     </div>
 
                     <Link
-                      className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:bg-blue-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600"
+                      className="inline-flex min-h-10 items-center gap-2 justify-self-start rounded-md text-sm font-medium text-blue-600 hover:text-blue-700 sm:col-start-3 sm:row-start-1 sm:justify-self-end"
                       href={`/student/programs/${program.id}`}
                     >
                       Открыть программу
@@ -110,18 +108,12 @@ export function StudentProgramsView() {
           )}
         </section>
 
-        <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-white text-blue-600">
-              <Layers3 size={19} aria-hidden="true" />
-            </span>
-            <h2 className="mt-4 font-semibold text-slate-950">Учебный план</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">Все назначенные вам программы в одном месте.</p>
-            <div className="mt-5 flex items-end justify-between rounded-2xl bg-white/80 p-4">
-              <span className="text-sm text-slate-500">Всего программ</span>
-              <span className="text-2xl font-semibold text-slate-950">{programs.data?.length ?? "—"}</span>
-            </div>
-          </section>
+        <aside className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[var(--border)] pt-4 text-sm text-[var(--text-secondary)]">
+          <p>Все назначенные вам программы в одном месте.</p>
+          <p>
+            Всего программ:{" "}
+            <span className="font-medium tabular-nums text-slate-900">{programs.data?.length ?? "—"}</span>
+          </p>
         </aside>
       </div>
     </main>

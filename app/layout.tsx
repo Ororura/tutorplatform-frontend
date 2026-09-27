@@ -5,7 +5,7 @@ import "@/_app/styles/globals.css";
 import { DemoModeProvider } from "@/shared/config";
 
 export const metadata: Metadata = {
-  title: "Tutor Learning Platform",
+  title: "Умнее Вместе",
   description: "Digital tutoring workflow and transparent learning progress.",
   icons: {
     icon: "/favicon.png",

@@ -10,7 +10,7 @@ export function AdminInvitationsPage() {
       </Link>
 
       <header className="mt-8 border-b border-neutral-200 pb-8">
-        <p className="text-sm text-neutral-500">Tutor Learning Platform / Invitations</p>
+        <p className="text-sm text-neutral-500">Умнее Вместе / Invitations</p>
 
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">Приглашения преподавателей</h1>
 

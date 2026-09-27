@@ -52,7 +52,7 @@ function RegistrationContent() {
           className="mx-auto w-full max-w-[560px] rounded-[24px] border border-white/90 bg-white/90 p-6 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-9"
           aria-busy="true"
         >
-          <p className="text-sm font-medium text-blue-600">Tutor Learning Platform</p>
+          <p className="text-sm font-medium text-blue-600">Умнее Вместе</p>
           <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
             Проверяем доступность регистрации
           </h1>
@@ -66,7 +66,7 @@ function RegistrationContent() {
     return (
       <RegistrationShell>
         <section className="mx-auto w-full max-w-[560px] rounded-[24px] border border-white/90 bg-white/90 p-6 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-9">
-          <p className="text-sm font-medium text-blue-600">Tutor Learning Platform</p>
+          <p className="text-sm font-medium text-blue-600">Умнее Вместе</p>
           <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
             Не удалось проверить регистрацию
           </h1>
@@ -172,9 +172,7 @@ function RegistrationShell({ children }: Readonly<{ children: ReactNode }>) {
             <BookOpen className="size-6" strokeWidth={2.2} aria-hidden="true" />
           </span>
           <span>
-            <span className="block text-base font-bold tracking-tight text-slate-900 sm:text-lg">
-              Tutor Learning Platform
-            </span>
+            <span className="block text-base font-bold tracking-tight text-slate-900 sm:text-lg">Умнее Вместе</span>
             <span className="hidden text-xs text-slate-500 sm:block">Учиться. Развиваться. Вместе.</span>
           </span>
         </Link>
@@ -221,7 +219,7 @@ function RegistrationShell({ children }: Readonly<{ children: ReactNode }>) {
       </div>
 
       <footer className="relative z-10 mx-auto mt-auto flex w-full max-w-[1280px] shrink-0 flex-col gap-2 px-5 pb-5 text-center text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10 lg:pb-7">
-        <p>© {new Date().getFullYear()} Tutor Learning Platform. Все права защищены.</p>
+        <p>© {new Date().getFullYear()} Умнее Вместе. Все права защищены.</p>
         <p>Обучение, которое открывает возможности</p>
       </footer>
     </main>

@@ -21,7 +21,7 @@ export function AdminDashboardPage() {
   return (
     <main className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6">
       <header className="border-b border-neutral-200 pb-8">
-        <p className="text-sm text-neutral-500">Tutor Learning Platform / Administration</p>
+        <p className="text-sm text-neutral-500">Умнее Вместе / Administration</p>
 
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">Управление платформой</h1>
 

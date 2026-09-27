@@ -38,6 +38,9 @@ describe("TaskList", () => {
     ["Лёгкая", "Средняя", "Сложная", "Черновик", "Активно", "В архиве"].forEach((label) =>
       expect(screen.getByText(label)).toBeInTheDocument(),
     );
+    expect(screen.getByText("Черновик")).toHaveClass("bg-amber-50", "text-amber-700");
+    expect(screen.getByText("Активно")).toHaveClass("bg-emerald-50", "text-emerald-700");
+    expect(screen.getByText("В архиве")).toHaveClass("bg-slate-100", "text-slate-600");
     expect(screen.getAllByText("Python")).toHaveLength(3);
     expect(screen.getByRole("link", { name: /Code medium/ })).toHaveAttribute("href", "/teacher/tasks/two");
   });

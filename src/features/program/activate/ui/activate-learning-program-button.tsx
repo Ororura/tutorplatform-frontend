@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
@@ -9,9 +9,10 @@ import { useActivateLearningProgramMutation } from "../api/activate-learning-pro
 
 type Props = {
   programId: string;
+  triggerVariant?: ComponentProps<typeof Button>["variant"];
 };
 
-export function ActivateLearningProgramButton({ programId }: Readonly<Props>) {
+export function ActivateLearningProgramButton({ programId, triggerVariant = "primary" }: Readonly<Props>) {
   const mutation = useActivateLearningProgramMutation();
   const [error, setError] = useState("");
 
@@ -41,7 +42,7 @@ export function ActivateLearningProgramButton({ programId }: Readonly<Props>) {
 
   return (
     <div className="space-y-2">
-      <Button type="button" disabled={mutation.isPending} onClick={() => void activate()}>
+      <Button type="button" variant={triggerVariant} disabled={mutation.isPending} onClick={() => void activate()}>
         {mutation.isPending ? "Активируем…" : "Активировать"}
       </Button>
 

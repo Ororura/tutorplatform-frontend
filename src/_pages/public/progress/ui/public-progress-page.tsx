@@ -18,7 +18,7 @@ export function PublicProgressPage({ token }: Readonly<{ token: string }>) {
             <ChartNoAxesCombined size={22} aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm font-medium text-blue-600">Tutor Learning Platform</p>
+            <p className="text-sm font-medium text-blue-600">Умнее Вместе</p>
             <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
               Текущий прогресс ученика
             </h1>

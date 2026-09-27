@@ -110,7 +110,7 @@ function TaskSolutionContent({
 
   return (
     <section
-      className="space-y-6 rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_12px_40px_rgba(45,79,135,0.06)]"
+      className="space-y-6 rounded-xl border border-[var(--border)] bg-white p-4 sm:p-6"
       aria-labelledby={`task-${item.id}-heading`}
     >
       <TaskHeader item={item} />

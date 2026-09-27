@@ -21,15 +21,17 @@ export function StudentProgressView() {
 
   return (
     <main className="mx-auto max-w-7xl space-y-4">
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+      <section className="py-2">
         <div className="flex items-center gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
             <ChartNoAxesCombined size={22} aria-hidden="true" />
           </span>
           <div>
             <p className="text-sm font-medium text-blue-600">Учебный кабинет</p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Мой прогресс</h1>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+              Мой прогресс
+            </h1>
+            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
               Следите за результатами обучения и продолжайте заниматься в своей программе.
             </p>
           </div>
@@ -150,7 +152,7 @@ function hasLearningData(progress: {
 
 function Loading({ label }: Readonly<{ label: string }>) {
   return (
-    <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+    <p className="rounded-2xl bg-slate-50 p-5 text-sm text-[var(--text-secondary)]" aria-busy="true">
       {label}
     </p>
   );
@@ -184,7 +186,7 @@ function EmptyState({
     <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
       <Icon size={30} className="mx-auto text-blue-500" aria-hidden="true" />
       <p className="mt-4 font-semibold text-slate-950">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">{description}</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">{description}</p>
       <Link
         className="mt-5 inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700"
         href={href}
