@@ -17,7 +17,7 @@ import { DemoAccountHelper } from "./demo-account-helper";
 import { RegistrationAvailability } from "./registration-availability";
 
 const inputClassName =
-  "h-12 w-full rounded-xl border bg-white pl-11 pr-4 text-[0.9375rem] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500";
+  "h-12 w-full rounded-xl border bg-white pl-11 pr-4 text-base text-slate-900 sm:text-[0.9375rem] outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500";
 
 export function LoginForm() {
   const router = useRouter();
@@ -75,7 +75,6 @@ export function LoginForm() {
             id="login-email"
             type="email"
             autoComplete="email"
-            autoFocus
             placeholder="example@domain.com"
             disabled={login.isPending}
             aria-invalid={Boolean(errors.email)}

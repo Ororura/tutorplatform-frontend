@@ -42,11 +42,30 @@ describe("MaterialRenderer", () => {
     expect(container.querySelector("script")).toBeNull();
   });
 
+  it("parses Markdown formatting while leaving TEXT markers literal", () => {
+    const content =
+      "Python — язык программирования.\nДля запуска файла используйте `python3 hello.py`.\nНужна версия **3.11 или новее**.";
+    const { container, rerender } = render(<MaterialRenderer material={material("MARKDOWN", { content })} />);
+    expect(screen.getByText("python3 hello.py", { selector: "code" })).toBeInTheDocument();
+    expect(screen.getByText("3.11 или новее", { selector: "strong" })).toBeInTheDocument();
+    expect(container.textContent).not.toContain("`");
+    expect(container.textContent).not.toContain("**");
+
+    rerender(<MaterialRenderer material={material("TEXT", { content })} />);
+    expect(container.querySelector("code, strong")).toBeNull();
+    expect(container.textContent).toContain("`python3 hello.py`");
+    expect(container.textContent).toContain("**3.11 или новее**");
+  });
+
   it("renders CODE_EXAMPLE as read-only code", () => {
     const { container } = render(
-      <MaterialRenderer material={material("CODE_EXAMPLE", { content: "for i in range(3):\n    print(i)" })} />,
+      <MaterialRenderer
+        material={material("CODE_EXAMPLE", { content: "for i in range(3):\n    print('**literal**')" })}
+      />,
     );
     expect(container.querySelector("pre code")).toHaveTextContent("for i in range(3):");
+    expect(container.querySelector("pre code")).toHaveTextContent("**literal**");
+    expect(container.querySelector("strong")).toBeNull();
   });
 
   it("renders a safe external LINK", () => {

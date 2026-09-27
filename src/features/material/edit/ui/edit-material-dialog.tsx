@@ -34,6 +34,7 @@ export function EditMaterialDialog({
   const mutation = useUpdateMaterialMutation(material.topicId, material.id);
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("editor");
+  const [materialType, setMaterialType] = useState<EditableMaterial["materialType"]>(material.materialType);
   const [title, setTitle] = useState(material.title);
   const [value, setValue] = useState(
     material.materialType === "LINK" ? (material.externalUrl ?? "") : (material.content ?? ""),
@@ -48,6 +49,7 @@ export function EditMaterialDialog({
 
   const showDialog = () => {
     setMode("editor");
+    setMaterialType(material.materialType);
     setTitle(material.title);
     setValue(material.materialType === "LINK" ? (material.externalUrl ?? "") : (material.content ?? ""));
     setError("");
@@ -68,10 +70,10 @@ export function EditMaterialDialog({
     setConflict(false);
     try {
       await mutation.mutateAsync({
-        materialType: material.materialType,
+        materialType,
         title: title.trim(),
-        content: material.materialType === "LINK" ? null : value,
-        externalUrl: material.materialType === "LINK" ? value.trim() : null,
+        content: materialType === "LINK" ? null : value,
+        externalUrl: materialType === "LINK" ? value.trim() : null,
         position: material.position,
         version: material.version,
       });
@@ -93,7 +95,7 @@ export function EditMaterialDialog({
     setOpen(false);
   };
 
-  const isMarkdown = material.materialType === "MARKDOWN";
+  const isMarkdown = materialType === "MARKDOWN";
 
   return (
     <>
@@ -129,11 +131,26 @@ export function EditMaterialDialog({
           </label>
           <label className="block space-y-2">
             <span className="text-sm font-medium">Тип материала</span>
-            <input
-              className="h-11 w-full rounded-md border bg-slate-50 px-3 text-slate-600"
-              value={materialTypeLabels[material.materialType]}
-              readOnly
-            />
+            {material.materialType === "TEXT" || material.materialType === "MARKDOWN" ? (
+              <select
+                aria-label="Тип материала"
+                className="h-11 w-full rounded-md border px-3"
+                value={materialType}
+                onChange={(event) => {
+                  setMaterialType(event.target.value as "TEXT" | "MARKDOWN");
+                  setMode("editor");
+                }}
+              >
+                <option value="TEXT">Текст</option>
+                <option value="MARKDOWN">Markdown</option>
+              </select>
+            ) : (
+              <input
+                className="h-11 w-full rounded-md border bg-slate-50 px-3 text-slate-600"
+                value={materialTypeLabels[materialType]}
+                readOnly
+              />
+            )}
           </label>
           <div className="space-y-2">
             {isMarkdown && (
@@ -166,7 +183,7 @@ export function EditMaterialDialog({
                   <p className="text-sm text-slate-500">Предпросмотр пуст.</p>
                 )}
               </div>
-            ) : material.materialType === "LINK" ? (
+            ) : materialType === "LINK" ? (
               <label className="block space-y-2">
                 <span className="text-sm font-medium">URL</span>
                 <input
@@ -182,7 +199,7 @@ export function EditMaterialDialog({
                 <span className="text-sm font-medium">Содержимое</span>
                 <textarea
                   aria-label={isMarkdown ? "Содержимое Markdown" : "Содержимое"}
-                  className={`min-h-64 w-full resize-y rounded-md border p-3 text-sm ${material.materialType === "CODE_EXAMPLE" ? "font-mono" : ""}`}
+                  className={`min-h-64 w-full resize-y rounded-md border p-3 text-sm ${materialType === "CODE_EXAMPLE" ? "font-mono" : ""}`}
                   value={value}
                   onChange={(event) => setValue(event.target.value)}
                 />
