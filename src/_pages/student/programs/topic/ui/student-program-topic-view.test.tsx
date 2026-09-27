@@ -5,10 +5,16 @@ import { ApiClientError } from "@/shared/api/client";
 
 import { StudentProgramTopicView } from "./student-program-topic-view";
 
-const mocks = vi.hoisted(() => ({ useQuery: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  useQuery: vi.fn(),
+  setQueryData: vi.fn(),
+}));
 
 vi.mock("@tanstack/react-query", () => ({
   useQuery: mocks.useQuery,
+  useQueryClient: () => ({
+    setQueryData: mocks.setQueryData,
+  }),
   queryOptions: (value: unknown) => value,
 }));
 
@@ -40,14 +46,28 @@ const program = {
       id: "module-1",
       title: "Основы",
       topics: [
-        { id: "topic-before", title: "Введение" },
-        { id: "topic-current", title: "Переменные" },
+        {
+          id: "topic-before",
+          title: "Введение",
+          progressStatus: "COMPLETED" as const,
+        },
+        {
+          id: "topic-current",
+          title: "Переменные",
+          progressStatus: "IN_PROGRESS" as const,
+        },
       ],
     },
     {
       id: "module-2",
       title: "Практика",
-      topics: [{ id: "topic-after", title: "Условия" }],
+      topics: [
+        {
+          id: "topic-after",
+          title: "Условия",
+          progressStatus: "AVAILABLE" as const,
+        },
+      ],
     },
   ],
 };
@@ -120,6 +140,7 @@ function apiError(status: number) {
 describe("StudentProgramTopicView", () => {
   beforeEach(() => {
     mocks.useQuery.mockReset();
+    mocks.setQueryData.mockReset();
     vi.unstubAllGlobals();
   });
 
@@ -204,6 +225,82 @@ describe("StudentProgramTopicView", () => {
 
     expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Повторить" })).not.toBeInTheDocument();
+  });
+
+  it("shows that a topic is locked when backend returns STUDENT_TOPIC_LOCKED", () => {
+    const lockedError = new ApiClientError(403, {
+      code: "STUDENT_TOPIC_LOCKED",
+      message: "Topic is locked",
+      timestamp: "2026-09-21T00:00:00Z",
+      traceId: "trace",
+      details: [],
+    });
+
+    mockQueries({
+      data: undefined,
+      error: lockedError,
+      isPending: false,
+      isError: true,
+      isSuccess: false,
+      refetch: vi.fn(),
+    });
+
+    render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
+
+    expect(
+      screen.getByRole("heading", {
+        name: "Тема пока заблокирована",
+      }),
+    ).toBeInTheDocument();
+
+    expect(screen.getByText("Преподаватель ещё не открыл доступ к этой теме.")).toBeInTheDocument();
+  });
+
+  it("does not link to a locked adjacent topic", () => {
+    const lockedProgram = {
+      ...program,
+      modules: program.modules.map((module) =>
+        module.id === "module-2"
+          ? {
+              ...module,
+              topics: module.topics.map((item) => ({
+                ...item,
+                progressStatus: "LOCKED" as const,
+              })),
+            }
+          : module,
+      ),
+    };
+
+    mockQueries(queryState(topic), queryState(lockedProgram), queryState([]));
+
+    render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
+
+    expect(
+      screen.queryByRole("link", {
+        name: /Следующая тема\s*Условия/,
+      }),
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByText("Следующая тема заблокирована")).toBeInTheDocument();
+  });
+
+  it("synchronizes the topic progress status into the program cache", () => {
+    mockQueries();
+
+    render(<StudentProgramTopicView studentProgramId="program-1" topicId="topic-current" />);
+
+    expect(mocks.setQueryData).toHaveBeenCalled();
+
+    const updater = mocks.setQueryData.mock.calls[0]?.[1];
+
+    expect(typeof updater).toBe("function");
+
+    const updated = updater(program);
+
+    expect(updated.modules[0].topics.find((item: { id: string }) => item.id === "topic-current").progressStatus).toBe(
+      "IN_PROGRESS",
+    );
   });
 
   it("retries both requests after a transient error", () => {
