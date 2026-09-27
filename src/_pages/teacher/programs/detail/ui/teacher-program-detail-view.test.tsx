@@ -57,6 +57,10 @@ vi.mock("@/features/program/archive", () => ({
   ArchiveLearningProgramButton: () => <button type="button">Архивировать</button>,
 }));
 
+vi.mock("@/features/program/duplicate/model/use-duplicate-learning-program-mutation", () => ({
+  useDuplicateLearningProgramMutation: () => ({ mutateAsync: vi.fn(), isPending: false }),
+}));
+
 vi.mock("@/features/program/edit", () => ({
   EditLearningProgramDialog: () => <button type="button">Редактировать</button>,
 }));
@@ -198,6 +202,19 @@ describe("TeacherProgramDetailView", () => {
     const modules = screen.getAllByRole("listitem").filter((item) => item.querySelector("details"));
     expect(modules[0]).toHaveTextContent("Числа");
     expect(modules[1]).toHaveTextContent("Уравнения");
+  });
+
+  it.each([
+    { status: "DRAFT", hasAssignments: false, editable: true },
+    { status: "ACTIVE", hasAssignments: false, editable: true },
+    { status: "ACTIVE", hasAssignments: true, editable: false },
+    { status: "ARCHIVED", hasAssignments: true, editable: false },
+  ])("offers duplication for $status (assigned: $hasAssignments, editable: $editable)", (state) => {
+    mocks.useQuery.mockReturnValue({ data: { ...program, ...state }, isPending: false, isError: false });
+    render(<TeacherProgramDetailView programId="algebra" />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Создать копию" }));
+    expect(screen.getByRole("dialog", { name: "Создать копию программы?" })).toBeInTheDocument();
   });
 
   it("reorders modules and topics with complete ordered IDs", () => {
