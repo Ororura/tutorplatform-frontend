@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { StudentProgramDetails } from "../api/student-program-queries";
@@ -70,6 +70,52 @@ describe("StudentProgramDetail", () => {
       expect(screen.getByText(label)).toBeInTheDocument();
     },
   );
+
+  it("supports teacher topic access selection without making started topics selectable", () => {
+    const onToggle = vi.fn();
+
+    render(
+      <StudentProgramDetail
+        program={details}
+        studentId="student-1"
+        topicSelection={{
+          enabled: true,
+          selectedTopicIds: new Set(["topic-4"]),
+          isSelectable: (topic) =>
+            topic.topicStatus === "ACTIVE" &&
+            (topic.progressStatus === "LOCKED" || topic.progressStatus === "AVAILABLE"),
+          onToggle,
+        }}
+      />,
+    );
+
+    const available = screen.getByRole("checkbox", {
+      name: "Выбрать тему «Доступная тема»",
+    });
+
+    const locked = screen.getByRole("checkbox", {
+      name: "Выбрать тему «Закрытая тема»",
+    });
+
+    const inProgress = screen.getByRole("checkbox", {
+      name: "Выбрать тему «Вторая тема по API»",
+    });
+
+    const completed = screen.getByRole("checkbox", {
+      name: "Выбрать тему «Первая тема по API»",
+    });
+
+    expect(available).toBeEnabled();
+    expect(locked).toBeEnabled();
+    expect(locked).toBeChecked();
+
+    expect(inProgress).toBeDisabled();
+    expect(completed).toBeDisabled();
+
+    fireEvent.click(available);
+
+    expect(onToggle).toHaveBeenCalledWith("topic-3", true);
+  });
 
   it("opens a topic with complete student and program context", () => {
     render(<StudentProgramDetail program={details} studentId="student-1" />);
