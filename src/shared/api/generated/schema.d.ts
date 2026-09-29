@@ -1889,6 +1889,7 @@ export interface components {
       title?: string;
       description?: string;
       materials?: components["schemas"]["Material"][];
+      tasks?: components["schemas"]["Task"][];
     };
     Topics: {
       completed?: components["schemas"]["Topic"][];
@@ -1990,6 +1991,8 @@ export interface components {
       topicCount?: number;
       /** Format: int32 */
       materialCount?: number;
+      /** Format: int32 */
+      taskCount?: number;
       createdModuleIds?: string[];
     };
     ContentPackagePreviewUpload: {
@@ -2011,11 +2014,15 @@ export interface components {
       programId?: string;
       digest?: string;
       /** Format: int32 */
+      schemaVersion?: number;
+      /** Format: int32 */
       moduleCount?: number;
       /** Format: int32 */
       topicCount?: number;
       /** Format: int32 */
       materialCount?: number;
+      /** Format: int32 */
+      taskCount?: number;
       modules?: components["schemas"]["Module"][];
       errors?: components["schemas"]["ContentPackagePreviewError"][];
     };
@@ -2030,6 +2037,27 @@ export interface components {
       title?: string;
       description?: string;
       topics?: components["schemas"]["Topic"][];
+    };
+    ProgrammingConfig: {
+      language?: string;
+      starterCode?: string;
+      executionEnabled?: boolean;
+      /** Format: int32 */
+      timeLimitMs?: number;
+      /** Format: int32 */
+      memoryLimitMb?: number;
+    };
+    Task: {
+      title?: string;
+      descriptionMarkdown?: string;
+      taskType?: string;
+      difficulty?: string;
+      required?: boolean;
+      programmingConfig?: components["schemas"]["ProgrammingConfig"];
+      /** Format: int32 */
+      testCaseCount?: number;
+      /** Format: int32 */
+      hiddenTestCaseCount?: number;
     };
     ContentPackagePreviewFailureResponse: {
       valid?: boolean;
