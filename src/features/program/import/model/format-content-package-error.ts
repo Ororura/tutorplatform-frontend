@@ -127,7 +127,7 @@ function friendlyError(error: ContentPackagePreviewError, preview?: ContentPacka
     case "DUPLICATE_KEY":
       return `${place}поле ${error.path || "без пути"} указано повторно.`;
     case "UNSUPPORTED_SCHEMA_VERSION":
-      return "Указана неподдерживаемая версия схемы. Используйте schemaVersion: 1.";
+      return "Указана неподдерживаемая версия схемы. Используйте schemaVersion: 1 или 2.";
     case "INVALID_PACKAGE_KIND":
       return "Указан неподдерживаемый тип пакета. Используйте kind: modules.";
     case "INVALID_UTF8":

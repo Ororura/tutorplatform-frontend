@@ -11,7 +11,7 @@ describe("formatContentPackageError", () => {
     ["INVALID_YAML", "root", "Проверьте синтаксис"],
     ["UNKNOWN_FIELD", "modules[0].wrong", "не предусмотрено форматом"],
     ["DUPLICATE_KEY", "modules[0].title", "указано повторно"],
-    ["UNSUPPORTED_SCHEMA_VERSION", "schemaVersion", "schemaVersion: 1"],
+    ["UNSUPPORTED_SCHEMA_VERSION", "schemaVersion", "schemaVersion: 1 или 2"],
     ["INVALID_PACKAGE_KIND", "kind", "kind: modules"],
     ["INVALID_UTF8", "root", "UTF-8"],
     ["FILE_TOO_LARGE", "root", "1 МиБ"],

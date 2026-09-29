@@ -1,11 +1,18 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, expectTypeOf, it, vi } from "vitest";
 
 import { learningProgramQueries } from "@/entities/learning-program";
 import { apiTransport } from "@/shared/api/client";
 
+import type {
+  ContentPackageImportResponse,
+  ContentPackagePreviewProgrammingConfig,
+  ContentPackagePreviewResponse,
+  ContentPackagePreviewTask,
+  ContentPackagePreviewTopic,
+} from "../model/content-package";
 import { importContentPackage, useImportContentPackageMutation } from "./import-content-package";
 import { previewContentPackage, usePreviewContentPackageMutation } from "./preview-content-package";
 
@@ -17,6 +24,65 @@ vi.mock("@/shared/api/client", async (importOriginal) => ({
 const transportMock = vi.mocked(apiTransport);
 const file = new File(["modules: []"], "package.yaml", { type: "application/yaml" });
 const request = { file, confirmationId: "confirmation-1", digest: "a".repeat(64) };
+const v1Preview = {
+  valid: true,
+  programId: "program-1",
+  digest: request.digest,
+  modules: [],
+  errors: [],
+} satisfies ContentPackagePreviewResponse;
+const v2Preview = {
+  valid: true,
+  programId: "program-1",
+  digest: request.digest,
+  schemaVersion: 2,
+  moduleCount: 1,
+  topicCount: 1,
+  materialCount: 0,
+  taskCount: 1,
+  modules: [
+    {
+      title: "Module",
+      topics: [
+        {
+          title: "Topic",
+          materials: [],
+          tasks: [
+            {
+              title: "Add two numbers",
+              descriptionMarkdown: "Solve the task",
+              taskType: "CODE",
+              difficulty: "EASY",
+              required: true,
+              programmingConfig: {
+                language: "PYTHON",
+                starterCode: "def add(a, b):\n    pass",
+                executionEnabled: true,
+                timeLimitMs: 1000,
+                memoryLimitMb: 128,
+              },
+              testCaseCount: 3,
+              hiddenTestCaseCount: 2,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  errors: [],
+} satisfies ContentPackagePreviewResponse;
+const v1Import = {
+  programId: "program-1",
+  confirmationId: request.confirmationId,
+  digest: request.digest,
+} satisfies ContentPackageImportResponse;
+const v2Import = {
+  ...v1Import,
+  moduleCount: 1,
+  topicCount: 1,
+  materialCount: 0,
+  taskCount: 1,
+} satisfies ContentPackageImportResponse;
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -31,8 +97,10 @@ function queryWrapper(client: QueryClient) {
 describe("content package API", () => {
   beforeEach(() => transportMock.mockReset());
 
-  it("sends the preview file as multipart and returns the typed preview response", async () => {
-    const preview = { valid: true, programId: "program-1", digest: request.digest, modules: [], errors: [] };
+  it.each([
+    ["v1", v1Preview],
+    ["v2", v2Preview],
+  ])("sends the preview file as multipart and returns the %s response", async (_, preview) => {
     transportMock.mockResolvedValue(jsonResponse(preview));
 
     await expect(previewContentPackage("program-1", file)).resolves.toEqual(preview);
@@ -45,8 +113,10 @@ describe("content package API", () => {
     expect((init?.body as FormData).get("file")).toBe(file);
   });
 
-  it("sends file, confirmationId and digest as multipart and returns the import response", async () => {
-    const imported = { programId: "program-1", confirmationId: request.confirmationId, digest: request.digest };
+  it.each([
+    ["v1", v1Import],
+    ["v2", v2Import],
+  ])("sends file, confirmationId and digest as multipart and returns the %s import response", async (_, imported) => {
     transportMock.mockResolvedValue(jsonResponse(imported, 201));
 
     await expect(importContentPackage("program-1", request)).resolves.toEqual(imported);
@@ -59,6 +129,18 @@ describe("content package API", () => {
     expect(body.get("file")).toBe(file);
     expect(body.get("confirmationId")).toBe(request.confirmationId);
     expect(body.get("digest")).toBe(request.digest);
+  });
+
+  it("models v2 topic tasks without exposing test case bodies", () => {
+    expectTypeOf<ContentPackagePreviewTopic>().toHaveProperty("tasks");
+    expectTypeOf<ContentPackagePreviewTask>().toHaveProperty("testCaseCount").toEqualTypeOf<number | undefined>();
+    expectTypeOf<ContentPackagePreviewTask>().toHaveProperty("hiddenTestCaseCount").toEqualTypeOf<number | undefined>();
+    expectTypeOf<ContentPackagePreviewTask>()
+      .toHaveProperty("programmingConfig")
+      .toEqualTypeOf<ContentPackagePreviewProgrammingConfig | undefined>();
+    expectTypeOf<ContentPackagePreviewTask>().not.toHaveProperty("testCases");
+    expectTypeOf<ContentPackagePreviewTask>().not.toHaveProperty("hiddenTestCases");
+    expect(v2Preview.modules[0].topics[0].tasks[0]).toMatchObject({ testCaseCount: 3, hiddenTestCaseCount: 2 });
   });
 
   it("preserves all preview validation errors with status, code, path and message", async () => {

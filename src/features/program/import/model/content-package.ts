@@ -3,6 +3,9 @@ import type { components } from "@/shared/api/generated/schema";
 export type ContentPackagePreviewResponse = components["schemas"]["ContentPackagePreviewResponse"];
 export type ContentPackageImportResponse = components["schemas"]["ContentPackageImportResponse"];
 export type ContentPackagePreviewError = components["schemas"]["ContentPackagePreviewError"];
+export type ContentPackagePreviewTopic = components["schemas"]["Topic"];
+export type ContentPackagePreviewTask = components["schemas"]["Task"];
+export type ContentPackagePreviewProgrammingConfig = components["schemas"]["ProgrammingConfig"];
 
 export type ImportContentPackageRequest = {
   file: File;
