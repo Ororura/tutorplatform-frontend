@@ -81,6 +81,7 @@ function PreviewTree({ preview }: Readonly<{ preview: Preview }>) {
         <span>Модулей: {preview.moduleCount ?? 0}</span>
         <span>Тем: {preview.topicCount ?? 0}</span>
         <span>Материалов: {preview.materialCount ?? 0}</span>
+        <span>Заданий: {preview.taskCount ?? 0}</span>
       </div>
       <ol className="space-y-4">
         {preview.modules?.map((module, moduleIndex) => (
