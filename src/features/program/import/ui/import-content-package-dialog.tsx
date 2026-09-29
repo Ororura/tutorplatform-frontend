@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { MaterialRenderer } from "@/entities/material";
+import { MaterialRenderer, SafeMarkdown } from "@/entities/material";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -13,6 +13,7 @@ import {
   type ContentPackageImportResponse,
   type ContentPackagePreviewError,
   type ContentPackagePreviewResponse,
+  type ContentPackagePreviewTask,
 } from "../model/content-package";
 import { formatContentPackageError, serializeContentPackageErrors } from "../model/format-content-package-error";
 import { ContentPackagePromptDialog } from "./content-package-prompt-dialog";
@@ -74,6 +75,47 @@ function canRetryImport(error: Error): boolean {
   );
 }
 
+const difficultyLabels: Record<string, string> = {
+  EASY: "Лёгкая",
+  MEDIUM: "Средняя",
+  HARD: "Сложная",
+};
+
+function TaskPreview({ task }: Readonly<{ task: ContentPackagePreviewTask }>) {
+  const config = task.programmingConfig;
+
+  return (
+    <li className="rounded-md bg-slate-50 p-3 text-sm">
+      <p className="font-medium text-slate-900">{task.title}</p>
+      <p className="mt-1 text-xs text-slate-600">
+        {task.taskType} · {difficultyLabels[task.difficulty ?? ""] ?? task.difficulty} ·{" "}
+        {task.required ? "Обязательное" : "Необязательное"}
+      </p>
+      {task.descriptionMarkdown && (
+        <div className="mt-2">
+          <SafeMarkdown>{task.descriptionMarkdown}</SafeMarkdown>
+        </div>
+      )}
+      {task.taskType === "CODE" && (
+        <div className="mt-2 space-y-1 text-slate-700">
+          <p>{config?.language === "PYTHON" ? "Python" : (config?.language ?? "Язык не указан")}</p>
+          <p>Выполнение кода: {config?.executionEnabled ? "включено" : "выключено"}</p>
+          <p>Лимит времени: {config?.timeLimitMs === undefined ? "—" : `${config.timeLimitMs} мс`}</p>
+          <p>Лимит памяти: {config?.memoryLimitMb === undefined ? "—" : `${config.memoryLimitMb} МБ`}</p>
+          <p>
+            Тестов: {task.testCaseCount ?? 0} · скрытых: {task.hiddenTestCaseCount ?? 0}
+          </p>
+          {config?.starterCode && (
+            <pre className="overflow-x-auto rounded-md bg-slate-900 p-3 text-slate-50">
+              <code>{config.starterCode}</code>
+            </pre>
+          )}
+        </div>
+      )}
+    </li>
+  );
+}
+
 function PreviewTree({ preview }: Readonly<{ preview: Preview }>) {
   return (
     <section className="space-y-4" aria-label="Предварительный просмотр модулей">
@@ -113,6 +155,16 @@ function PreviewTree({ preview }: Readonly<{ preview: Preview }>) {
                       </li>
                     ))}
                   </ol>
+                  {topic.tasks && topic.tasks.length > 0 && (
+                    <section className="mt-3" aria-label="Практические задания">
+                      <h5 className="text-sm font-semibold text-slate-900">Практические задания</h5>
+                      <ol className="mt-2 space-y-2">
+                        {topic.tasks.map((task, taskIndex) => (
+                          <TaskPreview key={taskIndex} task={task} />
+                        ))}
+                      </ol>
+                    </section>
+                  )}
                 </li>
               ))}
             </ol>
