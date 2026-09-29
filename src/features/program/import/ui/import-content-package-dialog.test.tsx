@@ -27,6 +27,7 @@ const preview = {
   valid: true,
   digest,
   programId: "program-1",
+  schemaVersion: 1,
   moduleCount: 1,
   topicCount: 1,
   materialCount: 4,
@@ -41,6 +42,48 @@ const preview = {
             { title: "Разметка", materialType: "MARKDOWN", content: "## Заголовок Markdown\n\n**Важный текст**" },
             { title: "Код", materialType: "CODE_EXAMPLE", content: "console.log('safe')" },
             { title: "Ссылка", materialType: "LINK", externalUrl: "https://example.org/lesson" },
+          ],
+        },
+      ],
+    },
+  ],
+};
+const starterCode = "def solve():\n    return 42\n";
+const v2Preview = {
+  ...preview,
+  schemaVersion: 2,
+  taskCount: 2,
+  modules: [
+    {
+      ...preview.modules[0],
+      topics: [
+        {
+          ...preview.modules[0].topics[0],
+          tasks: [
+            {
+              title: "Объясните решение",
+              descriptionMarkdown: "**Напишите** ответ.",
+              taskType: "TEXT",
+              difficulty: "EASY",
+              required: false,
+            },
+            {
+              title: "Практика с кодом",
+              descriptionMarkdown: "Реализуйте `solve`.",
+              taskType: "CODE",
+              difficulty: "MEDIUM",
+              required: true,
+              programmingConfig: {
+                language: "PYTHON",
+                executionEnabled: true,
+                timeLimitMs: 1500,
+                memoryLimitMb: 128,
+                starterCode,
+              },
+              testCaseCount: 5,
+              hiddenTestCaseCount: 3,
+              testCases: [{ input: "SECRET_INPUT", expectedOutput: "SECRET_OUTPUT" }],
+            },
           ],
         },
       ],
@@ -242,6 +285,7 @@ describe("ImportContentPackageDialog", () => {
     await waitFor(() => expect(screen.getByText("Модулей: 1")).toBeInTheDocument());
     expect(screen.getByText("Тем: 1")).toBeInTheDocument();
     expect(screen.getByText("Материалов: 4")).toBeInTheDocument();
+    expect(screen.getByText("Заданий: 0")).toBeInTheDocument();
     expect(screen.getByText("modules.yaml · 11 Б")).toBeInTheDocument();
     const tree = screen.getByRole("region", { name: "Предварительный просмотр модулей" });
     expect(within(tree).getByRole("heading", { name: "Модуль 1" })).toBeInTheDocument();
@@ -258,6 +302,33 @@ describe("ImportContentPackageDialog", () => {
       "href",
       "https://example.org/lesson",
     );
+    expect(within(tree).queryByRole("region", { name: "Практические задания" })).not.toBeInTheDocument();
+  });
+
+  it("previews v2 TEXT and CODE tasks without testcase bodies", async () => {
+    mocks.preview.mockResolvedValueOnce(v2Preview);
+    openDialog();
+    selectFile();
+    await checkFile();
+
+    const tree = screen.getByRole("region", { name: "Предварительный просмотр модулей" });
+    const tasks = within(tree).getByRole("region", { name: "Практические задания" });
+    expect(within(tree).getByText("Заданий: 2")).toBeInTheDocument();
+    expect(within(tasks).getByText("Объясните решение")).toBeInTheDocument();
+    expect(within(tasks).getByText("TEXT · Лёгкая · Необязательное")).toBeInTheDocument();
+    expect(within(tasks).getByText("Напишите", { selector: "strong" })).toBeInTheDocument();
+    expect(within(tasks).getByText("Практика с кодом")).toBeInTheDocument();
+    expect(within(tasks).getByText("CODE · Средняя · Обязательное")).toBeInTheDocument();
+    expect(within(tasks).getByText("Python")).toBeInTheDocument();
+    expect(within(tasks).getByText("Выполнение кода: включено")).toBeInTheDocument();
+    expect(within(tasks).getByText("Лимит времени: 1500 мс")).toBeInTheDocument();
+    expect(within(tasks).getByText("Лимит памяти: 128 МБ")).toBeInTheDocument();
+    expect(within(tasks).getByText("Тестов: 5 · скрытых: 3")).toBeInTheDocument();
+    const code = tasks.querySelector("pre code");
+    expect(code).toBeInTheDocument();
+    expect(code?.textContent).toBe(starterCode);
+    expect(tasks).not.toHaveTextContent("SECRET_INPUT");
+    expect(tasks).not.toHaveTextContent("SECRET_OUTPUT");
   });
 
   it("shows a readable required field error and preserves technical details", async () => {
@@ -278,6 +349,22 @@ describe("ImportContentPackageDialog", () => {
     expect(details).toHaveTextContent("code: REQUIRED_FIELD");
     expect(details).toHaveTextContent("path: modules[0].topics[1].materials[2].content");
     expect(details).toHaveTextContent("message: Content is required");
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Проверить файл" })).toBeEnabled();
+  });
+
+  it("shows a nested v2 task validation path without closing the dialog", async () => {
+    const path = "modules[0].topics[0].tasks[1].programmingConfig.timeLimitMs";
+    mocks.preview.mockRejectedValueOnce(
+      new ContentPackagePreviewValidationError(400, [
+        { code: "LIMIT_EXCEEDED", path, message: "Time limit is too high" },
+      ]),
+    );
+    openDialog();
+    selectFile();
+    fireEvent.click(screen.getByRole("button", { name: "Проверить файл" }));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent(path));
+    expect(screen.getByText("Технические подробности").closest("details")).toHaveTextContent(`path: ${path}`);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Проверить файл" })).toBeEnabled();
   });
@@ -356,13 +443,24 @@ describe("ImportContentPackageDialog", () => {
     expect(screen.getByRole("button", { name: "Отмена" })).toBeDisabled();
     pending.resolve(imported);
     await waitFor(() =>
-      expect(screen.getByRole("status")).toHaveTextContent("Создано модулей: 1, тем: 1, материалов: 4"),
+      expect(screen.getByRole("status")).toHaveTextContent("Создано модулей: 1, тем: 1, материалов: 4, заданий: 0"),
     );
     expect(screen.queryByRole("link", { name: "Скачать шаблон YAML" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Скачать заполненный пример" })).not.toBeInTheDocument();
     expect(mocks.importPackage).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: "Вернуться к программе" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("shows the v2 task count after a successful import", async () => {
+    mocks.preview.mockResolvedValueOnce(v2Preview);
+    mocks.importPackage.mockResolvedValueOnce({ ...imported, taskCount: 2 });
+    openDialog();
+    selectFile();
+    await checkFile();
+    fireEvent.click(screen.getByRole("button", { name: "Импортировать 1 модулей" }));
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("заданий: 2"));
+    expect(mocks.importPackage).toHaveBeenCalledTimes(1);
   });
 
   it("ignores a double click while import is pending", async () => {
