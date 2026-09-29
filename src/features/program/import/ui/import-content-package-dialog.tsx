@@ -317,7 +317,7 @@ export function ImportContentPackageDialog({
             <>
               <p className="text-sm text-emerald-700" role="status">
                 Импорт завершён. Создано модулей: {flow.result.moduleCount ?? 0}, тем: {flow.result.topicCount ?? 0},
-                материалов: {flow.result.materialCount ?? 0}.
+                материалов: {flow.result.materialCount ?? 0}, заданий: {flow.result.taskCount ?? 0}.
               </p>
               <div className="flex justify-end">
                 <Button type="button" onClick={close}>
