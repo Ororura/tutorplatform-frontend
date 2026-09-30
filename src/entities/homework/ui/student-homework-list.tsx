@@ -29,7 +29,7 @@ export function StudentHomeworkList({
           <li key={homework.id}>
             <article
               aria-label={homework.title}
-              className="flex min-w-0 flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:gap-5 sm:px-5"
+              className={`flex min-w-0 flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:gap-5 sm:px-5 ${overdue ? "" : "sm:py-3"}`}
             >
               <div className="flex min-w-0 flex-1 items-start gap-4 sm:items-center sm:gap-6">
                 <StudentHomeworkIcon />

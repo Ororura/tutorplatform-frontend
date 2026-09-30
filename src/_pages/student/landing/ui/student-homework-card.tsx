@@ -48,7 +48,7 @@ export function StudentHomeworkCard({
                 Ближайшее задание
               </span>
             ))}
-          <div className="mt-3 flex items-start gap-3">
+          <div className={`flex items-start gap-3 ${priority ? "mt-3" : ""}`}>
             {!priority && <StudentHomeworkIcon />}
             <div className="min-w-0 flex-1">
               <h3 className="break-words text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
