@@ -12,11 +12,11 @@ const variantClassNames: Record<ButtonVariant, string> = {
   primary:
     "bg-blue-600 text-white shadow-xs hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-600 disabled:bg-blue-100 disabled:text-blue-800",
   secondary:
-    "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-blue-600",
+    "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 active:bg-slate-100 active:text-slate-900 focus-visible:ring-blue-600 disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-600",
   ghost:
-    "bg-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-950 focus-visible:ring-blue-600",
+    "bg-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-950 active:bg-slate-200 active:text-slate-950 focus-visible:ring-blue-600 disabled:text-slate-600",
   danger:
-    "bg-red-600 text-white shadow-xs hover:bg-red-700 focus-visible:ring-red-600",
+    "bg-red-600 text-white shadow-xs hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-600 disabled:bg-red-100 disabled:text-red-800",
 };
 
 export function buttonClassName(variant: ButtonVariant = "primary", className?: string) {
