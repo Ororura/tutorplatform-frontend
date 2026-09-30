@@ -124,6 +124,13 @@ test("mixed statuses and long optional content preserve current-program hierarch
     const secondaryBox = await other.getByRole("article").first().boundingBox();
     expect(activeBox!.height).toBeGreaterThan(secondaryBox!.height);
     expect(activeBox!.y + activeBox!.height).toBeLessThan(secondaryBox!.y);
+    const progressBox = await current.getByRole("progressbar").boundingBox();
+    const actionBox = await action.boundingBox();
+    if (width >= 1024) {
+      expect(actionBox!.x).toBeGreaterThan(progressBox!.x + progressBox!.width);
+    } else {
+      expect(actionBox!.y).toBeGreaterThan(progressBox!.y + progressBox!.height);
+    }
     if (width === 1440 || width === 390) await screenshot(page, `student-programs-long-content-${width}`);
   }
   await action.focus();

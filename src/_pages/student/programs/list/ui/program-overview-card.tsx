@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, BookOpenText } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { progressQueries } from "@/entities/progress";
@@ -84,28 +84,21 @@ export function ProgramOverviewCard({
             )}
           </div>
         </div>
-        {!progress.isError && <ProgramTopicProgress progress={progress.data} title={program.title} />}
-      </div>
-      <div className="flex min-w-0 flex-col justify-between gap-6 rounded-xl bg-blue-50/60 p-4 sm:p-5">
         {current && (
-          <div className="flex items-start gap-3">
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-100/60 text-blue-600">
-              <BookOpenText size={24} aria-hidden="true" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-blue-600">Текущая тема</p>
-              <h4 className="mt-2 break-words text-xl font-semibold tracking-tight text-slate-950">
-                {current.topic.title}
-              </h4>
-              <p className="mt-2 break-words text-sm leading-5 text-slate-500">{current.module.title}</p>
-            </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-blue-600">Текущая тема</p>
+            <h4 className="mt-1 break-words text-lg font-semibold text-slate-950">{current.topic.title}</h4>
+            <p className="mt-1 break-words text-sm text-slate-500">{current.module.title}</p>
           </div>
         )}
+        {!progress.isError && <ProgramTopicProgress progress={progress.data} title={program.title} />}
+      </div>
+      <div className="flex min-w-0 items-center justify-center">
         <Link
           href={current ? studentProgramHref(program.id, current.topic.id) : programHref}
           className={buttonClassName(
             "primary",
-            "mt-auto h-auto min-h-10 gap-2 self-start py-3 text-center sm:self-end",
+            "h-auto min-h-14 w-full gap-3 rounded-2xl px-6 py-4 text-center text-base lg:min-h-24 lg:max-w-72 lg:rounded-3xl lg:text-lg xl:min-h-28 xl:max-w-80",
           )}
         >
           {current ? "Продолжить обучение" : "Открыть программу"}
