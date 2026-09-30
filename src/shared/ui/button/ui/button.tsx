@@ -19,19 +19,17 @@ const variantClassNames: Record<ButtonVariant, string> = {
     "bg-red-600 text-white shadow-xs hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-600 disabled:bg-red-100 disabled:text-red-800",
 };
 
+export function buttonClassName(variant: ButtonVariant = "primary", className?: string) {
+  return cn(
+    "inline-flex h-10 items-center justify-center rounded-xl px-4 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-4 disabled:pointer-events-none disabled:cursor-not-allowed disabled:shadow-none",
+    variantClassNames[variant],
+    className,
+  );
+}
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { className, variant = "primary", ...props },
   ref,
 ) {
-  return (
-    <button
-      ref={ref}
-      className={cn(
-        "inline-flex h-10 items-center justify-center rounded-xl px-4 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-4 disabled:pointer-events-none disabled:cursor-not-allowed disabled:shadow-none",
-        variantClassNames[variant],
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <button ref={ref} className={buttonClassName(variant, className)} {...props} />;
 });

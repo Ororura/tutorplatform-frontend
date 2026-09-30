@@ -15,3 +15,5 @@ export {
   type PublicCurrentProgress,
 } from "./api/public-progress-query";
 export { CurrentProgressOverview } from "./ui/current-progress-overview";
+
+export { getTopicCompletion } from "./model/topic-completion";
