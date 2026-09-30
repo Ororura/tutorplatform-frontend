@@ -1,12 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, BookOpenText, Check, Circle, Target } from "lucide-react";
+import { ArrowRight, Check, Circle, Target } from "lucide-react";
 import Link from "next/link";
 
 import { progressQueries } from "@/entities/progress";
-import { programStatusLabels, studentProgramQueries, type StudentProgramSummary } from "@/entities/student-program";
+import {
+  ProgramIcon,
+  ProgramStatusBadge,
+  ProgramTopicProgress,
+  studentProgramHref,
+  studentProgramQueries,
+  type StudentProgramSummary,
+} from "@/entities/student-program";
 
 import { getTopicCompletion } from "../model/dashboard-presentation";
-import { DashboardProgress } from "./dashboard-primitives";
 
 export function StudentProgramCard({
   program,
@@ -17,7 +23,6 @@ export function StudentProgramCard({
     ...studentProgramQueries.currentDetail(program.id),
     enabled: primary && program.status === "ACTIVE",
   });
-  const completion = progress.isError ? undefined : getTopicCompletion(progress.data);
   const modules = details.isError ? undefined : details.data?.modules;
   const topics = modules?.flatMap((module) => module.topics);
   // An in-progress topic is current; otherwise show the first available topic as the next step.
@@ -25,7 +30,7 @@ export function StudentProgramCard({
     topics?.find((topic) => topic.progressStatus === "IN_PROGRESS") ??
     topics?.find((topic) => topic.progressStatus === "AVAILABLE");
   const currentModule = modules?.find((module) => module.topics.some((topic) => topic.id === current?.id));
-  const programHref = `/student/programs/${program.id}`;
+  const programHref = studentProgramHref(program.id);
 
   return (
     <article
@@ -36,9 +41,7 @@ export function StudentProgramCard({
         href={programHref}
         className="group flex items-start gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
       >
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-          <BookOpenText size={23} aria-hidden="true" />
-        </span>
+        <ProgramIcon />
         <div className="min-w-0 flex-1">
           <h3 className="break-words text-base font-semibold tracking-tight text-slate-950 sm:text-lg">
             {program.title}
@@ -51,20 +54,12 @@ export function StudentProgramCard({
           aria-hidden="true"
         />
       </Link>
-      <span
-        className={`mt-3 inline-block rounded-lg px-2 py-1 text-xs font-medium ${program.status === "ACTIVE" ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}
-      >
-        {programStatusLabels[program.status]}
-      </span>
-      {completion && (
+      <div className="mt-3">
+        <ProgramStatusBadge status={program.status} />
+      </div>
+      {!progress.isError && getTopicCompletion(progress.data) && (
         <div className="mt-4">
-          <div className="mb-2 flex items-center justify-between gap-2 text-sm font-medium text-slate-600">
-            <span>
-              {completion.completed} из {completion.total} тем пройдено
-            </span>
-            <span>{completion.percent}%</span>
-          </div>
-          <DashboardProgress value={completion.percent} label={`Прогресс: ${program.title}`} />
+          <ProgramTopicProgress progress={progress.data} title={program.title} />
         </div>
       )}
       {primary && current && currentModule && (

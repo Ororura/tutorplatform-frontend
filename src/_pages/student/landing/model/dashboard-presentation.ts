@@ -1,5 +1,5 @@
 import type { StudentHomeworkSummary } from "@/entities/homework";
-import type { CurrentProgress } from "@/entities/progress";
+export { getTopicCompletion } from "@/entities/progress";
 
 export function isHomeworkOverdue(homework: StudentHomeworkSummary, now: number) {
   return (
@@ -22,11 +22,4 @@ export function getDeadlineHint(dueAt: string, now: number) {
   if (days > 0) return `До срока: ${days} дн.`;
   const hours = Math.floor(difference / 3_600_000);
   return hours > 0 ? `До срока: ${hours} ч.` : "До срока меньше часа";
-}
-
-export function getTopicCompletion(progress?: CurrentProgress) {
-  const total = progress?.totalTopics;
-  const completed = progress?.topics?.completed?.length;
-  if (total === undefined || completed === undefined || total <= 0 || completed > total) return undefined;
-  return { completed, total, percent: Math.round((completed / total) * 100) };
 }
