@@ -30,8 +30,13 @@ export function StudentLandingPage() {
     }),
   );
 
+  const priorityProgramId = homeworks.data?.items.find((item) => item.status === "ASSIGNED")?.studentProgramId;
   const visiblePrograms = [...(programs.data ?? [])]
-    .sort((a, b) => Number(b.status === "ACTIVE") - Number(a.status === "ACTIVE"))
+    .sort(
+      (a, b) =>
+        Number(b.status === "ACTIVE") - Number(a.status === "ACTIVE") ||
+        Number(b.id === priorityProgramId) - Number(a.id === priorityProgramId),
+    )
     .slice(0, previewSize);
 
   return (
