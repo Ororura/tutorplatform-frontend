@@ -3,10 +3,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, BookOpenText, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+import { StudentDashboardHeader } from "./student-dashboard-header";
 
 import { StudentHomeworkList, studentHomeworkQueries } from "@/entities/homework";
 import { StudentProgramList, studentProgramQueries } from "@/entities/student-program";
-import { useCurrentUserQuery } from "@/entities/user";
 import { Button } from "@/shared/ui/button";
 
 const previewSize = 3;
@@ -21,52 +23,30 @@ function SectionLink({ href, children }: Readonly<{ href: string; children: Reac
 }
 
 export function StudentLandingPage() {
-  const currentUser = useCurrentUserQuery();
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
   const programs = useQuery(studentProgramQueries.currentList());
   const homeworks = useQuery(
     studentHomeworkQueries.list({
       status: "ASSIGNED",
       page: 0,
       size: previewSize,
-      sort: "assignedAt,desc",
+      sort: "dueAt,asc",
     }),
   );
 
   return (
     <main className="space-y-4">
-      <header className="py-2">
-        <div>
-          <p className="text-sm font-medium text-[var(--text-secondary)]">Учебный кабинет</p>
-
-          {currentUser.isPending && (
-            <p
-              className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl"
-              aria-busy="true"
-            >
-              Загружаем профиль…
-            </p>
-          )}
-
-          {currentUser.isError && (
-            <div className="mt-3 space-y-3" role="alert">
-              <p className="font-medium">Не удалось загрузить профиль.</p>
-              <Button type="button" variant="secondary" onClick={() => currentUser.refetch()}>
-                Повторить
-              </Button>
-            </div>
-          )}
-
-          {currentUser.data && (
-            <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-              Привет, {currentUser.data.displayName}!
-            </h1>
-          )}
-
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
-            Здесь собраны ваши программы обучения и ближайшие домашние задания.
-          </p>
-        </div>
-      </header>
+      <StudentDashboardHeader
+        now={now}
+        attentionCount={homeworks.isError ? undefined : homeworks.data?.totalElements}
+        nearest={
+          homeworks.isError ? undefined : homeworks.data?.items.find((item) => item.status === "ASSIGNED" && item.dueAt)
+        }
+      />
 
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.8fr)_minmax(320px,1fr)]">
         <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
