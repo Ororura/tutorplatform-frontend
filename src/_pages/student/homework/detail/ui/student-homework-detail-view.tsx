@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, CalendarClock, CheckCircle2, ChevronRight, ClipboardList } from "lucide-react";
+import { ArrowLeft, CalendarClock, CalendarDays, CheckCircle2, ChevronRight, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -9,25 +9,13 @@ import {
   formatHomeworkDate,
   getStudentHomeworkPresentationState,
   studentHomeworkQueries,
-  studentHomeworkStatusPresentation,
+  StudentHomeworkIcon,
+  StudentHomeworkStatusBadge,
 } from "@/entities/homework";
 import { submissionStatusPresentation } from "@/entities/submission";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 import { StudentTaskSolution } from "@/widgets/student-task-solution";
-
-function getStatusClassName(state: string) {
-  switch (state) {
-    case "OVERDUE":
-      return "bg-red-50 text-red-700";
-    case "COMPLETED":
-      return "bg-emerald-50 text-emerald-700";
-    case "CANCELLED":
-      return "bg-slate-100 text-slate-600";
-    default:
-      return "bg-blue-50 text-blue-700";
-  }
-}
 
 export function StudentHomeworkDetailView({
   homeworkId,
@@ -39,16 +27,7 @@ export function StudentHomeworkDetailView({
   const [openedItemId, setOpenedItemId] = useState<string | null>(null);
 
   if (homework.isPending) {
-    return (
-      <main>
-        <div
-          className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-(--text-secondary)"
-          aria-busy="true"
-        >
-          Загружаем домашнее задание…
-        </div>
-      </main>
-    );
+    return <HomeworkDetailSkeleton />;
   }
 
   if (homework.isError) {
@@ -58,7 +37,7 @@ export function StudentHomeworkDetailView({
         : (homework.error as { status?: number }).status === 404;
 
     return (
-      <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+      <main className="mx-auto min-w-0 max-w-6xl space-y-5">
         <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
           <p className="text-sm text-red-700">
             {notFound ? "Домашнее задание не найдено" : "Не удалось загрузить домашнее задание."}
@@ -72,7 +51,7 @@ export function StudentHomeworkDetailView({
         </div>
 
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
           href="/student/homework"
         >
           <ArrowLeft size={16} />
@@ -91,10 +70,10 @@ export function StudentHomeworkDetailView({
   const openedItem = items.find((item) => item.id === openedItemId);
 
   return (
-    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+    <main className="mx-auto min-w-0 max-w-6xl space-y-5">
       <section className="py-2">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
           href="/student/homework"
         >
           <ArrowLeft size={16} />
@@ -103,9 +82,7 @@ export function StudentHomeworkDetailView({
 
         <div className="mt-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
           <div className="flex min-w-0 items-start gap-4">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-              <ClipboardList size={21} />
-            </span>
+            <StudentHomeworkIcon />
 
             <div className="min-w-0">
               <p className="text-sm font-medium text-blue-600">Домашняя работа</p>
@@ -116,42 +93,24 @@ export function StudentHomeworkDetailView({
             </div>
           </div>
 
-          <span className={`w-fit shrink-0 rounded-full px-3 py-1.5 text-sm font-medium ${getStatusClassName(state)}`}>
-            {studentHomeworkStatusPresentation[state]}
-          </span>
+          <StudentHomeworkStatusBadge state={state} />
         </div>
       </section>
 
       <div className="space-y-5">
         <div className="min-w-0 space-y-4">
-          <section className="rounded-2xl border border-(--border) bg-white p-6">
-            <dl className="grid gap-3 sm:grid-cols-3">
-              <div className="py-2">
-                <dt className="text-sm text-(--text-secondary)">Назначено</dt>
-
-                <dd className="mt-2 text-sm font-medium text-slate-900">{formatHomeworkDate(data.assignedAt)}</dd>
-              </div>
-
-              <div className="py-2">
-                <dt className="text-sm text-(--text-secondary)">Срок</dt>
-
-                <dd className="mt-2 text-sm font-medium text-slate-900">
-                  {data.dueAt ? formatHomeworkDate(data.dueAt) : "Без срока"}
-                </dd>
-              </div>
-
-              <div className="py-2">
-                <dt className="text-sm text-(--text-secondary)">Выполнено</dt>
-
-                <dd className="mt-2 text-sm font-medium text-slate-900">
-                  {data.completedAt ? formatHomeworkDate(data.completedAt) : "—"}
-                </dd>
-              </div>
+          <section className="rounded-2xl border border-(--border) bg-white p-5 shadow-xs sm:p-6">
+            <dl className="grid gap-5 sm:grid-cols-3">
+              <HomeworkDate label="Назначено" value={data.assignedAt} />
+              {data.dueAt && <HomeworkDate label="Срок" value={data.dueAt} />}
+              {data.completedAt && <HomeworkDate label="Выполнено" value={data.completedAt} completed />}
             </dl>
 
             {data.description && (
               <div className="mt-5 border-t border-slate-100 pt-5">
-                <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{data.description}</p>
+                <p className="wrap-break-word whitespace-pre-wrap text-sm leading-7 text-slate-700">
+                  {data.description}
+                </p>
               </div>
             )}
           </section>
@@ -263,6 +222,56 @@ export function StudentHomeworkDetailView({
             </div>
           </section>
         </aside>
+      </div>
+    </main>
+  );
+}
+
+function HomeworkDate({
+  label,
+  value,
+  completed = false,
+}: Readonly<{ label: string; value: string; completed?: boolean }>) {
+  const Icon = completed ? CheckCircle2 : CalendarDays;
+  return (
+    <div className="flex min-w-0 items-center gap-4">
+      <span
+        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl ${completed ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600"}`}
+      >
+        <Icon size={21} aria-hidden="true" />
+      </span>
+      <div className="min-w-0">
+        <dt className="text-sm text-(--text-secondary)">{label}</dt>
+        <dd className="mt-1 wrap-break-word text-sm font-medium text-slate-900">
+          <time dateTime={value}>{formatHomeworkDate(value)}</time>
+        </dd>
+      </div>
+    </div>
+  );
+}
+
+function HomeworkDetailSkeleton() {
+  return (
+    <main className="mx-auto min-w-0 max-w-6xl space-y-5" role="status" aria-busy="true">
+      <span className="sr-only">Загружаем домашнее задание…</span>
+      <div aria-hidden="true" className="space-y-5 motion-safe:animate-pulse">
+        <div className="h-4 w-40 rounded bg-slate-200" />
+        <div className="h-14 w-2/3 rounded-xl bg-slate-200" />
+        <div className="grid gap-5 rounded-2xl border border-slate-100 bg-white p-6 sm:grid-cols-3">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="h-12 rounded-xl bg-slate-100" />
+          ))}
+        </div>
+        <div className="space-y-3 rounded-2xl border border-slate-100 bg-white p-5">
+          <div className="h-6 w-32 rounded bg-slate-100" />
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="h-20 rounded-xl bg-slate-100" />
+          ))}
+        </div>
+        <div className="space-y-5 rounded-2xl border border-slate-100 bg-white p-6">
+          <div className="h-7 w-2/3 rounded bg-slate-100" />
+          <div className="h-32 rounded-xl bg-slate-100" />
+        </div>
       </div>
     </main>
   );
