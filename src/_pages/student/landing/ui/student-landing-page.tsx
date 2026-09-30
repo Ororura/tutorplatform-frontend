@@ -6,8 +6,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { StudentDashboardHeader } from "./student-dashboard-header";
+import { StudentHomeworkCard } from "./student-homework-card";
+import { DashboardSection, DashboardSkeleton, DashboardError } from "./dashboard-primitives";
 
-import { StudentHomeworkList, studentHomeworkQueries } from "@/entities/homework";
+import { studentHomeworkQueries } from "@/entities/homework";
 import { StudentProgramList, studentProgramQueries } from "@/entities/student-program";
 import { Button } from "@/shared/ui/button";
 
@@ -49,44 +51,38 @@ export function StudentLandingPage() {
       />
 
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.8fr)_minmax(320px,1fr)]">
-        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h2 className="text-xl font-semibold text-slate-950">Домашние задания</h2>
-              <p className="mt-1 text-sm text-slate-500">Задания, которые нужно выполнить.</p>
+        <DashboardSection
+          title="Домашние задания"
+          subtitle="Твои текущие и ближайшие задания"
+          icon={ClipboardCheck}
+          href="/student/homework"
+          linkLabel="Все задания"
+        >
+          {homeworks.isPending && <DashboardSkeleton label="Загружаем домашние задания…" />}
+          {homeworks.isError && (
+            <DashboardError message="Не удалось загрузить домашние задания." retry={() => homeworks.refetch()} />
+          )}
+          {!homeworks.isError && homeworks.data?.items.length === 0 && (
+            <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-8 text-center">
+              <ClipboardCheck size={28} className="mx-auto text-blue-500" aria-hidden="true" />
+              <p className="mt-3 font-semibold text-slate-950">Невыполненных заданий нет</p>
+              <p className="mt-2 text-sm leading-6 text-slate-500">Новые задания преподавателя появятся здесь.</p>
             </div>
-            <SectionLink href="/student/homework">Все задания</SectionLink>
-          </div>
-
-          <div className="mt-5">
-            {homeworks.isPending && (
-              <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
-                Загружаем домашние задания…
-              </p>
-            )}
-
-            {homeworks.isError && (
-              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-                <p className="text-sm text-red-700">Не удалось загрузить домашние задания.</p>
-                <Button type="button" variant="secondary" onClick={() => homeworks.refetch()}>
-                  Повторить
-                </Button>
-              </div>
-            )}
-
-            {homeworks.data?.items.length === 0 && (
-              <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
-                <ClipboardCheck size={28} className="mx-auto text-blue-500" aria-hidden="true" />
-                <p className="mt-3 font-semibold text-slate-950">Невыполненных заданий нет</p>
-                <p className="mt-2 text-sm leading-6 text-slate-500">Новые задания преподавателя появятся здесь.</p>
-              </div>
-            )}
-
-            {homeworks.data && homeworks.data.items.length > 0 && (
-              <StudentHomeworkList homeworks={homeworks.data.items} />
-            )}
-          </div>
-        </section>
+          )}
+          {!homeworks.isError &&
+            homeworks.data?.items
+              .filter((item) => item.status === "ASSIGNED")
+              .slice(0, previewSize)
+              .map((homework, index) => (
+                <StudentHomeworkCard
+                  key={homework.id}
+                  homework={homework}
+                  priority={index === 0}
+                  now={now}
+                  programTitle={programs.data?.find((program) => program.id === homework.studentProgramId)?.title}
+                />
+              ))}
+        </DashboardSection>
 
         <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-3">
