@@ -59,12 +59,16 @@ test("demo student completes the learning journey", async ({ page }) => {
 
   await page.getByRole("link", { name: "Мои программы", exact: true }).click();
   await expect(page).toHaveURL(/\/student\/programs$/);
-  await expect(page.getByRole("heading", { name: "Назначенные программы" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^Текущ(ая программа|ие программы)$/ })).toBeVisible();
 
   const assignedProgram = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Python с нуля", exact: true }),
   });
-  await assignedProgram.getByRole("link", { name: "Открыть программу" }).click();
+  const programAction = assignedProgram.getByRole("link", { name: /Открыть программу|Продолжить обучение/ });
+  const programHref = (await programAction.getAttribute("href"))!.split("/topics/")[0];
+  await programAction.click();
+  // Continue may open a current topic directly; still exercise the full program contents below.
+  await page.goto(programHref);
   await expect(page).toHaveURL(/\/student\/programs\/[^/]+$/);
   await expect(page.getByRole("heading", { name: "Python с нуля", exact: true })).toBeVisible();
 
