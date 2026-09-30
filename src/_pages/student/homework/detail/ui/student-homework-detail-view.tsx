@@ -100,7 +100,9 @@ export function StudentHomeworkDetailView({
             </div>
           </div>
 
-          <StudentHomeworkStatusBadge state={state} />
+          <div className="w-fit shrink-0">
+            <StudentHomeworkStatusBadge state={state} />
+          </div>
         </div>
       </section>
 
