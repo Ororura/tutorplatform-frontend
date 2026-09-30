@@ -30,7 +30,8 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: mocks.useQuery, queryOptions: (value: unknown) => value }));
-vi.mock("@/entities/submission", () => ({
+vi.mock("@/entities/submission", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/entities/submission")>()),
   studentSubmissionQueries: {
     list: (taskId: string, itemId: string) => ({ queryKey: ["student-submissions", taskId, itemId] }),
   },
@@ -377,5 +378,117 @@ describe("StudentTaskSolution widget", () => {
       />,
     );
     expect(screen.getByRole("button", { name: "Отправляем…" })).toBeDisabled();
+  });
+
+  it.each(["COMPLETED", "CANCELLED"] as const)(
+    "shows latest persisted TEXT answer read-only for %s homework",
+    (status) => {
+      mocks.useQuery.mockReturnValue({
+        data: {
+          items: [
+            {
+              id: "old",
+              attemptNo: 1,
+              status: "FAILED",
+              submittedAt: "2026-09-01T10:00:00Z",
+              textAnswer: "Старый ответ",
+            },
+            {
+              id: "latest",
+              attemptNo: 2,
+              status: "NEEDS_REVIEW",
+              submittedAt: "2026-09-02T10:00:00Z",
+              textAnswer: "Отправленный ответ",
+            },
+          ],
+        },
+      });
+      render(
+        <StudentTaskSolution
+          homeworkId="homework-1"
+          homeworkStatus={status}
+          item={{ ...base, task: { ...base.task, taskType: "TEXT" } }}
+        />,
+      );
+      const answer = screen.getByRole("textbox", { name: "Ваш ответ" });
+      expect(answer).toHaveValue("Отправленный ответ");
+      expect(answer).toHaveAttribute("readonly");
+      expect(screen.queryByRole("button", { name: "Отправить" })).not.toBeInTheDocument();
+      expect(screen.getByRole("note")).toHaveTextContent(status === "CANCELLED" ? "отменено" : "завершено");
+      expect(screen.getByRole("region", { name: "История попыток" })).toHaveTextContent("Попытка 1");
+      expect(screen.getByRole("region", { name: "История попыток" })).toHaveTextContent("Попытка 2");
+      expect(document.querySelector('time[datetime="2026-09-02T10:00:00Z"]')).toBeInTheDocument();
+      expect(mocks.submitText.mutate).not.toHaveBeenCalled();
+    },
+  );
+
+  it("keeps resubmission available for assigned homework with existing TEXT attempts", () => {
+    mocks.useQuery.mockReturnValue({
+      data: {
+        items: [
+          {
+            id: "s",
+            attemptNo: 1,
+            status: "NEEDS_REVIEW",
+            submittedAt: "2026-09-01T10:00:00Z",
+            textAnswer: "Предыдущий ответ",
+          },
+        ],
+      },
+    });
+    render(
+      <StudentTaskSolution
+        homeworkId="homework-1"
+        homeworkStatus="ASSIGNED"
+        item={{ ...base, task: { ...base.task, taskType: "TEXT" } }}
+      />,
+    );
+    fireEvent.change(screen.getByLabelText("Ваш ответ"), { target: { value: "Новая попытка" } });
+    fireEvent.click(screen.getByRole("button", { name: "Отправить" }));
+    expect(mocks.submitText.mutate).toHaveBeenCalledWith(expect.objectContaining({ textAnswer: "Новая попытка" }));
+  });
+
+  it("keeps completed CODE controls disabled and the specialized editor visible", () => {
+    render(
+      <StudentTaskSolution
+        homeworkId="homework-1"
+        homeworkStatus="COMPLETED"
+        item={{
+          ...base,
+          task: {
+            ...base.task,
+            taskType: "CODE",
+            codeExecution: {
+              language: "PYTHON",
+              starterCode: "print(1)",
+              executionEnabled: true,
+              timeLimitMs: 1000,
+              memoryLimitMb: 128,
+            },
+          },
+        }}
+      />,
+    );
+    expect(screen.getByLabelText("Код решения")).toHaveValue("print(1)");
+    expect(screen.getByLabelText("Код решения")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Запустить" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Отправить решение" })).toBeDisabled();
+  });
+
+  it.each([
+    { isPending: true, message: "Загружаем отправленный ответ…" },
+    { isError: true, message: "Отправленный ответ пока недоступен." },
+    { message: "Ответ ещё не отправлен." },
+  ])("explains unavailable read-only answers: $message", ({ message, ...query }) => {
+    mocks.useQuery.mockReturnValue(query);
+    render(
+      <StudentTaskSolution
+        homeworkId="homework-1"
+        homeworkStatus="COMPLETED"
+        item={{ ...base, task: { ...base.task, taskType: "TEXT" } }}
+      />,
+    );
+    expect(screen.getByText(message)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Отправить" })).not.toBeInTheDocument();
   });
 });

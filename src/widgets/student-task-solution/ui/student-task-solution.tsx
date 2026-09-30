@@ -2,14 +2,16 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { Info } from "lucide-react";
 
-import type { StudentHomeworkItem } from "@/entities/homework";
+import { formatHomeworkDate, StudentHomeworkTaskBadges, type StudentHomeworkItem } from "@/entities/homework";
 import type { StudentTopicTask } from "@/entities/task";
 import { SafeMarkdown } from "@/entities/material/ui/safe-markdown";
 import {
   executionStatusPresentation,
   studentSubmissionQueries,
   submissionStatusPresentation,
+  SubmissionStatusBadge,
   type ExecutionStatus,
   type StudentSubmission,
 } from "@/entities/submission";
@@ -76,6 +78,7 @@ export function StudentTaskSolution(props: SolutionProps) {
         practice={practice}
         submissions={visibleSubmissions}
         submissionsError={submissions.isError}
+        submissionsPending={submissions.isPending}
       />
     );
   }
@@ -87,6 +90,7 @@ export function StudentTaskSolution(props: SolutionProps) {
       item={props.item}
       submissions={visibleSubmissions}
       submissionsError={submissions.isError}
+      submissionsPending={submissions.isPending}
     />
   );
 }
@@ -98,6 +102,7 @@ function TaskSolutionContent({
   practice,
   submissions,
   submissionsError,
+  submissionsPending,
 }: Readonly<{
   homeworkId?: string;
   homeworkStatus?: HomeworkStatus;
@@ -105,26 +110,48 @@ function TaskSolutionContent({
   practice?: PracticeSolutionProps["practice"];
   submissions: StudentSubmission[];
   submissionsError: boolean;
+  submissionsPending: boolean;
 }>) {
   const readOnly = homeworkStatus !== undefined && homeworkStatus !== "ASSIGNED";
+  const latestSubmission = submissions.reduce<StudentSubmission | undefined>(
+    (latest, submission) => (!latest || submission.attemptNo > latest.attemptNo ? submission : latest),
+    undefined,
+  );
 
   return (
     <section
-      className="space-y-6 rounded-xl border border-(--border) bg-white p-4 sm:p-6"
+      className="min-w-0 space-y-6 rounded-2xl border border-(--border) bg-white p-5 shadow-xs sm:p-6"
+      id={`task-${item.id}-solution`}
       aria-labelledby={`task-${item.id}-heading`}
     >
       <TaskHeader item={item} />
 
       {readOnly && (
-        <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
-          {homeworkStatus === "CANCELLED"
-            ? "Домашнее задание отменено. Новые решения недоступны."
-            : "Домашнее задание завершено. Новые решения недоступны."}
-        </p>
+        <div
+          className="flex items-start gap-3 rounded-2xl bg-blue-50/60 p-4 text-sm leading-6 text-slate-600"
+          role="note"
+        >
+          <Info size={20} className="mt-0.5 shrink-0 text-blue-600" aria-hidden="true" />
+          <div>
+            <p>
+              {homeworkStatus === "CANCELLED"
+                ? "Домашнее задание отменено. Новые решения недоступны."
+                : "Домашнее задание завершено. Новые решения недоступны."}
+            </p>
+            <p>Вы можете посмотреть своё решение и историю попыток ниже.</p>
+          </div>
+        </div>
       )}
 
       {item.task.taskType === "TEXT" && homeworkId && (
-        <TextSolution disabled={readOnly} homeworkId={homeworkId} item={item} />
+        <TextSolution
+          disabled={readOnly}
+          homeworkId={homeworkId}
+          item={item}
+          submittedAnswer={latestSubmission?.textAnswer}
+          submissionsPending={submissionsPending}
+          submissionsError={submissionsError}
+        />
       )}
 
       {item.task.taskType === "TEXT" && practice && (
@@ -155,17 +182,11 @@ function TaskSolutionContent({
 function TaskHeader({ item }: Readonly<{ item: StudentHomeworkItem }>) {
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
-        <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-700">
-          {taskTypePresentation[item.task.taskType] ?? item.task.taskType}
-        </span>
-
-        <span>{item.required ? "Обязательное" : "Дополнительное"}</span>
-
-        <span>{item.passed ? "Выполнено" : "Не выполнено"}</span>
-      </div>
-
-      <h2 className="text-xl font-semibold text-slate-950" id={`task-${item.id}-heading`}>
+      <StudentHomeworkTaskBadges item={item} />
+      <h2
+        className="wrap-break-word text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl"
+        id={`task-${item.id}-heading`}
+      >
         {item.task.title}
       </h2>
 
@@ -178,16 +199,49 @@ function TextSolution({
   homeworkId,
   item,
   disabled,
+  submittedAnswer,
+  submissionsPending,
+  submissionsError,
 }: Readonly<{
   homeworkId: string;
   item: StudentHomeworkItem;
   disabled: boolean;
+  submittedAnswer?: string | null;
+  submissionsPending: boolean;
+  submissionsError: boolean;
 }>) {
   const [textAnswer, setTextAnswer] = useState("");
   const submit = useSubmitTextAnswerMutation(homeworkId);
 
   const empty = !textAnswer.trim();
   const submitDisabled = disabled || submit.isPending || empty;
+
+  if (disabled) {
+    return (
+      <div className="space-y-2">
+        <p className="font-medium" id={`answer-${item.id}-label`}>
+          Ваш ответ
+        </p>
+        {submissionsPending ? (
+          <p className="text-sm text-slate-500" role="status">
+            Загружаем отправленный ответ…
+          </p>
+        ) : submittedAnswer ? (
+          <textarea
+            className="min-h-28 w-full rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600 outline-none focus:ring-4 focus:ring-blue-100"
+            id={`answer-${item.id}`}
+            aria-labelledby={`answer-${item.id}-label`}
+            readOnly
+            value={submittedAnswer}
+          />
+        ) : (
+          <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
+            {submissionsError ? "Отправленный ответ пока недоступен." : "Ответ ещё не отправлен."}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <form
@@ -559,27 +613,28 @@ function SubmissionHistory({ submissions }: Readonly<{ submissions: StudentSubmi
   if (submissions.length === 0) return null;
 
   return (
-    <section className="border-t border-slate-100 pt-4" aria-label="История попыток">
+    <section className="min-w-0" aria-label="История попыток">
       <h3 className="font-medium">Попытки</h3>
 
-      <ul className="mt-3 space-y-2 text-sm text-slate-600">
+      <ul className="mt-2 space-y-1 text-sm text-slate-600">
         {submissions.map((submission) => (
-          <li className="flex flex-wrap items-center gap-x-2" key={submission.id}>
-            <span>Попытка {submission.attemptNo}</span>
-
-            <span aria-hidden="true">·</span>
-
-            <span>{submissionStatusPresentation[submission.status] ?? submission.status}</span>
-
-            {submission.execution && (
-              <>
-                <span aria-hidden="true">·</span>
-
+          <li
+            className="flex min-w-0 flex-col gap-2 rounded-xl border border-slate-100 px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
+            key={submission.id}
+          >
+            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+              <span>Попытка {submission.attemptNo}</span>
+              <span aria-hidden="true">·</span>
+              <time className="wrap-break-word" dateTime={submission.submittedAt}>
+                {formatHomeworkDate(submission.submittedAt)}
+              </time>
+              {submission.execution && (
                 <span>
                   {submission.execution.passedTests}/{submission.execution.totalTests} тестов
                 </span>
-              </>
-            )}
+              )}
+            </div>
+            <SubmissionStatusBadge status={submission.status} />
           </li>
         ))}
       </ul>
@@ -625,9 +680,4 @@ function MutationError({
 
 const languagePresentation: Record<string, string> = {
   PYTHON: "Python",
-};
-
-const taskTypePresentation: Record<string, string> = {
-  TEXT: "Текст",
-  CODE: "Код",
 };
