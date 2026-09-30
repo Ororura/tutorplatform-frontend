@@ -29,8 +29,8 @@ describe("dashboard presentation", () => {
     expect(isHomeworkOverdue({ ...homework, status: "CANCELLED" }, now)).toBe(false);
     expect(isHomeworkOverdue({ ...homework, completedAt: new Date(now).toISOString() }, now)).toBe(false);
   });
-  it("formats today and relative deadline hints without invented dates", () => {
-    expect(formatDashboardDeadline(new Date(now + 3_600_000).toISOString(), now)).toMatch(/^Сегодня,/);
+  it("formats compact dates and relative deadline hints without invented dates", () => {
+    expect(formatDashboardDeadline(new Date(now + 3_600_000).toISOString(), now)).toMatch(/^30 сентября, \d{2}:\d{2}$/);
     expect(getDeadlineHint(new Date(now - 2 * 86_400_000).toISOString(), now)).toBe("Просрочено: 2 дн.");
     expect(getDeadlineHint(new Date(now + 3 * 86_400_000).toISOString(), now)).toBe("До срока: 3 дн.");
     expect(getDeadlineHint(new Date(now + 2 * 3_600_000).toISOString(), now)).toBe("До срока: 2 ч.");
