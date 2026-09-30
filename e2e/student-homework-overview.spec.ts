@@ -23,6 +23,16 @@ test("real homework prioritizes action and shares dashboard styling at all reque
   await expect(
     page.getByRole("region", { name: "Домашние задания", exact: true }).getByRole("article").first(),
   ).toBeVisible();
+  await expect(
+    page
+      .getByRole("region", { name: "Домашние задания", exact: true })
+      .getByRole("article")
+      .first()
+      .getByRole("progressbar"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Моя программа", exact: true }).getByRole("progressbar").first(),
+  ).toBeVisible();
   await screenshot(page, "student-dashboard-real-1440");
   await page.getByRole("link", { name: "Все задания", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Домашние задания" })).toBeVisible();
