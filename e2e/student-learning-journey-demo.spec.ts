@@ -102,4 +102,12 @@ test("demo student completes the learning journey", async ({ page }) => {
   await page.getByRole("link", { name: "Домашние задания", exact: true }).click();
   await expect(page).toHaveURL(/\/student\/homework$/);
   await expect(page.getByRole("heading", { name: "Домашние задания", level: 1 })).toBeVisible();
+  await expect(
+    page
+      .getByRole("region", { name: /^Требуют внимания/ })
+      .getByText("Просрочено")
+      .first(),
+  ).toBeVisible();
+  await expect(page.getByRole("region", { name: /^История/ }).getByRole("listitem")).toHaveCount(3);
+  await expect(page.getByText("Ваша нагрузка")).toHaveCount(0);
 });

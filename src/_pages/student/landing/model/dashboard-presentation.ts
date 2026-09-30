@@ -1,19 +1,5 @@
-import type { StudentHomeworkSummary } from "@/entities/homework";
+export { isHomeworkOverdue, formatStudentHomeworkDeadline as formatDashboardDeadline } from "@/entities/homework";
 export { getTopicCompletion } from "@/entities/progress";
-
-export function isHomeworkOverdue(homework: StudentHomeworkSummary, now: number) {
-  return (
-    homework.status === "ASSIGNED" && !homework.completedAt && !!homework.dueAt && Date.parse(homework.dueAt) < now
-  );
-}
-
-export function formatDashboardDeadline(dueAt: string, now: number) {
-  const date = new Date(dueAt);
-  const today = date.toDateString() === new Date(now).toDateString();
-  return today
-    ? `Сегодня, ${new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit" }).format(date)}`
-    : new Intl.DateTimeFormat("ru-RU", { dateStyle: "long", timeStyle: "short" }).format(date);
-}
 
 export function getDeadlineHint(dueAt: string, now: number) {
   const difference = Date.parse(dueAt) - now;

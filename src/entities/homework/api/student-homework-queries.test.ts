@@ -32,6 +32,16 @@ describe("studentHomeworkQueries", () => {
     expect(studentHomeworkQueries.list({ page: 0 }).queryKey).toEqual(["student-homework", "list", { page: 0 }]);
   });
 
+  it("keeps infinite pages separate by status and stops at the server totalPages boundary", () => {
+    const active = studentHomeworkQueries.infiniteList({ status: "ASSIGNED", size: 20, sort: "dueAt,asc" });
+    const history = studentHomeworkQueries.infiniteList({ status: "COMPLETED", size: 3, sort: "assignedAt,desc" });
+    expect(active.queryKey).not.toEqual(history.queryKey);
+    const page = { items: [], page: 0, size: 20, totalElements: 21, totalPages: 2 };
+    expect(active.getNextPageParam!(page, [page], 0, [0])).toBe(1);
+    expect(active.getNextPageParam!({ ...page, page: 1 }, [page], 1, [0, 1])).toBeUndefined();
+    expect(active.getNextPageParam!({ ...page, totalPages: 0 }, [], 0, [0])).toBeUndefined();
+  });
+
   it("loads detail only by owned homework id", async () => {
     getMock.mockResolvedValue({
       data: { id: "homework-1", items: [] } as never,

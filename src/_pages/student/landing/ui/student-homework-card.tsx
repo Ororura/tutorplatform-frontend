@@ -1,8 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, CalendarClock, CircleAlert, ListChecks } from "lucide-react";
+import { ArrowRight, CalendarClock } from "lucide-react";
 import Link from "next/link";
 
-import { studentHomeworkQueries, type StudentHomeworkSummary } from "@/entities/homework";
+import {
+  studentHomeworkQueries,
+  StudentHomeworkIcon,
+  StudentHomeworkStatusBadge,
+  type StudentHomeworkSummary,
+} from "@/entities/homework";
 
 import { formatDashboardDeadline, getDeadlineHint, isHomeworkOverdue } from "../model/dashboard-presentation";
 import { DashboardProgress } from "./dashboard-primitives";
@@ -35,20 +40,16 @@ export function StudentHomeworkCard({
     >
       <div className="grid gap-4 min-[1380px]:grid-cols-[minmax(0,1fr)_240px]">
         <div className="min-w-0">
-          {priority && (
-            <span
-              className={`mb-3 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium ${overdue ? "bg-red-50 text-red-600 ring-1 ring-red-100" : "bg-blue-50 text-blue-700"}`}
-            >
-              {overdue && <CircleAlert size={14} aria-hidden="true" />}
-              {overdue ? "Просрочено" : "Ближайшее задание"}
-            </span>
-          )}
-          <div className="flex items-start gap-3">
-            {!priority && (
-              <span className="hidden size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 sm:flex">
-                <ListChecks size={22} aria-hidden="true" />
+          {priority &&
+            (overdue ? (
+              <StudentHomeworkStatusBadge state="OVERDUE" />
+            ) : (
+              <span className="inline-flex rounded-lg bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                Ближайшее задание
               </span>
-            )}
+            ))}
+          <div className={`flex items-start gap-3 ${priority ? "mt-3" : ""}`}>
+            {!priority && <StudentHomeworkIcon />}
             <div className="min-w-0 flex-1">
               <h3 className="break-words text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
                 {homework.title}
@@ -91,7 +92,7 @@ export function StudentHomeworkCard({
               />
               <div className="min-w-0">
                 <p className="text-slate-500">
-                  {overdue ? "Срок был " : "Срок: "}
+                  {overdue ? "Срок был " : "До "}
                   {formatDashboardDeadline(homework.dueAt, now)}
                 </p>
                 <p className={`mt-1 ${overdue ? "text-red-600" : today ? "text-amber-700" : "text-slate-500"}`}>
