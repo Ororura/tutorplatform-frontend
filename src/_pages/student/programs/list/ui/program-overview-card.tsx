@@ -98,7 +98,7 @@ export function ProgramOverviewCard({
           href={current ? studentProgramHref(program.id, current.topic.id) : programHref}
           className={buttonClassName(
             "primary",
-            "h-auto min-h-14 w-full gap-3 rounded-2xl px-6 py-4 text-center text-base lg:min-h-24 lg:max-w-72 lg:rounded-3xl lg:text-lg xl:min-h-28 xl:max-w-80",
+            "h-auto min-h-14 w-full gap-3 rounded-2xl px-6 py-4 text-center text-base lg:min-h-20 lg:max-w-72 lg:rounded-3xl lg:text-lg xl:min-h-20 xl:max-w-80",
           )}
         >
           {current ? "Продолжить обучение" : "Открыть программу"}
