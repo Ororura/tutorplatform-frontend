@@ -54,8 +54,8 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
   };
 
   return (
-    <main className="mx-auto max-w-[1280px] space-y-4">
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+    <main className="mx-auto max-w-7xl space-y-4">
+      <section className="rounded-2xl border border-(--border) bg-white p-6 sm:p-7">
         <Link
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
           href={`/teacher/students/${studentId}`}
@@ -78,7 +78,7 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
       <StudentProfileNav active="reports" studentId={studentId} />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
+        <section className="min-w-0 rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
           <h2 className="text-xl font-semibold text-slate-950">Отчёты</h2>
           <p className="mt-1 text-sm text-slate-500">Выберите программу, чтобы посмотреть связанные с ней отчёты.</p>
 
@@ -117,7 +117,7 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
                 Программа обучения
                 <select
                   id="student-reports-program"
-                  className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-3 focus:ring-blue-100 disabled:bg-slate-50"
+                  className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:ring-3 focus:ring-blue-100"
                   value={activeProgramId}
                   disabled={programs.data.length === 1}
                   onChange={(event) => setSelectedProgramId(event.target.value)}
@@ -160,7 +160,7 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
         </section>
 
         <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
             <Flag size={20} className="text-blue-600" />
             <h2 className="mt-4 font-semibold text-slate-950">Ожидают отчёта</h2>
             {periods.isPending && (

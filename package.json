@@ -7,6 +7,8 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
+    "lint:tailwind": "tailwind-lint --auto",
+    "lint:tailwind:fix": "tailwind-lint --auto --fix",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
@@ -50,6 +52,7 @@
     "lint-staged": "^17.5.1",
     "openapi-typescript": "7.13.0",
     "prettier": "^3.9.8",
+    "tailwind-lint": "^0.12.1",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.1"
@@ -57,7 +60,8 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix",
+      "tailwind-lint --fix"
     ],
     "*.{json,css,md,mdx,yml,yaml}": [
       "prettier --write"

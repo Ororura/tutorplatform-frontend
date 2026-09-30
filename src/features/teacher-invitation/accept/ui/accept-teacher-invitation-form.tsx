@@ -84,7 +84,7 @@ export function AcceptTeacherInvitationForm({ token }: Readonly<Props>) {
           autoComplete="name"
           autoFocus
           aria-invalid={Boolean(errors.displayName)}
-          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none focus:border-neutral-900"
+          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none"
           {...register("displayName")}
         />
 
@@ -105,7 +105,7 @@ export function AcceptTeacherInvitationForm({ token }: Readonly<Props>) {
           type="password"
           autoComplete="new-password"
           aria-invalid={Boolean(errors.password)}
-          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none focus:border-neutral-900"
+          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none"
           {...register("password")}
         />
 
@@ -128,7 +128,7 @@ export function AcceptTeacherInvitationForm({ token }: Readonly<Props>) {
           type="password"
           autoComplete="new-password"
           aria-invalid={Boolean(errors.passwordConfirmation)}
-          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none focus:border-neutral-900"
+          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none"
           {...register("passwordConfirmation")}
         />
 

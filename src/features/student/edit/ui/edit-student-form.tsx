@@ -64,11 +64,7 @@ export function EditStudentForm({ student, onDone }: Readonly<Props>) {
   });
 
   return (
-    <form
-      className="space-y-5 rounded-xl border border-[var(--border)] bg-white p-4 sm:p-6"
-      onSubmit={onSubmit}
-      noValidate
-    >
+    <form className="space-y-5 rounded-xl border border-(--border) bg-white p-4 sm:p-6" onSubmit={onSubmit} noValidate>
       <div>
         <p className="text-sm font-medium text-blue-600">Редактирование</p>
 
@@ -82,7 +78,7 @@ export function EditStudentForm({ student, onDone }: Readonly<Props>) {
 
         <input
           id="edit-student-first-name"
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 outline-none transition focus:ring-4 focus:ring-blue-100"
           aria-invalid={Boolean(errors.firstName)}
           aria-describedby={errors.firstName ? "edit-student-first-name-error" : undefined}
           {...register("firstName")}
@@ -102,7 +98,7 @@ export function EditStudentForm({ student, onDone }: Readonly<Props>) {
 
         <input
           id="edit-student-last-name"
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 outline-none transition focus:ring-4 focus:ring-blue-100"
           aria-invalid={Boolean(errors.lastName)}
           aria-describedby={errors.lastName ? "edit-student-last-name-error" : undefined}
           {...register("lastName")}

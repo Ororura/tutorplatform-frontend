@@ -197,7 +197,7 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
           {(Object.keys(attendancePresentation) as AttendanceStatus[]).map((status) => (
             <label
               key={status}
-              className="flex cursor-pointer items-center gap-2 rounded-md border border-neutral-300 px-4 py-3 has-[:checked]:border-neutral-900 has-[:checked]:bg-neutral-50"
+              className="flex cursor-pointer items-center gap-2 rounded-md border border-neutral-300 px-4 py-3 has-checked:bg-neutral-50"
             >
               <input
                 type="radio"

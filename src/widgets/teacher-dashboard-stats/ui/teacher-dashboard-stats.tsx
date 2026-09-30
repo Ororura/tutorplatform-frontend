@@ -56,7 +56,7 @@ export function TeacherDashboardStats({ data }: Readonly<Props>) {
         return (
           <Link
             key={card.label}
-            className="group rounded-[14px] border border-[var(--border)] bg-white p-4 transition hover:border-blue-200"
+            className="group rounded-[14px] border border-(--border) bg-white p-4 transition hover:border-blue-200"
             href={card.href}
           >
             <div className="flex items-start justify-between gap-3">
@@ -66,7 +66,7 @@ export function TeacherDashboardStats({ data }: Readonly<Props>) {
               <ArrowRight className="text-slate-300 transition group-hover:text-blue-600" size={17} />
             </div>
             <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{card.value}</p>
-            <p className="mt-1 text-sm leading-5 text-[var(--text-secondary)]">{card.label}</p>
+            <p className="mt-1 text-sm leading-5 text-(--text-secondary)">{card.label}</p>
           </Link>
         );
       })}

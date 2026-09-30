@@ -20,7 +20,7 @@ export function MaterialList({
       {materials.map((material, index) => (
         <li className="min-w-0 rounded-md border border-slate-200 bg-white p-4 sm:p-5" key={material.id}>
           <div className="mb-3 flex items-start justify-between gap-4">
-            <h3 className="min-w-0 break-words font-semibold">{material.title}</h3>
+            <h3 className="min-w-0 wrap-break-word font-semibold">{material.title}</h3>
             {renderActions?.(material, index)}
           </div>
           <MaterialRenderer material={material} />

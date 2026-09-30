@@ -39,11 +39,11 @@ export function TeacherHomePage() {
   return (
     <main className="space-y-4">
       <header className="py-2">
-        <p className="text-sm font-medium text-[var(--text-secondary)]">Рабочее пространство</p>
+        <p className="text-sm font-medium text-(--text-secondary)">Рабочее пространство</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
           Добрый день, {currentUser.data.displayName}!
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-(--text-secondary)">
           Здесь собраны ученики и быстрые действия для ежедневной работы.
         </p>
       </header>
@@ -85,7 +85,7 @@ function TeacherDashboardContent({ data, isPending, isError, onRetry }: Readonly
     return (
       <section
         aria-busy="true"
-        className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-[var(--text-secondary)]"
+        className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-(--text-secondary)"
       >
         Загружаем сводку…
       </section>
@@ -96,7 +96,7 @@ function TeacherDashboardContent({ data, isPending, isError, onRetry }: Readonly
     return (
       <section className="rounded-2xl border border-red-100 bg-white p-6" role="alert">
         <h2 className="text-lg font-semibold text-slate-950">Не удалось загрузить сводку</h2>
-        <p className="mt-2 text-sm text-[var(--text-secondary)]">Проверьте соединение и попробуйте ещё раз.</p>
+        <p className="mt-2 text-sm text-(--text-secondary)">Проверьте соединение и попробуйте ещё раз.</p>
         <Button className="mt-4" type="button" variant="secondary" onClick={onRetry}>
           Повторить загрузку сводки
         </Button>
@@ -116,7 +116,7 @@ function TeacherHomeLoading() {
   return (
     <main>
       <div
-        className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-[var(--text-secondary)]"
+        className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-(--text-secondary)"
         aria-busy="true"
       >
         Загружаем рабочее пространство…
@@ -130,7 +130,7 @@ function TeacherHomeError({ onRetry }: Readonly<{ onRetry: () => void }>) {
     <main>
       <div className="rounded-2xl border border-red-100 bg-white p-6" role="alert">
         <h1 className="text-xl font-semibold text-slate-950">Не удалось загрузить профиль преподавателя</h1>
-        <p className="mt-2 text-sm text-[var(--text-secondary)]">Проверьте соединение и попробуйте ещё раз.</p>
+        <p className="mt-2 text-sm text-(--text-secondary)">Проверьте соединение и попробуйте ещё раз.</p>
         <Button className="mt-5" type="button" variant="secondary" onClick={onRetry}>
           Повторить
         </Button>

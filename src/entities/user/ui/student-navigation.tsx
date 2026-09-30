@@ -54,7 +54,7 @@ export function StudentNavigation({ mobile = false }: Readonly<{ mobile?: boolea
             href={href}
             aria-current={active ? "page" : undefined}
             className={[
-              "flex shrink-0 items-center gap-2 rounded-[10px] text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600",
+              "flex shrink-0 items-center gap-2 rounded-[10px] text-sm font-medium transition focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
               mobile ? "px-3 py-2" : "h-9 px-3",
               active ? "bg-blue-50/70 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950",
             ].join(" ")}

@@ -34,10 +34,10 @@ export function StudentHomeworkList({
               <div className="flex min-w-0 flex-1 items-start gap-4 sm:items-center sm:gap-6">
                 <StudentHomeworkIcon />
                 <div className="min-w-0 flex-1">
-                  <h3 className="break-words text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
+                  <h3 className="wrap-break-word text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
                     {homework.title}
                   </h3>
-                  <p className="mt-1 break-words text-sm leading-6 text-slate-500">
+                  <p className="mt-1 wrap-break-word text-sm leading-6 text-slate-500">
                     {programTitle && (
                       <>
                         {programTitle}

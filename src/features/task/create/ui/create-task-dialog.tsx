@@ -92,7 +92,7 @@ export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>
       <dialog
         ref={dialogRef}
         aria-labelledby="create-task-title"
-        className="m-auto max-h-[90vh] w-[min(46rem,calc(100%-2rem))] overflow-auto rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto max-h-[90vh] w-[min(46rem,calc(100%-2rem))] overflow-auto rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>

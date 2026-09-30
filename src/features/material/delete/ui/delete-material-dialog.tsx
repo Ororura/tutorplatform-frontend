@@ -61,7 +61,7 @@ export function DeleteMaterialDialog({
         ref={dialogRef}
         aria-labelledby={`delete-material-title-${material.id}`}
         aria-describedby={`delete-material-description-${material.id}`}
-        className="m-auto w-[min(32rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto w-[min(32rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
         onCancel={(event) => {
           if (mutation.isPending) event.preventDefault();
         }}
@@ -71,7 +71,7 @@ export function DeleteMaterialDialog({
           <h2 id={`delete-material-title-${material.id}`} className="text-xl font-semibold text-slate-950">
             Удалить материал
           </h2>
-          <p id={`delete-material-description-${material.id}`} className="break-words text-sm text-slate-700">
+          <p id={`delete-material-description-${material.id}`} className="wrap-break-word text-sm text-slate-700">
             Вы действительно хотите удалить «{material.title}»? Это действие нельзя отменить.
           </p>
           {error && (

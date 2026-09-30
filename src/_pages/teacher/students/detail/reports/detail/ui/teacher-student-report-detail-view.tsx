@@ -163,7 +163,7 @@ function ReportDetails({
         <ArrowLeft size={16} /> Все отчёты
       </Link>
 
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
+      <section className="rounded-2xl border border-(--border) bg-white p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <span className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
@@ -191,10 +191,7 @@ function ReportDetails({
 
       <ReportPublicationManagement reportId={report.id} status={report.status} />
 
-      <section
-        className="rounded-2xl border border-[var(--border)] bg-white p-6"
-        aria-labelledby="report-snapshot-heading"
-      >
+      <section className="rounded-2xl border border-(--border) bg-white p-6" aria-labelledby="report-snapshot-heading">
         <h2 id="report-snapshot-heading" className="text-xl font-semibold text-slate-950">
           Результаты периода
         </h2>
@@ -236,14 +233,14 @@ function ReportDetails({
         </section>
       </section>
 
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
+      <section className="rounded-2xl border border-(--border) bg-white p-6">
         <h2 className="text-xl font-semibold text-slate-950">Комментарий преподавателя</h2>
         {editable ? (
           <form className="mt-5 space-y-5" onSubmit={save}>
             <label className="block space-y-2">
               <span className="text-sm font-medium text-slate-700">Итоги периода</span>
               <textarea
-                className="min-h-36 w-full resize-y rounded-xl border border-slate-200 p-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-100"
+                className="min-h-36 w-full resize-y rounded-xl border border-slate-200 p-3 text-slate-900 outline-none focus:ring-3 focus:ring-blue-100"
                 value={teacherSummary}
                 onChange={(event) => setTeacherSummary(event.target.value)}
               />
@@ -251,7 +248,7 @@ function ReportDetails({
             <label className="block space-y-2">
               <span className="text-sm font-medium text-slate-700">План на следующий период</span>
               <textarea
-                className="min-h-36 w-full resize-y rounded-xl border border-slate-200 p-3 text-slate-900 outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-100"
+                className="min-h-36 w-full resize-y rounded-xl border border-slate-200 p-3 text-slate-900 outline-none focus:ring-3 focus:ring-blue-100"
                 value={nextPeriodPlan}
                 onChange={(event) => setNextPeriodPlan(event.target.value)}
               />

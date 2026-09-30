@@ -28,17 +28,17 @@ export function StudentProgressView() {
           </span>
           <div>
             <p className="text-sm font-medium text-blue-600">Учебный кабинет</p>
-            <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+            <h1 className="mt-1 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
               Мой прогресс
             </h1>
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+            <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
               Следите за результатами обучения и продолжайте заниматься в своей программе.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
+      <section className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
         {programs.isPending && <Loading label="Загружаем программы…" />}
 
         {programs.isError && (
@@ -63,7 +63,7 @@ export function StudentProgressView() {
               </label>
               <select
                 id="student-progress-program"
-                className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-3 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-600"
+                className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:ring-3 focus:ring-blue-100"
                 value={activeProgramId}
                 disabled={programs.data.length === 1}
                 onChange={(event) => setSelectedProgramId(event.target.value)}
@@ -152,7 +152,7 @@ function hasLearningData(progress: {
 
 function Loading({ label }: Readonly<{ label: string }>) {
   return (
-    <p className="rounded-2xl bg-slate-50 p-5 text-sm text-[var(--text-secondary)]" aria-busy="true">
+    <p className="rounded-2xl bg-slate-50 p-5 text-sm text-(--text-secondary)" aria-busy="true">
       {label}
     </p>
   );
@@ -186,7 +186,7 @@ function EmptyState({
     <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
       <Icon size={30} className="mx-auto text-blue-500" aria-hidden="true" />
       <p className="mt-4 font-semibold text-slate-950">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">{description}</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-(--text-secondary)">{description}</p>
       <Link
         className="mt-5 inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700"
         href={href}

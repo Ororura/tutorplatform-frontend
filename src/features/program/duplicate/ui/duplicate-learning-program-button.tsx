@@ -55,7 +55,7 @@ export function DuplicateLearningProgramButton({ programId }: Readonly<{ program
         ref={dialogRef}
         aria-labelledby="duplicate-learning-program-title"
         aria-describedby="duplicate-learning-program-description"
-        className="m-auto w-[min(30rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto w-[min(30rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
         onClose={() => setOpen(false)}
         onCancel={(event) => {
           if (submitting.current) event.preventDefault();

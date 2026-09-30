@@ -43,7 +43,7 @@ export function CreateStudentDialog({ open: controlledOpen, onOpenChange }: Read
       <dialog
         ref={dialogRef}
         aria-labelledby="create-student-title"
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
         onClose={() => changeOpen(false)}
       >
         <div className="p-5 sm:p-6">

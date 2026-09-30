@@ -29,7 +29,7 @@ export function StudentDashboardHeader({
         )}
         {user.isError && <DashboardError message="Не удалось загрузить профиль." retry={() => user.refetch()} />}
         {user.data && (
-          <h1 className="break-words text-3xl font-bold tracking-tight text-slate-950 xl:text-4xl">
+          <h1 className="wrap-break-word text-3xl font-bold tracking-tight text-slate-950 xl:text-4xl">
             Добрый день{firstName ? `, ${firstName}` : ""}!
           </h1>
         )}
@@ -52,7 +52,7 @@ export function StudentDashboardHeader({
           <div className="min-w-0">
             <p className="text-xs text-slate-500">Ближайший срок</p>
             <p className="mt-1 text-sm font-semibold text-slate-950">{formatDashboardDeadline(nearest.dueAt, now)}</p>
-            <p className="mt-1 break-words text-sm text-slate-500">{nearest.title}</p>
+            <p className="mt-1 wrap-break-word text-sm text-slate-500">{nearest.title}</p>
           </div>
         </Link>
       )}
@@ -68,7 +68,7 @@ export function StudentDashboardHeader({
           width={1672}
           height={941}
           sizes="210px"
-          className="absolute bottom-0 -right-3 h-auto w-[210px]"
+          className="absolute bottom-0 -right-3 h-auto w-52.5"
         />
       </div>
     </header>

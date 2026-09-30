@@ -110,7 +110,7 @@ function TaskSolutionContent({
 
   return (
     <section
-      className="space-y-6 rounded-xl border border-[var(--border)] bg-white p-4 sm:p-6"
+      className="space-y-6 rounded-xl border border-(--border) bg-white p-4 sm:p-6"
       aria-labelledby={`task-${item.id}-heading`}
     >
       <TaskHeader item={item} />
@@ -208,7 +208,7 @@ function TextSolution({
         <span className="font-medium">Ваш ответ</span>
 
         <textarea
-          className="min-h-40 w-full rounded-xl border border-slate-200 bg-white p-3 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+          className="min-h-40 w-full rounded-xl border border-slate-200 bg-white p-3 outline-none transition focus:ring-4 focus:ring-blue-100"
           disabled={disabled || submit.isPending}
           id={`answer-${item.id}`}
           onChange={(event) => setTextAnswer(event.target.value)}
@@ -375,7 +375,7 @@ function CodeSolution({
         <span className="font-medium">Код решения</span>
 
         <textarea
-          className="min-h-72 w-full overflow-auto rounded-xl border border-slate-200 bg-slate-950 p-4 font-mono text-sm text-slate-100 whitespace-pre outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+          className="min-h-72 w-full overflow-auto rounded-xl border border-slate-200 bg-slate-950 p-4 font-mono text-sm text-slate-100 whitespace-pre outline-none transition focus:ring-4 focus:ring-blue-100"
           disabled={executionDisabled || busy}
           id={`source-${item.id}`}
           onChange={(event) => setSourceCode(event.target.value)}

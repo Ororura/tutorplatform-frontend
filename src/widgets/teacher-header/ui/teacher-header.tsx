@@ -57,7 +57,7 @@ export function TeacherHeader() {
   return (
     <header className="sticky top-0 z-40 pt-3">
       <div className="mx-auto max-w-[1600px] px-3 sm:px-5">
-        <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white/95 shadow-[var(--shadow-header)] backdrop-blur-xl">
+        <div className="overflow-hidden rounded-2xl border border-(--border) bg-white/95 shadow-(--shadow-header) backdrop-blur-xl">
           <div className="flex h-15 items-center gap-5 px-4 sm:px-5">
             <Link
               aria-label="Умнее Вместе — главная"
@@ -70,7 +70,7 @@ export function TeacherHeader() {
 
               <span className="hidden leading-tight sm:block">
                 <span className="block text-[15px] font-semibold tracking-tight text-slate-950">Умнее Вместе</span>
-                <span className="mt-0.5 block text-[11px] text-[var(--text-secondary)]">Платформа для репетиторов</span>
+                <span className="mt-0.5 block text-[11px] text-(--text-secondary)">Платформа для репетиторов</span>
               </span>
             </Link>
 
@@ -84,7 +84,7 @@ export function TeacherHeader() {
                     href={href}
                     aria-current={active ? "page" : undefined}
                     className={[
-                      "flex h-9 items-center gap-2 rounded-[10px] px-3 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600",
+                      "flex h-9 items-center gap-2 rounded-[10px] px-3 text-sm font-medium transition focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
                       active ? "bg-blue-50/70 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950",
                     ].join(" ")}
                   >
@@ -103,14 +103,14 @@ export function TeacherHeader() {
 
                 <span className="hidden leading-tight xl:block">
                   <span className="block max-w-40 truncate text-sm font-medium text-slate-900">{displayName}</span>
-                  <span className="block text-xs text-[var(--text-secondary)]">Преподаватель</span>
+                  <span className="block text-xs text-(--text-secondary)">Преподаватель</span>
                 </span>
               </div>
 
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 hover:bg-slate-50 xl:inline-flex"
+                  className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600 hover:bg-slate-50 xl:inline-flex"
                 >
                   <ShieldCheck size={17} />
                   Администрирование
@@ -134,7 +134,7 @@ export function TeacherHeader() {
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={[
-                    "flex shrink-0 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600",
+                    "flex shrink-0 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
                     active ? "bg-blue-50/70 text-blue-700" : "text-slate-600 hover:bg-slate-50",
                   ].join(" ")}
                 >
@@ -146,7 +146,7 @@ export function TeacherHeader() {
             {isAdmin && (
               <Link
                 href="/admin"
-                className="flex shrink-0 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 hover:bg-slate-50"
+                className="flex shrink-0 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium text-slate-600 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600 hover:bg-slate-50"
               >
                 <ShieldCheck size={16} />
                 Администрирование

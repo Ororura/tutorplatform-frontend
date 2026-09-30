@@ -43,10 +43,10 @@ export function StudentProgramCard({
       >
         <ProgramIcon />
         <div className="min-w-0 flex-1">
-          <h3 className="break-words text-base font-semibold tracking-tight text-slate-950 sm:text-lg">
+          <h3 className="wrap-break-word text-base font-semibold tracking-tight text-slate-950 sm:text-lg">
             {program.title}
           </h3>
-          <p className="mt-1 break-words text-sm text-slate-500">{program.subject.name}</p>
+          <p className="mt-1 wrap-break-word text-sm text-slate-500">{program.subject.name}</p>
         </div>
         <ArrowRight
           size={16}
@@ -72,8 +72,8 @@ export function StudentProgramCard({
               <p className="text-xs text-slate-500">
                 {current.progressStatus === "IN_PROGRESS" ? "Текущая тема" : "Следующая тема"}
               </p>
-              <p className="mt-1 break-words font-semibold text-slate-950">{current.title}</p>
-              <p className="mt-1 break-words text-xs text-slate-500">{currentModule.title}</p>
+              <p className="mt-1 wrap-break-word font-semibold text-slate-950">{current.title}</p>
+              <p className="mt-1 wrap-break-word text-xs text-slate-500">{currentModule.title}</p>
             </div>
             <ArrowRight
               size={19}
@@ -96,7 +96,7 @@ export function StudentProgramCard({
                     ) : (
                       <Circle size={17} className="mt-0.5 shrink-0 text-blue-400" aria-hidden="true" />
                     )}
-                    <span className="min-w-0 break-words">
+                    <span className="min-w-0 wrap-break-word">
                       {topic.title}
                       <span className="sr-only">
                         {topic.progressStatus === "COMPLETED"
@@ -132,7 +132,7 @@ export function StudentProgramMotivation({ program }: Readonly<{ program: Studen
       </span>
       <div className="min-w-0">
         <h3 className="font-semibold text-slate-950">Отличный прогресс!</h3>
-        <p className="mt-1 break-words text-xs leading-5 text-slate-600">
+        <p className="mt-1 wrap-break-word text-xs leading-5 text-slate-600">
           Ты прошёл {completion.percent}% программы «{program.title}». Продолжай в том же духе!
         </p>
       </div>

@@ -14,7 +14,7 @@ export function StudentList({
   students: StudentSummary[];
 }>) {
   return (
-    <ul className="divide-y divide-[var(--border)]">
+    <ul className="divide-y divide-(--border)">
       {students.map((student) => (
         <li key={student.id}>
           <Link

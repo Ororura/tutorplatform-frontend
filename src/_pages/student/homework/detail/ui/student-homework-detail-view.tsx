@@ -42,7 +42,7 @@ export function StudentHomeworkDetailView({
     return (
       <main>
         <div
-          className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-[var(--text-secondary)]"
+          className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-(--text-secondary)"
           aria-busy="true"
         >
           Загружаем домашнее задание…
@@ -72,7 +72,7 @@ export function StudentHomeworkDetailView({
         </div>
 
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) hover:text-blue-600"
           href="/student/homework"
         >
           <ArrowLeft size={16} />
@@ -94,7 +94,7 @@ export function StudentHomeworkDetailView({
     <main className="mx-auto min-w-0 max-w-5xl space-y-5">
       <section className="py-2">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-blue-600"
           href="/student/homework"
         >
           <ArrowLeft size={16} />
@@ -110,7 +110,7 @@ export function StudentHomeworkDetailView({
             <div className="min-w-0">
               <p className="text-sm font-medium text-blue-600">Домашняя работа</p>
 
-              <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+              <h1 className="mt-1 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
                 {data.title}
               </h1>
             </div>
@@ -124,16 +124,16 @@ export function StudentHomeworkDetailView({
 
       <div className="space-y-5">
         <div className="min-w-0 space-y-4">
-          <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
+          <section className="rounded-2xl border border-(--border) bg-white p-6">
             <dl className="grid gap-3 sm:grid-cols-3">
               <div className="py-2">
-                <dt className="text-sm text-[var(--text-secondary)]">Назначено</dt>
+                <dt className="text-sm text-(--text-secondary)">Назначено</dt>
 
                 <dd className="mt-2 text-sm font-medium text-slate-900">{formatHomeworkDate(data.assignedAt)}</dd>
               </div>
 
               <div className="py-2">
-                <dt className="text-sm text-[var(--text-secondary)]">Срок</dt>
+                <dt className="text-sm text-(--text-secondary)">Срок</dt>
 
                 <dd className="mt-2 text-sm font-medium text-slate-900">
                   {data.dueAt ? formatHomeworkDate(data.dueAt) : "Без срока"}
@@ -141,7 +141,7 @@ export function StudentHomeworkDetailView({
               </div>
 
               <div className="py-2">
-                <dt className="text-sm text-[var(--text-secondary)]">Выполнено</dt>
+                <dt className="text-sm text-(--text-secondary)">Выполнено</dt>
 
                 <dd className="mt-2 text-sm font-medium text-slate-900">
                   {data.completedAt ? formatHomeworkDate(data.completedAt) : "—"}
@@ -156,7 +156,7 @@ export function StudentHomeworkDetailView({
             )}
           </section>
 
-          <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
+          <section className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
             <div>
               <p className="text-sm font-medium text-blue-600">Практика</p>
 
@@ -164,7 +164,7 @@ export function StudentHomeworkDetailView({
                 Задания
               </h2>
 
-              <p className="mt-1 text-sm text-[var(--text-secondary)]">Выполняйте задания по порядку.</p>
+              <p className="mt-1 text-sm text-(--text-secondary)">Выполняйте задания по порядку.</p>
             </div>
 
             <ol className="mt-5 divide-y divide-slate-100" aria-labelledby="items-heading">
@@ -182,12 +182,12 @@ export function StudentHomeworkDetailView({
                     className="flex flex-col gap-4 py-5 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
                     key={item.id}
                   >
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-semibold text-[var(--text-secondary)]">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-semibold text-(--text-secondary)">
                       {item.position + 1}
                     </span>
 
                     <div className="min-w-0 flex-1">
-                      <h3 className="break-words font-semibold text-slate-950">{item.task.title}</h3>
+                      <h3 className="wrap-break-word font-semibold text-slate-950">{item.task.title}</h3>
 
                       <div className="mt-2 flex flex-wrap gap-2 text-xs">
                         <span className="rounded-full bg-slate-100 px-2.5 py-1 text-slate-600">
@@ -238,14 +238,14 @@ export function StudentHomeworkDetailView({
         </div>
 
         <aside>
-          <section className="border-t border-[var(--border)] pt-4">
+          <section className="border-t border-(--border) pt-4">
             <CheckCircle2 size={21} className="text-blue-600" />
 
             <h2 className="mt-4 font-semibold text-slate-950">Прогресс работы</h2>
 
             <div className="mt-5 py-2">
               <div className="flex items-end justify-between">
-                <span className="text-sm text-[var(--text-secondary)]">Выполнено</span>
+                <span className="text-sm text-(--text-secondary)">Выполнено</span>
 
                 <span className="text-2xl font-semibold text-slate-950">
                   {items.filter((item) => item.passed).length}

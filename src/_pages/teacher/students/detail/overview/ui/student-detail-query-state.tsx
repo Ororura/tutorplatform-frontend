@@ -11,7 +11,7 @@ type Props = {
 export function StudentDetailQueryState({ isPending, isError, error, onRetry }: Readonly<Props>) {
   if (isPending) {
     return (
-      <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
+      <div className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
         Загружаем ученика…
       </div>
     );
@@ -20,7 +20,7 @@ export function StudentDetailQueryState({ isPending, isError, error, onRetry }: 
   if (isError) {
     if (error instanceof ApiClientError && error.status === 404) {
       return (
-        <div className="rounded-2xl border border-[var(--border)] bg-white p-7" role="alert">
+        <div className="rounded-2xl border border-(--border) bg-white p-7" role="alert">
           <h1 className="text-2xl font-semibold text-slate-950">Ученик не найден</h1>
 
           <p className="mt-2 text-sm text-slate-500">Проверьте ссылку или вернитесь к списку учеников.</p>

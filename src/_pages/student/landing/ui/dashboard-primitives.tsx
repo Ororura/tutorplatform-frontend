@@ -22,7 +22,7 @@ export function DashboardSection({
   return (
     <section
       aria-label={title}
-      className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-4 shadow-xs sm:p-5 xl:p-6"
+      className="min-w-0 rounded-2xl border border-(--border) bg-white p-4 shadow-xs sm:p-5 xl:p-6"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
