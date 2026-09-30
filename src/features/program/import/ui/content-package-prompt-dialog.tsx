@@ -74,7 +74,7 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
       ref={dialogRef}
       aria-labelledby="content-package-prompt-title"
       aria-describedby="content-package-prompt-description"
-      className="m-auto max-h-[min(90vh,50rem)] w-[min(40rem,calc(100%-2rem))] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+      className="m-auto max-h-[min(90vh,50rem)] w-[min(40rem,calc(100%-2rem))] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
       onClose={onClose}
     >
       <form

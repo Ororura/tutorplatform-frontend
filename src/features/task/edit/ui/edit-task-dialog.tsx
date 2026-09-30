@@ -59,7 +59,7 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
       <dialog
         ref={dialogRef}
         aria-labelledby="edit-task-title"
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit}>

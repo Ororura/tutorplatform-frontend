@@ -58,7 +58,7 @@ export function AcceptStudentInviteForm({ token }: Readonly<{ token: string }>) 
           autoFocus
           aria-invalid={Boolean(errors.password)}
           aria-describedby={errors.password ? "student-password-error" : "student-password-hint"}
-          className="h-11 w-full rounded-md border border-neutral-300 bg-white px-3 outline-none focus:border-neutral-900 focus:ring-2 focus:ring-neutral-300"
+          className="h-11 w-full rounded-md border border-neutral-300 bg-white px-3 outline-none focus:ring-2 focus:ring-neutral-300"
           {...register("password")}
         />
         {errors.password ? (

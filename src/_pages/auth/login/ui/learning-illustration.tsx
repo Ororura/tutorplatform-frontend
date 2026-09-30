@@ -1,7 +1,7 @@
 export function LearningIllustration() {
   return (
     <svg
-      className="h-auto max-h-[670px] w-full max-w-[560px] overflow-visible drop-shadow-[0_28px_24px_rgba(37,99,235,0.09)]"
+      className="h-auto max-h-167.5 w-full max-w-140 overflow-visible drop-shadow-[0_28px_24px_rgba(37,99,235,0.09)]"
       viewBox="0 0 560 650"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

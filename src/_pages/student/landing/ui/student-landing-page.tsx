@@ -40,7 +40,7 @@ export function StudentLandingPage() {
     .slice(0, previewSize);
 
   return (
-    <main className="mx-auto max-w-[1440px] space-y-4">
+    <main className="mx-auto max-w-360 space-y-4">
       <StudentDashboardHeader
         now={now}
         attentionCount={homeworks.isError ? undefined : homeworks.data?.totalElements}
@@ -62,7 +62,7 @@ export function StudentLandingPage() {
             <DashboardError message="Не удалось загрузить домашние задания." retry={() => homeworks.refetch()} />
           )}
           {!homeworks.isError && homeworks.data?.items.length === 0 && (
-            <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-8 text-center">
+            <div className="rounded-xl bg-(--surface-muted) px-4 py-8 text-center">
               <ClipboardCheck size={28} className="mx-auto text-blue-500" aria-hidden="true" />
               <p className="mt-3 font-semibold text-slate-950">Невыполненных заданий нет</p>
               <p className="mt-2 text-sm leading-6 text-slate-500">Новые задания преподавателя появятся здесь.</p>
@@ -89,7 +89,7 @@ export function StudentLandingPage() {
             <DashboardError message="Не удалось загрузить ваши программы." retry={() => programs.refetch()} />
           )}
           {!programs.isError && programs.data?.length === 0 && (
-            <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-8 text-center">
+            <div className="rounded-xl bg-(--surface-muted) px-4 py-8 text-center">
               <BookOpenText size={28} className="mx-auto text-blue-500" aria-hidden="true" />
               <p className="mt-3 font-semibold text-slate-950">Программ пока нет</p>
               <p className="mt-2 text-sm leading-6 text-slate-500">

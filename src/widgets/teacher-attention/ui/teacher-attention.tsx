@@ -15,17 +15,14 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
         <Check aria-hidden="true" className="mt-0.5 shrink-0 text-slate-500" size={20} />
         <div>
           <h2 className="text-sm font-semibold text-slate-900">Всё спокойно</h2>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">Сейчас нет работ и отчётов, требующих действий.</p>
+          <p className="mt-1 text-sm text-(--text-secondary)">Сейчас нет работ и отчётов, требующих действий.</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section
-      id="teacher-attention"
-      className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6"
-    >
+    <section id="teacher-attention" className="scroll-mt-28 rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
       <div className="flex items-start gap-4">
         <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
           <CircleAlert size={20} />
@@ -45,7 +42,7 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
                   >
                     <span className="min-w-0">
                       <span className="block font-medium text-slate-900">{presentation.title}</span>
-                      <span className="mt-1 block truncate text-sm text-[var(--text-secondary)]">
+                      <span className="mt-1 block truncate text-sm text-(--text-secondary)">
                         {item.displayName} · {presentation.dateLabel} {dateFormatter.format(new Date(item.eventAt))}
                       </span>
                     </span>

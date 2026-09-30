@@ -29,18 +29,17 @@ export function ProgramOverviewCard({
 
   if (!active) {
     return (
-      <article
-        aria-label={program.title}
-        className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-4 sm:p-5"
-      >
+      <article aria-label={program.title} className="min-w-0 rounded-2xl border border-(--border) bg-white p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <ProgramIcon />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="break-words text-xs text-slate-500">{program.subject.name}</p>
+              <p className="wrap-break-word text-xs text-slate-500">{program.subject.name}</p>
               <ProgramStatusBadge status={program.status} />
             </div>
-            <h3 className="mt-2 break-words text-base font-semibold tracking-tight text-slate-950">{program.title}</h3>
+            <h3 className="mt-2 wrap-break-word text-base font-semibold tracking-tight text-slate-950">
+              {program.title}
+            </h3>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-end gap-x-5 gap-y-3">
@@ -64,21 +63,21 @@ export function ProgramOverviewCard({
   return (
     <article
       aria-label={program.title}
-      className="grid min-w-0 gap-6 rounded-2xl border border-[var(--border)] bg-white p-5 shadow-xs sm:p-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] xl:gap-8 xl:p-7"
+      className="grid min-w-0 gap-6 rounded-2xl border border-(--border) bg-white p-5 shadow-xs sm:p-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] xl:gap-8 xl:p-7"
     >
       <div className="flex min-w-0 flex-col justify-between gap-6">
         <div className="flex items-start gap-4">
           <ProgramIcon large />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="break-words text-sm text-slate-500">{program.subject.name}</p>
+              <p className="wrap-break-word text-sm text-slate-500">{program.subject.name}</p>
               <ProgramStatusBadge status={program.status} />
             </div>
-            <h3 className="mt-2 break-words text-2xl font-semibold tracking-tight text-slate-950 xl:text-3xl">
+            <h3 className="mt-2 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 xl:text-3xl">
               {program.title}
             </h3>
             {program.description && (
-              <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-slate-500 sm:text-base">
+              <p className="mt-3 line-clamp-3 wrap-break-word text-sm leading-6 text-slate-500 sm:text-base">
                 {program.description}
               </p>
             )}
@@ -87,8 +86,8 @@ export function ProgramOverviewCard({
         {current && (
           <div className="min-w-0">
             <p className="text-sm font-medium text-blue-600">Текущая тема</p>
-            <h4 className="mt-1 break-words text-lg font-semibold text-slate-950">{current.topic.title}</h4>
-            <p className="mt-1 break-words text-sm text-slate-500">{current.module.title}</p>
+            <h4 className="mt-1 wrap-break-word text-lg font-semibold text-slate-950">{current.topic.title}</h4>
+            <p className="mt-1 wrap-break-word text-sm text-slate-500">{current.module.title}</p>
           </div>
         )}
         {!progress.isError && <ProgramTopicProgress progress={progress.data} title={program.title} />}

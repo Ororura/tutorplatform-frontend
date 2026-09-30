@@ -17,7 +17,7 @@ export function TeacherStudentsOverview({ data, isPending, isError, onRetry }: R
 
   if (isPending) {
     content = (
-      <p aria-busy="true" className="py-4 text-sm text-[var(--text-secondary)]">
+      <p aria-busy="true" className="py-4 text-sm text-(--text-secondary)">
         Загружаем учеников…
       </p>
     );
@@ -34,7 +34,7 @@ export function TeacherStudentsOverview({ data, isPending, isError, onRetry }: R
     content = (
       <div className="py-4">
         <p className="font-medium text-slate-900">Учеников пока нет</p>
-        <p className="mt-1 text-sm text-[var(--text-secondary)]">Добавьте первого ученика через быстрые действия.</p>
+        <p className="mt-1 text-sm text-(--text-secondary)">Добавьте первого ученика через быстрые действия.</p>
       </div>
     );
   } else {
@@ -53,7 +53,7 @@ export function TeacherStudentsOverview({ data, isPending, isError, onRetry }: R
 
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-slate-900">{name}</p>
-                    <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                    <p className="mt-1 text-sm text-(--text-secondary)">
                       {getStudentStatusLabel(student.status)} · {getStudentAccountStatusLabel(student.accountStatus)}
                     </p>
                   </div>
@@ -74,7 +74,7 @@ export function TeacherStudentsOverview({ data, isPending, isError, onRetry }: R
 
         <div className="mt-3 flex flex-col gap-3 border-t border-slate-100 pt-3 sm:flex-row sm:items-center sm:justify-between">
           {data.totalElements > data.items.length ? (
-            <p className="text-xs text-[var(--text-secondary)]">
+            <p className="text-xs text-(--text-secondary)">
               Показаны последние {data.items.length} из {data.totalElements}
             </p>
           ) : (
@@ -91,7 +91,7 @@ export function TeacherStudentsOverview({ data, isPending, isError, onRetry }: R
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
+    <section className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
       <h2 className="text-xl font-semibold tracking-tight text-slate-950">Мои ученики</h2>
 
       {content}

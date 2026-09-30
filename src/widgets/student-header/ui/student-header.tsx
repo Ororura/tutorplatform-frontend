@@ -25,7 +25,7 @@ export function StudentHeader() {
   return (
     <header className="sticky top-0 z-40 pt-3">
       <div className="mx-auto max-w-[1600px] px-3 sm:px-5">
-        <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white/95 shadow-[var(--shadow-header)] backdrop-blur-xl">
+        <div className="overflow-hidden rounded-2xl border border-(--border) bg-white/95 shadow-(--shadow-header) backdrop-blur-xl">
           <div className="flex h-15 items-center gap-5 px-4 sm:px-5">
             <Link
               aria-label="Умнее Вместе — главная"

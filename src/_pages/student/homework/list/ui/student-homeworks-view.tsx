@@ -45,18 +45,18 @@ export function StudentHomeworksView() {
   const empty = !pending && !failed && activeItems.length === 0 && history.length === 0;
 
   return (
-    <main className="mx-auto max-w-[1440px] space-y-5">
+    <main className="mx-auto max-w-360 space-y-5">
       <header className="py-2">
         <div className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-[var(--text-secondary)]">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-(--text-secondary)">
             <ClipboardCheck size={24} aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-[var(--text-secondary)]">Учебный кабинет</p>
-            <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+            <p className="text-sm font-medium text-(--text-secondary)">Учебный кабинет</p>
+            <h1 className="mt-1 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
               Домашние задания
             </h1>
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+            <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
               Задания преподавателя и результаты их проверки.
             </p>
           </div>
@@ -77,10 +77,10 @@ export function StudentHomeworksView() {
         </div>
       )}
       {empty && (
-        <section className="rounded-2xl border border-[var(--border)] bg-white px-4 py-10 text-center shadow-xs">
+        <section className="rounded-2xl border border-(--border) bg-white px-4 py-10 text-center shadow-xs">
           <ClipboardCheck size={30} className="mx-auto text-blue-500" aria-hidden="true" />
           <h2 className="mt-4 font-semibold text-slate-950">Домашних заданий пока нет</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-(--text-secondary)">
             Когда преподаватель назначит новое задание, оно появится здесь.
           </p>
         </section>
@@ -103,7 +103,7 @@ export function StudentHomeworksView() {
       {upcoming.length > 0 && (
         <section
           aria-labelledby="homework-upcoming-heading"
-          className="rounded-2xl border border-[var(--border)] bg-white p-4 shadow-xs"
+          className="rounded-2xl border border-(--border) bg-white p-4 shadow-xs"
         >
           <h2
             id="homework-upcoming-heading"

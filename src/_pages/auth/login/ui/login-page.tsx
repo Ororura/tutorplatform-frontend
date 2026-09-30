@@ -39,7 +39,7 @@ export function LoginPage() {
           aria-hidden="true"
         />
 
-        <header className="relative z-10 mx-auto flex w-full max-w-[1500px] shrink-0 items-center justify-between px-5 py-5 sm:px-8 lg:px-10 lg:py-7">
+        <header className="relative z-10 mx-auto flex w-full max-w-375 shrink-0 items-center justify-between px-5 py-5 sm:px-8 lg:px-10 lg:py-7">
           <div className="flex items-center gap-3">
             <span className="grid size-11 place-items-center rounded-xl bg-blue-600 text-white">
               <BookOpen className="size-6" strokeWidth={2.2} aria-hidden="true" />
@@ -57,8 +57,8 @@ export function LoginPage() {
           </div>
         </header>
 
-        <div className="relative z-10 mx-auto grid w-full max-w-[1500px] flex-none items-start px-5 pt-4 pb-8 sm:px-8 sm:pt-6 lg:flex-1 lg:grid-cols-[minmax(250px,0.72fr)_minmax(430px,510px)] lg:items-center lg:gap-10 lg:px-10 lg:pt-0 xl:grid-cols-[minmax(280px,0.72fr)_minmax(450px,510px)_minmax(350px,0.95fr)] xl:gap-12">
-          <section className="hidden max-w-[350px] lg:block" aria-labelledby="login-intro-title">
+        <div className="relative z-10 mx-auto grid w-full max-w-375 flex-none items-start px-5 pt-4 pb-8 sm:px-8 sm:pt-6 lg:flex-1 lg:grid-cols-[minmax(250px,0.72fr)_minmax(430px,510px)] lg:items-center lg:gap-10 lg:px-10 lg:pt-0 xl:grid-cols-[minmax(280px,0.72fr)_minmax(450px,510px)_minmax(350px,0.95fr)] xl:gap-12">
+          <section className="hidden max-w-87.5 lg:block" aria-labelledby="login-intro-title">
             <h1
               id="login-intro-title"
               className="text-[clamp(2.6rem,3.3vw,4rem)] leading-[1.08] font-bold tracking-[-0.045em] text-slate-900"
@@ -67,7 +67,7 @@ export function LoginPage() {
               <br />
               большие <span className="text-blue-600">возможности</span>
             </h1>
-            <p className="mt-6 max-w-[330px] text-base leading-7 text-slate-600">
+            <p className="mt-6 max-w-82.5 text-base leading-7 text-slate-600">
               Удобная платформа для обучения и преподавания. Развивайтесь, достигайте целей и открывайте новые горизонты
               вместе с нами.
             </p>
@@ -88,7 +88,7 @@ export function LoginPage() {
             </ul>
           </section>
 
-          <section className="mx-auto w-full max-w-[510px] rounded-2xl border border-[var(--border)] bg-white p-5 shadow-xs sm:p-8 lg:p-9">
+          <section className="mx-auto w-full max-w-127.5 rounded-2xl border border-(--border) bg-white p-5 shadow-xs sm:p-8 lg:p-9">
             <div className="flex items-start justify-between gap-6">
               <div>
                 <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Вход</h2>
@@ -106,12 +106,12 @@ export function LoginPage() {
             </Suspense>
           </section>
 
-          <aside className="relative hidden h-full min-h-[610px] items-center xl:flex" aria-hidden="true">
+          <aside className="relative hidden h-full min-h-152.5 items-center xl:flex" aria-hidden="true">
             <LearningIllustration />
           </aside>
         </div>
 
-        <footer className="relative z-10 mx-auto mt-auto flex w-full max-w-[1500px] shrink-0 flex-col gap-2 px-5 pb-5 text-center text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10 lg:pb-7">
+        <footer className="relative z-10 mx-auto mt-auto flex w-full max-w-375 shrink-0 flex-col gap-2 px-5 pb-5 text-center text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10 lg:pb-7">
           <p>© {new Date().getFullYear()} Умнее Вместе. Все права защищены.</p>
           <p>Обучение, которое открывает возможности</p>
         </footer>

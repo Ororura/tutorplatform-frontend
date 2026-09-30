@@ -64,7 +64,7 @@ export function CreateProgressShareForm({
           </label>
           <input
             id="progress-share-expires-at"
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-blue-400 focus:ring-3 focus:ring-blue-100"
+            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none transition focus:ring-3 focus:ring-blue-100"
             type="datetime-local"
             value={expiresAt}
             disabled={mutation.isPending}

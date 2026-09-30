@@ -42,7 +42,7 @@ export function AdminHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur-xl">
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+      <div className="mx-auto max-w-300 px-4 sm:px-6">
         <div className="flex h-18 items-center gap-6">
           <Link
             href="/admin"

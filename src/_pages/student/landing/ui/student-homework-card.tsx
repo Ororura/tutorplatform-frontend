@@ -51,7 +51,7 @@ export function StudentHomeworkCard({
           <div className={`flex items-start gap-3 ${priority ? "mt-3" : ""}`}>
             {!priority && <StudentHomeworkIcon />}
             <div className="min-w-0 flex-1">
-              <h3 className="break-words text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
+              <h3 className="wrap-break-word text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
                 {homework.title}
               </h3>
               <p className="mt-1 text-sm leading-6 text-slate-500">
@@ -64,7 +64,7 @@ export function StudentHomeworkCard({
                 Заданий: {homework.itemsCount}
               </p>
               {data?.description && (
-                <p className="mt-2 line-clamp-3 break-words text-sm leading-5 text-slate-500">{data.description}</p>
+                <p className="mt-2 line-clamp-3 wrap-break-word text-sm leading-5 text-slate-500">{data.description}</p>
               )}
               {percent !== undefined && (
                 <div className="mt-4">

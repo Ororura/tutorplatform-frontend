@@ -49,7 +49,7 @@ export function ArchiveLearningProgramButton({ programId }: Readonly<{ programId
       <dialog
         ref={dialogRef}
         aria-labelledby="archive-learning-program-title"
-        className="m-auto w-[min(30rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto w-[min(30rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
         onClose={() => setOpen(false)}
       >
         <section className="space-y-5 p-6">

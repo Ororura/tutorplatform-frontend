@@ -38,7 +38,7 @@ export function TeacherStudentView({
 
   if (student.isPending || student.isError) {
     return (
-      <main className="mx-auto max-w-[1280px] space-y-4">
+      <main className="mx-auto max-w-7xl space-y-4">
         <StudentDetailQueryState
           isPending={student.isPending}
           isError={student.isError}
@@ -64,8 +64,8 @@ export function TeacherStudentView({
   const initials = `${student.data.firstName[0] ?? ""}${student.data.lastName?.[0] ?? ""}`.toUpperCase();
 
   return (
-    <main className="mx-auto max-w-[1280px] space-y-4">
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+    <main className="mx-auto max-w-7xl space-y-4">
+      <section className="rounded-2xl border border-(--border) bg-white p-6 sm:p-7">
         <Link
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
           href="/teacher/students"
@@ -76,7 +76,7 @@ export function TeacherStudentView({
 
         <div className="mt-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
           <div className="flex min-w-0 items-center gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-50 to-indigo-100 text-lg font-semibold text-blue-700 ring-1 ring-blue-100">
+            <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-blue-50 to-indigo-100 text-lg font-semibold text-blue-700 ring-1 ring-blue-100">
               {initials}
             </div>
 
@@ -118,7 +118,7 @@ export function TeacherStudentView({
           )}
 
           <section
-            className="rounded-2xl border border-[var(--border)] bg-white p-6"
+            className="rounded-2xl border border-(--border) bg-white p-6"
             aria-labelledby="invite-history-heading"
           >
             <div>
@@ -168,7 +168,7 @@ export function TeacherStudentView({
         </div>
 
         <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
             <span className="flex size-11 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
               {student.data.account.status === "REGISTERED" ? <ShieldCheck size={20} /> : <UserRound size={20} />}
             </span>

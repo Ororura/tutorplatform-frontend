@@ -36,7 +36,7 @@ function ReportContent({ report, token }: Readonly<{ report: PublicProgressRepor
   const metrics = report.snapshot.metrics;
   return (
     <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-5 sm:px-6 sm:py-10 lg:px-8">
-      <header className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:rounded-2xl sm:p-7">
+      <header className="rounded-2xl border border-(--border) bg-white p-5 sm:rounded-2xl sm:p-7">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-3 sm:gap-4">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 sm:size-12">
@@ -56,7 +56,7 @@ function ReportContent({ report, token }: Readonly<{ report: PublicProgressRepor
         </div>
       </header>
 
-      <section className="mt-4 rounded-2xl border border-[var(--border)] bg-white p-5 sm:mt-6 sm:rounded-2xl sm:p-7">
+      <section className="mt-4 rounded-2xl border border-(--border) bg-white p-5 sm:mt-6 sm:rounded-2xl sm:p-7">
         <h2 className="text-lg font-semibold text-slate-950 sm:text-xl">Результаты периода</h2>
         <dl className="mt-4 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-5">
           <Metric
@@ -112,7 +112,7 @@ function ReportContent({ report, token }: Readonly<{ report: PublicProgressRepor
         ) : null}
       </section>
 
-      <section className="mt-4 rounded-2xl border border-[var(--border)] bg-white p-5 sm:mt-6 sm:rounded-2xl sm:p-7">
+      <section className="mt-4 rounded-2xl border border-(--border) bg-white p-5 sm:mt-6 sm:rounded-2xl sm:p-7">
         <h2 className="text-lg font-semibold text-slate-950 sm:text-xl">Комментарий преподавателя</h2>
         <dl className="mt-4 space-y-4">
           <ReadonlyText label="Итоги периода" value={report.teacherSummary} />

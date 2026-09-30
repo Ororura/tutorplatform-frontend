@@ -298,7 +298,7 @@ export function ImportContentPackageDialog({
         ref={dialogRef}
         aria-labelledby="import-content-package-title"
         aria-describedby="import-content-package-description"
-        className="m-auto max-h-[min(90vh,50rem)] w-[min(48rem,calc(100%-2rem))] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto max-h-[min(90vh,50rem)] w-[min(48rem,calc(100%-2rem))] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
         onCancel={(event) => {
           if (busyRef.current) event.preventDefault();
         }}
@@ -338,7 +338,7 @@ export function ImportContentPackageDialog({
                   {file ? "Заменить файл" : "Выберите YAML-файл"}
                 </span>
                 <input
-                  className="block w-full rounded-md border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-blue-700"
+                  className="block w-full rounded-md border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:px-3 file:py-2"
                   type="file"
                   accept=".yaml,.yml"
                   disabled={busy}

@@ -163,7 +163,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
       </Link>
 
       {program.isPending && (
-        <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
+        <div className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
           Загружаем программу…
         </div>
       )}
@@ -193,9 +193,11 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
 
           return (
             <>
-              <section className="rounded-xl border border-[var(--border)] bg-white p-4 sm:p-5">
+              <section className="rounded-xl border border-(--border) bg-white p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-4">
-                  <p className="min-w-0 break-words text-sm font-medium text-blue-600">{program.data.subject.name}</p>
+                  <p className="min-w-0 wrap-break-word text-sm font-medium text-blue-600">
+                    {program.data.subject.name}
+                  </p>
                   <span
                     className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusClassName[program.data.status]}`}
                   >
@@ -203,14 +205,14 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     {statusPresentation[program.data.status]}
                   </span>
                 </div>
-                <h1 className="mt-2 break-words text-2xl font-semibold tracking-tight text-slate-950">
+                <h1 className="mt-2 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950">
                   {program.data.title}
                 </h1>
                 <section className="mt-2" aria-labelledby="program-description-heading">
                   <h2 id="program-description-heading" className="sr-only">
                     Описание
                   </h2>
-                  <p className="break-words whitespace-pre-wrap text-sm leading-6 text-slate-500">
+                  <p className="wrap-break-word whitespace-pre-wrap text-sm leading-6 text-slate-500">
                     {program.data.description || "Описание программы пока не добавлено."}
                   </p>
                 </section>
@@ -227,7 +229,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
               </section>
 
               <section
-                className="rounded-xl border border-[var(--border)] bg-white p-4 sm:p-5"
+                className="rounded-xl border border-(--border) bg-white p-4 sm:p-5"
                 aria-labelledby="program-modules-heading"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -290,7 +292,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                     <p className="mt-2 text-sm text-slate-500">Структура программы ещё не заполнена.</p>
                   </div>
                 ) : (
-                  <ol className="mt-4 divide-y divide-slate-200 border-y border-slate-200">
+                  <ol className="mt-4 divide-y divide-slate-200 border-y">
                     {modules.map((module, moduleIndex) => {
                       const topics = [...module.topics].sort((a, b) => a.position - b.position);
                       return (
@@ -313,9 +315,9 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                                   {String(module.position + 1).padStart(2, "0")}.
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                  <h3 className="break-words font-semibold text-slate-950">{module.title}</h3>
+                                  <h3 className="wrap-break-word font-semibold text-slate-950">{module.title}</h3>
                                   {module.description && (
-                                    <p className="mt-1 break-words text-sm leading-5 text-slate-500">
+                                    <p className="mt-1 wrap-break-word text-sm leading-5 text-slate-500">
                                       {module.description}
                                     </p>
                                   )}
@@ -443,7 +445,7 @@ function TopicList({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <Link
-                className="min-w-0 break-words font-medium text-slate-950 hover:text-blue-600 hover:underline hover:underline-offset-4"
+                className="min-w-0 wrap-break-word font-medium text-slate-950 hover:text-blue-600 hover:underline hover:underline-offset-4"
                 href={`/teacher/programs/${programSlug}/topics/${topic.slug}`}
               >
                 {topic.title}
@@ -454,7 +456,7 @@ function TopicList({
                 {topicStatusPresentation[topic.status]}
               </span>
             </div>
-            {topic.description && <p className="mt-1 break-words leading-5 text-slate-500">{topic.description}</p>}
+            {topic.description && <p className="mt-1 wrap-break-word leading-5 text-slate-500">{topic.description}</p>}
           </div>
           <LearningProgramTopicActions
             programId={programId}

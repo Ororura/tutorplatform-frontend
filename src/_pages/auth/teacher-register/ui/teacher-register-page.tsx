@@ -49,7 +49,7 @@ function RegistrationContent() {
     return (
       <RegistrationShell>
         <section
-          className="mx-auto w-full max-w-[560px] rounded-[24px] border border-white/90 bg-white/90 p-6 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-9"
+          className="mx-auto w-full max-w-140 rounded-3xl border border-white/90 bg-white/90 p-6 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-9"
           aria-busy="true"
         >
           <p className="text-sm font-medium text-blue-600">Умнее Вместе</p>
@@ -65,7 +65,7 @@ function RegistrationContent() {
   if (settings.isError) {
     return (
       <RegistrationShell>
-        <section className="mx-auto w-full max-w-[560px] rounded-[24px] border border-white/90 bg-white/90 p-6 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-9">
+        <section className="mx-auto w-full max-w-140 rounded-3xl border border-white/90 bg-white/90 p-6 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-9">
           <p className="text-sm font-medium text-blue-600">Умнее Вместе</p>
           <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
             Не удалось проверить регистрацию
@@ -98,7 +98,7 @@ function RegistrationContent() {
   if (settings.data.registrationMode === "INVITE_ONLY") {
     return (
       <RegistrationShell>
-        <section className="mx-auto w-full max-w-[560px] rounded-[24px] border border-white/90 bg-white/90 p-6 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-9">
+        <section className="mx-auto w-full max-w-140 rounded-3xl border border-white/90 bg-white/90 p-6 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-9">
           <span className="grid size-14 place-items-center rounded-2xl bg-blue-50 text-blue-600">
             <BookOpen className="size-7" strokeWidth={1.8} aria-hidden="true" />
           </span>
@@ -133,7 +133,7 @@ function RegistrationContent() {
 
   return (
     <RegistrationShell>
-      <section className="mx-auto w-full max-w-[560px] rounded-[24px] border border-white/90 bg-white/90 p-5 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-8 lg:p-9">
+      <section className="mx-auto w-full max-w-140 rounded-3xl border border-white/90 bg-white/90 p-5 shadow-[0_24px_70px_-30px_rgba(30,64,175,0.38)] ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-8 lg:p-9">
         <div className="flex items-start justify-between gap-6">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-[2.15rem]">
@@ -163,7 +163,7 @@ function RegistrationShell({ children }: Readonly<{ children: ReactNode }>) {
         aria-hidden="true"
       />
 
-      <header className="relative z-10 mx-auto flex w-full max-w-[1280px] shrink-0 items-center justify-between px-5 py-5 sm:px-8 lg:px-10 lg:py-7">
+      <header className="relative z-10 mx-auto flex w-full max-w-7xl shrink-0 items-center justify-between px-5 py-5 sm:px-8 lg:px-10 lg:py-7">
         <Link
           href="/login"
           className="flex items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-100"
@@ -184,8 +184,8 @@ function RegistrationShell({ children }: Readonly<{ children: ReactNode }>) {
         </div>
       </header>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-[1280px] flex-none items-start gap-10 px-5 pt-3 pb-8 sm:px-8 sm:pt-6 lg:flex-1 lg:grid-cols-[minmax(300px,0.8fr)_minmax(460px,560px)] lg:items-center lg:px-10 lg:pt-0 xl:gap-16">
-        <section className="hidden max-w-[410px] lg:block" aria-labelledby="register-intro-title">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-none items-start gap-10 px-5 pt-3 pb-8 sm:px-8 sm:pt-6 lg:flex-1 lg:grid-cols-[minmax(300px,0.8fr)_minmax(460px,560px)] lg:items-center lg:px-10 lg:pt-0 xl:gap-16">
+        <section className="hidden max-w-102.5 lg:block" aria-labelledby="register-intro-title">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">Для преподавателей</p>
           <h2
             id="register-intro-title"
@@ -195,7 +195,7 @@ function RegistrationShell({ children }: Readonly<{ children: ReactNode }>) {
             <br />
             становится <span className="text-blue-600">понятнее</span>
           </h2>
-          <p className="mt-6 max-w-[380px] text-base leading-7 text-slate-600">
+          <p className="mt-6 max-w-95 text-base leading-7 text-slate-600">
             Создавайте программы, выдавайте задания и отслеживайте прогресс учеников в одном рабочем пространстве.
           </p>
           <span className="mt-6 block h-1 w-11 rounded-full bg-blue-300" aria-hidden="true" />
@@ -218,7 +218,7 @@ function RegistrationShell({ children }: Readonly<{ children: ReactNode }>) {
         {children}
       </div>
 
-      <footer className="relative z-10 mx-auto mt-auto flex w-full max-w-[1280px] shrink-0 flex-col gap-2 px-5 pb-5 text-center text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10 lg:pb-7">
+      <footer className="relative z-10 mx-auto mt-auto flex w-full max-w-7xl shrink-0 flex-col gap-2 px-5 pb-5 text-center text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between md:text-left lg:px-10 lg:pb-7">
         <p>© {new Date().getFullYear()} Умнее Вместе. Все права защищены.</p>
         <p>Обучение, которое открывает возможности</p>
       </footer>

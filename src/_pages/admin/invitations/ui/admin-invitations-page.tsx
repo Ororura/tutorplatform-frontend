@@ -4,7 +4,7 @@ import { TeacherInvitationManager } from "@/features/teacher-invitation/manage";
 
 export function AdminInvitationsPage() {
   return (
-    <main className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
+    <main className="mx-auto max-w-275 px-4 py-10 sm:px-6">
       <Link href="/admin" className="text-sm text-neutral-500 hover:text-neutral-900">
         ← Администрирование
       </Link>

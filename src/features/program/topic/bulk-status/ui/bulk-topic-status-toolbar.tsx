@@ -85,7 +85,7 @@ export function BulkTopicStatusToolbar({
       <dialog
         ref={dialog}
         aria-labelledby="archive-selected-topics"
-        className="m-auto w-[min(32rem,calc(100%-2rem))] space-y-5 rounded-xl border border-neutral-200 bg-white p-6 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto w-[min(32rem,calc(100%-2rem))] space-y-5 rounded-xl border border-neutral-200 bg-white p-6 shadow-xl"
         onCancel={(event) => {
           if (pending) event.preventDefault();
         }}

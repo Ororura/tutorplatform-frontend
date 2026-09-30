@@ -19,7 +19,7 @@ export function StudentDetailsCard({
         : "bg-slate-100 text-slate-600";
 
   return (
-    <section className="rounded-2xl border border-[var(--border)] bg-white p-6">
+    <section className="rounded-2xl border border-(--border) bg-white p-6">
       <div>
         <p className="text-sm font-medium text-blue-600">Карточка ученика</p>
 

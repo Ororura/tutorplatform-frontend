@@ -160,7 +160,7 @@ export function TeacherInvitationManager() {
               onChange={(event) => setEmail(event.target.value)}
               disabled={createMutation.isPending}
               placeholder="teacher@example.com"
-              className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none focus:border-neutral-900"
+              className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none"
             />
           </div>
 

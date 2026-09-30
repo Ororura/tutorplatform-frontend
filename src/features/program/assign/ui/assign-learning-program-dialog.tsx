@@ -118,7 +118,7 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
       <dialog
         ref={dialogRef}
         aria-labelledby={titleId}
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl backdrop:bg-neutral-900/35"
+        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
         onClose={() => setOpen(false)}
       >
         <div className="p-5 sm:p-6">
@@ -172,7 +172,7 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
                   return (
                     <label
                       key={template.id}
-                      className="flex cursor-pointer gap-3 rounded-lg border border-neutral-200 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:bg-neutral-100"
+                      className="flex cursor-pointer gap-3 rounded-lg border border-neutral-200 p-4 has-disabled:bg-neutral-100"
                     >
                       <input
                         type="radio"

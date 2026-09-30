@@ -42,7 +42,7 @@ export function TeacherProgramsView() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Программы обучения</h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-(--text-secondary)">
             Создавайте шаблоны обучения и назначайте активные программы ученикам.
           </p>
         </div>
@@ -99,7 +99,7 @@ export function TeacherProgramsView() {
           )}
 
           {programs.data?.length === 0 && (
-            <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
+            <div className="rounded-xl bg-(--surface-muted) px-4 py-6 text-center">
               <BookOpenText size={28} className="mx-auto text-blue-500" />
 
               <h2 className="mt-4 font-semibold text-slate-950">Программ пока нет</h2>
@@ -111,7 +111,7 @@ export function TeacherProgramsView() {
           )}
 
           {programs.data && programs.data.length > 0 && (
-            <div className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
+            <div className="divide-y divide-(--border) border-y">
               {programs.data.map((program) => {
                 const StatusIcon = statusIcon[program.status];
 
@@ -131,11 +131,11 @@ export function TeacherProgramsView() {
                         <BookOpenText size={19} aria-hidden="true" />
                       </span>
                       <div className="min-w-0">
-                        <h3 className="break-words font-semibold text-slate-950">{program.title}</h3>
+                        <h3 className="wrap-break-word font-semibold text-slate-950">{program.title}</h3>
                         <p className="mt-1 text-sm text-slate-500">
                           <span className="font-medium">{program.subject.name}</span>
                           {program.description && (
-                            <span className="line-clamp-2 break-words">{program.description}</span>
+                            <span className="line-clamp-2 wrap-break-word">{program.description}</span>
                           )}
                         </p>
                       </div>

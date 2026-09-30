@@ -48,7 +48,7 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
         </Link>
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
-            <h1 className="break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+            <h1 className="wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
               {task.data.title}
             </h1>
             <div className="mt-3 flex flex-wrap gap-2 text-sm">

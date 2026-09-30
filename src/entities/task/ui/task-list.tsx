@@ -20,25 +20,25 @@ export function TaskList({
   const subjectNames = new Map(subjects.map((subject) => [subject.id, subject.name]));
 
   return (
-    <ul className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
+    <ul className="divide-y divide-(--border) border-y">
       {tasks.map((task) => {
         const TypeIcon = task.taskType === "CODE" ? Code2 : FileText;
 
         return (
           <li key={task.id}>
             <Link
-              className="group flex flex-col gap-3 px-3 py-4 transition hover:bg-white/80 focus-visible:outline-offset-[-2px] sm:flex-row sm:items-center"
+              className="group flex flex-col gap-3 px-3 py-4 transition hover:bg-white/80 focus-visible:-outline-offset-2 sm:flex-row sm:items-center"
               href={`/teacher/tasks/${task.id}`}
             >
               <span className="flex min-w-0 flex-1 items-center gap-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[var(--text-secondary)]">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-(--text-secondary)">
                   <TypeIcon size={19} />
                 </span>
 
                 <span className="min-w-0">
-                  <span className="block break-words font-semibold text-slate-900">{task.title}</span>
+                  <span className="block wrap-break-word font-semibold text-slate-900">{task.title}</span>
 
-                  <span className="mt-1 block break-words text-sm text-[var(--text-secondary)]">
+                  <span className="mt-1 block wrap-break-word text-sm text-(--text-secondary)">
                     {subjectNames.get(task.subjectId) ?? "Без предмета"}
                   </span>
                 </span>

@@ -15,18 +15,18 @@ export function StudentProgramsView() {
   const other = programs.data?.filter((program) => program.status !== "ACTIVE") ?? [];
 
   return (
-    <main className="mx-auto max-w-[1440px] space-y-7 sm:space-y-8">
+    <main className="mx-auto max-w-360 space-y-7 sm:space-y-8">
       <header className="px-1 py-5 sm:px-5">
         <div className="flex items-center gap-4">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[var(--text-secondary)]">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-(--text-secondary)">
             <BookOpenText size={22} aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm font-medium text-[var(--text-secondary)]">Учебный кабинет</p>
-            <h1 className="mt-1 break-words text-3xl font-bold tracking-tight text-slate-950 xl:text-4xl">
+            <p className="text-sm font-medium text-(--text-secondary)">Учебный кабинет</p>
+            <h1 className="mt-1 wrap-break-word text-3xl font-bold tracking-tight text-slate-950 xl:text-4xl">
               Мои программы
             </h1>
-            <p className="mt-3 text-sm leading-6 text-[var(--text-secondary)]">
+            <p className="mt-3 text-sm leading-6 text-(--text-secondary)">
               Программы обучения, назначенные вашим преподавателем.
             </p>
           </div>
@@ -35,7 +35,7 @@ export function StudentProgramsView() {
 
       <div className="space-y-7 sm:space-y-8">
         {programs.isPending && (
-          <p className="rounded-2xl bg-slate-50 p-5 text-sm text-[var(--text-secondary)]" aria-busy="true">
+          <p className="rounded-2xl bg-slate-50 p-5 text-sm text-(--text-secondary)" aria-busy="true">
             Загружаем программы…
           </p>
         )}
@@ -50,10 +50,10 @@ export function StudentProgramsView() {
         )}
 
         {!programs.isError && programs.data?.length === 0 && (
-          <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
+          <div className="rounded-xl bg-(--surface-muted) px-4 py-6 text-center">
             <BookOpenText size={30} className="mx-auto text-blue-500" aria-hidden="true" />
             <p className="mt-4 font-semibold text-slate-950">Пока нет программ</p>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-(--text-secondary)">
               Когда преподаватель назначит программу обучения, она появится здесь.
             </p>
           </div>

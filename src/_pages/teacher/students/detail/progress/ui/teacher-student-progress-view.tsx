@@ -25,8 +25,8 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
   });
 
   return (
-    <main className="mx-auto max-w-[1280px] space-y-4">
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-7">
+    <main className="mx-auto max-w-7xl space-y-4">
+      <section className="rounded-2xl border border-(--border) bg-white p-6 sm:p-7">
         <Link
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
           href={`/teacher/students/${studentId}`}
@@ -50,7 +50,7 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
 
       <StudentProfileNav active="progress" studentId={studentId} />
 
-      <section className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6">
+      <section className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
         {programs.isPending && (
           <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
             Загружаем программы…
@@ -90,7 +90,7 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
               </label>
               <select
                 id="student-progress-program"
-                className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-3 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-600"
+                className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:ring-3 focus:ring-blue-100"
                 value={activeProgramId}
                 disabled={programs.data.length === 1}
                 onChange={(event) => setSelectedProgramId(event.target.value)}

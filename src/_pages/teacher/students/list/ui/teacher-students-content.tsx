@@ -75,7 +75,7 @@ export function TeacherStudentsContent() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Ученики</h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-(--text-secondary)">
             Управляйте учениками, отслеживайте состояние аккаунтов и переходите к учебным программам.
           </p>
         </div>
@@ -104,7 +104,7 @@ export function TeacherStudentsContent() {
           )}
         </div>
 
-        <div className="mt-3 flex flex-col gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] p-3 lg:flex-row">
+        <div className="mt-3 flex flex-col gap-3 rounded-xl border border-(--border) bg-(--surface-muted) p-3 lg:flex-row">
           <StudentSearch key={search} initialSearch={search} navigate={navigate} />
 
           <label>
@@ -113,7 +113,7 @@ export function TeacherStudentsContent() {
             <select
               id="account-status-filter"
               aria-label="Статус аккаунта"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 lg:w-auto"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100 lg:w-auto"
               value={accountStatus ?? ""}
               onChange={(event) =>
                 navigate({
@@ -135,7 +135,7 @@ export function TeacherStudentsContent() {
             <select
               id="student-sort"
               aria-label="Сортировка"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 lg:w-auto"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100 lg:w-auto"
               value={sort}
               onChange={(event) =>
                 navigate({
@@ -279,7 +279,7 @@ function StudentSearch({
         <input
           id="student-search"
           name="search"
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-blue-100"
           maxLength={100}
           placeholder="Имя или фамилия"
           value={value}

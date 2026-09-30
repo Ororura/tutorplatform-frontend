@@ -56,7 +56,7 @@ export function TeacherTasksView() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Банк заданий</h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-(--text-secondary)">
             Создавайте практику и используйте задания в домашних работах учеников.
           </p>
         </div>
@@ -70,27 +70,27 @@ export function TeacherTasksView() {
             <h2 id="task-list-title" className="text-base font-semibold text-slate-950">
               Задания
             </h2>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">Фильтруйте по предмету, статусу и сложности.</p>
+            <p className="mt-1 text-sm text-(--text-secondary)">Фильтруйте по предмету, статусу и сложности.</p>
           </div>
         </div>
 
         <dl className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm" aria-label="Состояние банка заданий">
           <div className="flex items-center gap-2">
-            <dt className="text-[var(--text-secondary)]">Найдено заданий</dt>
+            <dt className="text-(--text-secondary)">Найдено заданий</dt>
             <dd className="font-medium tabular-nums text-slate-900">{tasks.data?.totalElements ?? "—"}</dd>
           </div>
           <div className="flex items-center gap-2">
-            <dt className="text-[var(--text-secondary)]">Предметов</dt>
+            <dt className="text-(--text-secondary)">Предметов</dt>
             <dd className="font-medium tabular-nums text-slate-900">{subjects.data?.length ?? "—"}</dd>
           </div>
         </dl>
-        <div className="mt-3 flex flex-col gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] p-3 sm:flex-row sm:flex-wrap">
+        <div className="mt-3 flex flex-col gap-3 rounded-xl border border-(--border) bg-(--surface-muted) p-3 sm:flex-row sm:flex-wrap">
           <label className="min-w-0 sm:max-w-full">
             <span className="sr-only">Предмет</span>
 
             <select
               aria-label="Предмет"
-              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100"
               value={subjectId ?? ""}
               onChange={(event) =>
                 navigate({
@@ -114,7 +114,7 @@ export function TeacherTasksView() {
 
             <select
               aria-label="Статус"
-              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100"
               value={status ?? ""}
               onChange={(event) =>
                 navigate({
@@ -135,7 +135,7 @@ export function TeacherTasksView() {
 
             <select
               aria-label="Сложность"
-              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100"
               value={difficulty ?? ""}
               onChange={(event) =>
                 navigate({
@@ -154,7 +154,7 @@ export function TeacherTasksView() {
 
         <div className="mt-5">
           {(tasks.isPending || subjects.isPending) && (
-            <div className="rounded-2xl bg-slate-50 p-6 text-sm text-[var(--text-secondary)]" aria-busy="true">
+            <div className="rounded-2xl bg-slate-50 p-6 text-sm text-(--text-secondary)" aria-busy="true">
               Загружаем задания…
             </div>
           )}
@@ -177,10 +177,10 @@ export function TeacherTasksView() {
           )}
 
           {tasks.data?.items.length === 0 && (
-            <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
+            <div className="rounded-xl bg-(--surface-muted) px-4 py-6 text-center">
               <p className="font-semibold text-slate-900">Задания не найдены</p>
 
-              <p className="mt-2 text-sm text-[var(--text-secondary)]">Измените фильтры или создайте новое задание.</p>
+              <p className="mt-2 text-sm text-(--text-secondary)">Измените фильтры или создайте новое задание.</p>
             </div>
           )}
 
@@ -207,7 +207,7 @@ export function TeacherTasksView() {
               Назад
             </Button>
 
-            <span className="text-sm text-[var(--text-secondary)]">
+            <span className="text-sm text-(--text-secondary)">
               Страница {tasks.data.page + 1} из {tasks.data.totalPages}
             </span>
 
@@ -227,9 +227,7 @@ export function TeacherTasksView() {
         )}
       </section>
 
-      <p className="text-sm text-[var(--text-secondary)]">
-        Созданные задания можно добавлять в домашние работы учеников.
-      </p>
+      <p className="text-sm text-(--text-secondary)">Созданные задания можно добавлять в домашние работы учеников.</p>
     </main>
   );
 }

@@ -99,7 +99,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
       </nav>
 
       {program.isPending && (
-        <div className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500" aria-busy="true">
+        <div className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
           Загружаем тему…
         </div>
       )}
@@ -116,18 +116,18 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
         </section>
       )}
       {program.data && !topicContext && (
-        <section className="rounded-2xl border border-[var(--border)] bg-white p-6" role="alert">
+        <section className="rounded-2xl border border-(--border) bg-white p-6" role="alert">
           <h1 className="text-xl font-semibold text-slate-950">Тема не найдена</h1>
           <p className="mt-2 text-sm text-slate-600">Эта тема не входит в выбранную программу.</p>
         </section>
       )}
       {topicContext && (
         <>
-          <header className="rounded-2xl border border-[var(--border)] bg-white p-6">
-            <p className="break-words text-sm text-slate-500">{topicContext.module.title}</p>
-            <h1 className="mt-2 break-words text-3xl font-semibold text-slate-950">{topicContext.topic.title}</h1>
+          <header className="rounded-2xl border border-(--border) bg-white p-6">
+            <p className="wrap-break-word text-sm text-slate-500">{topicContext.module.title}</p>
+            <h1 className="mt-2 wrap-break-word text-3xl font-semibold text-slate-950">{topicContext.topic.title}</h1>
             {topicContext.topic.description && (
-              <p className="mt-4 break-words whitespace-pre-line leading-7 text-slate-600">
+              <p className="mt-4 wrap-break-word whitespace-pre-line leading-7 text-slate-600">
                 {topicContext.topic.description}
               </p>
             )}
@@ -146,10 +146,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               )}
             </div>
             {materials.isPending && (
-              <p
-                className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500"
-                aria-busy="true"
-              >
+              <p className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
                 Загружаем материалы…
               </p>
             )}
@@ -220,10 +217,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               )}
             </div>
             {topicTasks.isPending && (
-              <p
-                className="rounded-2xl border border-[var(--border)] bg-white p-6 text-sm text-slate-500"
-                aria-busy="true"
-              >
+              <p className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
                 Загружаем задания…
               </p>
             )}
@@ -246,7 +240,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               </div>
             )}
             {topicTasks.data && (
-              <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
+              <div className="overflow-hidden rounded-2xl border border-(--border) bg-white">
                 {topicTasks.data.length === 0 ? (
                   <p className="p-6 text-sm text-slate-500">К теме пока не прикреплены задания.</p>
                 ) : (

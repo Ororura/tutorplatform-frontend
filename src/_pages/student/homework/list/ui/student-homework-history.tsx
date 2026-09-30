@@ -21,7 +21,7 @@ export function StudentHomeworkHistory({
   return (
     <section
       aria-labelledby="homework-history-heading"
-      className="rounded-2xl border border-[var(--border)] bg-white p-4 shadow-xs"
+      className="rounded-2xl border border-(--border) bg-white p-4 shadow-xs"
     >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2
@@ -43,7 +43,7 @@ export function StudentHomeworkHistory({
           </Button>
         )}
       </div>
-      <ul id="homework-history-list" className="divide-y divide-slate-100 border-t border-slate-100">
+      <ul id="homework-history-list" className="divide-y divide-slate-100 border-t">
         {visible.map((homework) => {
           const completed = homework.status === "COMPLETED";
           return (
@@ -57,7 +57,7 @@ export function StudentHomeworkHistory({
                 >
                   {completed ? <Check size={14} aria-hidden="true" /> : <Minus size={14} aria-hidden="true" />}
                 </span>
-                <span className="min-w-0 flex-1 break-words text-slate-900">{homework.title}</span>
+                <span className="min-w-0 flex-1 wrap-break-word text-slate-900">{homework.title}</span>
                 <StudentHomeworkStatusBadge state={completed ? "COMPLETED" : "CANCELLED"} />
                 <ChevronRight
                   size={17}

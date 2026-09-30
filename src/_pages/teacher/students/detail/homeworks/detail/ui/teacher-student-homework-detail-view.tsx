@@ -111,7 +111,7 @@ export function TeacherStudentHomeworkDetailView({
           {homework.data.status === "ASSIGNED" && (
             <div className="flex gap-3">
               <Link
-                className="inline-flex h-10 items-center rounded-xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 active:bg-slate-100 active:text-slate-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600"
+                className="inline-flex h-10 items-center rounded-xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600"
                 href={`/teacher/students/${studentId}/homework/${homeworkId}/edit`}
               >
                 Редактировать
