@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components, operations } from "@/shared/api/generated/schema";
@@ -32,6 +32,13 @@ export const studentHomeworkQueries = {
     queryOptions({
       queryKey: [...studentHomeworkQueries.lists(), params] as const,
       queryFn: () => getCurrentStudentHomeworks(params),
+    }),
+  infiniteList: (params: Omit<StudentHomeworkListParams, "page">) =>
+    infiniteQueryOptions({
+      queryKey: [...studentHomeworkQueries.lists(), "infinite", params] as const,
+      initialPageParam: 0,
+      queryFn: ({ pageParam }) => getCurrentStudentHomeworks({ ...params, page: pageParam }),
+      getNextPageParam: (lastPage) => (lastPage.page + 1 < lastPage.totalPages ? lastPage.page + 1 : undefined),
     }),
   details: () => [...studentHomeworkQueries.all(), "detail"] as const,
   detail: (homeworkId: string) =>
