@@ -58,8 +58,6 @@ test("teacher and student complete the authentication and invitation flow", asyn
     await expect(studentPage).toHaveURL(/\/student$/);
     await expect(studentPage.getByRole("heading", { name: "Домашние задания" })).toBeVisible();
 
-    const cookies = await studentContext.cookies();
-
     const currentUserResponse = await studentPage.request.get(`${new URL(studentPage.url()).origin}/api/v1/auth/me`);
     expect(
       currentUserResponse.ok(),
