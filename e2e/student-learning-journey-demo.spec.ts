@@ -20,7 +20,37 @@ test("demo student completes the learning journey", async ({ page }) => {
   await page.getByRole("button", { name: "Войти" }).click();
 
   await expect(page).toHaveURL(/\/student$/);
-  await expect(page.getByRole("heading", { name: "Привет, Алексей Иванов!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Добрый день, Алексей!" })).toBeVisible();
+
+  const homeworkOverview = page.getByRole("region", { name: "Домашние задания", exact: true });
+  const programOverview = page.getByRole("region", { name: "Моя программа", exact: true });
+  await expect(homeworkOverview.getByRole("link", { name: "Все задания" })).toBeVisible();
+  await expect(programOverview.getByRole("link", { name: "Все программы" })).toBeVisible();
+  await expect(homeworkOverview.getByRole("article").first().getByRole("progressbar")).toBeVisible();
+  await expect(programOverview.getByRole("progressbar").first()).toBeVisible();
+  await expect(page.getByText("Быстрые действия")).toHaveCount(0);
+
+  for (const width of [1536, 1440, 1280, 1024, 768, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await expect(homeworkOverview).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    const homeworkBox = await homeworkOverview.boundingBox();
+    const programBox = await programOverview.boundingBox();
+    expect(homeworkBox).not.toBeNull();
+    expect(programBox).not.toBeNull();
+    if (width >= 1280) {
+      expect(homeworkBox!.width / programBox!.width).toBeGreaterThan(1.7);
+      expect(homeworkBox!.width / programBox!.width).toBeLessThan(1.9);
+    } else {
+      expect(homeworkBox!.y + homeworkBox!.height).toBeLessThan(programBox!.y);
+    }
+    if (width === 1440 || width === 390) {
+      const path = test.info().outputPath(`student-dashboard-${width}.png`);
+      await page.screenshot({ path, fullPage: true });
+      await test.info().attach(`student-dashboard-${width}`, { path, contentType: "image/png" });
+    }
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 });
 
   await page.getByRole("link", { name: "Мои программы", exact: true }).click();
   await expect(page).toHaveURL(/\/student\/programs$/);
