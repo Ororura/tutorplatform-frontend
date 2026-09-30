@@ -1,120 +1,91 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, BookOpenText } from "lucide-react";
-import Link from "next/link";
+import { BookOpenText } from "lucide-react";
 
-import { programStatusLabels, studentProgramQueries } from "@/entities/student-program";
+import { studentProgramQueries } from "@/entities/student-program";
 import { Button } from "@/shared/ui/button";
 
-const statusClassNames = {
-  ACTIVE: "bg-emerald-50 text-emerald-700",
-  PAUSED: "bg-amber-50 text-amber-700",
-  COMPLETED: "bg-blue-50 text-blue-700",
-  ARCHIVED: "bg-slate-100 text-slate-600",
-} as const;
+import { ProgramOverviewCard } from "./program-overview-card";
 
 export function StudentProgramsView() {
   const programs = useQuery(studentProgramQueries.currentList());
 
+  const active = programs.data?.filter((program) => program.status === "ACTIVE") ?? [];
+  const other = programs.data?.filter((program) => program.status !== "ACTIVE") ?? [];
+
   return (
-    <main className="space-y-6">
-      <section className="py-2">
+    <main className="mx-auto max-w-[1440px] space-y-7 sm:space-y-8">
+      <header className="px-1 py-5 sm:px-5">
         <div className="flex items-center gap-4">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[var(--text-secondary)]">
             <BookOpenText size={22} aria-hidden="true" />
           </span>
           <div>
             <p className="text-sm font-medium text-[var(--text-secondary)]">Учебный кабинет</p>
-            <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+            <h1 className="mt-1 break-words text-3xl font-bold tracking-tight text-slate-950 xl:text-4xl">
               Мои программы
             </h1>
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+            <p className="mt-3 text-sm leading-6 text-[var(--text-secondary)]">
               Программы обучения, назначенные вашим преподавателем.
             </p>
           </div>
         </div>
-      </section>
+      </header>
 
-      <div className="space-y-5">
-        <section className="min-w-0">
-          {programs.isPending && (
-            <p className="rounded-2xl bg-slate-50 p-5 text-sm text-[var(--text-secondary)]" aria-busy="true">
-              Загружаем программы…
-            </p>
-          )}
-
-          {programs.isError && (
-            <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-              <p className="text-sm text-red-700">Не удалось загрузить ваши программы.</p>
-              <Button type="button" variant="secondary" onClick={() => programs.refetch()}>
-                Повторить
-              </Button>
-            </div>
-          )}
-
-          {programs.data?.length === 0 && (
-            <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
-              <BookOpenText size={30} className="mx-auto text-blue-500" aria-hidden="true" />
-              <p className="mt-4 font-semibold text-slate-950">Программ пока нет</p>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">
-                Когда преподаватель назначит программу обучения, она появится здесь.
-              </p>
-            </div>
-          )}
-
-          {programs.data && programs.data.length > 0 && (
-            <div className="space-y-5">
-              <div>
-                <h2 className="text-base font-semibold text-slate-950">Назначенные программы</h2>
-                <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                  Откройте программу, чтобы посмотреть её содержание.
-                </p>
-              </div>
-
-              <div className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
-                {programs.data.map((program) => (
-                  <article
-                    key={program.id}
-                    className="grid min-w-0 gap-3 px-3 py-4 transition hover:bg-white/80 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center"
-                  >
-                    <div className="flex items-center gap-3 sm:col-start-2 sm:row-start-1">
-                      <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusClassNames[program.status]}`}
-                      >
-                        {programStatusLabels[program.status]}
-                      </span>
-                    </div>
-
-                    <div className="min-w-0 sm:col-start-1 sm:row-start-1">
-                      <p className="text-sm font-medium text-[var(--text-secondary)]">{program.subject.name}</p>
-                      <h3 className="mt-1 break-words font-semibold text-slate-950">{program.title}</h3>
-                      <p className="mt-1 line-clamp-2 break-words text-sm leading-6 text-[var(--text-secondary)]">
-                        {program.description || "Описание программы пока не добавлено."}
-                      </p>
-                    </div>
-
-                    <Link
-                      className="inline-flex min-h-10 items-center gap-2 justify-self-start rounded-md text-sm font-medium text-blue-600 hover:text-blue-700 sm:col-start-3 sm:row-start-1 sm:justify-self-end"
-                      href={`/student/programs/${program.id}`}
-                    >
-                      Открыть программу
-                      <ArrowRight size={16} aria-hidden="true" />
-                    </Link>
-                  </article>
-                ))}
-              </div>
-            </div>
-          )}
-        </section>
-
-        <aside className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[var(--border)] pt-4 text-sm text-[var(--text-secondary)]">
-          <p>Все назначенные вам программы в одном месте.</p>
-          <p>
-            Всего программ:{" "}
-            <span className="font-medium tabular-nums text-slate-900">{programs.data?.length ?? "—"}</span>
+      <div className="space-y-7 sm:space-y-8">
+        {programs.isPending && (
+          <p className="rounded-2xl bg-slate-50 p-5 text-sm text-[var(--text-secondary)]" aria-busy="true">
+            Загружаем программы…
           </p>
-        </aside>
+        )}
+
+        {programs.isError && (
+          <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
+            <p className="text-sm text-red-700">Не удалось загрузить ваши программы.</p>
+            <Button type="button" variant="secondary" onClick={() => programs.refetch()}>
+              Повторить
+            </Button>
+          </div>
+        )}
+
+        {!programs.isError && programs.data?.length === 0 && (
+          <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
+            <BookOpenText size={30} className="mx-auto text-blue-500" aria-hidden="true" />
+            <p className="mt-4 font-semibold text-slate-950">Пока нет программ</p>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">
+              Когда преподаватель назначит программу обучения, она появится здесь.
+            </p>
+          </div>
+        )}
+
+        {!programs.isError && active.length > 0 && (
+          <section aria-labelledby="current-programs-heading" className="min-w-0 space-y-4">
+            <h2
+              id="current-programs-heading"
+              className="text-xl font-semibold tracking-tight text-slate-950 2xl:text-2xl"
+            >
+              {active.length === 1 ? "Текущая программа" : "Текущие программы"}
+            </h2>
+            <div className="space-y-4">
+              {active.map((program) => (
+                <ProgramOverviewCard key={program.id} program={program} active />
+              ))}
+            </div>
+          </section>
+        )}
+        {!programs.isError && other.length > 0 && (
+          <section aria-labelledby="other-programs-heading" className="min-w-0 space-y-4">
+            <h2 id="other-programs-heading" className="text-lg font-semibold tracking-tight text-slate-950">
+              Другие программы
+            </h2>
+            <div className="grid items-start gap-4 md:grid-cols-2">
+              {other.map((program) => (
+                <ProgramOverviewCard key={program.id} program={program} active={false} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </main>
   );
