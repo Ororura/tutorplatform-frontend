@@ -1,135 +1,171 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { ClipboardCheck } from "lucide-react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { CircleAlert, ClipboardCheck, Clock3 } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { getStudentHomeworkPresentationState, StudentHomeworkList, studentHomeworkQueries } from "@/entities/homework";
+import { isHomeworkOverdue, StudentHomeworkList, studentHomeworkQueries } from "@/entities/homework";
+import { studentProgramQueries } from "@/entities/student-program";
 import { Button } from "@/shared/ui/button";
 
+import { StudentHomeworkHistory } from "./student-homework-history";
+
 export function StudentHomeworksView() {
-  const homeworks = useQuery(
-    studentHomeworkQueries.list({
-      page: 0,
-      size: 20,
-      sort: "assignedAt,desc",
-    }),
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const active = useInfiniteQuery(
+    studentHomeworkQueries.infiniteList({ status: "ASSIGNED", size: 20, sort: "dueAt,asc" }),
   );
-
-  const items = homeworks.data?.items ?? [];
-
-  const pendingCount = items.filter((homework) => {
-    const state = getStudentHomeworkPresentationState(homework);
-
-    return state === "ASSIGNED" || state === "OVERDUE";
-  }).length;
-
-  const completedCount = items.filter(
-    (homework) => getStudentHomeworkPresentationState(homework) === "COMPLETED",
-  ).length;
+  const completed = useInfiniteQuery(
+    studentHomeworkQueries.infiniteList({ status: "COMPLETED", size: 3, sort: "assignedAt,desc" }),
+  );
+  const cancelled = useInfiniteQuery(
+    studentHomeworkQueries.infiniteList({ status: "CANCELLED", size: 3, sort: "assignedAt,desc" }),
+  );
+  const programs = useQuery(studentProgramQueries.currentList());
+  const queries = [active, completed, cancelled];
+  const pending = queries.some((query) => query.isPending);
+  const failed = queries.some((query) => query.isError);
+  const activeItems = active.data?.pages.flatMap((page) => page.items) ?? [];
+  const attention = activeItems.filter((homework) => isHomeworkOverdue(homework, now));
+  // The API orders deadlines ascending; keep that order, placing undated work last.
+  const upcoming = activeItems.filter((homework) => !isHomeworkOverdue(homework, now));
+  const datedUpcoming = upcoming.filter((homework) => homework.dueAt);
+  const undatedUpcoming = upcoming.filter((homework) => !homework.dueAt);
+  const history = [completed, cancelled]
+    .flatMap((query) => query.data?.pages.flatMap((page) => page.items) ?? [])
+    .sort((a, b) => Date.parse(b.assignedAt) - Date.parse(a.assignedAt) || b.id.localeCompare(a.id));
+  const programTitles = new Map(
+    (programs.isError ? [] : (programs.data ?? [])).map((program) => [program.id, program.title]),
+  );
+  const empty = !pending && !failed && activeItems.length === 0 && history.length === 0;
 
   return (
-    <main className="space-y-6">
-      <section className="py-2">
+    <main className="mx-auto max-w-[1440px] space-y-5">
+      <header className="py-2">
         <div className="flex items-center gap-4">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[var(--text-secondary)]">
-            <ClipboardCheck size={22} />
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-[var(--text-secondary)]">
+            <ClipboardCheck size={24} aria-hidden="true" />
           </span>
-
-          <div>
+          <div className="min-w-0">
             <p className="text-sm font-medium text-[var(--text-secondary)]">Учебный кабинет</p>
-
             <h1 className="mt-1 break-words text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
               Домашние задания
             </h1>
-
             <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-              Здесь находятся задания преподавателя и результаты их проверки.
+              Задания преподавателя и результаты их проверки.
             </p>
           </div>
         </div>
-      </section>
+      </header>
 
-      <div className="space-y-5">
-        <section className="min-w-0">
-          <div>
-            <h2 className="text-base font-semibold text-slate-950">Ваши задания</h2>
-
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Последние назначенные задания отображаются первыми.
-            </p>
-          </div>
-
-          <div className="mt-5">
-            {homeworks.isPending && (
-              <div className="rounded-2xl bg-slate-50 p-5 text-sm text-[var(--text-secondary)]" aria-busy="true">
-                Загружаем домашние задания…
-              </div>
-            )}
-
-            {homeworks.isError && (
-              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-                <p className="text-sm text-red-700">Не удалось загрузить домашние задания.</p>
-
-                <Button variant="secondary" type="button" onClick={() => homeworks.refetch()}>
-                  Повторить
-                </Button>
-              </div>
-            )}
-
-            {homeworks.data?.items.length === 0 && (
-              <div className="rounded-xl bg-[var(--surface-muted)] px-4 py-6 text-center">
-                <ClipboardCheck size={30} className="mx-auto text-blue-500" />
-
-                <p className="mt-4 font-semibold text-slate-950">Домашних заданий пока нет</p>
-
-                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">
-                  Когда преподаватель назначит новую работу, она появится здесь.
-                </p>
-              </div>
-            )}
-
-            {homeworks.data && homeworks.data.items.length > 0 && (
-              <StudentHomeworkList homeworks={homeworks.data.items} />
-            )}
-          </div>
+      {pending && <StudentHomeworkSkeleton />}
+      {failed && (
+        <div className="space-y-3 rounded-2xl border border-red-100 bg-white p-5" role="alert">
+          <p className="text-sm text-red-700">Не удалось загрузить домашние задания.</p>
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={() => queries.filter((query) => query.isError).forEach((query) => void query.refetch())}
+          >
+            Повторить
+          </Button>
+        </div>
+      )}
+      {empty && (
+        <section className="rounded-2xl border border-[var(--border)] bg-white px-4 py-10 text-center shadow-xs">
+          <ClipboardCheck size={30} className="mx-auto text-blue-500" aria-hidden="true" />
+          <h2 className="mt-4 font-semibold text-slate-950">Домашних заданий пока нет</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">
+            Когда преподаватель назначит новое задание, оно появится здесь.
+          </p>
         </section>
-
-        <aside className="min-w-0">
-          <section className="border-t border-[var(--border)] pt-4">
-            <ClipboardCheck size={21} className="text-blue-600" />
-
-            <h2 className="mt-4 font-semibold text-slate-950">Ваша нагрузка</h2>
-
-            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-              Краткая информация по домашним заданиям.
-            </p>
-
-            <div className="mt-3 grid gap-x-6 sm:grid-cols-3">
-              <div className="flex items-end justify-between py-2">
-                <span className="text-sm text-[var(--text-secondary)]">Всего</span>
-
-                <span className="text-2xl font-semibold text-slate-950">{homeworks.data?.totalElements ?? "—"}</span>
-              </div>
-
-              <div className="flex items-end justify-between py-2">
-                <span className="text-sm text-[var(--text-secondary)]">К выполнению</span>
-
-                <span className="text-2xl font-semibold text-blue-700">{homeworks.data ? pendingCount : "—"}</span>
-              </div>
-
-              <div className="flex items-end justify-between py-2">
-                <span className="text-sm text-[var(--text-secondary)]">Выполнено</span>
-
-                <span className="text-2xl font-semibold text-emerald-700">{homeworks.data ? completedCount : "—"}</span>
-              </div>
-            </div>
-
-            <p className="mt-3 text-xs leading-5 text-[var(--text-secondary)]">
-              Счётчики выполнения относятся к текущей загруженной странице.
-            </p>
-          </section>
-        </aside>
-      </div>
+      )}
+      {attention.length > 0 && (
+        <section
+          aria-labelledby="homework-attention-heading"
+          className="rounded-2xl border border-red-100 bg-red-50/40 p-4"
+        >
+          <h2
+            id="homework-attention-heading"
+            className="mb-3 flex items-center gap-3 text-lg font-semibold tracking-tight text-slate-950 sm:text-xl"
+          >
+            <CircleAlert size={28} className="shrink-0 text-red-600" aria-hidden="true" />
+            Требуют внимания <span className="text-red-600">· {attention.length}</span>
+          </h2>
+          <StudentHomeworkList homeworks={attention} now={now} programTitles={programTitles} />
+        </section>
+      )}
+      {upcoming.length > 0 && (
+        <section
+          aria-labelledby="homework-upcoming-heading"
+          className="rounded-2xl border border-[var(--border)] bg-white p-4 shadow-xs"
+        >
+          <h2
+            id="homework-upcoming-heading"
+            className="mb-3 flex items-center gap-3 text-lg font-semibold tracking-tight text-slate-950 sm:text-xl"
+          >
+            <Clock3 size={28} className="shrink-0 text-blue-600" aria-hidden="true" />
+            Предстоящие <span className="text-blue-600">· {upcoming.length}</span>
+          </h2>
+          <StudentHomeworkList
+            homeworks={[...datedUpcoming, ...undatedUpcoming]}
+            now={now}
+            programTitles={programTitles}
+          />
+        </section>
+      )}
+      {active.hasNextPage && (
+        <Button variant="secondary" disabled={active.isFetchingNextPage} onClick={() => void active.fetchNextPage()}>
+          {active.isFetchingNextPage ? "Загружаем…" : "Загрузить ещё задания"}
+        </Button>
+      )}
+      {history.length > 0 && (
+        <StudentHomeworkHistory
+          homeworks={history}
+          hasMore={completed.hasNextPage || cancelled.hasNextPage}
+          loading={completed.isFetchingNextPage || cancelled.isFetchingNextPage}
+          loadMore={() => {
+            if (completed.hasNextPage) void completed.fetchNextPage();
+            if (cancelled.hasNextPage) void cancelled.fetchNextPage();
+          }}
+        />
+      )}
     </main>
+  );
+}
+
+function StudentHomeworkSkeleton() {
+  return (
+    <div role="status" aria-busy="true" className="space-y-5">
+      <span className="sr-only">Загружаем домашние задания…</span>
+      {[2, 1].map((count) => (
+        <div
+          key={count}
+          aria-hidden="true"
+          className="space-y-3 rounded-2xl border border-slate-100 bg-white p-4 motion-safe:animate-pulse"
+        >
+          <div className="h-6 w-48 rounded bg-slate-100" />
+          {Array.from({ length: count }, (_, i) => (
+            <div
+              key={i}
+              className="flex flex-col gap-4 rounded-2xl border border-slate-100 p-5 sm:flex-row sm:items-center"
+            >
+              <div className="hidden size-14 shrink-0 rounded-2xl bg-blue-50 sm:block" />
+              <div className="flex-1 space-y-3">
+                <div className="h-5 w-2/3 rounded bg-slate-100" />
+                <div className="h-3 w-1/2 rounded bg-slate-100" />
+                <div className="h-3 w-3/4 rounded bg-slate-100" />
+              </div>
+              <div className="h-10 rounded-xl bg-blue-50 sm:w-32" />
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
   );
 }
