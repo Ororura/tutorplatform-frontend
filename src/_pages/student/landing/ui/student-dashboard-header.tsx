@@ -1,4 +1,5 @@
 import { CalendarClock } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import type { StudentHomeworkSummary } from "@/entities/homework";
@@ -19,8 +20,8 @@ export function StudentDashboardHeader({
   const user = useCurrentUserQuery();
   const firstName = user.data?.displayName.trim().split(/\s+/)[0];
   return (
-    <header className="flex flex-col justify-between gap-5 px-1 py-5 sm:px-5 sm:py-7 lg:flex-row lg:items-center">
-      <div className="min-w-0">
+    <header className="flex flex-col justify-between gap-5 px-1 py-5 sm:px-5 sm:py-5 lg:flex-row lg:items-center">
+      <div className="min-w-0 flex-1">
         {user.isPending && (
           <p className="text-2xl font-semibold text-slate-950" aria-busy="true">
             Загружаем профиль…
@@ -41,7 +42,7 @@ export function StudentDashboardHeader({
       {nearest?.dueAt && (
         <Link
           href={`/student/homework/${nearest.id}`}
-          className="flex min-w-0 items-center gap-4 rounded-2xl border border-blue-100 bg-blue-50/30 p-4 transition hover:border-blue-200 hover:bg-blue-50 lg:w-72 lg:shrink-0"
+          className="flex min-w-0 items-center gap-4 rounded-2xl border border-blue-100 bg-blue-50/30 p-4 transition hover:border-blue-200 hover:bg-blue-50 lg:w-64 lg:shrink-0"
         >
           <span
             className={`flex size-11 shrink-0 items-center justify-center rounded-2xl ${isHomeworkOverdue(nearest, now) ? "bg-red-50 text-red-600" : "bg-blue-50 text-blue-600"}`}
@@ -55,6 +56,21 @@ export function StudentDashboardHeader({
           </div>
         </Link>
       )}
+      <div aria-hidden="true" className="relative hidden h-32 w-72 shrink-0 xl:block">
+        <div className="absolute left-0 top-4 z-10 rounded-2xl border border-blue-100 bg-white/80 px-3 py-2.5 text-xs leading-5 text-slate-600 shadow-xs after:absolute after:-right-1.5 after:bottom-3 after:size-3 after:rotate-45 after:border-r after:border-t after:border-blue-100 after:bg-white">
+          Продолжай!
+          <br />
+          Ты всё успеешь!
+        </div>
+        <Image
+          src="/images/student-miku.png"
+          alt=""
+          width={1672}
+          height={941}
+          sizes="210px"
+          className="absolute bottom-0 -right-3 h-auto w-[210px]"
+        />
+      </div>
     </header>
   );
 }

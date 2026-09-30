@@ -30,6 +30,8 @@ test("demo student completes the learning journey", async ({ page }) => {
   await expect(programOverview.getByRole("progressbar").first()).toBeVisible();
   await expect(page.getByText("Быстрые действия")).toHaveCount(0);
 
+  const mascot = page.locator("main header img");
+
   for (const width of [1536, 1440, 1280, 1024, 768, 390]) {
     await page.setViewportSize({ width, height: 1000 });
     await expect(homeworkOverview).toBeVisible();
@@ -39,9 +41,12 @@ test("demo student completes the learning journey", async ({ page }) => {
     expect(homeworkBox).not.toBeNull();
     expect(programBox).not.toBeNull();
     if (width >= 1280) {
+      await expect(mascot).toBeVisible();
+      await expect.poll(() => mascot.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
       expect(homeworkBox!.width / programBox!.width).toBeGreaterThan(1.7);
       expect(homeworkBox!.width / programBox!.width).toBeLessThan(1.9);
     } else {
+      await expect(mascot).toBeHidden();
       expect(homeworkBox!.y + homeworkBox!.height).toBeLessThan(programBox!.y);
     }
     if (width === 1440 || width === 390) {
