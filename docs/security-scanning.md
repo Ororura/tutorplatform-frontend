@@ -40,3 +40,14 @@ installed/fixed versions, upstream link, and why an upgrade must be separate.
 Any proposed exception must be scoped to that CVE and package path, include an
 owner and expiry, and retain visibility in a separate unfiltered report.
 Do not add a global severity bypass or blanket unfixed-vulnerability suppression.
+
+## Initial baseline (2026-10-01)
+
+The old `npm install` build resolved newer dependencies and had no HIGH/CRITICAL
+findings. Building the committed lockfile with `npm ci` exposed the CRITICAL
+[GHSA-vcvr-r3jv-pc5j](https://github.com/advisories/GHSA-vcvr-r3jv-pc5j)
+in the standalone runtime's Next.js 16.3.5. Update Next.js and its matching
+`eslint-config-next` to 16.3.6 and commit the corresponding lockfile changes.
+The production gate checks the packages actually shipped in the standalone
+image; development/build dependencies remain outside that image. No allow-list
+is needed.
