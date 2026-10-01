@@ -1,20 +1,25 @@
 import type { NextConfig } from "next";
-import { productionSecurityHeaders } from "./browser-security";
-
-const backendUrl = process.env.BACKEND_INTERNAL_URL ?? "http://localhost:8080";
+import { applicationCsp, productionSecurityHeaders } from "./browser-security";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  async headers() {
-    return process.env.NODE_ENV === "production" ? [{ source: "/:path*", headers: productionSecurityHeaders() }] : [];
+  images: {
+    // Retain Next/Image's isolated document policy and also deny embedding.
+    contentSecurityPolicy: "default-src 'none'; frame-ancestors 'none'; sandbox",
   },
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${backendUrl}/api/:path*`,
-      },
-    ];
+  async headers() {
+    return process.env.NODE_ENV === "production"
+      ? [
+          {
+            source: "/:path*",
+            headers: [
+              ...productionSecurityHeaders(),
+              // Proxy replaces this policy with a per-request nonce on pages.
+              { key: "Content-Security-Policy", value: applicationCsp() },
+            ],
+          },
+        ]
+      : [];
   },
 };
 
