@@ -13,6 +13,7 @@ export default defineConfig({
   reporter: process.env.CI ? [["line"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL,
+    channel: process.env.PLAYWRIGHT_CHANNEL,
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },

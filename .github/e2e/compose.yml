@@ -47,6 +47,9 @@ services:
       FILE_STORAGE_DIRECTORY: /tmp/tutor-files
       PUBLIC_FRONTEND_BASE_URL: http://127.0.0.1:3000
       SESSION_COOKIE_SECURE: "false"
+      # All browser contexts share this proxy peer; the full suite exceeds
+      # the production budget of 10 logins/minute. Keep a finite E2E-only limit.
+      AUTH_RATE_LIMIT_LOGIN_LIMIT: "50"
     depends_on:
       postgres:
         condition: service_healthy
