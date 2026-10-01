@@ -35,6 +35,21 @@ Student Alex:  alex.demo@tutor.local / DemoStudent123!
 Student Maria: maria.demo@tutor.local / DemoStudent123!
 ```
 
+## Production browser security
+
+Production responses (including `/api/*` rewrites and static assets) set
+`X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and a
+`Permissions-Policy` that disables unused device capabilities. Clipboard writes are
+limited to the same origin for invitation/share links and content-package prompts.
+The referrer policy also protects bearer tokens in public progress/report URLs.
+These headers are disabled under `next dev`.
+
+HSTS is deliberately omitted: the checked-in Docker/Compose deployment exposes HTTP
+and does not establish an HTTPS-only public origin or a trusted TLS terminator.
+Configure HSTS at the HTTPS reverse proxy once the production domain, certificate,
+and HTTP-to-HTTPS redirect are verified. Do not enable it for local HTTP or assume
+all subdomains support HTTPS.
+
 ## OpenAPI and checks
 
 Spring Boot `/v3/api-docs` is the API source of truth. With the backend on port 8080, regenerate
