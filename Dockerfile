@@ -2,8 +2,8 @@ FROM node:26-alpine AS build
 WORKDIR /app
 ARG BACKEND_INTERNAL_URL=http://backend:8080
 ENV BACKEND_INTERNAL_URL=$BACKEND_INTERNAL_URL
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 RUN npm run build
 
