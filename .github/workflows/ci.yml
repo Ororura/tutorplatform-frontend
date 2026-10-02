@@ -20,6 +20,23 @@ env:
   IMAGE_NAME: ghcr.io/ororura/tutorplatform-frontend
 
 jobs:
+  delivery-checks:
+    name: Deployment verification tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Compile operational scripts
+        run: python3 -m compileall -q scripts tests/ops
+      - name: Smoke, deployment and Compose regression tests
+        run: python3 -m unittest discover -s tests/ops -v
+      - name: Validate GitHub Actions and embedded shell
+        run: |
+          docker run --rm --network none --workdir /repo \
+            --mount "type=bind,source=$PWD,target=/repo,readonly" \
+            rhysd/actionlint:1.7.12 .github/workflows/ci.yml
+
   checks:
     name: Frontend checks
     runs-on: ubuntu-latest
@@ -124,7 +141,7 @@ jobs:
     outputs:
       digest: ${{ steps.publish.outputs.digest }}
     name: Build and scan production image
-    needs: [checks, e2e]
+    needs: [checks, e2e, delivery-checks]
     runs-on: ubuntu-latest
     permissions:
       contents: read
