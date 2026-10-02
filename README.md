@@ -135,3 +135,8 @@ docker compose -f .github/e2e/compose.yml down --volumes --remove-orphans
 The suite covers authentication, teacher students, the learning program editor, materials, the
 student learning journey, and homework/submissions. Traces and screenshots for failed tests are
 written to `test-results/`; CI also uploads them together with the HTML report.
+
+## Immutable production delivery
+
+See [production delivery](docs/production-delivery.md) for exact image selection,
+smoke verification, deployed SHA inspection and manual rollback.
