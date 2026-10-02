@@ -12,3 +12,6 @@ test-results
 *.log
 *.tsbuildinfo
 .env.local
+
+# Operational Python checks
+__pycache__/
