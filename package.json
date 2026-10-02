@@ -52,7 +52,7 @@
     "jsdom": "^30.1.1",
     "lint-staged": "^17.5.1",
     "openapi-typescript": "7.13.0",
-    "prettier": "^3.9.8",
+    "prettier": "^3.9.9",
     "tailwind-lint": "^0.12.1",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.9.0",
