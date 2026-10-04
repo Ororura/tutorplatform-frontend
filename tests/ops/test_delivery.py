@@ -383,6 +383,9 @@ class RemoteDeliveryTests(unittest.TestCase):
             command = call.args[0]
             flag = "-P" if command[0] == "scp" else "-p"
             self.assertEqual("2222", command[command.index(flag) + 1])
+            self.assertIn("ControlMaster=auto", command)
+            self.assertIn("ControlPersist=120", command)
+            self.assertIn("ControlPath=/tmp/tutorplatform-ssh-%r@%h:%p", command)
         self.assertIn("test -w /opt/tutorplatform", runner.call_args_list[0].args[0][-1])
         self.assertIn("test -w /opt/tutorplatform-demo", runner.call_args_list[4].args[0][-1])
         self.assertIn(self.environment["IMAGE_SHA"], runner.call_args_list[3].args[0][-1])
