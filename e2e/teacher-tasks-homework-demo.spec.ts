@@ -1,6 +1,25 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+import type { components } from "../src/shared/api/generated/schema";
 
 import { login, uniqueName } from "./helpers/journeys";
+
+async function findPage<T extends { title: string }>(
+  page: Page,
+  endpoint: string,
+  params: Record<string, string | number>,
+  title: string,
+) {
+  // Locate persisted seed records without assuming mutable collections fit on page 1.
+  for (let index = 0; ; index++) {
+    const response = await page.request.get(endpoint, { params: { ...params, page: index } });
+    expect(response.status()).toBe(200);
+    const collection = (await response.json()) as { items: T[]; totalPages: number };
+    const item = collection.items.find((item) => item.title === title);
+    if (item) return { index, item };
+    if (index + 1 >= collection.totalPages) throw new Error(`Expected record not found: ${title}`);
+  }
+}
 
 test("teacher assigns TEXT + CODE homework and reviews resubmitted TEXT through completion", async ({
   page,
@@ -17,8 +36,14 @@ test("teacher assigns TEXT + CODE homework and reviews resubmitted TEXT through 
   await page.getByRole("link", { name: "Задания", exact: true }).click();
   await expect(page).toHaveURL(/\/teacher\/tasks$/);
   await expect(page.getByRole("heading", { name: "Банк заданий", level: 1 })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Когда использовать цикл while.*Текстовый ответ/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Сумма двух чисел.*Код/ })).toBeVisible();
+  for (const [title, label] of [
+    ["Когда использовать цикл while?", /Когда использовать цикл while.*Текстовый ответ/],
+    ["Сумма двух чисел", /Сумма двух чисел.*Код/],
+  ] as const) {
+    const { index } = await findPage(page, "/api/v1/teacher/tasks", { size: 20, sort: "updatedAt,desc" }, title);
+    await page.goto(`/teacher/tasks?page=${index}`);
+    await expect(page.getByRole("link", { name: label })).toBeVisible();
+  }
   await page.getByRole("link", { name: /Сумма двух чисел/ }).click();
   await expect(page.getByRole("heading", { name: "Конфигурация кода" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Тесты" })).toBeVisible();
@@ -29,11 +54,23 @@ test("teacher assigns TEXT + CODE homework and reviews resubmitted TEXT through 
   await expect(page).toHaveURL(/search=/);
   await page.getByRole("link", { name: /Алексей Иванов/ }).click();
   await expect(page).toHaveURL(/\/teacher\/students\/[^/]+$/);
+  const studentId = new URL(page.url()).pathname.split("/")[3];
   await page.getByRole("link", { name: "Домашние задания", exact: true }).click();
-  await expect(page.getByRole("link", { name: /Основы Python.*Выполнено/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Циклы.*Назначено/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Практика со списками.*Просрочено/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Повторение основ.*Отменено/ })).toBeVisible();
+  for (const [title, label] of [
+    ["Циклы", /Циклы.*Назначено/],
+    ["Практика со списками", /Практика со списками.*Просрочено/],
+    ["Повторение основ", /Повторение основ.*Отменено/],
+    ["Основы Python", /Основы Python.*Выполнено/],
+  ] as const) {
+    const { index } = await findPage(
+      page,
+      `/api/v1/teacher/students/${studentId}/homeworks`,
+      { size: 20, sort: "assignedAt,desc" },
+      title,
+    );
+    await page.goto(`/teacher/students/${studentId}/homework?page=${index}`);
+    await expect(page.getByRole("link", { name: label })).toBeVisible();
+  }
   await page
     .getByRole("link", {
       name: /Основы Python/,
@@ -59,6 +96,10 @@ test("teacher assigns TEXT + CODE homework and reviews resubmitted TEXT through 
   const programId = await pythonProgram.getAttribute("value");
   expect(programId).toBeTruthy();
   await program.selectOption(programId!);
+  const programsResponse = await page.request.get(`/api/v1/teacher/students/${studentId}/programs`);
+  expect(programsResponse.status()).toBe(200);
+  const programs = (await programsResponse.json()) as components["schemas"]["StudentProgramSummaryResponse"][];
+  const subjectId = programs.find((program) => program.id === programId)!.subject.id;
   const title = uniqueName("TEXT CODE");
   await page.getByLabel("Название").fill(title);
   const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
@@ -67,8 +108,30 @@ test("teacher assigns TEXT + CODE homework and reviews resubmitted TEXT through 
     tomorrow.getHours(),
   )}:${pad(tomorrow.getMinutes())}`;
   await page.getByLabel("Срок").fill(dueAt);
-  await page.getByRole("checkbox", { name: /Разница между = и ==/ }).check();
-  await page.getByRole("checkbox", { name: /Сумма двух чисел/ }).check();
+  const taskSelection = page.getByRole("group", { name: "Выбрать задания" });
+  let selectionPage = 0;
+  for (const title of ["Разница между = и ==", "Сумма двух чисел"]) {
+    const { index } = await findPage(
+      page,
+      "/api/v1/teacher/tasks",
+      {
+        size: 10,
+        sort: "updatedAt,desc",
+        status: "ACTIVE",
+        subjectId,
+      },
+      title,
+    );
+    while (selectionPage !== index) {
+      const direction = selectionPage < index ? "Вперёд" : "Назад";
+      const button = taskSelection.getByRole("button", { name: direction, exact: true });
+      await expect(button).toBeEnabled();
+      await button.click();
+      selectionPage += selectionPage < index ? 1 : -1;
+      await expect(taskSelection.getByText(new RegExp(`^Страница ${selectionPage + 1} из`))).toBeVisible();
+    }
+    await taskSelection.getByRole("checkbox", { name: new RegExp(title) }).check();
+  }
   const required = page.getByRole("checkbox", { name: "Обязательное" });
   await required.nth(1).uncheck();
   await page.getByRole("button", { name: "Назначить", exact: true }).click();
@@ -81,7 +144,6 @@ test("teacher assigns TEXT + CODE homework and reviews resubmitted TEXT through 
   await expect(page.getByRole("heading", { name: title })).toBeVisible();
 
   const teacherPath = new URL(page.url()).pathname;
-  const studentId = teacherPath.split("/")[3];
   const homeworkId = teacherPath.split("/")[5];
   const studentContext = await browser.newContext({ baseURL });
   try {
