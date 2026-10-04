@@ -1,6 +1,11 @@
 name: tutorplatform-e2e
 
 services:
+  sandbox-image:
+    image: python:3.12.10-alpine3.21@sha256:9c51ecce261773a684c8345b2d4673700055c513b4d54bc0719337d3e4ee552e
+    entrypoint: ["/bin/true"]
+    network_mode: none
+
   postgres:
     image: postgres:17-alpine
     environment:
@@ -20,12 +25,15 @@ services:
       context: ${E2E_WORKER_CONTEXT:-../../../execution-worker}
     environment:
       EXECUTION_RUNTIME_WORKSPACE_DIRECTORY: /workspaces
-      EXECUTION_RUNTIME_WORKSPACE_VOLUME: tutorplatform-e2e-workspaces
+      EXECUTION_RUNTIME_WORKSPACE_VOLUME: ${COMPOSE_PROJECT_NAME:-tutorplatform-e2e}-workspaces
+    depends_on:
+      sandbox-image:
+        condition: service_completed_successfully
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - execution-workspaces:/workspaces
     ports:
-      - "127.0.0.1:8090:8090"
+      - "127.0.0.1:${E2E_WORKER_PORT:-8090}:8090"
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8090/actuator/health/readiness"]
       interval: 2s
@@ -45,7 +53,7 @@ services:
       EXECUTION_WORKER_BASE_URL: http://execution-worker:8090
       FILE_STORAGE_PROVIDER: LOCAL
       FILE_STORAGE_DIRECTORY: /tmp/tutor-files
-      PUBLIC_FRONTEND_BASE_URL: http://127.0.0.1:3000
+      PUBLIC_FRONTEND_BASE_URL: http://127.0.0.1:${E2E_FRONTEND_PORT:-3000}
       SESSION_COOKIE_SECURE: "false"
       # All browser contexts share this proxy peer; the full suite exceeds
       # the production budget of 10 logins/minute. Keep a finite E2E-only limit.
@@ -56,7 +64,7 @@ services:
       execution-worker:
         condition: service_healthy
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:${E2E_BACKEND_PORT:-8080}:8080"
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080/actuator/health/readiness"]
       interval: 2s
@@ -77,7 +85,7 @@ services:
       backend:
         condition: service_healthy
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:${E2E_FRONTEND_PORT:-3000}:3000"
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/login"]
       interval: 2s
@@ -87,4 +95,4 @@ services:
 
 volumes:
   execution-workspaces:
-    name: tutorplatform-e2e-workspaces
+    name: ${COMPOSE_PROJECT_NAME:-tutorplatform-e2e}-workspaces

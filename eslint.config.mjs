@@ -34,7 +34,18 @@ const eslintConfig = defineConfig([
   // Должен идти ближе к концу.
   prettier,
 
-  globalIgnores([".next/**", "out/**", "build/**", "coverage/**", "next-env.d.ts"]),
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "coverage/**",
+    "next-env.d.ts",
+    ".e2e-dependencies/**",
+    "playwright-report/**",
+    "test-results/**",
+    "e2e-artifacts/**",
+    ".agents/**",
+  ]),
 ]);
 
 export default eslintConfig;
