@@ -39,7 +39,10 @@ test("demo teacher reads Alex session history and creates a real session", async
 
   await page.getByRole("link", { name: "Все занятия" }).click();
   await page.getByRole("link", { name: "Добавить занятие" }).click();
-  await expect(page.getByLabel("Программа обучения")).toHaveValue(/.+/);
+  const program = page.getByLabel("Программа обучения");
+  const pythonOption = program.locator("option").filter({ hasText: /^Python с нуля/ });
+  await expect(pythonOption).toBeAttached();
+  await program.selectOption((await pythonOption.getAttribute("value"))!);
   const progressContext = await page.evaluate(async () => {
     const studentId = location.pathname.split("/")[3];
     const studentProgramId = (document.querySelector("#session-program") as HTMLSelectElement).value;
