@@ -233,6 +233,12 @@ test("demo teacher creates, publishes, shares and revokes a progress report", as
     const publicJson = JSON.stringify(publicReport);
     for (const key of [
       "privateNotes",
+      "id",
+      "topicId",
+      "skillId",
+      "studentId",
+      "teacherId",
+      "programId",
       "generatedByTeacherId",
       "tokenHash",
       "studentProgramId",

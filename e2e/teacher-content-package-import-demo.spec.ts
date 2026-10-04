@@ -237,7 +237,7 @@ test("teacher prepares a package and imports the downloaded example", async ({ p
   await generator.getByLabel("Название модуля").fill("Условные конструкции");
   await generator.getByRole("button", { name: "Скопировать промпт" }).click();
   await expect(generator.getByRole("status")).toContainText("Промпт скопирован");
-  const prompt = await page.evaluate(() => navigator.clipboard.readText());
+  const prompt = await generator.getByLabel("Готовый промпт").inputValue();
   expect(prompt).toContain("schemaVersion: 1\nkind: modules\nmodules:");
   expect(prompt).toContain("materialType: MARKDOWN");
   await generator.getByRole("button", { name: "Вернуться к импорту" }).click();

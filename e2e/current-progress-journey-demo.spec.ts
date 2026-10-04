@@ -141,6 +141,10 @@ test("demo teacher assessment flows through teacher, student and public current 
   await page.getByRole("link", { name: new RegExp(programTitle) }).click();
   await expect(page.getByRole("heading", { name: programTitle, exact: true })).toBeVisible();
   const programId = new URL(page.url()).pathname.split("/")[5];
+  const beforeProgress = await getProgress(
+    page.request,
+    `/api/v1/teacher/students/${studentId}/progress?studentProgramId=${programId}`,
+  );
 
   // A separate session leaves the report journey's dedicated program untouched.
   await page.goto(`/teacher/students/${studentId}/sessions/new`);
@@ -190,7 +194,8 @@ test("demo teacher assessment flows through teacher, student and public current 
     `/api/v1/teacher/students/${studentId}/progress?studentProgramId=${programId}`,
   );
   expect(teacherProgress.studentProgramId).toBe(programId);
-  expect(teacherProgress.sessionsCount).toBeGreaterThan(0);
+  expect(teacherProgress.sessionsCount).toBe(beforeProgress.sessionsCount! + 1);
+  expect(teacherProgress.totalLearningMinutes).toBe(beforeProgress.totalLearningMinutes! + 60);
   for (const value of Object.values(teacherProgress.assessment ?? {})) expect(value).not.toBeNull();
   expect(Object.keys(teacherProgress.assessment ?? {})).toHaveLength(4);
   await expectProgress(page, teacherProgress, "teacher");
@@ -254,6 +259,11 @@ test("demo teacher assessment flows through teacher, student and public current 
     const publicJson = JSON.stringify(publicProgress);
     for (const key of [
       "privateNotes",
+      "topicId",
+      "skillId",
+      "studentId",
+      "teacherId",
+      "programId",
       "publicComment",
       "studentProgramId",
       "id",

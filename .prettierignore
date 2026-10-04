@@ -4,6 +4,11 @@ out
 build
 dist
 coverage
+.e2e-dependencies
+playwright-report
+test-results
+e2e-artifacts
+.agents
 
 package-lock.json
 pnpm-lock.yaml

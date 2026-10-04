@@ -12,17 +12,17 @@ test("demo teacher assigns two real programs to Ilya", async ({ page }) => {
   expect(ilyaPath).toBeTruthy();
   await page.goto(ilyaPath!);
   await page.getByRole("link", { name: "Программа", exact: true }).click();
-  await expect(page.locator("body")).toContainText(/У ученика пока нет программы обучения|Python/);
-
-  if (await page.getByText("У ученика пока нет программы обучения").isVisible()) {
-    await page.getByRole("button", { name: "Назначить программу" }).click();
+  await expect(page.getByRole("button", { name: /^Назначить (ещё )?программу$/ })).toBeVisible();
+  const pythonSource = page.getByRole("link", { name: /Python с нуля/ });
+  if ((await pythonSource.count()) === 0) {
+    await page.getByRole("button", { name: /^Назначить (ещё )?программу$/ }).click();
     const firstDialog = page.getByRole("dialog", { name: "Назначить программу" });
     await expect(firstDialog.getByText("Python · Активна").first()).toBeVisible();
     await firstDialog.getByRole("radio", { name: /Python с нуля/ }).check();
     await firstDialog.getByLabel("Интервал отчёта, часов").fill("8");
     await firstDialog.getByRole("button", { name: "Назначить", exact: true }).click();
-  } else if (await page.getByRole("link", { name: /Python с нуля/ }).isVisible()) {
-    await page.getByRole("link", { name: /Python с нуля/ }).click();
+  } else {
+    await pythonSource.click();
   }
 
   await expect(page).toHaveURL(/\/teacher\/students\/[^/]+\/programs\/[^/]+$/);
@@ -55,6 +55,7 @@ test("demo teacher assigns two real programs to Ilya", async ({ page }) => {
 
   await page.getByRole("button", { name: "Назначить ещё программу" }).click();
   const repeatDialog = page.getByRole("dialog", { name: "Назначить программу" });
-  await expect(repeatDialog.getByText("Уже назначена")).toHaveCount(2);
-  await expect(repeatDialog.getByRole("button", { name: "Назначить", exact: true })).toBeDisabled();
+  await expect(repeatDialog.getByRole("radio", { name: /Python с нуля/ })).toBeDisabled();
+  await expect(repeatDialog.getByRole("radio", { name: /Python — начало обучения/ })).toBeDisabled();
+  await repeatDialog.getByRole("button", { name: "Закрыть", exact: true }).click();
 });

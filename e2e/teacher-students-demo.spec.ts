@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
 
+// The invitation dialog renders a bearer URL, including in DOM snapshots.
+test.use({ trace: "off", screenshot: "off" });
+
 test("demo teacher completes the real students vertical slice", async ({ page }, testInfo) => {
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"], {
     origin: new URL(testInfo.project.use.baseURL ?? "http://127.0.0.1:3000").origin,

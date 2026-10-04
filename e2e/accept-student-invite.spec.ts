@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
 
+// Registration passwords and invitation bearer URLs must not be recorded.
+test.use({ trace: "off", screenshot: "off" });
+
 test("teacher and student complete the authentication and invitation flow", async ({ browser, page }, testInfo) => {
   const suffix = `${Date.now()}-${testInfo.workerIndex}`;
   const teacherEmail = `teacher-${suffix}@example.com`;
