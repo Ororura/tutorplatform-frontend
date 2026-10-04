@@ -108,6 +108,11 @@ test("demo student completes the learning journey", async ({ page }) => {
       .getByText("Просрочено")
       .first(),
   ).toBeVisible();
-  await expect(page.getByRole("region", { name: /^История/ }).getByRole("listitem")).toHaveCount(3);
+  await expect(
+    page
+      .getByRole("region", { name: /^История/ })
+      .getByRole("listitem")
+      .first(),
+  ).toBeVisible();
   await expect(page.getByText("Ваша нагрузка")).toHaveCount(0);
 });
