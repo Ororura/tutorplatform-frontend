@@ -13,6 +13,12 @@ import {
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
+import {
+  javaStarterCode,
+  programmingLanguageLabels,
+  type ProgrammingLanguage,
+} from "@/entities/task/model/programming-language";
+
 import { useUpdateTaskMutation } from "../api/update-task";
 
 export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
@@ -22,6 +28,8 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
   const [description, setDescription] = useState(task.descriptionMarkdown);
   const [difficulty, setDifficulty] = useState<TaskDifficulty>(task.difficulty);
   const [status, setStatus] = useState<TaskStatus>(task.status);
+  const [language, setLanguage] = useState<ProgrammingLanguage>(task.programmingConfig?.language ?? "PYTHON");
+  const [starterCode, setStarterCode] = useState(task.programmingConfig?.starterCode ?? "");
   const [error, setError] = useState("");
   const mutation = useUpdateTaskMutation(task.id);
   useEffect(() => {
@@ -42,6 +50,17 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
         difficulty,
         status,
         version: task.version,
+        ...(task.programmingConfig
+          ? {
+              programmingConfig: {
+                language,
+                starterCode,
+                executionEnabled: task.programmingConfig.executionEnabled,
+                timeLimitMs: task.programmingConfig.timeLimitMs,
+                memoryLimitMb: task.programmingConfig.memoryLimitMb,
+              },
+            }
+          : {}),
       });
       setOpen(false);
     } catch (caught) {
@@ -60,7 +79,7 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
       <dialog
         ref={dialogRef}
         aria-labelledby="edit-task-title"
-        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))] overflow-auto"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit}>
@@ -106,6 +125,37 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
               </Select>
             </label>
           </div>
+          {task.programmingConfig && (
+            <fieldset className="space-y-4 rounded-inset border border-border p-4">
+              <legend className="px-1 font-medium">Конфигурация программы</legend>
+              <label className="block space-y-2">
+                <span className="field-label">Язык</span>
+                <Select
+                  aria-label="Язык"
+                  value={language}
+                  onChange={(event) => {
+                    const next = event.target.value as ProgrammingLanguage;
+                    setLanguage(next);
+                    if (next === "JAVA" && !starterCode.trim()) setStarterCode(javaStarterCode);
+                  }}
+                >
+                  {Object.entries(programmingLanguageLabels).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </Select>
+              </label>
+              <label className="block space-y-2">
+                <span className="field-label">Стартовый код</span>
+                <Textarea
+                  className="min-h-28 font-mono"
+                  value={starterCode}
+                  onChange={(event) => setStarterCode(event.target.value)}
+                />
+              </label>
+            </fieldset>
+          )}
           {error && (
             <p className="text-sm text-danger" role="alert">
               {error}

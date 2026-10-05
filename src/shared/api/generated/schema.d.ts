@@ -1479,7 +1479,13 @@ export interface components {
     TaskTestCasesResponse: {
       items?: components["schemas"]["TaskTestCaseResponse"][];
     };
+    /**
+     * @description Programming language supported by CODE tasks
+     * @enum {string}
+     */
+    ProgrammingLanguage: "PYTHON" | "JAVA";
     UpdateProgrammingTaskConfigRequest: {
+      language?: components["schemas"]["ProgrammingLanguage"];
       starterCode?: string;
       executionEnabled: boolean;
       /** Format: int32 */
@@ -1487,11 +1493,6 @@ export interface components {
       /** Format: int32 */
       memoryLimitMb: number;
     };
-    /**
-     * @description Programming language supported by CODE tasks
-     * @enum {string}
-     */
-    ProgrammingLanguage: "PYTHON";
     ProgrammingTaskConfigResponse: {
       language: components["schemas"]["ProgrammingLanguage"];
       starterCode?: string;
@@ -5643,6 +5644,24 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
+      /** @description Source code exceeds configured UTF-8 size (SOURCE_CODE_TOO_LARGE) */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Student execution quota exceeded (EXECUTION_RATE_LIMIT_EXCEEDED) */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
     };
   };
   submitCodeAnswer: {
@@ -5714,6 +5733,24 @@ export interface operations {
           "*/*": components["schemas"]["ApiError"];
         };
       };
+      /** @description Source code exceeds configured UTF-8 size (SOURCE_CODE_TOO_LARGE) */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Student execution quota exceeded (EXECUTION_RATE_LIMIT_EXCEEDED) */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
     };
   };
   acceptTeacherInvitation: {
@@ -5769,6 +5806,15 @@ export interface operations {
       };
       /** @description Invitation unavailable or email registered */
       409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Authentication rate limit exceeded; Retry-After contains seconds */
+      429: {
         headers: {
           [name: string]: unknown;
         };
@@ -5847,6 +5893,15 @@ export interface operations {
           "application/json": components["schemas"]["ApiError"];
         };
       };
+      /** @description Authentication rate limit exceeded; Retry-After contains seconds */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApiError"];
+        };
+      };
     };
   };
   registerTeacher: {
@@ -5891,6 +5946,15 @@ export interface operations {
       };
       /** @description Email already registered */
       409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Authentication rate limit exceeded; Retry-After contains seconds */
+      429: {
         headers: {
           [name: string]: unknown;
         };
@@ -5969,6 +6033,15 @@ export interface operations {
       };
       /** @description Missing or invalid CSRF token */
       403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Authentication rate limit exceeded; Retry-After contains seconds */
+      429: {
         headers: {
           [name: string]: unknown;
         };
