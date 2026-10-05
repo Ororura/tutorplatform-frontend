@@ -37,6 +37,7 @@ const eslintConfig = defineConfig([
   globalIgnores([
     ".next/**",
     "out/**",
+    "public/monaco/**",
     "build/**",
     "coverage/**",
     "next-env.d.ts",

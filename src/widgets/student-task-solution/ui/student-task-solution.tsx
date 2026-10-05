@@ -1,4 +1,5 @@
 "use client";
+import { CodeEditor } from "@/shared/ui/code-editor";
 import { Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
@@ -7,6 +8,7 @@ import { Info } from "lucide-react";
 
 import { formatHomeworkDate, StudentHomeworkTaskBadges, type StudentHomeworkItem } from "@/entities/homework";
 import type { StudentTopicTask } from "@/entities/task";
+import { programmingLanguageLabels } from "@/entities/task/model/programming-language";
 import { SafeMarkdown } from "@/entities/material/ui/safe-markdown";
 import {
   executionStatusPresentation,
@@ -349,7 +351,7 @@ function CodeSolution({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-foreground-muted">
-        <span>Язык: {languagePresentation[config.language] ?? config.language}</span>
+        <span>Язык: {programmingLanguageLabels[config.language] ?? config.language}</span>
 
         {config.timeLimitMs !== undefined && <span>Лимит времени: {config.timeLimitMs} мс</span>}
 
@@ -362,102 +364,93 @@ function CodeSolution({
         </p>
       )}
 
-      <details className="rounded-surface border border-border bg-surface-subtle/60 px-3 py-2 text-sm" open>
-        <summary className="cursor-pointer font-medium text-foreground-muted">Как выполнить задание</summary>
-        <div className="mt-3 space-y-3 text-foreground-muted">
-          <p>
-            Напишите программу на Python, которая решает задачу. Для чтения входных данных используйте input(), для
-            вывода результата — print().
-          </p>
-          <p>
-            Преподаватель мог заранее подготовить для вас часть решения. Если в редакторе уже есть код, внимательно
-            изучите его и дополните или измените согласно условию задания. Необязательно писать программу с нуля
-          </p>
-          <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
-            <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
-          </pre>
-          <p className="text-xs text-foreground-muted">
-            Программа считывает два числа из одной строки и выводит их сумму
-          </p>
-          <ul className="space-y-1 text-xs">
-            <li>«Запустить» — проверить код и посмотреть результат без отправки окончательного решения.</li>
-            <li>«Отправить решение» — сохранить ответ и проверить его по тестам задания.</li>
-          </ul>
-          <p className="text-xs text-foreground-muted">
-            Входные данные для проверки подаются автоматически. Вводить их вручную после запуска не нужно
-          </p>
-          <div className="space-y-3 border-t border-border pt-3">
-            <h3 className="font-medium text-foreground-muted">Когда решение считается верным?</h3>
+      {config.language === "JAVA" ? (
+        <p className="rounded-surface border border-border bg-surface-subtle/60 p-3 text-sm text-foreground-muted">
+          Программа запускается из класса Main без package. Точка входа — public static void main(String[] args).
+          Входные данные передаются через System.in. Выводите результат через System.out.print / System.out.println:
+          система сравнивает вывод программы с ожидаемым результатом тестов.
+        </p>
+      ) : (
+        <details className="rounded-surface border border-border bg-surface-subtle/60 px-3 py-2 text-sm" open>
+          <summary className="cursor-pointer font-medium text-foreground-muted">Как выполнить задание</summary>
+          <div className="mt-3 space-y-3 text-foreground-muted">
             <p>
-              Программа считается верной, когда успешно проходит все тесты задания. Система автоматически передаёт вашей
-              программе входные данные и сравнивает полученный результат с ожидаемым ответом.
+              Напишите программу на Python, которая решает задачу. Для чтения входных данных используйте input(), для
+              вывода результата — print().
             </p>
             <p>
-              Для вывода результата используйте print(). Именно то, что программа выводит в консоль, проверяется
-              системой.
+              Преподаватель мог заранее подготовить для вас часть решения. Если в редакторе уже есть код, внимательно
+              изучите его и дополните или измените согласно условию задания. Необязательно писать программу с нуля
             </p>
-            <p>
-              Выводите только то, что требуется в условии. Не добавляйте пояснения вроде &quot;Ответ:&quot;,
-              &quot;Результат:&quot; или &quot;Введите число:&quot;, если задание этого не требует
+            <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
+              <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
+            </pre>
+            <p className="text-xs text-foreground-muted">
+              Программа считывает два числа из одной строки и выводит их сумму
             </p>
-            <div className="space-y-2">
-              <p>Условие: «Прочитайте два числа и выведите их сумму».</p>
-              <div>
-                <p className="text-xs font-medium text-success">Правильно:</p>
-                <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
-                  <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
-                </pre>
-              </div>
-              <div>
-                <p className="text-xs font-medium text-danger">Неправильно:</p>
-                <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
-                  <code>{'a, b = map(int, input().split())\nprint("Сумма чисел:", a + b)'}</code>
-                </pre>
-              </div>
-              <p className="text-xs text-foreground-muted">
-                Если ожидаемый ответ — 5, программа должна вывести 5, а не &quot;Сумма чисел: 5&quot;.
-              </p>
-            </div>
             <ul className="space-y-1 text-xs">
-              <li>input() получает входные данные, которые система подаёт автоматически.</li>
-              <li>print() выводит результат, который система сравнивает с ожидаемым.</li>
-              <li>
-                Программа может работать без ошибок, но не пройти проверку из-за неправильного ответа или лишнего текста
-                в выводе.
-              </li>
-              <li>Успешное прохождение одного примера не гарантирует прохождение всех тестов.</li>
+              <li>«Запустить» — проверить код и посмотреть результат без отправки окончательного решения.</li>
+              <li>«Отправить решение» — сохранить ответ и проверить его по тестам задания.</li>
             </ul>
+            <p className="text-xs text-foreground-muted">
+              Входные данные для проверки подаются автоматически. Вводить их вручную после запуска не нужно
+            </p>
+            <div className="space-y-3 border-t border-border pt-3">
+              <h3 className="font-medium text-foreground-muted">Когда решение считается верным?</h3>
+              <p>
+                Программа считается верной, когда успешно проходит все тесты задания. Система автоматически передаёт
+                вашей программе входные данные и сравнивает полученный результат с ожидаемым ответом.
+              </p>
+              <p>
+                Для вывода результата используйте print(). Именно то, что программа выводит в консоль, проверяется
+                системой.
+              </p>
+              <p>
+                Выводите только то, что требуется в условии. Не добавляйте пояснения вроде &quot;Ответ:&quot;,
+                &quot;Результат:&quot; или &quot;Введите число:&quot;, если задание этого не требует
+              </p>
+              <div className="space-y-2">
+                <p>Условие: «Прочитайте два числа и выведите их сумму».</p>
+                <div>
+                  <p className="text-xs font-medium text-success">Правильно:</p>
+                  <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
+                    <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-danger">Неправильно:</p>
+                  <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
+                    <code>{'a, b = map(int, input().split())\nprint("Сумма чисел:", a + b)'}</code>
+                  </pre>
+                </div>
+                <p className="text-xs text-foreground-muted">
+                  Если ожидаемый ответ — 5, программа должна вывести 5, а не &quot;Сумма чисел: 5&quot;.
+                </p>
+              </div>
+              <ul className="space-y-1 text-xs">
+                <li>input() получает входные данные, которые система подаёт автоматически.</li>
+                <li>print() выводит результат, который система сравнивает с ожидаемым.</li>
+                <li>
+                  Программа может работать без ошибок, но не пройти проверку из-за неправильного ответа или лишнего
+                  текста в выводе.
+                </li>
+                <li>Успешное прохождение одного примера не гарантирует прохождение всех тестов.</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </details>
+        </details>
+      )}
 
-      <label className="block space-y-2" htmlFor={`source-${item.id}`}>
+      <div className="block space-y-2">
         <span className="font-medium">Код решения</span>
 
-        <Textarea
-          className="min-h-72 overflow-auto bg-code-surface font-mono text-code-foreground whitespace-pre"
-          disabled={executionDisabled || busy}
-          id={`source-${item.id}`}
-          onChange={(event) => setSourceCode(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key !== "Tab") return;
-
-            event.preventDefault();
-
-            const target = event.currentTarget;
-            const start = target.selectionStart;
-            const end = target.selectionEnd;
-
-            setSourceCode((current) => `${current.slice(0, start)}\t${current.slice(end)}`);
-
-            requestAnimationFrame(() => {
-              target.setSelectionRange(start + 1, start + 1);
-            });
-          }}
-          spellCheck={false}
+        <CodeEditor
+          language={config.language}
           value={sourceCode}
+          onChange={setSourceCode}
+          disabled={executionDisabled || busy}
         />
-      </label>
+      </div>
 
       <div className="flex flex-wrap gap-3">
         <Button variant="secondary" disabled={actionsDisabled} onClick={handleRun} type="button">
@@ -683,7 +676,3 @@ function MutationError({
     </p>
   );
 }
-
-const languagePresentation: Record<string, string> = {
-  PYTHON: "Python",
-};

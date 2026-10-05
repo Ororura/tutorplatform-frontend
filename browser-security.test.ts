@@ -37,8 +37,9 @@ describe("production browser policy", () => {
     expect(directives["script-src-attr"]).toEqual(["'none'"]);
     expect(directives["connect-src"]).toEqual(["'self'"]);
     expect(directives["img-src"]).toEqual(["'self'", "blob:"]);
+    expect(directives["worker-src"]).toEqual(["'self'"]);
     expect(directives["font-src"]).toEqual(["'self'"]);
-    for (const name of ["object-src", "frame-src", "frame-ancestors", "worker-src", "media-src"]) {
+    for (const name of ["object-src", "frame-src", "frame-ancestors", "media-src"]) {
       expect(directives[name]).toEqual(["'none'"]);
     }
     expect(csp).not.toMatch(/\*|unsafe-eval|https?:/);
