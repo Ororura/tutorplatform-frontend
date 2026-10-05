@@ -9,9 +9,9 @@ export const progressReportStatusLabels: Record<ProgressReportStatus, string> = 
 };
 
 export const progressReportStatusClassNames: Record<ProgressReportStatus, string> = {
-  DRAFT: "bg-amber-50 text-amber-700",
-  PUBLISHED: "bg-emerald-50 text-emerald-700",
-  ARCHIVED: "bg-slate-100 text-slate-600",
+  DRAFT: "bg-warning-subtle text-warning",
+  PUBLISHED: "bg-success-subtle text-success",
+  ARCHIVED: "bg-surface-subtle text-foreground-muted",
 };
 
 const dateFormatter = new Intl.DateTimeFormat("ru-RU", { dateStyle: "medium" });

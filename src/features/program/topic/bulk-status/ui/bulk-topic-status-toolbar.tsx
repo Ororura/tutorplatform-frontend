@@ -32,7 +32,7 @@ export function BulkTopicStatusToolbar({
   const cannotSubmit = pending || !count || exceedsLimit;
   return (
     <div
-      className="sticky top-32 z-20 mt-4 space-y-2 rounded-lg border border-slate-200 bg-white p-3 shadow-sm xl:top-20"
+      className="sticky top-[calc(var(--app-header-height)+0.5rem)] z-20 mt-4 space-y-2 rounded-inset border border-border bg-surface p-3"
       role="region"
       aria-label="Выбор тем"
       aria-busy={pending}
@@ -68,35 +68,35 @@ export function BulkTopicStatusToolbar({
         </Button>
       </div>
       {exceedsLimit && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-danger">
           За один раз можно изменить статус не более 375 тем. Уменьшите выбор.
         </p>
       )}
       {pending && (
-        <p role="status" className="text-sm text-slate-500">
+        <p role="status" className="text-sm text-foreground-muted">
           Сохраняем…
         </p>
       )}
       {error && !confirming && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-danger">
           {error}
         </p>
       )}
       <dialog
         ref={dialog}
         aria-labelledby="archive-selected-topics"
-        className="m-auto w-[min(32rem,calc(100%-2rem))] space-y-5 rounded-xl border border-neutral-200 bg-white p-6 shadow-xl"
+        className="dialog-surface w-[min(32rem,calc(100%-2rem))] space-y-5 p-6"
         onCancel={(event) => {
           if (pending) event.preventDefault();
         }}
         onClose={() => setConfirming(false)}
       >
-        <h2 id="archive-selected-topics" className="text-xl font-semibold">
+        <h2 id="archive-selected-topics" className="section-title">
           Архивировать выбранные темы?
         </h2>
         <p>Будут архивированы {count} тем.</p>
         {error && confirming && (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-sm text-danger">
             {error}
           </p>
         )}

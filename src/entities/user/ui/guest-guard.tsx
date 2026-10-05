@@ -25,7 +25,7 @@ export function GuestGuard({ children }: Readonly<{ children: React.ReactNode }>
 
   if (auth.status === "error") {
     return (
-      <main className="grid min-h-screen place-items-center px-6">
+      <main className="page-stack grid min-h-screen place-items-center">
         <div className="space-y-4 text-center" role="alert">
           <p>Не удалось проверить текущую сессию.</p>
           <Button type="button" onClick={() => window.location.reload()}>

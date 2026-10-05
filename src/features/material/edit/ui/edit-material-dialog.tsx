@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -109,12 +110,12 @@ export function EditMaterialDialog({
       <dialog
         ref={dialogRef}
         aria-labelledby={`edit-material-title-${material.id}`}
-        className="m-auto w-[min(48rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(48rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>
           <div className="flex items-start justify-between gap-4">
-            <h2 id={`edit-material-title-${material.id}`} className="text-xl font-semibold">
+            <h2 id={`edit-material-title-${material.id}`} className="section-title">
               Редактировать материал
             </h2>
             <button type="button" className="text-sm underline" onClick={() => setOpen(false)}>
@@ -122,19 +123,15 @@ export function EditMaterialDialog({
             </button>
           </div>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Название</span>
-            <input
-              className="h-11 w-full rounded-md border px-3"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-            />
+            <span className="field-label">Название</span>
+            <Input value={title} onChange={(event) => setTitle(event.target.value)} />
           </label>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Тип материала</span>
+            <span className="field-label">Тип материала</span>
             {material.materialType === "TEXT" || material.materialType === "MARKDOWN" ? (
-              <select
+              <Select
                 aria-label="Тип материала"
-                className="h-11 w-full rounded-md border px-3"
+
                 value={materialType}
                 onChange={(event) => {
                   setMaterialType(event.target.value as "TEXT" | "MARKDOWN");
@@ -143,13 +140,9 @@ export function EditMaterialDialog({
               >
                 <option value="TEXT">Текст</option>
                 <option value="MARKDOWN">Markdown</option>
-              </select>
+              </Select>
             ) : (
-              <input
-                className="h-11 w-full rounded-md border bg-slate-50 px-3 text-slate-600"
-                value={materialTypeLabels[materialType]}
-                readOnly
-              />
+              <Input value={materialTypeLabels[materialType]} readOnly />
             )}
           </label>
           <div className="space-y-2">
@@ -159,7 +152,7 @@ export function EditMaterialDialog({
                   type="button"
                   role="tab"
                   aria-selected={mode === "editor"}
-                  className={`rounded-md px-3 py-2 text-sm ${mode === "editor" ? "bg-slate-100 font-medium" : "underline"}`}
+                  className={`rounded-control px-3 py-2 text-sm ${mode === "editor" ? "bg-surface-subtle font-medium" : "underline"}`}
                   onClick={() => setMode("editor")}
                 >
                   Редактор
@@ -168,7 +161,7 @@ export function EditMaterialDialog({
                   type="button"
                   role="tab"
                   aria-selected={mode === "preview"}
-                  className={`rounded-md px-3 py-2 text-sm ${mode === "preview" ? "bg-slate-100 font-medium" : "underline"}`}
+                  className={`rounded-control px-3 py-2 text-sm ${mode === "preview" ? "bg-surface-subtle font-medium" : "underline"}`}
                   onClick={() => setMode("preview")}
                 >
                   Предпросмотр
@@ -176,19 +169,19 @@ export function EditMaterialDialog({
               </div>
             )}
             {isMarkdown && mode === "preview" ? (
-              <div className="min-h-64 rounded-md border p-3" role="tabpanel">
+              <div className="min-h-64 rounded-control border p-3 border-border" role="tabpanel">
                 {value ? (
                   <SafeMarkdown>{value}</SafeMarkdown>
                 ) : (
-                  <p className="text-sm text-slate-500">Предпросмотр пуст.</p>
+                  <p className="text-sm text-foreground-muted">Предпросмотр пуст.</p>
                 )}
               </div>
             ) : materialType === "LINK" ? (
               <label className="block space-y-2">
-                <span className="text-sm font-medium">URL</span>
-                <input
+                <span className="field-label">URL</span>
+                <Input
                   aria-label="URL"
-                  className="h-11 w-full rounded-md border px-3"
+
                   type="url"
                   value={value}
                   onChange={(event) => setValue(event.target.value)}
@@ -196,10 +189,10 @@ export function EditMaterialDialog({
               </label>
             ) : (
               <label className="block space-y-2">
-                <span className="text-sm font-medium">Содержимое</span>
-                <textarea
+                <span className="field-label">Содержимое</span>
+                <Textarea
                   aria-label={isMarkdown ? "Содержимое Markdown" : "Содержимое"}
-                  className={`min-h-64 w-full resize-y rounded-md border p-3 text-sm ${materialType === "CODE_EXAMPLE" ? "font-mono" : ""}`}
+                  className={`min-h-64 w-full resize-y rounded-control border p-3 text-sm ${materialType === "CODE_EXAMPLE" ? "font-mono" : ""}`}
                   value={value}
                   onChange={(event) => setValue(event.target.value)}
                 />
@@ -207,7 +200,7 @@ export function EditMaterialDialog({
             )}
           </div>
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}

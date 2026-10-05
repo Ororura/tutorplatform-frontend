@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -64,17 +65,17 @@ export function CreateStudentInviteForm({ studentId }: Readonly<{ studentId: str
           <label className="mb-2 block text-sm font-medium" htmlFor="invite-email">
             Email ученика
           </label>
-          <input
+          <Input
             id="invite-email"
             type="email"
             autoComplete="email"
-            className="h-10 w-full rounded-md border border-neutral-300 px-3"
+
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? "invite-email-error" : undefined}
             {...register("email")}
           />
           {errors.email && (
-            <p id="invite-email-error" className="mt-1 text-sm text-red-700">
+            <p id="invite-email-error" className="mt-1 text-sm text-danger">
               {errors.email.message}
             </p>
           )}
@@ -84,25 +85,25 @@ export function CreateStudentInviteForm({ studentId }: Readonly<{ studentId: str
         </Button>
       </form>
       {errors.root?.server && (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="text-sm text-danger" role="alert">
           {errors.root.server.message}
         </p>
       )}
       {mutation.data && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4" role="status">
-          <p className="font-medium text-green-900">Ссылка создана</p>
-          <p className="mt-1 text-sm text-green-800">
+        <div className="rounded-inset border border-success-border bg-success-subtle p-4" role="status">
+          <p className="font-medium text-success">Ссылка создана</p>
+          <p className="mt-1 text-sm text-success">
             Сохраните её сейчас: после перезагрузки она больше не будет доступна.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-            <input
-              className="h-10 min-w-0 flex-1 rounded-md border border-green-300 bg-white px-3 text-sm"
+            <Input
+              className="min-w-0 flex-1"
               readOnly
               aria-label="Ссылка-приглашение"
               value={mutation.data.inviteUrl}
             />
             <button
-              className="rounded-md border border-green-700 px-4 py-2 text-sm font-medium text-green-900"
+              className="rounded-control border border-success-border px-4 py-2 text-sm font-medium text-success"
               type="button"
               onClick={copyInviteUrl}
             >

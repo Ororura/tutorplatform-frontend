@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -41,36 +42,27 @@ function TopicForm({
   return (
     <>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Название</span>
-        <input
-          className="h-11 w-full rounded-md border px-3"
-          maxLength={180}
-          value={title}
-          onChange={(event) => onTitleChange(event.target.value)}
-        />
+        <span className="field-label">Название</span>
+        <Input maxLength={180} value={title} onChange={(event) => onTitleChange(event.target.value)} />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Описание</span>
-        <textarea
-          className="min-h-28 w-full resize-y rounded-md border p-3"
+        <span className="field-label">Описание</span>
+        <Textarea
+          className="min-h-28 resize-y"
           value={description}
           onChange={(event) => onDescriptionChange(event.target.value)}
         />
       </label>
       {status && onStatusChange && (
         <label className="block space-y-2">
-          <span className="text-sm font-medium">Статус</span>
-          <select
-            className="h-11 w-full rounded-md border bg-white px-3"
-            value={status}
-            onChange={(event) => onStatusChange(event.target.value as TopicStatus)}
-          >
+          <span className="field-label">Статус</span>
+          <Select value={status} onChange={(event) => onStatusChange(event.target.value as TopicStatus)}>
             {topicStatuses.map((value) => (
               <option key={value} value={value}>
                 {topicStatusLabels[value]}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       )}
     </>
@@ -137,12 +129,12 @@ export function CreateLearningProgramTopicDialog({
       <dialog
         ref={dialogRef}
         aria-labelledby={`create-topic-${moduleId}`}
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>
           <div className="flex items-start justify-between gap-4">
-            <h2 id={`create-topic-${moduleId}`} className="text-xl font-semibold">
+            <h2 id={`create-topic-${moduleId}`} className="section-title">
               Добавить тему
             </h2>
             <button type="button" className="text-sm underline" onClick={() => setOpen(false)}>
@@ -156,7 +148,7 @@ export function CreateLearningProgramTopicDialog({
             onDescriptionChange={setDescription}
           />
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}
@@ -245,12 +237,12 @@ export function LearningProgramTopicActions({
       <dialog
         ref={dialogRef}
         aria-labelledby={`edit-topic-${topic.id}`}
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>
           <div className="flex items-start justify-between gap-4">
-            <h2 id={`edit-topic-${topic.id}`} className="text-xl font-semibold">
+            <h2 id={`edit-topic-${topic.id}`} className="section-title">
               Изменить тему
             </h2>
             <button type="button" className="text-sm underline" onClick={() => setOpen(false)}>
@@ -266,7 +258,7 @@ export function LearningProgramTopicActions({
             onStatusChange={setStatus}
           />
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}

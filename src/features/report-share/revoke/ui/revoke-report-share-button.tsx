@@ -22,7 +22,7 @@ export function RevokeReportShareButton({ reportId, shareId }: Readonly<{ report
         {mutation.isPending ? "Отзываем…" : "Отозвать доступ"}
       </Button>
       {mutation.isError && (
-        <p className="max-w-xs text-sm text-red-700" role="alert">
+        <p className="max-w-xs text-sm text-danger" role="alert">
           Не удалось отозвать ссылку. Попробуйте ещё раз.
         </p>
       )}

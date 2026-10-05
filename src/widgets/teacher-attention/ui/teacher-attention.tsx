@@ -11,10 +11,13 @@ const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
 export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAttentionItem[] }>) {
   if (items.length === 0) {
     return (
-      <section id="teacher-attention" className="flex scroll-mt-28 items-start gap-3 py-3">
-        <Check aria-hidden="true" className="mt-0.5 shrink-0 text-slate-500" size={20} />
+      <section
+        id="teacher-attention"
+        className="flex scroll-mt-[calc(var(--app-header-height)+1rem)] items-start gap-3 py-3"
+      >
+        <Check aria-hidden="true" className="mt-0.5 shrink-0 text-foreground-muted" size={20} />
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">Всё спокойно</h2>
+          <h2 className="section-title text-sm">Всё спокойно</h2>
           <p className="mt-1 text-sm text-(--text-secondary)">Сейчас нет работ и отчётов, требующих действий.</p>
         </div>
       </section>
@@ -22,31 +25,34 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
   }
 
   return (
-    <section id="teacher-attention" className="scroll-mt-28 rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
+    <section id="teacher-attention" className="surface scroll-mt-[calc(var(--app-header-height)+1rem)]">
       <div className="flex items-start gap-4">
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-surface bg-warning-subtle text-warning">
           <CircleAlert size={20} />
         </span>
 
         <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">Требует внимания</h2>
-          <ul className="mt-4 divide-y divide-slate-100">
+          <h2 className="section-title">Требует внимания</h2>
+          <ul className="mt-4 divide-y divide-border">
             {items.map((item) => {
               const presentation = getAttentionPresentation(item);
 
               return (
-                <li key={`${item.type}-${item.resourceId}`} className="py-4 first:pt-1 last:pb-0">
+                <li key={`${item.type}-${item.resourceId}`} className="py-2 first:pt-1 last:pb-0">
                   <Link
-                    className="group flex items-center justify-between gap-4 rounded-2xl transition hover:bg-slate-50 sm:px-3 sm:py-2"
+                    className="group flex items-center justify-between gap-4 rounded-control py-2 transition-colors hover:bg-surface-subtle sm:px-3"
                     href={presentation.href}
                   >
                     <span className="min-w-0">
-                      <span className="block font-medium text-slate-900">{presentation.title}</span>
-                      <span className="mt-1 block truncate text-sm text-(--text-secondary)">
+                      <span className="block font-medium text-foreground">{presentation.title}</span>
+                      <span className="mt-1 block wrap-break-word text-sm text-(--text-secondary)">
                         {item.displayName} · {presentation.dateLabel} {dateFormatter.format(new Date(item.eventAt))}
                       </span>
                     </span>
-                    <ArrowRight className="shrink-0 text-slate-300 transition group-hover:text-blue-600" size={17} />
+                    <ArrowRight
+                      className="shrink-0 text-foreground-subtle transition group-hover:text-primary"
+                      size={17}
+                    />
                   </Link>
                 </li>
               );

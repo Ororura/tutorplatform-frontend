@@ -4,7 +4,10 @@ import { useState } from "react";
 
 import type { RegistrationMode } from "@/entities/platform-settings";
 import { ApiClientError } from "@/shared/api/client";
+import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/form-controls";
+import { Surface } from "@/shared/ui/surface";
 
 import { useChangeRegistrationModeMutation } from "../api/change-registration-mode";
 
@@ -52,11 +55,13 @@ export function RegistrationModeForm({ currentMode }: Readonly<Props>) {
   }
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-6">
+    <Surface>
       <div className="mb-6">
-        <h2 className="text-xl font-semibold">Доступ к регистрации</h2>
+        <h2 className="section-title">Доступ к регистрации</h2>
 
-        <p className="mt-2 text-sm text-neutral-600">Выберите, кто может создавать новые аккаунты преподавателей.</p>
+        <p className="mt-2 text-sm text-foreground-muted">
+          Выберите, кто может создавать новые аккаунты преподавателей.
+        </p>
       </div>
 
       <fieldset className="space-y-3" disabled={mutation.isPending}>
@@ -69,11 +74,11 @@ export function RegistrationModeForm({ currentMode }: Readonly<Props>) {
             <label
               key={option.value}
               className={[
-                "flex cursor-pointer gap-4 rounded-xl border p-4 transition-colors",
-                checked ? "border-neutral-900 bg-neutral-50" : "border-neutral-200 hover:border-neutral-400",
+                "flex cursor-pointer gap-3 rounded-inset border p-4 transition-colors focus-within:border-primary focus-within:bg-primary-subtle",
+                checked ? "border-primary bg-primary-subtle" : "border-border hover:border-border-strong",
               ].join(" ")}
             >
-              <input
+              <Input
                 type="radio"
                 name="registrationMode"
                 value={option.value}
@@ -88,7 +93,7 @@ export function RegistrationModeForm({ currentMode }: Readonly<Props>) {
               <span>
                 <span className="block font-medium">{option.title}</span>
 
-                <span className="mt-1 block text-sm leading-6 text-neutral-600">{option.description}</span>
+                <span className="mt-1 block text-sm leading-6 text-foreground-muted">{option.description}</span>
               </span>
             </label>
           );
@@ -100,22 +105,25 @@ export function RegistrationModeForm({ currentMode }: Readonly<Props>) {
           {mutation.isPending ? "Сохраняем…" : "Сохранить изменения"}
         </Button>
 
-        {!hasChanges && !mutation.isSuccess && <span className="text-sm text-neutral-500">Изменений нет</span>}
+        {!hasChanges && !mutation.isSuccess && <span className="text-sm text-foreground-muted">Изменений нет</span>}
 
         {mutation.isSuccess && (
-          <span role="status" className="text-sm text-green-700">
+          <Badge role="status" tone="success">
             Настройки сохранены
-          </span>
+          </Badge>
         )}
       </div>
 
       {mutation.isError && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+        <p
+          role="alert"
+          className="mt-4 rounded-inset border border-danger-border bg-danger-subtle p-3 text-sm text-danger"
+        >
           {mutation.error instanceof ApiClientError
             ? mutation.error.body.message
             : "Не удалось сохранить настройки. Попробуйте ещё раз."}
         </p>
       )}
-    </section>
+    </Surface>
   );
 }

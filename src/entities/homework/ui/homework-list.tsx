@@ -11,13 +11,13 @@ import {
 function getStatusClassName(state: ReturnType<typeof getHomeworkPresentationState>) {
   switch (state) {
     case "OVERDUE":
-      return "bg-red-50 text-red-700";
+      return "bg-danger-subtle text-danger";
     case "COMPLETED":
-      return "bg-emerald-50 text-emerald-700";
+      return "bg-success-subtle text-success";
     case "CANCELLED":
-      return "bg-slate-100 text-slate-600";
+      return "bg-surface-subtle text-foreground-muted";
     default:
-      return "bg-blue-50 text-blue-700";
+      return "bg-primary-subtle text-primary";
   }
 }
 
@@ -29,25 +29,25 @@ export function HomeworkList({
   studentId: string;
 }>) {
   return (
-    <ul className="divide-y divide-slate-100">
+    <ul className="divide-y divide-border">
       {homeworks.map((homework) => {
         const state = getHomeworkPresentationState(homework);
 
         return (
           <li key={homework.id}>
             <Link
-              className="group flex flex-col gap-4 px-2 py-5 transition hover:bg-slate-50/70 sm:flex-row sm:items-center"
+              className="group flex flex-col gap-4 px-2 py-5 transition hover:bg-surface-subtle/70 sm:flex-row sm:items-center"
               href={`/teacher/students/${studentId}/homework/${homework.id}`}
             >
               <span className="flex min-w-0 flex-1 items-start gap-4">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
                   <ClipboardCheck size={19} />
                 </span>
 
                 <span className="min-w-0">
-                  <span className="block truncate font-semibold text-slate-950">{homework.title}</span>
+                  <span className="block truncate font-semibold text-foreground">{homework.title}</span>
 
-                  <span className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+                  <span className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-foreground-muted">
                     <CalendarClock size={14} />
                     Назначено {formatHomeworkDate(homework.assignedAt)}
                     <span aria-hidden="true">·</span>
@@ -57,13 +57,11 @@ export function HomeworkList({
               </span>
 
               <span className="flex shrink-0 items-center gap-3">
-                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClassName(state)}`}>
-                  {homeworkStatusPresentation[state]}
-                </span>
+                <span className={`badge  ${getStatusClassName(state)}`}>{homeworkStatusPresentation[state]}</span>
 
                 <ChevronRight
                   size={18}
-                  className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-blue-600"
+                  className="text-foreground-subtle transition group-hover:translate-x-0.5 group-hover:text-primary"
                 />
               </span>
             </Link>

@@ -13,10 +13,10 @@ export const topicProgressPresentation: Record<
   NonNullable<TopicProgressStatus>,
   { label: string; icon: string; className: string }
 > = {
-  LOCKED: { label: "Заблокирована", icon: "🔒", className: "bg-neutral-100 text-neutral-600" },
-  AVAILABLE: { label: "Доступна", icon: "○", className: "bg-blue-50 text-blue-800" },
-  IN_PROGRESS: { label: "В процессе", icon: "◐", className: "bg-amber-50 text-amber-800" },
-  COMPLETED: { label: "Пройдена", icon: "✓", className: "bg-emerald-50 text-emerald-800" },
+  LOCKED: { label: "Заблокирована", icon: "🔒", className: "bg-surface-subtle text-foreground-muted" },
+  AVAILABLE: { label: "Доступна", icon: "○", className: "bg-primary-subtle text-primary" },
+  IN_PROGRESS: { label: "В процессе", icon: "◐", className: "bg-primary-subtle text-primary" },
+  COMPLETED: { label: "Пройдена", icon: "✓", className: "bg-success-subtle text-success" },
 };
 
 export function formatProgramDate(value: string): string {

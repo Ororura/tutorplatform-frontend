@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -143,7 +144,7 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
     );
   if (programs.data.length === 0)
     return (
-      <div className="space-y-4 rounded-lg border border-dashed p-8 text-center">
+      <div className="space-y-4 rounded-inset border border-dashed p-8 text-center border-border">
         <p className="font-medium">Сначала назначьте ученику программу обучения</p>
         <a className="underline" href={`/teacher/students/${studentId}/program`}>
           Перейти в раздел «Программа»
@@ -152,12 +153,14 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
     );
 
   return (
-    <form className="space-y-7 rounded-lg border border-neutral-200 bg-white p-6" onSubmit={submit} noValidate>
+    <form className="surface space-y-6" onSubmit={submit} noValidate>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Программа обучения</span>
-        <select
+        <span className="field-label">Программа обучения</span>
+        <Select
           aria-label="Программа обучения"
-          className="h-11 w-full rounded-md border border-neutral-300 px-3"
+          aria-invalid={Boolean(errors.studentProgramId)}
+          aria-describedby={errors.studentProgramId ? "homework-studentProgramId-error" : undefined}
+
           disabled={Boolean(homework)}
           value={effectiveProgramId}
           onChange={(event) => changeProgram(event.target.value)}
@@ -168,47 +171,60 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
               {item.title} · {item.subject.name} · {programStatusLabels[item.status]}
             </option>
           ))}
-        </select>
+        </Select>
         {program && (
-          <p className="text-xs text-neutral-500">Задания будут отфильтрованы по предмету «{program.subject.name}».</p>
+          <p className="text-xs text-foreground-muted">
+            Задания будут отфильтрованы по предмету «{program.subject.name}».
+          </p>
         )}
-        {errors.studentProgramId && <p className="text-sm text-red-700">{errors.studentProgramId}</p>}
+        {errors.studentProgramId && (
+          <p id="homework-studentProgramId-error" role="alert" className="field-error">
+            {errors.studentProgramId}
+          </p>
+        )}
       </label>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Название</span>
-        <input
-          className="h-11 w-full rounded-md border border-neutral-300 px-3"
+        <span className="field-label">Название</span>
+        <Input
           maxLength={220}
+          aria-invalid={Boolean(errors.title)}
+          aria-describedby={errors.title ? "homework-title-error" : undefined}
           value={title}
           onChange={(event) => setTitle(event.target.value)}
         />
-        {errors.title && <p className="text-sm text-red-700">{errors.title}</p>}
+        {errors.title && (
+          <p id="homework-title-error" role="alert" className="field-error">
+            {errors.title}
+          </p>
+        )}
       </label>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Описание</span>
-        <textarea
-          className="min-h-28 w-full rounded-md border border-neutral-300 p-3"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-        />
+        <span className="field-label">Описание</span>
+        <Textarea className="min-h-28" value={description} onChange={(event) => setDescription(event.target.value)} />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Срок</span>
-        <input
+        <span className="field-label">Срок</span>
+        <Input
           aria-label="Срок"
-          className="h-11 w-full rounded-md border border-neutral-300 px-3"
+          aria-invalid={Boolean(errors.dueAt)}
+          aria-describedby={errors.dueAt ? "homework-dueAt-error" : undefined}
+
           type="datetime-local"
           value={dueAt}
           onChange={(event) => setDueAt(event.target.value)}
         />
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-foreground-muted">
           Оставьте пустым, чтобы назначить без срока. Время указано в вашем часовом поясе.
         </p>
-        {errors.dueAt && <p className="text-sm text-red-700">{errors.dueAt}</p>}
+        {errors.dueAt && (
+          <p id="homework-dueAt-error" role="alert" className="field-error">
+            {errors.dueAt}
+          </p>
+        )}
       </label>
       <fieldset className="space-y-4">
         <legend className="text-lg font-semibold">Выбрать задания</legend>
-        {!program && <p className="text-sm text-neutral-600">Сначала выберите программу.</p>}
+        {!program && <p className="text-sm text-foreground-muted">Сначала выберите программу.</p>}
         {program && tasks.isPending && <p aria-busy="true">Загружаем активные задания…</p>}
         {tasks.isError && (
           <div role="alert">
@@ -219,19 +235,19 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
           </div>
         )}
         {tasks.data?.items.length === 0 && (
-          <p className="rounded-md bg-neutral-50 p-4 text-sm">Для предмета нет активных заданий.</p>
+          <p className="rounded-control bg-surface-subtle p-4 text-sm">Для предмета нет активных заданий.</p>
         )}
         {tasks.data && tasks.data.items.length > 0 && (
-          <div className="divide-y rounded-lg border">
+          <div className="divide-y rounded-inset border border-border divide-border">
             {tasks.data.items.map((task) => (
               <label className="flex items-center gap-3 p-3" key={task.id}>
-                <input
+                <Input
                   type="checkbox"
                   checked={selectedIds.has(task.id)}
                   onChange={(event) => toggleTask(task, event.target.checked)}
                 />
                 <span className="flex-1">{task.title}</span>
-                <span className="text-xs text-neutral-500">
+                <span className="text-xs text-foreground-muted">
                   {taskTypePresentation[task.taskType]} · {taskDifficultyPresentation[task.difficulty]}
                 </span>
               </label>
@@ -241,7 +257,7 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
         {tasks.data && tasks.data.totalPages > 1 && (
           <div className="flex items-center justify-between">
             <button
-              className="rounded border px-3 py-2 text-sm disabled:opacity-50"
+              className="rounded border px-3 py-2 text-sm disabled:opacity-50 border-border"
               type="button"
               disabled={taskPage === 0 || tasks.isFetching}
               onClick={() => setTaskPage((value) => value - 1)}
@@ -252,7 +268,7 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
               Страница {taskPage + 1} из {tasks.data.totalPages}
             </span>
             <button
-              className="rounded border px-3 py-2 text-sm disabled:opacity-50"
+              className="rounded border px-3 py-2 text-sm disabled:opacity-50 border-border"
               type="button"
               disabled={taskPage + 1 >= tasks.data.totalPages || tasks.isFetching}
               onClick={() => setTaskPage((value) => value + 1)}
@@ -261,27 +277,30 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
             </button>
           </div>
         )}
-        {errors.items && <p className="text-sm text-red-700">{errors.items}</p>}
+        {errors.items && <p className="text-sm text-danger">{errors.items}</p>}
       </fieldset>
       {selected.length > 0 && (
         <section className="space-y-3" aria-labelledby="selected-heading">
-          <h2 id="selected-heading" className="text-lg font-semibold">
+          <h2 id="selected-heading" className="section-title">
             Порядок заданий
           </h2>
           <ol className="space-y-2">
             {selected.map((item, index) => (
-              <li className="flex flex-wrap items-center gap-3 rounded-md border p-3" key={item.taskId}>
-                <span className="w-6 text-neutral-500">{index + 1}.</span>
+              <li
+                className="flex flex-wrap items-center gap-3 rounded-control border p-3 border-border"
+                key={item.taskId}
+              >
+                <span className="w-6 text-foreground-muted">{index + 1}.</span>
                 <span className="min-w-48 flex-1">
                   {item.title}
                   {item.taskType && item.difficulty ? (
-                    <span className="ml-2 text-xs text-neutral-500">
+                    <span className="ml-2 text-xs text-foreground-muted">
                       {taskTypePresentation[item.taskType]} · {taskDifficultyPresentation[item.difficulty]}
                     </span>
                   ) : null}
                 </span>
                 <label className="flex items-center gap-2 text-sm">
-                  <input
+                  <Input
                     type="checkbox"
                     checked={item.required}
                     onChange={(event) =>
@@ -301,7 +320,7 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
                 </label>
                 <button
                   aria-label={`Поднять ${item.title}`}
-                  className="rounded border px-2 py-1 disabled:opacity-40"
+                  className="rounded border px-2 py-1 disabled:opacity-40 border-border"
                   type="button"
                   disabled={index === 0}
                   onClick={() => move(index, -1)}
@@ -310,7 +329,7 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
                 </button>
                 <button
                   aria-label={`Опустить ${item.title}`}
-                  className="rounded border px-2 py-1 disabled:opacity-40"
+                  className="rounded border px-2 py-1 disabled:opacity-40 border-border"
                   type="button"
                   disabled={index === selected.length - 1}
                   onClick={() => move(index, 1)}
@@ -323,12 +342,12 @@ export function HomeworkForm({ studentId, homework }: Readonly<{ studentId: stri
         </section>
       )}
       {errors.server && (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="text-sm text-danger" role="alert">
           {errors.server}
         </p>
       )}
       <div className="flex gap-3">
-        <Button type="submit" disabled={mutation.isPending}>
+        <Button type="submit" loading={mutation.isPending}>
           {mutation.isPending ? "Сохраняем…" : homework ? "Сохранить изменения" : "Назначить"}
         </Button>
         <Button variant="secondary" type="button" onClick={() => router.back()}>

@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
@@ -25,10 +26,10 @@ const statusLabels: Record<TeacherInvitationStatus, string> = {
 };
 
 const statusStyles: Record<TeacherInvitationStatus, string> = {
-  ACTIVE: "bg-blue-50 text-blue-700",
-  ACCEPTED: "bg-green-50 text-green-700",
-  REVOKED: "bg-neutral-100 text-neutral-600",
-  EXPIRED: "bg-amber-50 text-amber-700",
+  ACTIVE: "bg-primary-subtle text-primary",
+  ACCEPTED: "bg-success-subtle text-success",
+  REVOKED: "bg-surface-subtle text-foreground-muted",
+  EXPIRED: "bg-warning-subtle text-warning",
 };
 
 function formatDate(value?: string): string {
@@ -134,10 +135,10 @@ export function TeacherInvitationManager() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-neutral-200 bg-white p-6">
-        <h2 className="text-xl font-semibold">Новое приглашение</h2>
+      <section className="surface">
+        <h2 className="section-title">Новое приглашение</h2>
 
-        <p className="mt-2 text-sm leading-6 text-neutral-600">
+        <p className="mt-2 text-sm leading-6 text-foreground-muted">
           Укажите email преподавателя. Приглашение будет привязано к этому адресу.
         </p>
 
@@ -150,7 +151,7 @@ export function TeacherInvitationManager() {
               Email преподавателя
             </label>
 
-            <input
+            <Input
               id="teacher-invitation-email"
               type="email"
               autoComplete="email"
@@ -160,7 +161,6 @@ export function TeacherInvitationManager() {
               onChange={(event) => setEmail(event.target.value)}
               disabled={createMutation.isPending}
               placeholder="teacher@example.com"
-              className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none"
             />
           </div>
 
@@ -170,28 +170,28 @@ export function TeacherInvitationManager() {
         </form>
 
         {createError && (
-          <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+          <p role="alert" className="mt-4 rounded-inset bg-danger-subtle p-3 text-sm text-danger">
             {createError}
           </p>
         )}
 
         {created && (
-          <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-4" role="status">
-            <h3 className="font-semibold text-green-900">Приглашение создано</h3>
+          <div className="mt-6 rounded-surface border border-success-border bg-success-subtle p-4" role="status">
+            <h3 className="font-semibold text-success">Приглашение создано</h3>
 
-            <p className="mt-2 text-sm text-green-800">
+            <p className="mt-2 text-sm text-success">
               Сохраните ссылку сейчас. После перезагрузки страницы получить её повторно будет нельзя.
             </p>
 
-            <p className="mt-2 text-sm text-green-800">Email: {created.email}</p>
+            <p className="mt-2 text-sm text-success">Email: {created.email}</p>
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-              <input
+              <Input
                 readOnly
                 aria-label="Ссылка приглашения"
                 value={created.invitationUrl}
                 onFocus={(event) => event.target.select()}
-                className="h-11 min-w-0 flex-1 rounded-lg border border-green-300 bg-white px-3 text-sm"
+                className="min-w-0 flex-1"
               />
 
               <Button type="button" onClick={() => void handleCopy()}>
@@ -200,7 +200,7 @@ export function TeacherInvitationManager() {
             </div>
 
             {copyError && (
-              <p role="alert" className="mt-3 text-sm text-red-700">
+              <p role="alert" className="mt-3 text-sm text-danger">
                 {copyError}
               </p>
             )}
@@ -208,12 +208,12 @@ export function TeacherInvitationManager() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-neutral-200 bg-white p-6">
+      <section className="surface">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold">История приглашений</h2>
+            <h2 className="section-title">История приглашений</h2>
 
-            <p className="mt-2 text-sm text-neutral-600">Приглашения, созданные вашим аккаунтом.</p>
+            <p className="mt-2 text-sm text-foreground-muted">Приглашения, созданные вашим аккаунтом.</p>
           </div>
 
           <Button type="button" disabled={invitations.isFetching} onClick={() => void invitations.refetch()}>
@@ -222,27 +222,27 @@ export function TeacherInvitationManager() {
         </div>
 
         {revokeError && (
-          <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+          <p role="alert" className="mt-4 rounded-inset bg-danger-subtle p-3 text-sm text-danger">
             {revokeError}
           </p>
         )}
 
         {invitations.isPending && (
-          <p className="mt-6 text-sm text-neutral-500" role="status">
+          <p className="mt-6 text-sm text-foreground-muted" role="status">
             Загружаем приглашения…
           </p>
         )}
 
         {invitations.isError && (
-          <div role="alert" className="mt-6 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+          <div role="alert" className="mt-6 rounded-inset bg-danger-subtle p-4 text-sm text-danger">
             Не удалось загрузить приглашения.
           </div>
         )}
 
-        {invitations.data?.length === 0 && <p className="mt-6 text-sm text-neutral-500">Приглашений пока нет.</p>}
+        {invitations.data?.length === 0 && <p className="mt-6 text-sm text-foreground-muted">Приглашений пока нет.</p>}
 
         {invitations.data && invitations.data.length > 0 && (
-          <ul className="mt-6 divide-y divide-neutral-200">
+          <ul className="mt-6 divide-y divide-border">
             {invitations.data.map((invitation) => (
               <li
                 key={invitation.id}
@@ -261,9 +261,9 @@ export function TeacherInvitationManager() {
                     </span>
                   </div>
 
-                  <p className="mt-2 text-sm text-neutral-500">Создано: {formatDate(invitation.createdAt)}</p>
+                  <p className="mt-2 text-sm text-foreground-muted">Создано: {formatDate(invitation.createdAt)}</p>
 
-                  <p className="mt-1 text-sm text-neutral-500">Действует до: {formatDate(invitation.expiresAt)}</p>
+                  <p className="mt-1 text-sm text-foreground-muted">Действует до: {formatDate(invitation.expiresAt)}</p>
                 </div>
 
                 {invitation.status === "ACTIVE" && (

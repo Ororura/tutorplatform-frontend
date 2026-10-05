@@ -38,7 +38,7 @@ export function ArchiveLearningProgramButton({ programId }: Readonly<{ programId
       <Button
         type="button"
         variant="ghost"
-        className="text-red-700 hover:bg-red-50 hover:text-red-800"
+        className="text-danger hover:bg-danger-subtle hover:text-danger"
         onClick={() => {
           setError("");
           setOpen(true);
@@ -49,18 +49,18 @@ export function ArchiveLearningProgramButton({ programId }: Readonly<{ programId
       <dialog
         ref={dialogRef}
         aria-labelledby="archive-learning-program-title"
-        className="m-auto w-[min(30rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(30rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <section className="space-y-5 p-6">
           <div>
-            <h2 id="archive-learning-program-title" className="text-xl font-semibold">
+            <h2 id="archive-learning-program-title" className="section-title">
               Архивировать программу?
             </h2>
-            <p className="mt-2 text-sm text-neutral-600">Программа останется доступной только для чтения.</p>
+            <p className="mt-2 text-sm text-foreground-muted">Программа останется доступной только для чтения.</p>
           </div>
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}

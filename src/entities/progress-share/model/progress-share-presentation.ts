@@ -4,7 +4,7 @@ export const progressShareStatusPresentation: Record<
   ProgressShareStatus,
   Readonly<{ label: ProgressShareStatus; className: string }>
 > = {
-  ACTIVE: { label: "ACTIVE", className: "bg-emerald-50 text-emerald-700" },
-  EXPIRED: { label: "EXPIRED", className: "bg-amber-50 text-amber-700" },
-  REVOKED: { label: "REVOKED", className: "bg-slate-100 text-slate-600" },
+  ACTIVE: { label: "ACTIVE", className: "bg-success-subtle text-success" },
+  EXPIRED: { label: "EXPIRED", className: "bg-warning-subtle text-warning" },
+  REVOKED: { label: "REVOKED", className: "bg-surface-subtle text-foreground-muted" },
 };

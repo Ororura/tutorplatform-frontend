@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { getStudentInviteErrorMessage } from "@/entities/student-invite";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/form-controls";
 
 import { useAcceptStudentInviteMutation } from "../api/accept-student-invite";
 import { type AcceptStudentInviteFormValues, acceptStudentInviteSchema } from "../model/accept-student-invite-schema";
@@ -48,38 +49,37 @@ export function AcceptStudentInviteForm({ token }: Readonly<{ token: string }>) 
   return (
     <form className="space-y-5" onSubmit={onSubmit} noValidate>
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="student-password">
+        <label className="field-label" htmlFor="student-password">
           Придумайте пароль
         </label>
-        <input
+        <Input
           id="student-password"
           type="password"
           autoComplete="new-password"
           autoFocus
           aria-invalid={Boolean(errors.password)}
           aria-describedby={errors.password ? "student-password-error" : "student-password-hint"}
-          className="h-11 w-full rounded-md border border-neutral-300 bg-white px-3 outline-none focus:ring-2 focus:ring-neutral-300"
           {...register("password")}
         />
         {errors.password ? (
-          <p id="student-password-error" className="text-sm text-red-700">
+          <p id="student-password-error" className="text-sm text-danger">
             {errors.password.message}
           </p>
         ) : (
-          <p id="student-password-hint" className="text-sm text-neutral-500">
+          <p id="student-password-hint" className="text-sm text-foreground-muted">
             Не менее 10 символов.
           </p>
         )}
       </div>
 
       {errors.root?.server && (
-        <p className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">
+        <p className="rounded-control bg-danger-subtle p-3 text-sm text-danger" role="alert">
           {errors.root.server.message}
         </p>
       )}
 
       {mutation.isSuccess && (
-        <p className="rounded-md bg-green-50 p-3 text-sm text-green-800" role="status">
+        <p className="rounded-control bg-success-subtle p-3 text-sm text-success" role="status">
           Приглашение принято. Переходим в аккаунт…
         </p>
       )}

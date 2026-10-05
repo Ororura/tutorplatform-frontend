@@ -14,8 +14,8 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
   const subjects = useQuery(taskQueries.subjects());
   if (task.isPending)
     return (
-      <main className="mx-auto min-w-0 max-w-5xl">
-        <p className="rounded-2xl bg-slate-50 p-6 text-sm text-slate-500" aria-busy="true">
+      <main className="page-stack min-w-0">
+        <p className="rounded-surface bg-surface-subtle p-6 text-sm text-foreground-muted" aria-busy="true">
           Загружаем задание…
         </p>
       </main>
@@ -23,8 +23,11 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
   if (task.isError) {
     const notFound = task.error instanceof ApiClientError && task.error.status === 404;
     return (
-      <main className="mx-auto min-w-0 max-w-5xl space-y-4">
-        <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5 text-sm text-red-700" role="alert">
+      <main className="page-stack min-w-0">
+        <div
+          className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5 text-sm text-danger"
+          role="alert"
+        >
           <p>{notFound ? "Задание не найдено" : "Не удалось загрузить задание."}</p>
           {!notFound && (
             <Button type="button" variant="secondary" onClick={() => task.refetch()}>
@@ -41,16 +44,14 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
   const subject = subjects.data?.find((item) => item.id === task.data.subjectId);
   const tests = [...(task.data.testCases ?? [])].sort((a, b) => a.position - b.position);
   return (
-    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+    <main className="page-stack min-w-0">
       <div>
-        <Link className="text-sm text-neutral-600 underline" href="/teacher/tasks">
+        <Link className="text-sm text-foreground-muted underline" href="/teacher/tasks">
           ← Банк заданий
         </Link>
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
-            <h1 className="wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-              {task.data.title}
-            </h1>
+            <h1 className="page-title wrap-break-word">{task.data.title}</h1>
             <div className="mt-3 flex flex-wrap gap-2 text-sm">
               <span>{taskTypePresentation[task.data.taskType]}</span>
               <span>·</span>
@@ -68,42 +69,42 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
           <EditTaskDialog task={task.data} />
         </div>
       </div>
-      <section className="rounded-lg border border-neutral-200 bg-white p-6" aria-labelledby="description-heading">
-        <h2 id="description-heading" className="mb-4 text-xl font-semibold">
+      <section className="rounded-inset border border-border bg-surface p-6" aria-labelledby="description-heading">
+        <h2 id="description-heading" className="section-title mb-4">
           Описание
         </h2>
         <SafeMarkdown>{task.data.descriptionMarkdown}</SafeMarkdown>
       </section>
       {task.data.taskType === "CODE" && task.data.programmingConfig && (
         <section
-          className="space-y-4 rounded-lg border border-neutral-200 bg-white p-6"
+          className="space-y-4 rounded-inset border border-border bg-surface p-6"
           aria-labelledby="config-heading"
         >
-          <h2 id="config-heading" className="text-xl font-semibold">
+          <h2 id="config-heading" className="section-title">
             Конфигурация кода
           </h2>
           <dl className="grid gap-3 text-sm sm:grid-cols-2">
             <div>
-              <dt className="text-neutral-500">Язык</dt>
+              <dt className="text-foreground-muted">Язык</dt>
               <dd>{task.data.programmingConfig.language}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Выполнение</dt>
+              <dt className="text-foreground-muted">Выполнение</dt>
               <dd>{task.data.programmingConfig.executionEnabled ? "Разрешено" : "Отключено"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Лимит времени</dt>
+              <dt className="text-foreground-muted">Лимит времени</dt>
               <dd>{task.data.programmingConfig.timeLimitMs} мс</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Лимит памяти</dt>
+              <dt className="text-foreground-muted">Лимит памяти</dt>
               <dd>{task.data.programmingConfig.memoryLimitMb} МБ</dd>
             </div>
           </dl>
           {task.data.programmingConfig.starterCode && (
             <div>
               <h3 className="mb-2 font-medium">Стартовый код</h3>
-              <pre className="overflow-x-auto rounded-md bg-neutral-950 p-4 text-sm text-neutral-100">
+              <pre className="overflow-x-auto rounded-control bg-code-surface p-4 text-sm text-code-foreground">
                 <code>{task.data.programmingConfig.starterCode}</code>
               </pre>
             </div>
@@ -112,26 +113,26 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
       )}
       {task.data.taskType === "CODE" && tests.length > 0 && (
         <section className="space-y-4" aria-labelledby="tests-heading">
-          <h2 id="tests-heading" className="text-xl font-semibold">
+          <h2 id="tests-heading" className="section-title">
             Тесты
           </h2>
           <ol className="space-y-3">
             {tests.map((test) => (
-              <li className="rounded-lg border border-neutral-200 bg-white p-4" key={test.id}>
+              <li className="rounded-inset border border-border bg-surface p-4" key={test.id}>
                 <div className="mb-3 flex justify-between gap-3">
                   <span className="font-medium">Тест {test.position + 1}</span>
-                  <span className="text-xs text-neutral-600">
+                  <span className="text-xs text-foreground-muted">
                     {test.hidden ? "Скрытый" : "Открытый"} · {test.comparisonMode}
                   </span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div>
-                    <p className="mb-1 text-xs text-neutral-500">Ввод</p>
-                    <pre className="overflow-x-auto rounded bg-neutral-100 p-3 text-sm">{test.inputText ?? "—"}</pre>
+                    <p className="mb-1 text-xs text-foreground-muted">Ввод</p>
+                    <pre className="overflow-x-auto rounded bg-surface-subtle p-3 text-sm">{test.inputText ?? "—"}</pre>
                   </div>
                   <div>
-                    <p className="mb-1 text-xs text-neutral-500">Ожидаемый вывод</p>
-                    <pre className="overflow-x-auto rounded bg-neutral-100 p-3 text-sm">{test.expectedOutput}</pre>
+                    <p className="mb-1 text-xs text-foreground-muted">Ожидаемый вывод</p>
+                    <pre className="overflow-x-auto rounded bg-surface-subtle p-3 text-sm">{test.expectedOutput}</pre>
                   </div>
                 </div>
               </li>

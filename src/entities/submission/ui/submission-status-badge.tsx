@@ -1,22 +1,16 @@
-import { cn } from "@/shared/lib/cn";
-
+import { Badge, type BadgeTone } from "@/shared/ui/badge";
 import { submissionStatusPresentation, type SubmissionStatus } from "../model/submission-presentation";
-
+const tones: Record<SubmissionStatus, BadgeTone> = {
+  SUBMITTED: "info",
+  PASSED: "success",
+  FAILED: "danger",
+  NEEDS_REVIEW: "warning",
+  SYSTEM_ERROR: "danger",
+};
 export function SubmissionStatusBadge({ status }: Readonly<{ status?: SubmissionStatus | null }>) {
   return (
-    <span
-      className={cn(
-        "inline-flex w-fit rounded-full px-2.5 py-1 text-xs font-medium",
-        status === "PASSED"
-          ? "bg-emerald-50 text-emerald-700"
-          : status === "FAILED" || status === "SYSTEM_ERROR"
-            ? "bg-red-50 text-red-700"
-            : status
-              ? "bg-blue-50 text-blue-700"
-              : "bg-slate-100 text-slate-600",
-      )}
-    >
+    <Badge tone={status ? tones[status] : "neutral"}>
       {status ? submissionStatusPresentation[status] : "Не выполнено"}
-    </span>
+    </Badge>
   );
 }

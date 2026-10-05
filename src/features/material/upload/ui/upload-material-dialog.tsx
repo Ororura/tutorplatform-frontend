@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select } from "@/shared/ui/form-controls";
 
 /* eslint-disable @next/next/no-img-element -- Object URLs are local draft previews. */
 
@@ -144,12 +145,12 @@ export function UploadMaterialDialog({
       <dialog
         ref={dialogRef}
         aria-labelledby="upload-material-title"
-        className="m-auto w-[min(36rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(36rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>
           <div className="flex items-start justify-between gap-4">
-            <h2 id="upload-material-title" className="text-xl font-semibold">
+            <h2 id="upload-material-title" className="section-title">
               Загрузить материал
             </h2>
             <button type="button" className="text-sm underline" onClick={() => setOpen(false)}>
@@ -157,18 +158,14 @@ export function UploadMaterialDialog({
             </button>
           </div>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Название</span>
-            <input
-              className="h-11 w-full rounded-md border px-3"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-            />
+            <span className="field-label">Название</span>
+            <Input value={title} onChange={(event) => setTitle(event.target.value)} />
           </label>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Тип материала</span>
-            <select
+            <span className="field-label">Тип материала</span>
+            <Select
               aria-label="Тип файла"
-              className="h-11 w-full rounded-md border px-3"
+
               value={materialType}
               onChange={(event) => {
                 const nextType = event.target.value as UploadMaterialType;
@@ -178,11 +175,11 @@ export function UploadMaterialDialog({
             >
               <option value="FILE">Файл</option>
               <option value="IMAGE">Изображение</option>
-            </select>
+            </Select>
           </label>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Файл</span>
-            <input
+            <span className="field-label">Файл</span>
+            <Input
               aria-label="Выберите файл"
               type="file"
               accept={materialType === "IMAGE" ? IMAGE_ACCEPT : FILE_ACCEPT}
@@ -190,19 +187,19 @@ export function UploadMaterialDialog({
             />
           </label>
           {file && (
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-foreground-muted">
               {file.name} · {formatFileSize(file.size)}
             </p>
           )}
           {previewUrl && materialType === "IMAGE" && (
             <img
-              className="max-h-64 rounded-md border object-contain"
+              className="max-h-64 rounded-control border object-contain border-border"
               src={previewUrl}
               alt="Предпросмотр выбранного изображения"
             />
           )}
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}

@@ -1,4 +1,5 @@
 "use client";
+import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, BookOpenText, ChartNoAxesCombined, ClipboardCheck } from "lucide-react";
@@ -7,7 +8,7 @@ import { useState } from "react";
 
 import { CurrentProgressOverview, progressQueries } from "@/entities/progress";
 import { studentProgramQueries } from "@/entities/student-program";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonClassName } from "@/shared/ui/button";
 
 export function StudentProgressView() {
   const [selectedProgramId, setSelectedProgramId] = useState("");
@@ -20,17 +21,15 @@ export function StudentProgressView() {
   });
 
   return (
-    <main className="mx-auto max-w-7xl space-y-4">
+    <main className="page-content page-stack">
       <section className="py-2">
         <div className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
             <ChartNoAxesCombined size={22} aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm font-medium text-blue-600">Учебный кабинет</p>
-            <h1 className="mt-1 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-              Мой прогресс
-            </h1>
+            <p className="text-sm font-medium text-primary">Учебный кабинет</p>
+            <h1 className="page-title mt-1 wrap-break-word">Мой прогресс</h1>
             <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
               Следите за результатами обучения и продолжайте заниматься в своей программе.
             </p>
@@ -38,7 +37,7 @@ export function StudentProgressView() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
+      <section className="surface">
         {programs.isPending && <Loading label="Загружаем программы…" />}
 
         {programs.isError && (
@@ -58,12 +57,12 @@ export function StudentProgressView() {
         {programs.data && programs.data.length > 0 && (
           <div className="space-y-6">
             <div className="max-w-xl">
-              <label htmlFor="student-progress-program" className="text-sm font-medium text-slate-700">
+              <label htmlFor="student-progress-program" className="text-sm font-medium text-foreground-muted">
                 Программа обучения
               </label>
-              <select
+              <Select
                 id="student-progress-program"
-                className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:ring-3 focus:ring-blue-100"
+                className="mt-2"
                 value={activeProgramId}
                 disabled={programs.data.length === 1}
                 onChange={(event) => setSelectedProgramId(event.target.value)}
@@ -73,7 +72,7 @@ export function StudentProgressView() {
                     {program.title}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             {progress.isPending && <Loading label="Загружаем ваш прогресс…" />}
@@ -97,15 +96,12 @@ export function StudentProgressView() {
                 <CurrentProgressOverview progress={progress.data} audience="student" />
 
                 <section className="grid gap-3 sm:grid-cols-2" aria-label="Продолжить обучение">
-                  <Link
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700"
-                    href={`/student/programs/${activeProgramId}`}
-                  >
+                  <Link className={buttonClassName("primary", "")} href={`/student/programs/${activeProgramId}`}>
                     Продолжить обучение
                     <ArrowRight size={16} aria-hidden="true" />
                   </Link>
                   <Link
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-700 transition hover:border-blue-200 hover:bg-blue-50"
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-surface border border-border px-4 text-sm font-medium text-foreground-muted transition hover:border-primary-border hover:bg-primary-subtle"
                     href="/student/homework"
                   >
                     Открыть домашние задания
@@ -152,7 +148,7 @@ function hasLearningData(progress: {
 
 function Loading({ label }: Readonly<{ label: string }>) {
   return (
-    <p className="rounded-2xl bg-slate-50 p-5 text-sm text-(--text-secondary)" aria-busy="true">
+    <p className="rounded-surface bg-surface-subtle p-5 text-sm text-(--text-secondary)" aria-busy="true">
       {label}
     </p>
   );
@@ -160,8 +156,8 @@ function Loading({ label }: Readonly<{ label: string }>) {
 
 function RetryMessage({ message, onRetry }: Readonly<{ message: string; onRetry: () => void }>) {
   return (
-    <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-      <p className="text-sm text-red-700">{message}</p>
+    <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
+      <p className="text-sm text-danger">{message}</p>
       <Button type="button" variant="secondary" onClick={onRetry}>
         Повторить
       </Button>
@@ -183,14 +179,11 @@ function EmptyState({
   action: string;
 }>) {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
-      <Icon size={30} className="mx-auto text-blue-500" aria-hidden="true" />
-      <p className="mt-4 font-semibold text-slate-950">{title}</p>
+    <div className="rounded-surface border border-dashed border-border bg-surface-subtle/60 p-10 text-center">
+      <Icon size={30} className="mx-auto text-primary" aria-hidden="true" />
+      <p className="mt-4 font-semibold text-foreground">{title}</p>
       <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-(--text-secondary)">{description}</p>
-      <Link
-        className="mt-5 inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700"
-        href={href}
-      >
+      <Link className={buttonClassName("primary", "mt-5")} href={href}>
         {action}
       </Link>
     </div>

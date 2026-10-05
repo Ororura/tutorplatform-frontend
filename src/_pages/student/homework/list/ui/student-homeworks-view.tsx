@@ -45,17 +45,15 @@ export function StudentHomeworksView() {
   const empty = !pending && !failed && activeItems.length === 0 && history.length === 0;
 
   return (
-    <main className="mx-auto max-w-360 space-y-5">
+    <main className="page-stack">
       <header className="py-2">
         <div className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-(--text-secondary)">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-surface-subtle text-(--text-secondary)">
             <ClipboardCheck size={24} aria-hidden="true" />
           </span>
           <div className="min-w-0">
             <p className="text-sm font-medium text-(--text-secondary)">Учебный кабинет</p>
-            <h1 className="mt-1 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-              Домашние задания
-            </h1>
+            <h1 className="page-title mt-1 wrap-break-word">Домашние задания</h1>
             <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
               Задания преподавателя и результаты их проверки.
             </p>
@@ -65,8 +63,8 @@ export function StudentHomeworksView() {
 
       {pending && <StudentHomeworkSkeleton />}
       {failed && (
-        <div className="space-y-3 rounded-2xl border border-red-100 bg-white p-5" role="alert">
-          <p className="text-sm text-red-700">Не удалось загрузить домашние задания.</p>
+        <div className="space-y-3 rounded-surface border border-danger-border bg-surface p-5" role="alert">
+          <p className="text-sm text-danger">Не удалось загрузить домашние задания.</p>
           <Button
             variant="secondary"
             type="button"
@@ -77,9 +75,9 @@ export function StudentHomeworksView() {
         </div>
       )}
       {empty && (
-        <section className="rounded-2xl border border-(--border) bg-white px-4 py-10 text-center shadow-xs">
-          <ClipboardCheck size={30} className="mx-auto text-blue-500" aria-hidden="true" />
-          <h2 className="mt-4 font-semibold text-slate-950">Домашних заданий пока нет</h2>
+        <section className="rounded-surface border border-(--border) bg-surface px-4 py-10 text-center">
+          <ClipboardCheck size={30} className="mx-auto text-primary" aria-hidden="true" />
+          <h2 className="section-title mt-4">Домашних заданий пока нет</h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-(--text-secondary)">
             Когда преподаватель назначит новое задание, оно появится здесь.
           </p>
@@ -88,29 +86,20 @@ export function StudentHomeworksView() {
       {attention.length > 0 && (
         <section
           aria-labelledby="homework-attention-heading"
-          className="rounded-2xl border border-red-100 bg-red-50/40 p-4"
+          className="rounded-surface border border-danger-border bg-danger-subtle/40 p-4"
         >
-          <h2
-            id="homework-attention-heading"
-            className="mb-3 flex items-center gap-3 text-lg font-semibold tracking-tight text-slate-950 sm:text-xl"
-          >
-            <CircleAlert size={28} className="shrink-0 text-red-600" aria-hidden="true" />
-            Требуют внимания <span className="text-red-600">· {attention.length}</span>
+          <h2 id="homework-attention-heading" className="section-title mb-3 flex items-center gap-3">
+            <CircleAlert size={28} className="shrink-0 text-danger" aria-hidden="true" />
+            Требуют внимания <span className="text-danger">· {attention.length}</span>
           </h2>
           <StudentHomeworkList homeworks={attention} now={now} programTitles={programTitles} />
         </section>
       )}
       {upcoming.length > 0 && (
-        <section
-          aria-labelledby="homework-upcoming-heading"
-          className="rounded-2xl border border-(--border) bg-white p-4 shadow-xs"
-        >
-          <h2
-            id="homework-upcoming-heading"
-            className="mb-3 flex items-center gap-3 text-lg font-semibold tracking-tight text-slate-950 sm:text-xl"
-          >
-            <Clock3 size={28} className="shrink-0 text-blue-600" aria-hidden="true" />
-            Предстоящие <span className="text-blue-600">· {upcoming.length}</span>
+        <section aria-labelledby="homework-upcoming-heading" className="surface">
+          <h2 id="homework-upcoming-heading" className="section-title mb-3 flex items-center gap-3">
+            <Clock3 size={28} className="shrink-0 text-primary" aria-hidden="true" />
+            Предстоящие <span className="text-primary">· {upcoming.length}</span>
           </h2>
           <StudentHomeworkList
             homeworks={[...datedUpcoming, ...undatedUpcoming]}
@@ -144,24 +133,20 @@ function StudentHomeworkSkeleton() {
     <div role="status" aria-busy="true" className="space-y-5">
       <span className="sr-only">Загружаем домашние задания…</span>
       {[2, 1].map((count) => (
-        <div
-          key={count}
-          aria-hidden="true"
-          className="space-y-3 rounded-2xl border border-slate-100 bg-white p-4 motion-safe:animate-pulse"
-        >
-          <div className="h-6 w-48 rounded bg-slate-100" />
+        <div key={count} aria-hidden="true" className="surface space-y-3 motion-safe:animate-pulse">
+          <div className="h-6 w-48 rounded bg-surface-subtle" />
           {Array.from({ length: count }, (_, i) => (
             <div
               key={i}
-              className="flex flex-col gap-4 rounded-2xl border border-slate-100 p-5 sm:flex-row sm:items-center"
+              className="flex flex-col gap-4 rounded-surface border border-border p-5 sm:flex-row sm:items-center"
             >
-              <div className="hidden size-14 shrink-0 rounded-2xl bg-blue-50 sm:block" />
+              <div className="hidden size-14 shrink-0 rounded-surface bg-primary-subtle sm:block" />
               <div className="flex-1 space-y-3">
-                <div className="h-5 w-2/3 rounded bg-slate-100" />
-                <div className="h-3 w-1/2 rounded bg-slate-100" />
-                <div className="h-3 w-3/4 rounded bg-slate-100" />
+                <div className="h-5 w-2/3 rounded bg-surface-subtle" />
+                <div className="h-3 w-1/2 rounded bg-surface-subtle" />
+                <div className="h-3 w-3/4 rounded bg-surface-subtle" />
               </div>
-              <div className="h-10 rounded-xl bg-blue-50 sm:w-32" />
+              <div className="h-10 rounded-surface bg-primary-subtle sm:w-32" />
             </div>
           ))}
         </div>

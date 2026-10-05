@@ -2,7 +2,7 @@ import { ArrowRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { Button } from "@/shared/ui/button";
+import { ErrorState } from "@/shared/ui/feedback";
 
 export function DashboardSection({
   title,
@@ -20,22 +20,19 @@ export function DashboardSection({
   children: ReactNode;
 }>) {
   return (
-    <section
-      aria-label={title}
-      className="min-w-0 rounded-2xl border border-(--border) bg-white p-4 shadow-xs sm:p-5 xl:p-6"
-    >
+    <section aria-label={title} className="min-w-0">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-            <Icon size={24} aria-hidden="true" />
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-inset bg-surface-hover text-foreground-muted">
+            <Icon size={19} aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-950 2xl:text-2xl">{title}</h2>
-            {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+            <h2 className="section-title">{title}</h2>
+            {subtitle && <p className="mt-1 text-sm text-foreground-muted">{subtitle}</p>}
           </div>
         </div>
         <Link
-          className="group inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          className="group inline-flex items-center gap-2 rounded-surface px-2 py-2 text-sm font-medium text-primary transition hover:bg-primary-subtle hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
           href={href}
         >
           {linkLabel}
@@ -56,12 +53,12 @@ export function DashboardSkeleton({ label }: Readonly<{ label: string }>) {
       {[0, 1, 2].map((item) => (
         <div
           key={item}
-          className="space-y-4 rounded-2xl border border-slate-100 p-5 motion-safe:animate-pulse"
+          className="space-y-4 rounded-surface border border-border p-5 motion-safe:animate-pulse"
           aria-hidden="true"
         >
-          <div className="h-5 w-2/3 rounded bg-slate-100" />
-          <div className="h-3 w-1/2 rounded bg-slate-100" />
-          <div className="h-9 rounded-xl bg-slate-50" />
+          <div className="h-5 w-2/3 rounded bg-surface-subtle" />
+          <div className="h-3 w-1/2 rounded bg-surface-subtle" />
+          <div className="h-9 rounded-surface bg-surface-subtle" />
         </div>
       ))}
     </div>
@@ -69,12 +66,5 @@ export function DashboardSkeleton({ label }: Readonly<{ label: string }>) {
 }
 
 export function DashboardError({ message, retry }: Readonly<{ message: string; retry: () => void }>) {
-  return (
-    <div role="alert" className="space-y-3 rounded-xl border border-red-100 p-4">
-      <p className="text-sm text-red-700">{message}</p>
-      <Button variant="secondary" onClick={retry}>
-        Повторить
-      </Button>
-    </div>
-  );
+  return <ErrorState title={message} onRetry={retry} />;
 }

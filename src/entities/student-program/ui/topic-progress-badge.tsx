@@ -1,26 +1,21 @@
-import { cn } from "@/shared/lib/cn";
-
+import { Check, Circle, CircleDot, LockKeyhole } from "lucide-react";
+import { Badge, type BadgeTone } from "@/shared/ui/badge";
 import type { TopicProgressStatus } from "../api/student-program-queries";
 import { topicProgressPresentation } from "../model/student-program-labels";
-
+const tones: Record<NonNullable<TopicProgressStatus>, BadgeTone> = {
+  LOCKED: "neutral",
+  AVAILABLE: "info",
+  IN_PROGRESS: "info",
+  COMPLETED: "success",
+};
+const icons = { LOCKED: LockKeyhole, AVAILABLE: Circle, IN_PROGRESS: CircleDot, COMPLETED: Check };
 export function TopicProgressBadge({ status }: Readonly<{ status?: TopicProgressStatus | null }>) {
-  if (!status) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-600">
-        <span aria-hidden="true">—</span> Статус не задан
-      </span>
-    );
-  }
-
-  const presentation = topicProgressPresentation[status];
+  if (!status) return <Badge>Статус не задан</Badge>;
+  const Icon = icons[status];
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
-        presentation.className,
-      )}
-    >
-      <span aria-hidden="true">{presentation.icon}</span> {presentation.label}
-    </span>
+    <Badge tone={tones[status]}>
+      <Icon size={13} aria-hidden="true" />
+      {topicProgressPresentation[status].label}
+    </Badge>
   );
 }

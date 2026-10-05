@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useId, useRef, useState } from "react";
@@ -118,19 +119,19 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
       <dialog
         ref={dialogRef}
         aria-labelledby={titleId}
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <div className="p-5 sm:p-6">
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
-              <h2 id={titleId} className="text-xl font-semibold">
+              <h2 id={titleId} className="section-title">
                 Назначить программу
               </h2>
-              <p className="mt-1 text-sm text-neutral-600">Выберите активную программу и интервал отчёта.</p>
+              <p className="mt-1 text-sm text-foreground-muted">Выберите активную программу и интервал отчёта.</p>
             </div>
             <button
-              className="rounded px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100"
+              className="rounded px-2 py-1 text-sm text-foreground-muted hover:bg-surface-subtle"
               type="button"
               onClick={close}
               aria-label="Закрыть"
@@ -140,12 +141,12 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
           </div>
 
           {loading && (
-            <p className="rounded-lg border border-neutral-200 p-5 text-neutral-600" aria-busy="true">
+            <p className="rounded-inset border border-border p-5 text-foreground-muted" aria-busy="true">
               Загружаем доступные программы…
             </p>
           )}
           {loadError && (
-            <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-4" role="alert">
+            <div className="space-y-3 rounded-inset border border-danger-border bg-danger-subtle p-4" role="alert">
               <p>Не удалось загрузить программы для назначения.</p>
               <Button
                 type="button"
@@ -159,22 +160,22 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
             </div>
           )}
           {!loading && !loadError && templates.data?.length === 0 && (
-            <p className="rounded-lg border border-dashed border-neutral-300 p-5">
+            <p className="rounded-inset border border-dashed border-border-strong p-5">
               Нет программ, доступных для назначения
             </p>
           )}
           {!loading && !loadError && templates.data && templates.data.length > 0 && (
             <form className="space-y-5" onSubmit={submit} noValidate>
               <fieldset className="space-y-3">
-                <legend className="text-sm font-medium">Программа обучения</legend>
+                <legend className="field-label">Программа обучения</legend>
                 {templates.data.map((template) => {
                   const alreadyAssigned = assignedProgramIds.has(template.id);
                   return (
                     <label
                       key={template.id}
-                      className="flex cursor-pointer gap-3 rounded-lg border border-neutral-200 p-4 has-disabled:bg-neutral-100"
+                      className="flex cursor-pointer gap-3 rounded-inset border border-border p-4 has-disabled:bg-surface-subtle"
                     >
-                      <input
+                      <Input
                         type="radio"
                         name="learningProgram"
                         value={template.id}
@@ -187,29 +188,31 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
                       />
                       <span className="min-w-0">
                         <span className="block font-medium">{template.title}</span>
-                        <span className="mt-1 block text-sm text-neutral-600">{template.subject.name} · Активна</span>
+                        <span className="mt-1 block text-sm text-foreground-muted">
+                          {template.subject.name} · Активна
+                        </span>
                         {template.description && (
-                          <span className="mt-1 block text-sm text-neutral-700">{template.description}</span>
+                          <span className="mt-1 block text-sm text-foreground-muted">{template.description}</span>
                         )}
                         {alreadyAssigned && (
-                          <span className="mt-2 block text-sm font-medium text-neutral-700">Уже назначена</span>
+                          <span className="mt-2 block text-sm font-medium text-foreground-muted">Уже назначена</span>
                         )}
                       </span>
                     </label>
                   );
                 })}
               </fieldset>
-              {programError && <p className="text-sm text-red-700">{programError}</p>}
+              {programError && <p className="text-sm text-danger">{programError}</p>}
               {!hasAssignableTemplate && (
-                <p className="text-sm text-neutral-700">Нет программ, доступных для назначения</p>
+                <p className="text-sm text-foreground-muted">Нет программ, доступных для назначения</p>
               )}
               <div className="space-y-2">
-                <label className="block text-sm font-medium" htmlFor="assign-report-hours">
+                <label className="field-label" htmlFor="assign-report-hours">
                   Интервал отчёта, часов
                 </label>
-                <input
+                <Input
                   id="assign-report-hours"
-                  className="h-10 w-full rounded-md border border-neutral-300 px-3 outline-none focus:ring-2 focus:ring-neutral-300"
+
                   type="number"
                   min="0.5"
                   step="0.5"
@@ -221,17 +224,17 @@ export function AssignLearningProgramDialog({ studentId, triggerLabel, onAssigne
                   aria-invalid={Boolean(intervalError)}
                   aria-describedby={intervalError ? "assign-report-error" : "assign-report-help"}
                 />
-                <p id="assign-report-help" className="text-xs text-neutral-500">
+                <p id="assign-report-help" className="text-xs text-foreground-muted">
                   Можно указать половину часа, например 1,5 часа = 90 минут.
                 </p>
                 {intervalError && (
-                  <p id="assign-report-error" className="text-sm text-red-700">
+                  <p id="assign-report-error" className="text-sm text-danger">
                     {intervalError}
                   </p>
                 )}
               </div>
               {submitError && (
-                <p className="text-sm text-red-700" role="alert">
+                <p className="text-sm text-danger" role="alert">
                   {submitError}
                 </p>
               )}

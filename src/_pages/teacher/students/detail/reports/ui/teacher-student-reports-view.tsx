@@ -1,4 +1,5 @@
 "use client";
+import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, FileText, Flag } from "lucide-react";
@@ -54,23 +55,23 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
   };
 
   return (
-    <main className="mx-auto max-w-7xl space-y-4">
-      <section className="rounded-2xl border border-(--border) bg-white p-6 sm:p-7">
+    <main className="page-content page-stack">
+      <section className="surface sm:p-7">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
           href={`/teacher/students/${studentId}`}
         >
           <ArrowLeft size={16} />
           Профиль ученика
         </Link>
         <div className="mt-5 flex items-center gap-4">
-          <span className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
             <FileText size={21} />
           </span>
           <div>
-            <p className="text-sm font-medium text-blue-600">Учебный процесс</p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Отчёты об успеваемости</h1>
-            <p className="mt-2 text-sm text-slate-500">История отчётов по завершённым учебным периодам.</p>
+            <p className="text-sm font-medium text-primary">Учебный процесс</p>
+            <h1 className="page-title mt-1">Отчёты об успеваемости</h1>
+            <p className="mt-2 text-sm text-foreground-muted">История отчётов по завершённым учебным периодам.</p>
           </div>
         </div>
       </section>
@@ -78,29 +79,34 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
       <StudentProfileNav active="reports" studentId={studentId} />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
-          <h2 className="text-xl font-semibold text-slate-950">Отчёты</h2>
-          <p className="mt-1 text-sm text-slate-500">Выберите программу, чтобы посмотреть связанные с ней отчёты.</p>
+        <section className="surface min-w-0">
+          <h2 className="section-title">Отчёты</h2>
+          <p className="mt-1 text-sm text-foreground-muted">
+            Выберите программу, чтобы посмотреть связанные с ней отчёты.
+          </p>
 
           {programs.isPending && (
-            <p className="mt-5 rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+            <p className="mt-5 rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
               Загружаем программы…
             </p>
           )}
           {programs.isError && (
-            <div className="mt-5 space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-              <p className="text-sm text-red-700">Не удалось загрузить программы ученика.</p>
+            <div
+              className="mt-5 space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5"
+              role="alert"
+            >
+              <p className="text-sm text-danger">Не удалось загрузить программы ученика.</p>
               <Button type="button" variant="secondary" onClick={() => programs.refetch()}>
                 Повторить
               </Button>
             </div>
           )}
           {programs.data?.length === 0 && (
-            <div className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
-              <FileText size={28} className="mx-auto text-blue-500" />
-              <p className="mt-4 font-semibold text-slate-950">Нет программ для отчётов</p>
+            <div className="mt-5 rounded-surface border border-dashed border-border bg-surface-subtle/60 p-10 text-center">
+              <FileText size={28} className="mx-auto text-primary" />
+              <p className="mt-4 font-semibold text-foreground">Нет программ для отчётов</p>
               <Link
-                className="mt-4 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+                className="mt-4 inline-flex text-sm font-medium text-primary hover:text-primary"
                 href={`/teacher/students/${studentId}/program`}
               >
                 Перейти в раздел «Программа»
@@ -111,13 +117,13 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
           {programs.data && programs.data.length > 0 && (
             <>
               <label
-                className="mt-5 block max-w-xl text-sm font-medium text-slate-700"
+                className="mt-5 block max-w-xl text-sm font-medium text-foreground-muted"
                 htmlFor="student-reports-program"
               >
                 Программа обучения
-                <select
+                <Select
                   id="student-reports-program"
-                  className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:ring-3 focus:ring-blue-100"
+                  className="mt-2"
                   value={activeProgramId}
                   disabled={programs.data.length === 1}
                   onChange={(event) => setSelectedProgramId(event.target.value)}
@@ -127,28 +133,33 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
                       {program.title}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
 
               <div className="mt-5">
                 {reports.isPending && (
-                  <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+                  <p className="rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
                     Загружаем отчёты…
                   </p>
                 )}
                 {reports.isError && (
-                  <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-                    <p className="text-sm text-red-700">Не удалось загрузить отчёты.</p>
+                  <div
+                    className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5"
+                    role="alert"
+                  >
+                    <p className="text-sm text-danger">Не удалось загрузить отчёты.</p>
                     <Button type="button" variant="secondary" onClick={() => reports.refetch()}>
                       Повторить
                     </Button>
                   </div>
                 )}
                 {reports.data?.items.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
-                    <FileText size={28} className="mx-auto text-blue-500" />
-                    <p className="mt-4 font-semibold text-slate-950">Отчётов пока нет</p>
-                    <p className="mt-2 text-sm text-slate-500">Завершённые периоды без отчёта показаны справа.</p>
+                  <div className="rounded-surface border border-dashed border-border bg-surface-subtle/60 p-10 text-center">
+                    <FileText size={28} className="mx-auto text-primary" />
+                    <p className="mt-4 font-semibold text-foreground">Отчётов пока нет</p>
+                    <p className="mt-2 text-sm text-foreground-muted">
+                      Завершённые периоды без отчёта показаны справа.
+                    </p>
                   </div>
                 )}
                 {reports.data && reports.data.items.length > 0 && (
@@ -160,24 +171,24 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
         </section>
 
         <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
-            <Flag size={20} className="text-blue-600" />
-            <h2 className="mt-4 font-semibold text-slate-950">Ожидают отчёта</h2>
+          <section className="rounded-surface border border-primary-border bg-surface-subtle p-6">
+            <Flag size={20} className="text-primary" />
+            <h2 className="section-title mt-4">Ожидают отчёта</h2>
             {periods.isPending && (
-              <p className="mt-3 text-sm text-slate-500" aria-busy="true">
+              <p className="mt-3 text-sm text-foreground-muted" aria-busy="true">
                 Загружаем периоды…
               </p>
             )}
-            {periods.isError && <p className="mt-3 text-sm text-red-700">Не удалось загрузить учебные периоды.</p>}
+            {periods.isError && <p className="mt-3 text-sm text-danger">Не удалось загрузить учебные периоды.</p>}
             {periods.data && pendingPeriods.length === 0 && (
-              <p className="mt-3 text-sm text-slate-500">Все завершённые периоды уже имеют отчёт.</p>
+              <p className="mt-3 text-sm text-foreground-muted">Все завершённые периоды уже имеют отчёт.</p>
             )}
             {pendingPeriods.length > 0 && (
               <ol className="mt-4 space-y-3">
                 {pendingPeriods.map((period) => (
-                  <li key={period.id} className="rounded-2xl bg-white/80 p-4">
-                    <p className="font-medium text-slate-950">Период {period.sequenceNo}</p>
-                    <p className="mt-1 text-sm text-slate-500">
+                  <li key={period.id} className="rounded-surface bg-surface/80 p-4">
+                    <p className="font-medium text-foreground">Период {period.sequenceNo}</p>
+                    <p className="mt-1 text-sm text-foreground-muted">
                       Завершён {period.completedAt ? formatReportDate(period.completedAt) : "—"}
                     </p>
                     <Button
@@ -194,7 +205,7 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
               </ol>
             )}
             {createError && (
-              <p className="mt-4 text-sm text-red-700" role="alert">
+              <p className="mt-4 text-sm text-danger" role="alert">
                 {createError}
               </p>
             )}

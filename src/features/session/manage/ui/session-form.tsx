@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -119,7 +120,7 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
     );
   if (programs.data.length === 0)
     return (
-      <div className="space-y-4 rounded-lg border border-dashed border-neutral-300 p-8 text-center">
+      <div className="space-y-4 rounded-inset border border-dashed border-border-strong p-8 text-center">
         <p className="font-medium">Сначала назначьте ученику программу обучения</p>
         <a className="inline-block underline underline-offset-4" href={`/teacher/students/${studentId}/program`}>
           Перейти в раздел «Программа»
@@ -128,14 +129,16 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
     );
 
   return (
-    <form className="space-y-7 rounded-lg border border-neutral-200 bg-white p-6" onSubmit={submit} noValidate>
+    <form className="space-y-7 rounded-inset border border-border bg-surface p-6" onSubmit={submit} noValidate>
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="session-program">
+        <label className="field-label" htmlFor="session-program">
           Программа обучения
         </label>
-        <select
+        <Select
           id="session-program"
-          className="h-11 w-full rounded-md border border-neutral-300 bg-white px-3"
+          aria-invalid={Boolean(errors.studentProgramId)}
+          aria-describedby={errors.studentProgramId ? "session-studentProgramId-error" : undefined}
+
           value={effectiveProgramId}
           disabled={Boolean(session)}
           onChange={(event) => changeProgram(event.target.value)}
@@ -146,33 +149,45 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
               {item.title} · {item.subject.name} · {programStatusLabels[item.status]}
             </option>
           ))}
-        </select>
-        {session && <p className="text-xs text-neutral-500">Программу существующего занятия изменить нельзя.</p>}
-        {errors.studentProgramId && <p className="text-sm text-red-700">{errors.studentProgramId}</p>}
+        </Select>
+        {session && <p className="text-xs text-foreground-muted">Программу существующего занятия изменить нельзя.</p>}
+        {errors.studentProgramId && (
+          <p id="session-studentProgramId-error" role="alert" className="field-error">
+            {errors.studentProgramId}
+          </p>
+        )}
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="space-y-2">
-          <label className="block text-sm font-medium" htmlFor="session-started-at">
+          <label className="field-label" htmlFor="session-started-at">
             Дата и время
           </label>
-          <input
+          <Input
             id="session-started-at"
-            className="h-11 w-full rounded-md border border-neutral-300 px-3"
+            aria-invalid={Boolean(errors.startedAt)}
+            aria-describedby={errors.startedAt ? "session-startedAt-error" : undefined}
+
             type="datetime-local"
             value={startedAt}
             onChange={(event) => setStartedAt(event.target.value)}
           />
-          <p className="text-xs text-neutral-500">Время указано в вашем часовом поясе.</p>
-          {errors.startedAt && <p className="text-sm text-red-700">{errors.startedAt}</p>}
+          <p className="text-xs text-foreground-muted">Время указано в вашем часовом поясе.</p>
+          {errors.startedAt && (
+            <p id="session-startedAt-error" role="alert" className="field-error">
+              {errors.startedAt}
+            </p>
+          )}
         </div>
         <div className="space-y-2">
-          <label className="block text-sm font-medium" htmlFor="session-duration">
+          <label className="field-label" htmlFor="session-duration">
             Длительность, минут
           </label>
-          <input
+          <Input
             id="session-duration"
-            className="h-11 w-full rounded-md border border-neutral-300 px-3"
+            aria-invalid={Boolean(errors.duration)}
+            aria-describedby={errors.duration ? "session-duration-error" : undefined}
+
             type="number"
             min="1"
             max="600"
@@ -187,19 +202,23 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
             <option value="90" />
             <option value="120" />
           </datalist>
-          {errors.duration && <p className="text-sm text-red-700">{errors.duration}</p>}
+          {errors.duration && (
+            <p id="session-duration-error" role="alert" className="field-error">
+              {errors.duration}
+            </p>
+          )}
         </div>
       </div>
 
       <fieldset className="space-y-3">
-        <legend className="text-sm font-medium">Посещаемость</legend>
+        <legend className="field-label">Посещаемость</legend>
         <div className="flex flex-wrap gap-3">
           {(Object.keys(attendancePresentation) as AttendanceStatus[]).map((status) => (
             <label
               key={status}
-              className="flex cursor-pointer items-center gap-2 rounded-md border border-neutral-300 px-4 py-3 has-checked:bg-neutral-50"
+              className="flex cursor-pointer items-center gap-2 rounded-control border border-border-strong px-4 py-3 has-checked:border-primary has-checked:bg-primary-subtle focus-within:outline-2 focus-within:outline-focus-ring focus-within:outline-offset-2"
             >
-              <input
+              <Input
                 type="radio"
                 name="attendance"
                 checked={attendance === status}
@@ -213,8 +232,8 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
       </fieldset>
 
       <fieldset className="space-y-4">
-        <legend className="text-sm font-medium">Пройденные темы</legend>
-        {!effectiveProgramId && <p className="text-sm text-neutral-600">Сначала выберите программу.</p>}
+        <legend className="field-label">Пройденные темы</legend>
+        {!effectiveProgramId && <p className="text-sm text-foreground-muted">Сначала выберите программу.</p>}
         {effectiveProgramId && program.isPending && <p aria-busy="true">Загружаем темы…</p>}
         {program.isError && (
           <div role="alert">
@@ -225,26 +244,26 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
           </div>
         )}
         {program.data?.modules.map((module) => (
-          <section key={module.id} className="rounded-lg border border-neutral-200">
-            <h3 className="border-b border-neutral-200 px-4 py-3 font-medium">{module.title}</h3>
+          <section key={module.id} className="rounded-inset border border-border">
+            <h3 className="border-b border-border px-4 py-3 font-medium">{module.title}</h3>
             {module.topics.length === 0 ? (
-              <p className="px-4 py-3 text-sm text-neutral-500">В модуле нет тем.</p>
+              <p className="px-4 py-3 text-sm text-foreground-muted">В модуле нет тем.</p>
             ) : (
-              <div className="divide-y divide-neutral-100">
+              <div className="divide-y divide-border">
                 {module.topics.map((topic) => {
                   const selected = selectedTopics.includes(topic.id);
                   return (
                     <div key={topic.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                       <label className="flex items-center gap-3">
-                        <input
+                        <Input
                           type="checkbox"
                           checked={selected}
                           onChange={(event) => toggleTopic(topic.id, event.target.checked)}
                         />
                         <span>{topic.title}</span>
                       </label>
-                      <label className={`flex items-center gap-2 text-sm ${selected ? "" : "text-neutral-400"}`}>
-                        <input
+                      <label className={`flex items-center gap-2 text-sm ${selected ? "" : "text-foreground-subtle"}`}>
+                        <Input
                           type="radio"
                           name="primaryTopic"
                           disabled={!selected}
@@ -263,31 +282,31 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
       </fieldset>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="session-summary">
+        <label className="field-label" htmlFor="session-summary">
           Краткое описание занятия
         </label>
-        <textarea
+        <Textarea
           id="session-summary"
-          className="min-h-28 w-full rounded-md border border-neutral-300 p-3"
+          className="min-h-28"
           value={summary}
           onChange={(event) => setSummary(event.target.value)}
         />
       </div>
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="session-private-notes">
+        <label className="field-label" htmlFor="session-private-notes">
           Личные заметки
         </label>
-        <textarea
+        <Textarea
           id="session-private-notes"
-          className="min-h-28 w-full rounded-md border border-neutral-300 p-3"
+          className="min-h-28"
           value={privateNotes}
           onChange={(event) => setPrivateNotes(event.target.value)}
         />
-        <p className="text-xs text-neutral-500">Не показываются ученику или родителю.</p>
+        <p className="text-xs text-foreground-muted">Не показываются ученику или родителю.</p>
       </div>
       {errors.server && (
         <div className="space-y-2" role="alert">
-          <p className="text-sm text-red-700">{errors.server}</p>
+          <p className="text-sm text-danger">{errors.server}</p>
           {errors.conflict && (
             <button
               className="text-sm font-medium underline underline-offset-4"
@@ -300,7 +319,7 @@ export function SessionForm({ studentId, session }: Readonly<Props>) {
         </div>
       )}
       <div className="flex gap-3">
-        <Button type="submit" disabled={mutation.isPending}>
+        <Button type="submit" loading={mutation.isPending}>
           {mutation.isPending ? "Сохраняем…" : session ? "Сохранить изменения" : "Создать занятие"}
         </Button>
         <Button variant="secondary" type="button" onClick={() => router.back()}>

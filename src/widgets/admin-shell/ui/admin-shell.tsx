@@ -8,10 +8,10 @@ type Props = {
 
 export function AdminShell({ children }: Readonly<Props>) {
   return (
-    <div className="min-h-screen bg-neutral-50/50">
+    <div className="min-h-dvh">
       <AdminHeader />
 
-      {children}
+      <div className="app-container app-content">{children}</div>
     </div>
   );
 }

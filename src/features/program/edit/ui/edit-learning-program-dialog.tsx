@@ -1,4 +1,5 @@
 "use client";
+import { Input, Textarea } from "@/shared/ui/form-controls";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -67,40 +68,35 @@ export function EditLearningProgramDialog({ program }: Readonly<{ program: Learn
       <dialog
         ref={dialogRef}
         aria-labelledby="edit-learning-program-title"
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 id="edit-learning-program-title" className="text-xl font-semibold">
+              <h2 id="edit-learning-program-title" className="section-title">
                 Редактировать программу
               </h2>
-              <p className="mt-1 text-sm text-neutral-600">Предмет программы изменить нельзя.</p>
+              <p className="mt-1 text-sm text-foreground-muted">Предмет программы изменить нельзя.</p>
             </div>
             <button type="button" className="text-sm underline" onClick={close}>
               Закрыть
             </button>
           </div>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Название</span>
-            <input
-              className="h-11 w-full rounded-md border px-3"
-              maxLength={200}
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-            />
+            <span className="field-label">Название</span>
+            <Input maxLength={200} value={title} onChange={(event) => setTitle(event.target.value)} />
           </label>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Описание</span>
-            <textarea
-              className="min-h-32 w-full resize-y rounded-md border p-3"
+            <span className="field-label">Описание</span>
+            <Textarea
+              className="min-h-32 resize-y"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
             />
           </label>
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}

@@ -23,9 +23,9 @@ describe("TeacherQuickActions", () => {
     render(<TeacherQuickActions />);
 
     expect(screen.getByRole("heading", { name: "Быстрые действия" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Добавить ученика" })).toHaveClass("bg-blue-600");
-    expect(screen.getByRole("button", { name: "Создать программу" })).toHaveClass("bg-white");
-    expect(screen.getByRole("button", { name: "Создать задание" })).toHaveClass("bg-white");
+    expect(screen.getByRole("button", { name: "Добавить ученика" })).toHaveClass("bg-primary");
+    expect(screen.getByRole("button", { name: "Создать программу" })).toHaveClass("bg-surface");
+    expect(screen.getByRole("button", { name: "Создать задание" })).toHaveClass("bg-surface");
   });
 
   it.each(["Добавить ученика", "Создать программу", "Создать задание"])("opens the existing dialog: %s", (name) => {

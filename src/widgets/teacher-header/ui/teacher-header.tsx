@@ -1,10 +1,11 @@
 "use client";
 
-import { BookOpen, BookOpenText, ClipboardList, House, ShieldCheck, Users } from "lucide-react";
+import { BookOpenText, ClipboardList, House, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useCurrentUserQuery } from "@/entities/user";
+import { AppBrand } from "@/shared/ui/app-brand";
 import { LogoutButton } from "@/features/auth/logout";
 
 const navigation = [
@@ -55,40 +56,19 @@ export function TeacherHeader() {
   const isAdmin = currentUser.data?.roles.includes("ADMIN") ?? false;
 
   return (
-    <header className="sticky top-0 z-40 pt-3">
-      <div className="mx-auto max-w-[1600px] px-3 sm:px-5">
-        <div className="overflow-hidden rounded-2xl border border-(--border) bg-white/95 shadow-(--shadow-header) backdrop-blur-xl">
-          <div className="flex h-15 items-center gap-5 px-4 sm:px-5">
-            <Link
-              aria-label="Умнее Вместе — главная"
-              className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              href="/teacher"
-            >
-              <span className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 text-white">
-                <BookOpen size={21} strokeWidth={2.1} />
-              </span>
-
-              <span className="hidden leading-tight sm:block">
-                <span className="block text-[15px] font-semibold tracking-tight text-slate-950">Умнее Вместе</span>
-                <span className="mt-0.5 block text-[11px] text-(--text-secondary)">Платформа для репетиторов</span>
-              </span>
-            </Link>
+    <header className="app-header">
+      <div className="app-container">
+        <div className="min-w-0">
+          <div className="app-header-row">
+            <AppBrand href="/teacher" subtitle="Платформа для репетиторов" />
 
             <nav className="hidden h-full items-center gap-1 xl:flex" aria-label="Навигация преподавателя">
               {navigation.map(({ href, label, icon: Icon }) => {
                 const active = isActivePath(pathname, href);
 
                 return (
-                  <Link
-                    key={href}
-                    href={href}
-                    aria-current={active ? "page" : undefined}
-                    className={[
-                      "flex h-9 items-center gap-2 rounded-[10px] px-3 text-sm font-medium transition focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
-                      active ? "bg-blue-50/70 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950",
-                    ].join(" ")}
-                  >
-                    <Icon size={17} />
+                  <Link key={href} href={href} aria-current={active ? "page" : undefined} className="nav-item">
+                    <Icon size={17} aria-hidden="true" />
                     {label}
                   </Link>
                 );
@@ -96,13 +76,13 @@ export function TeacherHeader() {
             </nav>
 
             <div className="ml-auto flex items-center gap-3">
-              <div className="hidden items-center gap-3 border-r border-slate-100 pr-4 md:flex">
-                <span className="flex size-9 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-blue-700">
+              <div className="hidden items-center gap-3 border-r border-border pr-4 md:flex">
+                <span className="flex size-9 items-center justify-center rounded-full bg-surface-subtle text-sm font-semibold text-foreground-muted">
                   {getInitials(displayName)}
                 </span>
 
                 <span className="hidden leading-tight xl:block">
-                  <span className="block max-w-40 truncate text-sm font-medium text-slate-900">{displayName}</span>
+                  <span className="block max-w-40 truncate text-sm font-medium text-foreground">{displayName}</span>
                   <span className="block text-xs text-(--text-secondary)">Преподаватель</span>
                 </span>
               </div>
@@ -110,9 +90,9 @@ export function TeacherHeader() {
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600 hover:bg-slate-50 xl:inline-flex"
+                  className="hidden shrink-0 items-center gap-2 nav-item border border-border xl:inline-flex"
                 >
-                  <ShieldCheck size={17} />
+                  <ShieldCheck size={17} aria-hidden="true" />
                   Администрирование
                 </Link>
               )}
@@ -121,34 +101,20 @@ export function TeacherHeader() {
             </div>
           </div>
 
-          <nav
-            className="flex gap-1 overflow-x-auto border-t border-slate-100 px-3 py-2 xl:hidden"
-            aria-label="Мобильная навигация преподавателя"
-          >
+          <nav className="nav-mobile xl:hidden" aria-label="Мобильная навигация преподавателя">
             {navigation.map(({ href, label, icon: Icon }) => {
               const active = isActivePath(pathname, href);
 
               return (
-                <Link
-                  key={href}
-                  href={href}
-                  aria-current={active ? "page" : undefined}
-                  className={[
-                    "flex shrink-0 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
-                    active ? "bg-blue-50/70 text-blue-700" : "text-slate-600 hover:bg-slate-50",
-                  ].join(" ")}
-                >
-                  <Icon size={16} />
+                <Link key={href} href={href} aria-current={active ? "page" : undefined} className="nav-item">
+                  <Icon size={16} aria-hidden="true" />
                   {label}
                 </Link>
               );
             })}
             {isAdmin && (
-              <Link
-                href="/admin"
-                className="flex shrink-0 items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium text-slate-600 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600 hover:bg-slate-50"
-              >
-                <ShieldCheck size={16} />
+              <Link href="/admin" className="nav-item">
+                <ShieldCheck size={16} aria-hidden="true" />
                 Администрирование
               </Link>
             )}

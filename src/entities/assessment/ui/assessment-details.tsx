@@ -12,8 +12,8 @@ export function AssessmentDetails({ assessment }: Readonly<{ assessment: Teacher
     <div className="space-y-5">
       <dl className="grid gap-4 sm:grid-cols-2">
         {scoreLabels.map(([field, label]) => (
-          <div className="rounded-lg bg-neutral-50 p-4" key={field}>
-            <dt className="text-sm text-neutral-500">{label}</dt>
+          <div className="rounded-inset bg-surface-subtle p-4" key={field}>
+            <dt className="text-sm text-foreground-muted">{label}</dt>
             <dd className="mt-1 text-lg font-semibold">
               {assessment[field] === null || assessment[field] === undefined
                 ? "Не указано"
@@ -23,8 +23,8 @@ export function AssessmentDetails({ assessment }: Readonly<{ assessment: Teacher
         ))}
       </dl>
       <div>
-        <h3 className="text-sm font-medium text-neutral-500">Комментарий для ученика</h3>
-        <p className="mt-2 whitespace-pre-line text-neutral-700">{assessment.publicComment || "Не указан"}</p>
+        <h3 className="text-sm font-medium text-foreground-muted">Комментарий для ученика</h3>
+        <p className="mt-2 whitespace-pre-line text-foreground-muted">{assessment.publicComment || "Не указан"}</p>
       </div>
     </div>
   );

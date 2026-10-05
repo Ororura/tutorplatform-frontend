@@ -11,25 +11,23 @@ export function PublicProgressPage({ token }: Readonly<{ token: string }>) {
   const progress = useQuery(publicProgressQueries.detail(token));
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-      <header className="rounded-2xl border border-(--border) bg-white p-5 sm:p-7">
+    <main className="app-container app-content page-stack">
+      <header className="pb-2">
         <div className="flex items-start gap-4">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 sm:size-12">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary sm:size-12">
             <ChartNoAxesCombined size={22} aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm font-medium text-blue-600">Умнее Вместе</p>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-              Текущий прогресс ученика
-            </h1>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <p className="text-sm font-medium text-primary">Умнее Вместе</p>
+            <h1 className="page-title mt-1">Текущий прогресс ученика</h1>
+            <p className="mt-2 text-sm leading-6 text-foreground-muted">
               Актуальные результаты обучения по публичной ссылке преподавателя.
             </p>
           </div>
         </div>
       </header>
 
-      <section className="mt-4 rounded-2xl border border-(--border) bg-white/70 p-4 sm:mt-6 sm:p-6">
+      <section className="min-w-0">
         {progress.isPending && <LoadingState />}
         {progress.isError && <ErrorState error={progress.error} onRetry={() => progress.refetch()} />}
         {progress.data && !hasLearningData(progress.data) && <EmptyState />}
@@ -44,13 +42,13 @@ export function PublicProgressPage({ token }: Readonly<{ token: string }>) {
 function LoadingState() {
   return (
     <div className="space-y-4" aria-busy="true" aria-label="Загружаем прогресс">
-      <div className="h-6 w-44 animate-pulse rounded-lg bg-slate-200" />
+      <div className="h-6 w-44 motion-safe:animate-pulse rounded-inset bg-surface-hover" />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {[0, 1, 2].map((item) => (
-          <div key={item} className="h-36 animate-pulse rounded-2xl bg-slate-100" />
+          <div key={item} className="h-36 motion-safe:animate-pulse rounded-surface bg-surface-subtle" />
         ))}
       </div>
-      <p className="text-sm text-slate-500">Загружаем прогресс…</p>
+      <p className="text-sm text-foreground-muted">Загружаем прогресс…</p>
     </div>
   );
 }
@@ -77,9 +75,9 @@ function ErrorState({ error, onRetry }: Readonly<{ error: Error; onRetry: () => 
   }
 
   return (
-    <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-center" role="alert">
-      <p className="font-semibold text-slate-950">Не удалось загрузить прогресс</p>
-      <p className="mt-2 text-sm leading-6 text-slate-600">Произошла ошибка сервера. Попробуйте ещё раз.</p>
+    <div className="rounded-surface border border-danger-border bg-danger-subtle p-6 text-center" role="alert">
+      <p className="font-semibold text-foreground">Не удалось загрузить прогресс</p>
+      <p className="mt-2 text-sm leading-6 text-foreground-muted">Произошла ошибка сервера. Попробуйте ещё раз.</p>
       <Button className="mt-5" type="button" variant="secondary" onClick={onRetry}>
         Повторить
       </Button>
@@ -89,20 +87,20 @@ function ErrorState({ error, onRetry }: Readonly<{ error: Error; onRetry: () => 
 
 function StatusMessage({ title, description }: Readonly<{ title: string; description: string }>) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center" role="alert">
-      <Link2Off className="mx-auto text-slate-400" size={30} aria-hidden="true" />
-      <p className="mt-4 font-semibold text-slate-950">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600">{description}</p>
+    <div className="rounded-surface border border-border bg-surface-subtle p-6 text-center" role="alert">
+      <Link2Off className="mx-auto text-foreground-subtle" size={30} aria-hidden="true" />
+      <p className="mt-4 font-semibold text-foreground">{title}</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-foreground-muted">{description}</p>
     </div>
   );
 }
 
 function EmptyState() {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-8 text-center sm:p-10">
-      <ChartNoAxesCombined className="mx-auto text-blue-500" size={30} aria-hidden="true" />
-      <p className="mt-4 font-semibold text-slate-950">Учебных данных пока нет</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+    <div className="rounded-surface border border-dashed border-border bg-surface-subtle/80 p-8 text-center sm:p-10">
+      <ChartNoAxesCombined className="mx-auto text-primary" size={30} aria-hidden="true" />
+      <p className="mt-4 font-semibold text-foreground">Учебных данных пока нет</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-foreground-muted">
         Результаты появятся здесь после начала занятий.
       </p>
     </div>

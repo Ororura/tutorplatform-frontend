@@ -14,14 +14,14 @@ export function ReportShareList({
 }>) {
   if (shares.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-6 text-center">
-        <p className="text-sm text-slate-500">Публичных ссылок для этого отчёта пока нет.</p>
+      <div className="rounded-surface border border-dashed border-border bg-surface-subtle/60 p-6 text-center">
+        <p className="text-sm text-foreground-muted">Публичных ссылок для этого отчёта пока нет.</p>
       </div>
     );
   }
 
   return (
-    <ul className="divide-y divide-slate-100">
+    <ul className="divide-y divide-border">
       {shares.map((share) => {
         const status = reportShareStatusPresentation[share.status];
         return (
@@ -31,20 +31,18 @@ export function ReportShareList({
           >
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${status.className}`}>
-                  {status.label}
-                </span>
-                <span className="text-sm text-slate-500">
+                <span className={`badge  ${status.className}`}>{status.label}</span>
+                <span className="text-sm text-foreground-muted">
                   Создана {dateFormatter.format(new Date(share.createdAt))}
                 </span>
               </div>
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-foreground-muted">
                 {share.expiresAt
                   ? `Действует до ${dateFormatter.format(new Date(share.expiresAt))}`
                   : "Без даты истечения"}
               </p>
               {share.revokedAt && (
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 text-xs text-foreground-subtle">
                   Отозвана {dateFormatter.format(new Date(share.revokedAt))}
                 </p>
               )}

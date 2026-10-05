@@ -22,10 +22,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
   if (program.isPending) {
     return (
       <main>
-        <div
-          className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-(--text-secondary)"
-          aria-busy="true"
-        >
+        <div className="surface text-sm text-(--text-secondary)" aria-busy="true">
           Загружаем программу…
         </div>
       </main>
@@ -43,11 +40,11 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
           : "Не удалось загрузить программу";
 
     return (
-      <main className="mx-auto min-w-0 max-w-5xl space-y-5">
-        <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
-          <h1 className="text-xl font-semibold text-slate-950">{title}</h1>
+      <main className="page-content page-stack min-w-0">
+        <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
+          <h1 className="page-title">{title}</h1>
 
-          <p className="text-sm leading-6 text-red-700">
+          <p className="text-sm leading-6 text-danger">
             {status === 403
               ? "Эта программа недоступна для вашей учётной записи."
               : status === 404
@@ -63,7 +60,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
         </div>
 
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-primary"
           href="/student/programs"
         >
           <ArrowLeft size={16} aria-hidden="true" />
@@ -76,10 +73,10 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
   const data = program.data;
 
   return (
-    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+    <main className="page-content page-stack min-w-0">
       <section className="py-2">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-primary"
           href="/student/programs"
         >
           <ArrowLeft size={16} aria-hidden="true" />
@@ -88,60 +85,56 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
 
         <div className="mt-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
           <div className="flex min-w-0 items-start gap-4">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
               <BookOpenText size={22} aria-hidden="true" />
             </span>
 
             <div className="min-w-0">
-              <p className="text-sm font-medium text-blue-600">{data.subject.name}</p>
+              <p className="text-sm font-medium text-primary">{data.subject.name}</p>
 
-              <h1 className="mt-1 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                {data.title}
-              </h1>
+              <h1 className="page-title mt-1 wrap-break-word">{data.title}</h1>
 
-              <p className="mt-3 max-w-3xl whitespace-pre-line text-sm leading-7 text-slate-600">
+              <p className="mt-3 max-w-3xl whitespace-pre-line text-sm leading-7 text-foreground-muted">
                 {data.description || "Описание программы пока не добавлено."}
               </p>
             </div>
           </div>
 
-          <span className="w-fit shrink-0 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
-            {programStatusLabels[data.status]}
-          </span>
+          <span className="badge shrink-0 bg-primary-subtle text-primary">{programStatusLabels[data.status]}</span>
         </div>
       </section>
 
-      <section className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
+      <section className="surface">
         <div className="flex items-start gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-surface bg-surface-subtle text-foreground-muted">
             <Layers3 size={19} aria-hidden="true" />
           </span>
 
           <div>
-            <p className="text-sm font-medium text-blue-600">Учебный план</p>
+            <p className="text-sm font-medium text-primary">Учебный план</p>
 
-            <h2 className="mt-1 text-xl font-semibold text-slate-950" id="program-modules-heading">
+            <h2 className="section-title mt-1" id="program-modules-heading">
               Модули и темы
             </h2>
           </div>
         </div>
 
         {data.modules.length === 0 ? (
-          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-(--text-secondary)">
+          <p className="mt-5 rounded-surface border border-dashed border-border bg-surface-subtle/60 p-8 text-center text-sm text-(--text-secondary)">
             В программе пока нет модулей.
           </p>
         ) : (
-          <ol className="mt-4 divide-y divide-slate-200 border-y" aria-labelledby="program-modules-heading">
+          <ol className="mt-4 divide-y divide-border border-y border-border" aria-labelledby="program-modules-heading">
             {data.modules.map((module, moduleIndex) => (
               <li className="min-w-0 py-2" key={module.id}>
                 <div className="py-3">
                   <div className="flex items-start gap-3">
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-semibold text-slate-600">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-inset bg-surface text-sm font-semibold text-foreground-muted">
                       {moduleIndex + 1}
                     </span>
 
                     <div className="min-w-0">
-                      <h3 className="wrap-break-word font-semibold text-slate-950">{module.title}</h3>
+                      <h3 className="wrap-break-word font-semibold text-foreground">{module.title}</h3>
 
                       {module.description && (
                         <p className="mt-1 wrap-break-word whitespace-pre-line text-sm leading-6 text-(--text-secondary)">
@@ -155,27 +148,27 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
                 {module.topics.length === 0 ? (
                   <p className="px-5 py-4 text-sm text-(--text-secondary) sm:px-6">В модуле пока нет тем.</p>
                 ) : (
-                  <ol className="divide-y divide-slate-100">
+                  <ol className="divide-y divide-border">
                     {module.topics.map((topic, topicIndex) => {
                       const locked = topic.progressStatus === "LOCKED";
 
                       const content = (
                         <>
                           <span className="flex min-w-0 items-center gap-3">
-                            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs font-semibold text-(--text-secondary)">
+                            <span className="flex size-7 shrink-0 items-center justify-center rounded-inset bg-surface-subtle text-xs font-semibold text-(--text-secondary)">
                               {topicIndex + 1}
                             </span>
 
-                            <span className="min-w-0 wrap-break-word font-medium text-slate-900">{topic.title}</span>
+                            <span className="min-w-0 wrap-break-word font-medium text-foreground">{topic.title}</span>
                           </span>
 
                           <span className="flex items-center gap-3 self-end sm:self-auto">
                             {topic.progressStatus && <TopicProgressBadge status={topic.progressStatus} />}
 
                             {locked ? (
-                              <LockKeyhole className="shrink-0 text-slate-400" size={17} aria-hidden="true" />
+                              <LockKeyhole className="shrink-0 text-foreground-subtle" size={17} aria-hidden="true" />
                             ) : (
-                              <ChevronRight className="shrink-0 text-slate-400" size={18} aria-hidden="true" />
+                              <ChevronRight className="shrink-0 text-foreground-subtle" size={18} aria-hidden="true" />
                             )}
                           </span>
                         </>
@@ -192,7 +185,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
                             </div>
                           ) : (
                             <Link
-                              className="flex flex-col gap-3 px-5 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:px-6"
+                              className="flex flex-col gap-3 px-5 py-4 transition hover:bg-primary-subtle/40 sm:flex-row sm:items-center sm:justify-between sm:px-6"
                               href={`/student/programs/${data.id}/topics/${topic.id}`}
                             >
                               {content}

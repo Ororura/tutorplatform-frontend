@@ -122,23 +122,23 @@ export function TeacherStudentProgramDetailView({
   }
 
   return (
-    <main className="mx-auto max-w-5xl space-y-8 px-6 py-12">
+    <main className="page-stack">
       <Link
-        className="text-sm text-neutral-600 underline underline-offset-4"
+        className="text-sm text-foreground-muted underline underline-offset-4"
         href={`/teacher/students/${studentId}/program`}
       >
         ← Программы ученика
       </Link>
 
       {program.isPending && (
-        <p className="rounded-lg border border-neutral-200 bg-white p-5 text-neutral-600" aria-busy="true">
+        <p className="rounded-inset border border-border bg-surface p-5 text-foreground-muted" aria-busy="true">
           Загружаем программу…
         </p>
       )}
 
       {program.isError && (
-        <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-5" role="alert">
-          <h1 className="text-2xl font-semibold">
+        <div className="space-y-3 rounded-inset border border-danger-border bg-danger-subtle p-5" role="alert">
+          <h1 className="page-title">
             {program.error instanceof ApiClientError && program.error.status === 404
               ? "Программа не найдена"
               : "Не удалось загрузить программу."}
@@ -169,13 +169,13 @@ export function TeacherStudentProgramDetailView({
           {accessMode && (
             <section
               aria-label="Управление доступом к темам"
-              className="sticky top-24 z-20 rounded-2xl border border-blue-100 bg-white/95 p-4 shadow-sm backdrop-blur"
+              className="sticky top-[calc(var(--app-header-height)+0.5rem)] z-20 rounded-surface border border-primary-border bg-surface/95 p-4 backdrop-blur"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="font-medium text-slate-950">Выбрано: {selectedTopicIds.size}</p>
+                  <p className="font-medium text-foreground">Выбрано: {selectedTopicIds.size}</p>
 
-                  <p className="mt-1 text-sm text-slate-500">Начатые и завершённые темы изменять нельзя.</p>
+                  <p className="mt-1 text-sm text-foreground-muted">Начатые и завершённые темы изменять нельзя.</p>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -208,13 +208,13 @@ export function TeacherStudentProgramDetailView({
               </div>
 
               {successMessage && (
-                <p className="mt-3 text-sm font-medium text-emerald-700" role="status">
+                <p className="mt-3 text-sm font-medium text-success" role="status">
                   {successMessage}
                 </p>
               )}
 
               {accessMutation.isError && (
-                <p className="mt-3 text-sm font-medium text-red-700" role="alert">
+                <p className="mt-3 text-sm font-medium text-danger" role="alert">
                   {accessErrorMessage(accessMutation.error)}
                 </p>
               )}

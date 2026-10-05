@@ -55,7 +55,7 @@ export function DuplicateLearningProgramButton({ programId }: Readonly<{ program
         ref={dialogRef}
         aria-labelledby="duplicate-learning-program-title"
         aria-describedby="duplicate-learning-program-description"
-        className="m-auto w-[min(30rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(30rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
         onCancel={(event) => {
           if (submitting.current) event.preventDefault();
@@ -63,16 +63,16 @@ export function DuplicateLearningProgramButton({ programId }: Readonly<{ program
       >
         <section className="space-y-5 p-6">
           <div>
-            <h2 id="duplicate-learning-program-title" className="text-xl font-semibold">
+            <h2 id="duplicate-learning-program-title" className="section-title">
               Создать копию программы?
             </h2>
-            <p id="duplicate-learning-program-description" className="mt-2 text-sm text-neutral-600">
+            <p id="duplicate-learning-program-description" className="mt-2 text-sm text-foreground-muted">
               Будет создан новый черновик со структурой, материалами и заданиями этой программы. Назначения учеников и
               их прогресс не копируются.
             </p>
           </div>
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}

@@ -9,7 +9,7 @@ import { AttendanceBadge, formatSessionDateTime, formatSessionDuration, sessionQ
 import { studentProgramQueries } from "@/entities/student-program";
 import { AssessmentForm } from "@/features/assessment/save";
 import { ApiClientError } from "@/shared/api/client";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonClassName } from "@/shared/ui/button";
 
 export function TeacherStudentSessionDetailView({
   studentId,
@@ -31,15 +31,15 @@ export function TeacherStudentSessionDetailView({
 
   if (session.isPending)
     return (
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <main className="page-stack">
         <p aria-busy="true">Загружаем занятие…</p>
       </main>
     );
   if (session.isError) {
     const notFound = session.error instanceof ApiClientError && session.error.status === 404;
     return (
-      <main className="mx-auto max-w-4xl space-y-4 px-6 py-12">
-        <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-5" role="alert">
+      <main className="page-stack">
+        <div className="space-y-3 rounded-inset border border-danger-border bg-danger-subtle p-5" role="alert">
           <p>{notFound ? "Занятие не найдено" : "Не удалось загрузить занятие."}</p>
           {!notFound && (
             <Button type="button" onClick={() => session.refetch()}>
@@ -60,85 +60,85 @@ export function TeacherStudentSessionDetailView({
   const assessmentMissing =
     assessment.isError && assessment.error instanceof ApiClientError && assessment.error.status === 404;
   return (
-    <main className="mx-auto max-w-4xl space-y-8 px-6 py-12">
+    <main className="page-stack">
       <div>
         <Link
-          className="text-sm text-neutral-600 underline underline-offset-4"
+          className="text-sm text-foreground-muted underline underline-offset-4"
           href={`/teacher/students/${studentId}/sessions`}
         >
           ← Все занятия
         </Link>
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-sm text-neutral-600">
+            <p className="text-sm text-foreground-muted">
               {program.data?.subject.name}
               {program.data ? " · " : ""}
               {program.data?.title}
             </p>
-            <h1 className="mt-1 text-3xl font-semibold">{formatSessionDateTime(session.data.startedAt)}</h1>
+            <h1 className="page-title mt-1">{formatSessionDateTime(session.data.startedAt)}</h1>
           </div>
           <Link
-            className="inline-flex h-10 items-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600"
+            className={buttonClassName("primary", "")}
             href={`/teacher/students/${studentId}/sessions/${sessionId}/edit`}
           >
             Редактировать
           </Link>
         </div>
       </div>
-      <section className="space-y-6 rounded-lg border border-neutral-200 bg-white p-6">
+      <section className="space-y-6 rounded-inset border border-border bg-surface p-6">
         <dl className="grid gap-5 sm:grid-cols-2">
           <div>
-            <dt className="text-sm text-neutral-500">Посещаемость</dt>
+            <dt className="text-sm text-foreground-muted">Посещаемость</dt>
             <dd className="mt-2">
               <AttendanceBadge status={session.data.attendanceStatus} />
             </dd>
           </div>
           <div>
-            <dt className="text-sm text-neutral-500">Длительность</dt>
+            <dt className="text-sm text-foreground-muted">Длительность</dt>
             <dd className="mt-1 font-medium">{formatSessionDuration(session.data.durationMinutes)}</dd>
           </div>
         </dl>
         <div>
-          <h2 className="font-semibold">Пройденные темы</h2>
+          <h2 className="section-title">Пройденные темы</h2>
           {program.isPending && (
-            <p className="mt-2 text-sm text-neutral-500" aria-busy="true">
+            <p className="mt-2 text-sm text-foreground-muted" aria-busy="true">
               Загружаем названия тем…
             </p>
           )}
           {session.data.topics.length === 0 ? (
-            <p className="mt-2 text-neutral-600">Темы не указаны.</p>
+            <p className="mt-2 text-foreground-muted">Темы не указаны.</p>
           ) : (
             <ul className="mt-3 space-y-2">
               {session.data.topics.map((topic) => (
                 <li className="flex items-center gap-2" key={topic.topicId}>
                   <span aria-hidden="true">{topic.isPrimary ? "★" : "•"}</span>
                   <span>{topicMap.get(topic.topicId) ?? "Тема программы"}</span>
-                  {topic.isPrimary && <span className="text-xs text-neutral-500">Основная тема</span>}
+                  {topic.isPrimary && <span className="text-xs text-foreground-muted">Основная тема</span>}
                 </li>
               ))}
             </ul>
           )}
         </div>
         <div>
-          <h2 className="font-semibold">Краткое описание занятия</h2>
-          <p className="mt-2 whitespace-pre-line text-neutral-700">{session.data.summary || "Не указано"}</p>
+          <h2 className="section-title">Краткое описание занятия</h2>
+          <p className="mt-2 whitespace-pre-line text-foreground-muted">{session.data.summary || "Не указано"}</p>
         </div>
-        <div className="rounded-lg bg-neutral-50 p-4">
-          <h2 className="font-semibold">Личные заметки</h2>
-          <p className="mt-1 text-xs text-neutral-500">Видны только преподавателю</p>
-          <p className="mt-2 whitespace-pre-line text-neutral-700">{session.data.privateNotes || "Не указаны"}</p>
+        <div className="rounded-inset bg-surface-subtle p-4">
+          <h2 className="section-title">Личные заметки</h2>
+          <p className="mt-1 text-xs text-foreground-muted">Видны только преподавателю</p>
+          <p className="mt-2 whitespace-pre-line text-foreground-muted">{session.data.privateNotes || "Не указаны"}</p>
         </div>
       </section>
       <section
-        className="space-y-5 rounded-lg border border-neutral-200 bg-white p-6"
+        className="space-y-5 rounded-inset border border-border bg-surface p-6"
         aria-labelledby="assessment-heading"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-semibold" id="assessment-heading">
+            <h2 className="section-title" id="assessment-heading">
               Оценка занятия
             </h2>
-            <p className="mt-1 text-sm text-neutral-500">Оценки и комментарий будут доступны ученику.</p>
+            <p className="mt-1 text-sm text-foreground-muted">Оценки и комментарий будут доступны ученику.</p>
           </div>
           {assessment.data && !editingAssessment && (
             <Button type="button" variant="secondary" onClick={() => setEditingAssessment(true)}>
@@ -157,8 +157,8 @@ export function TeacherStudentSessionDetailView({
         )}
         {assessment.data && !editingAssessment && <AssessmentDetails assessment={assessment.data} />}
         {assessmentMissing && !editingAssessment && (
-          <div className="space-y-4 rounded-lg border border-dashed border-neutral-300 p-5">
-            <p className="text-neutral-700">Оцените проведённое занятие и оставьте комментарий для ученика.</p>
+          <div className="space-y-4 rounded-inset border border-dashed border-border-strong p-5">
+            <p className="text-foreground-muted">Оцените проведённое занятие и оставьте комментарий для ученика.</p>
             <Button type="button" onClick={() => setEditingAssessment(true)}>
               Оценить занятие
             </Button>

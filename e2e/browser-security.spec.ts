@@ -110,7 +110,15 @@ test("student code editor, same-origin run/submit and image assets work under CS
   test.setTimeout(120_000);
   const violations = await recordViolations(page);
   await login(page, "student");
-  const image = page.locator('img[src*="student-miku"]');
+  // Keep same-origin image CSP coverage independent of decorative dashboard content.
+  await page.evaluate(() => {
+    const image = document.createElement("img");
+    image.src = "/images/student-miku.png";
+    image.alt = "Проверка локального изображения";
+    image.width = 160;
+    document.body.append(image);
+  });
+  const image = page.getByRole("img", { name: "Проверка локального изображения" });
   await expect(image).toBeVisible();
   await expect
     .poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0))

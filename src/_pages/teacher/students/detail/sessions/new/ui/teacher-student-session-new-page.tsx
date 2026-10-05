@@ -5,15 +5,15 @@ import { SessionForm } from "@/features/session/manage";
 export async function TeacherStudentSessionNewPage({ params }: Readonly<{ params: Promise<{ studentId: string }> }>) {
   const { studentId } = await params;
   return (
-    <main className="mx-auto max-w-3xl space-y-8 px-6 py-12">
+    <main className="page-form page-stack">
       <div>
         <Link
-          className="text-sm text-neutral-600 underline underline-offset-4"
+          className="text-sm text-foreground-muted underline underline-offset-4"
           href={`/teacher/students/${studentId}/sessions`}
         >
           ← Все занятия
         </Link>
-        <h1 className="mt-4 text-3xl font-semibold">Добавить занятие</h1>
+        <h1 className="page-title mt-4">Добавить занятие</h1>
       </div>
       <SessionForm studentId={studentId} />
     </main>

@@ -59,7 +59,7 @@ export function ActionMenu({ label, items }: Readonly<{ label: string; items: Ac
         ref={trigger}
         type="button"
         variant="ghost"
-        className="size-10 rounded-md p-0"
+        className="size-10 rounded-control p-0"
         aria-label={label}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -84,7 +84,7 @@ export function ActionMenu({ label, items }: Readonly<{ label: string; items: Ac
           id={id}
           role="menu"
           aria-label={label}
-          className="absolute right-0 top-full z-30 my-1 w-56 max-w-[calc(100vw-2rem)] rounded-lg border border-slate-200 bg-white p-1 shadow-md"
+          className="absolute right-0 top-full z-30 my-1 w-56 max-w-[calc(100vw-2rem)] rounded-inset border border-border bg-surface p-1 shadow-(--shadow-floating)"
           onKeyDown={(event) => {
             const buttons = enabledItems();
             const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
@@ -108,13 +108,13 @@ export function ActionMenu({ label, items }: Readonly<{ label: string; items: Ac
         >
           {items.map((item) => (
             <Fragment key={item.label}>
-              {item.separator && <div role="separator" className="my-1 border-t border-slate-100" />}
+              {item.separator && <div role="separator" className="my-1 border-t border-border" />}
               <button
                 type="button"
                 role="menuitem"
                 tabIndex={-1}
                 disabled={item.disabled}
-                className={`flex min-h-10 w-full items-center rounded-md px-3 py-2 text-left text-sm hover:bg-slate-50 focus-visible:bg-slate-100 focus-visible:outline-2 focus-visible:outline-blue-600 disabled:opacity-40 ${item.destructive ? "text-red-700" : "text-slate-700"}`}
+                className={`flex min-h-11 w-full items-center rounded-control px-3 py-2 text-left text-sm hover:bg-surface-subtle focus-visible:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-focus-ring disabled:opacity-40 ${item.destructive ? "text-danger" : "text-foreground-muted"}`}
                 onClick={() => {
                   close();
                   item.onSelect();

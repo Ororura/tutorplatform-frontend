@@ -1,9 +1,9 @@
 import type { AttendanceStatus } from "../api/session-queries";
 
 export const attendancePresentation: Record<AttendanceStatus, { label: string; icon: string; className: string }> = {
-  ATTENDED: { label: "Проведено", icon: "✓", className: "bg-emerald-50 text-emerald-800" },
-  MISSED: { label: "Пропущено", icon: "!", className: "bg-amber-50 text-amber-800" },
-  CANCELLED: { label: "Отменено", icon: "×", className: "bg-neutral-100 text-neutral-700" },
+  ATTENDED: { label: "Проведено", icon: "✓", className: "bg-success-subtle text-success" },
+  MISSED: { label: "Пропущено", icon: "!", className: "bg-warning-subtle text-warning" },
+  CANCELLED: { label: "Отменено", icon: "×", className: "bg-surface-subtle text-foreground-muted" },
 };
 
 export function formatSessionDateTime(value: string): string {

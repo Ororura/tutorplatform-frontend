@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -74,79 +75,79 @@ export function AcceptTeacherInvitationForm({ token }: Readonly<Props>) {
   return (
     <form className="space-y-5" onSubmit={onSubmit} noValidate>
       <div className="space-y-2">
-        <label htmlFor="teacher-invite-name" className="block text-sm font-medium">
+        <label htmlFor="teacher-invite-name" className="field-label">
           Как к вам обращаться?
         </label>
 
-        <input
+        <Input
           id="teacher-invite-name"
           type="text"
           autoComplete="name"
           autoFocus
           aria-invalid={Boolean(errors.displayName)}
-          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none"
+
           {...register("displayName")}
         />
 
         {errors.displayName && (
-          <p className="text-sm text-red-700" role="alert">
+          <p className="text-sm text-danger" role="alert">
             {errors.displayName.message}
           </p>
         )}
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="teacher-invite-password" className="block text-sm font-medium">
+        <label htmlFor="teacher-invite-password" className="field-label">
           Придумайте пароль
         </label>
 
-        <input
+        <Input
           id="teacher-invite-password"
           type="password"
           autoComplete="new-password"
           aria-invalid={Boolean(errors.password)}
-          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none"
+
           {...register("password")}
         />
 
         {errors.password ? (
-          <p className="text-sm text-red-700" role="alert">
+          <p className="text-sm text-danger" role="alert">
             {errors.password.message}
           </p>
         ) : (
-          <p className="text-sm text-neutral-500">Не менее 10 символов.</p>
+          <p className="text-sm text-foreground-muted">Не менее 10 символов.</p>
         )}
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="teacher-invite-confirmation" className="block text-sm font-medium">
+        <label htmlFor="teacher-invite-confirmation" className="field-label">
           Повторите пароль
         </label>
 
-        <input
+        <Input
           id="teacher-invite-confirmation"
           type="password"
           autoComplete="new-password"
           aria-invalid={Boolean(errors.passwordConfirmation)}
-          className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 outline-none"
+
           {...register("passwordConfirmation")}
         />
 
         {errors.passwordConfirmation && (
-          <p className="text-sm text-red-700" role="alert">
+          <p className="text-sm text-danger" role="alert">
             {errors.passwordConfirmation.message}
           </p>
         )}
       </div>
 
       {errors.root?.server && (
-        <p className="rounded-lg bg-red-50 p-4 text-sm text-red-700" role="alert">
+        <p className="rounded-inset bg-danger-subtle p-4 text-sm text-danger" role="alert">
           {errors.root.server.message}
         </p>
       )}
 
       {mutation.isSuccess && (
-        <p className="rounded-lg bg-green-50 p-4 text-sm text-green-800" role="status">
+        <p className="rounded-inset bg-success-subtle p-4 text-sm text-success" role="status">
           Аккаунт создан. Переходим в кабинет…
         </p>
       )}

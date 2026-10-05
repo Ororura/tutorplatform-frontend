@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -23,7 +24,7 @@ const initialConfig: FormConfig = {
   links: false,
 };
 
-const fieldClass = "mt-1 block w-full rounded-md border border-slate-300 bg-white p-2 text-sm text-slate-950";
+const fieldClass = "mt-1";
 
 export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () => void }>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -74,7 +75,7 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
       ref={dialogRef}
       aria-labelledby="content-package-prompt-title"
       aria-describedby="content-package-prompt-description"
-      className="m-auto max-h-[min(90vh,50rem)] w-[min(40rem,calc(100%-2rem))] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+      className="dialog-surface w-[min(40rem,calc(100%-2rem))]"
       onClose={onClose}
     >
       <form
@@ -86,20 +87,20 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
         }}
       >
         <div className="flex items-start justify-between gap-4">
-          <h2 id="content-package-prompt-title" className="text-xl font-semibold text-slate-950">
+          <h2 id="content-package-prompt-title" className="section-title">
             Подготовка учебных материалов с помощью ИИ
           </h2>
           <button type="button" className="text-sm underline" onClick={onClose}>
             Закрыть
           </button>
         </div>
-        <p id="content-package-prompt-description" className="text-sm leading-6 text-slate-600">
+        <p id="content-package-prompt-description" className="text-sm leading-6 text-foreground-muted">
           Укажите параметры учебного модуля. Мы подготовим запрос, который можно отправить любой нейросети.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="text-sm font-medium text-slate-950">
+          <label className="text-sm font-medium text-foreground">
             Предмет
-            <input
+            <Input
               className={fieldClass}
               value={config.subject}
               placeholder="Python"
@@ -107,9 +108,9 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
               onChange={(event) => update({ subject: event.target.value })}
             />
           </label>
-          <label className="text-sm font-medium text-slate-950">
+          <label className="text-sm font-medium text-foreground">
             Название модуля
-            <input
+            <Input
               className={fieldClass}
               value={config.moduleTitle}
               placeholder="Условные операторы"
@@ -117,9 +118,9 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
               onChange={(event) => update({ moduleTitle: event.target.value })}
             />
           </label>
-          <label className="text-sm font-medium text-slate-950">
+          <label className="text-sm font-medium text-foreground">
             Уровень
-            <select
+            <Select
               className={fieldClass}
               value={config.level}
               onChange={(event) => update({ level: event.target.value as ContentPackagePromptConfig["level"] })}
@@ -127,11 +128,11 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
               <option>Начинающий</option>
               <option>Средний</option>
               <option>Продвинутый</option>
-            </select>
+            </Select>
           </label>
-          <label className="text-sm font-medium text-slate-950">
+          <label className="text-sm font-medium text-foreground">
             Количество тем
-            <input
+            <Input
               className={fieldClass}
               type="number"
               min="1"
@@ -143,18 +144,18 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
             />
           </label>
         </div>
-        <label className="block text-sm font-medium text-slate-950">
-          Целевая аудитория <span className="font-normal text-slate-500">(необязательно)</span>
-          <input
+        <label className="block text-sm font-medium text-foreground">
+          Целевая аудитория <span className="font-normal text-foreground-muted">(необязательно)</span>
+          <Input
             className={fieldClass}
             value={config.audience}
             placeholder="Школьники 12–16 лет"
             onChange={(event) => update({ audience: event.target.value })}
           />
         </label>
-        <label className="block text-sm font-medium text-slate-950">
-          Дополнительные пожелания <span className="font-normal text-slate-500">(необязательно)</span>
-          <textarea
+        <label className="block text-sm font-medium text-foreground">
+          Дополнительные пожелания <span className="font-normal text-foreground-muted">(необязательно)</span>
+          <Textarea
             className={fieldClass}
             rows={2}
             value={config.wishes}
@@ -162,11 +163,11 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
             onChange={(event) => update({ wishes: event.target.value })}
           />
         </label>
-        <fieldset className="space-y-2 text-sm text-slate-950">
+        <fieldset className="space-y-2 text-sm text-foreground">
           <legend className="font-medium">Тип содержимого</legend>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             <label className="flex items-center gap-2">
-              <input
+              <Input
                 type="checkbox"
                 checked={config.theory}
                 onChange={(event) => update({ theory: event.target.checked })}
@@ -174,7 +175,7 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
               Теория
             </label>
             <label className="flex items-center gap-2">
-              <input
+              <Input
                 type="checkbox"
                 checked={config.codeExamples}
                 onChange={(event) => update({ codeExamples: event.target.checked })}
@@ -182,7 +183,7 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
               Примеры кода
             </label>
             <label className="flex items-center gap-2">
-              <input
+              <Input
                 type="checkbox"
                 checked={config.links}
                 onChange={(event) => update({ links: event.target.checked })}
@@ -192,23 +193,23 @@ export function ContentPackagePromptDialog({ onClose }: Readonly<{ onClose: () =
           </div>
         </fieldset>
         {error && (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-sm text-danger">
             {error}
           </p>
         )}
         {prompt !== null && (
-          <label className="block text-sm font-medium text-slate-950">
+          <label className="block text-sm font-medium text-foreground">
             Готовый промпт
-            <textarea ref={promptRef} className={`${fieldClass} min-h-48 font-mono`} value={prompt} readOnly />
+            <Textarea ref={promptRef} className={`${fieldClass} min-h-48 font-mono`} value={prompt} readOnly />
           </label>
         )}
         {copyStatus === "copied" && (
-          <p role="status" className="text-sm text-emerald-700">
+          <p role="status" className="text-sm text-success">
             Промпт скопирован
           </p>
         )}
         {copyStatus === "failed" && (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-sm text-danger">
             Не удалось скопировать промпт. Выделите текст в поле выше и скопируйте его вручную.
           </p>
         )}

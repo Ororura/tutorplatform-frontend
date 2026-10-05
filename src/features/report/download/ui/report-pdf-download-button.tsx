@@ -37,7 +37,7 @@ export function ReportPdfDownloadButton(props: Readonly<Props>) {
         {pending ? "Скачиваем…" : "Скачать PDF"}
       </Button>
       {error && (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="text-sm text-danger" role="alert">
           {error}
         </p>
       )}
