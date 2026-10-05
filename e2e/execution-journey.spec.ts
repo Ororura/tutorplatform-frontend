@@ -1,3 +1,4 @@
+import { fillCodeEditor } from "./helpers/journeys";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
@@ -44,7 +45,7 @@ test("student runs wrong and correct code in Docker, then persists a standalone 
     [`print(${JSON.stringify(marker)})`, "FAILED"],
     ['print("Hello, World!")', "PASSED"],
   ] as const) {
-    await page.getByLabel("Код решения").fill(source);
+    await fillCodeEditor(page, source);
     const responsePromise = page.waitForResponse(
       (response) =>
         response.request().method() === "POST" &&

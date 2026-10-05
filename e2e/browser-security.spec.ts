@@ -1,3 +1,4 @@
+import { fillCodeEditor } from "./helpers/journeys";
 import { expect, test, type APIResponse, type Page } from "@playwright/test";
 
 // Public tokens are bearer credentials; never record these tests in traces/screenshots.
@@ -131,7 +132,7 @@ test("student code editor, same-origin run/submit and image assets work under CS
   expect(item).toBeTruthy();
   await page.goto(`/student/homework/${homework.id}`);
   await page.getByRole("button", { name: `Открыть: ${item.task.title}`, exact: true }).click();
-  await page.getByLabel("Код решения").fill('print("Hello, World!")');
+  await fillCodeEditor(page, 'print("Hello, World!")');
   await page.getByRole("button", { name: "Запустить", exact: true }).click();
   await expect(page.getByRole("region", { name: "Результат запуска" })).toContainText("Тесты:", { timeout: 60_000 });
   await page.getByRole("button", { name: "Отправить решение", exact: true }).click();

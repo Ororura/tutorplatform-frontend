@@ -6,6 +6,14 @@ services:
     entrypoint: ["/bin/true"]
     network_mode: none
 
+  java-sandbox-image:
+    image: tutor-java-runtime:21
+    build:
+      context: ${E2E_WORKER_CONTEXT:-../../../execution-worker}
+      dockerfile: Dockerfile.runtime-java
+    entrypoint: ["/bin/true"]
+    network_mode: none
+
   postgres:
     image: postgres:17-alpine
     environment:
@@ -28,6 +36,8 @@ services:
       EXECUTION_RUNTIME_WORKSPACE_VOLUME: ${COMPOSE_PROJECT_NAME:-tutorplatform-e2e}-workspaces
     depends_on:
       sandbox-image:
+        condition: service_completed_successfully
+      java-sandbox-image:
         condition: service_completed_successfully
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
