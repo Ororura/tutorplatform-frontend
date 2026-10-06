@@ -6,9 +6,9 @@ export function ProgressBar({ value, label }: Readonly<{ value: number; label: s
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={value}
-      className="h-2 overflow-hidden rounded-full bg-slate-100"
+      className="h-2 overflow-hidden rounded-full bg-surface-subtle"
     >
-      <div className="h-full rounded-full bg-blue-500" style={{ width: `${value}%` }} />
+      <div className="h-full rounded-full bg-primary" style={{ width: `${value}%` }} />
     </div>
   );
 }

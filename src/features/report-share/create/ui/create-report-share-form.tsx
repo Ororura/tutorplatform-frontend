@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { useState, type FormEvent } from "react";
 
@@ -61,12 +62,12 @@ export function CreateReportShareForm({ reportId }: Readonly<{ reportId: string 
     <div className="space-y-4">
       <form className="flex flex-col gap-3 sm:flex-row sm:items-end" onSubmit={(event) => void submit(event)}>
         <div className="flex-1">
-          <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="report-share-expires-at">
+          <label className="mb-2 block text-sm font-medium text-foreground-muted" htmlFor="report-share-expires-at">
             Дата истечения (необязательно)
           </label>
-          <input
+          <Input
             id="report-share-expires-at"
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none transition focus:ring-3 focus:ring-blue-100"
+
             type="datetime-local"
             value={expiresAt}
             disabled={mutation.isPending}
@@ -79,21 +80,21 @@ export function CreateReportShareForm({ reportId }: Readonly<{ reportId: string 
       </form>
 
       {error && (
-        <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700" role="alert">
+        <p className="rounded-surface bg-danger-subtle p-3 text-sm text-danger" role="alert">
           {error}
         </p>
       )}
 
       {mutation.data && (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4" role="status">
-          <p className="font-medium text-emerald-900">Публичная ссылка создана</p>
-          <p className="mt-1 text-sm text-emerald-800">
+        <div className="rounded-surface border border-success-border bg-success-subtle p-4" role="status">
+          <p className="font-medium text-success">Публичная ссылка создана</p>
+          <p className="mt-1 text-sm text-success">
             Скопируйте её сейчас: в истории адрес не отображается в целях безопасности.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-            <input
+            <Input
               aria-label="Публичная ссылка на отчёт"
-              className="h-10 min-w-0 flex-1 rounded-xl border border-emerald-300 bg-white px-3 text-sm"
+              className="min-w-0 flex-1"
               readOnly
               value={mutation.data.shareUrl}
               onFocus={(event) => event.target.select()}
@@ -103,7 +104,7 @@ export function CreateReportShareForm({ reportId }: Readonly<{ reportId: string 
             </Button>
           </div>
           {copyError && (
-            <p className="mt-3 text-sm text-red-700" role="alert">
+            <p className="mt-3 text-sm text-danger" role="alert">
               {copyError}
             </p>
           )}

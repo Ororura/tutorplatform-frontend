@@ -1,4 +1,5 @@
 "use client";
+import { Input, Textarea } from "@/shared/ui/form-controls";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -24,18 +25,13 @@ function ModuleForm({ title, description, onTitleChange, onDescriptionChange }: 
   return (
     <>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Название</span>
-        <input
-          className="h-11 w-full rounded-md border px-3"
-          maxLength={180}
-          value={title}
-          onChange={(event) => onTitleChange(event.target.value)}
-        />
+        <span className="field-label">Название</span>
+        <Input maxLength={180} value={title} onChange={(event) => onTitleChange(event.target.value)} />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Описание</span>
-        <textarea
-          className="min-h-28 w-full resize-y rounded-md border p-3"
+        <span className="field-label">Описание</span>
+        <Textarea
+          className="min-h-28 resize-y"
           value={description}
           onChange={(event) => onDescriptionChange(event.target.value)}
         />
@@ -107,12 +103,12 @@ export function CreateLearningProgramModuleDialog({
       <dialog
         ref={dialogRef}
         aria-labelledby="create-learning-program-module-title"
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>
           <div className="flex items-start justify-between gap-4">
-            <h2 id="create-learning-program-module-title" className="text-xl font-semibold">
+            <h2 id="create-learning-program-module-title" className="section-title">
               Добавить модуль
             </h2>
             <button type="button" className="text-sm underline" onClick={() => setOpen(false)}>
@@ -126,7 +122,7 @@ export function CreateLearningProgramModuleDialog({
             onDescriptionChange={setDescription}
           />
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}
@@ -237,12 +233,12 @@ export function LearningProgramModuleActions({
       <dialog
         ref={editDialogRef}
         aria-labelledby={`edit-module-${module.id}`}
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
         onClose={() => setEditing(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submitEdit} noValidate>
           <div className="flex items-start justify-between gap-4">
-            <h2 id={`edit-module-${module.id}`} className="text-xl font-semibold">
+            <h2 id={`edit-module-${module.id}`} className="section-title">
               Изменить модуль
             </h2>
             <button type="button" className="text-sm underline" onClick={() => setEditing(false)}>
@@ -256,7 +252,7 @@ export function LearningProgramModuleActions({
             onDescriptionChange={setDescription}
           />
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}
@@ -273,20 +269,20 @@ export function LearningProgramModuleActions({
       <dialog
         ref={deleteDialogRef}
         aria-labelledby={`delete-module-${module.id}`}
-        className="m-auto w-[min(30rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(30rem,calc(100%-2rem))]"
         onClose={() => setDeleting(false)}
       >
         <section className="space-y-5 p-6">
           <div>
-            <h2 id={`delete-module-${module.id}`} className="text-xl font-semibold">
+            <h2 id={`delete-module-${module.id}`} className="section-title">
               Удалить модуль?
             </h2>
-            <p className="mt-2 text-sm text-neutral-600">
+            <p className="mt-2 text-sm text-foreground-muted">
               Модуль «{module.title}» будет удалён без возможности восстановления.
             </p>
           </div>
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}

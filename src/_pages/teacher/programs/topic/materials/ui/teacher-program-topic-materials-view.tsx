@@ -82,14 +82,14 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
   }
 
   return (
-    <main className="mx-auto max-w-5xl space-y-6">
-      <nav aria-label="Хлебные крошки" className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
-        <Link className="font-medium hover:text-blue-600" href="/teacher/programs">
+    <main className="page-content page-stack">
+      <nav aria-label="Хлебные крошки" className="flex flex-wrap items-center gap-2 text-sm text-foreground-muted">
+        <Link className="font-medium hover:text-primary" href="/teacher/programs">
           Программы обучения
         </Link>
         <span aria-hidden="true">/</span>
         <Link
-          className="font-medium hover:text-blue-600"
+          className="font-medium hover:text-primary"
           href={`/teacher/programs/${program.data?.slug ?? programRoute}`}
         >
           {program.data?.title ?? "Программа"}
@@ -99,15 +99,13 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
       </nav>
 
       {program.isPending && (
-        <div className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
+        <div className="surface text-sm text-foreground-muted" aria-busy="true">
           Загружаем тему…
         </div>
       )}
       {program.isError && (
-        <section className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
-          <h1 className="text-xl font-semibold text-slate-950">
-            {programNotFound ? "Программа не найдена" : "Не удалось загрузить тему."}
-          </h1>
+        <section className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
+          <h1 className="page-title">{programNotFound ? "Программа не найдена" : "Не удалось загрузить тему."}</h1>
           {!programNotFound && (
             <Button type="button" variant="secondary" onClick={() => void program.refetch()}>
               Повторить
@@ -116,18 +114,18 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
         </section>
       )}
       {program.data && !topicContext && (
-        <section className="rounded-2xl border border-(--border) bg-white p-6" role="alert">
-          <h1 className="text-xl font-semibold text-slate-950">Тема не найдена</h1>
-          <p className="mt-2 text-sm text-slate-600">Эта тема не входит в выбранную программу.</p>
+        <section className="surface" role="alert">
+          <h1 className="page-title">Тема не найдена</h1>
+          <p className="mt-2 text-sm text-foreground-muted">Эта тема не входит в выбранную программу.</p>
         </section>
       )}
       {topicContext && (
         <>
-          <header className="rounded-2xl border border-(--border) bg-white p-6">
-            <p className="wrap-break-word text-sm text-slate-500">{topicContext.module.title}</p>
-            <h1 className="mt-2 wrap-break-word text-3xl font-semibold text-slate-950">{topicContext.topic.title}</h1>
+          <header className="rounded-surface border border-(--border) bg-surface p-6">
+            <p className="wrap-break-word text-sm text-foreground-muted">{topicContext.module.title}</p>
+            <h1 className="page-title mt-2 wrap-break-word">{topicContext.topic.title}</h1>
             {topicContext.topic.description && (
-              <p className="mt-4 wrap-break-word whitespace-pre-line leading-7 text-slate-600">
+              <p className="mt-4 wrap-break-word whitespace-pre-line leading-7 text-foreground-muted">
                 {topicContext.topic.description}
               </p>
             )}
@@ -135,7 +133,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
 
           <section className="space-y-4" aria-labelledby="materials-heading">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-xl font-semibold text-slate-950" id="materials-heading">
+              <h2 className="section-title" id="materials-heading">
                 Материалы
               </h2>
               {materialsEditable && (
@@ -146,12 +144,15 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               )}
             </div>
             {materials.isPending && (
-              <p className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
+              <p
+                className="rounded-surface border border-(--border) bg-surface p-6 text-sm text-foreground-muted"
+                aria-busy="true"
+              >
                 Загружаем материалы…
               </p>
             )}
             {materials.isError && (
-              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
+              <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
                 <p>{materialsNotFound ? "Тема не найдена" : "Не удалось загрузить материалы."}</p>
                 {!materialsNotFound && (
                   <Button type="button" variant="secondary" onClick={() => void materials.refetch()}>
@@ -207,22 +208,25 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
           <section className="space-y-4" aria-labelledby="practice-tasks-heading">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-semibold text-slate-950" id="practice-tasks-heading">
+                <h2 className="section-title" id="practice-tasks-heading">
                   Практические задания
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">Задания из банка по предмету программы.</p>
+                <p className="mt-1 text-sm text-foreground-muted">Задания из банка по предмету программы.</p>
               </div>
               {program.data?.editable && topicTasks.data && taskBank.data && (
                 <AttachTaskToTopicDialog topicId={topicId} attachedTasks={topicTasks.data} tasks={taskBank.data} />
               )}
             </div>
             {topicTasks.isPending && (
-              <p className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
+              <p
+                className="rounded-surface border border-(--border) bg-surface p-6 text-sm text-foreground-muted"
+                aria-busy="true"
+              >
                 Загружаем задания…
               </p>
             )}
             {topicTasks.isError && (
-              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
+              <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
                 <p>{topicTasksNotFound ? "Тема недоступна." : "Не удалось загрузить практические задания."}</p>
                 {!topicTasksNotFound && (
                   <Button type="button" variant="secondary" onClick={() => void topicTasks.refetch()}>
@@ -232,7 +236,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               </div>
             )}
             {taskBank.isError && (
-              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
+              <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
                 <p>Не удалось загрузить банк заданий.</p>
                 <Button type="button" variant="secondary" onClick={() => void taskBank.refetch()}>
                   Повторить
@@ -240,23 +244,23 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
               </div>
             )}
             {topicTasks.data && (
-              <div className="overflow-hidden rounded-2xl border border-(--border) bg-white">
+              <div className="overflow-hidden rounded-surface border border-(--border) bg-surface">
                 {topicTasks.data.length === 0 ? (
-                  <p className="p-6 text-sm text-slate-500">К теме пока не прикреплены задания.</p>
+                  <p className="p-6 text-sm text-foreground-muted">К теме пока не прикреплены задания.</p>
                 ) : (
-                  <ul className="divide-y divide-slate-100">
+                  <ul className="divide-y divide-border">
                     {topicTasks.data.map((task) => (
                       <li key={task.taskId} className="flex flex-wrap items-center justify-between gap-3 p-5">
                         <div>
-                          <p className="font-semibold text-slate-900">{task.title}</p>
-                          <p className="mt-1 text-sm text-slate-500">
+                          <p className="font-semibold text-foreground">{task.title}</p>
+                          <p className="mt-1 text-sm text-foreground-muted">
                             {taskTypePresentation[task.taskType as keyof typeof taskTypePresentation] ?? task.taskType}{" "}
                             · {taskDifficultyPresentation[task.difficulty]}
                             {!task.required && " · Необязательное"}
                           </p>
                         </div>
                         <Link
-                          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                          className="text-sm font-medium text-primary hover:text-primary"
                           href={`/teacher/tasks/${task.taskId}`}
                         >
                           Открыть задание

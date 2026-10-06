@@ -1,4 +1,5 @@
 "use client";
+import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ClipboardCheck, Filter, Plus } from "lucide-react";
@@ -8,12 +9,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { HomeworkList, homeworkQueries, type HomeworkStatus } from "@/entities/homework";
 import { StudentProfileNav } from "@/entities/student";
 import { studentProgramQueries } from "@/entities/student-program";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonClassName } from "@/shared/ui/button";
 
 const statuses: HomeworkStatus[] = ["ASSIGNED", "COMPLETED", "CANCELLED"];
 
-const primaryLinkClassName =
-  "inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:bg-blue-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600";
+const primaryLinkClassName = buttonClassName();
 
 function pageFrom(value: string | null) {
   const parsed = Number(value);
@@ -57,10 +57,10 @@ export function TeacherStudentHomeworksView({
   };
 
   return (
-    <main className="mx-auto max-w-7xl space-y-4">
-      <section className="rounded-2xl border border-(--border) bg-white p-6 sm:p-7">
+    <main className="page-stack">
+      <section className="surface sm:p-7">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
           href={`/teacher/students/${studentId}`}
         >
           <ArrowLeft size={16} />
@@ -69,16 +69,16 @@ export function TeacherStudentHomeworksView({
 
         <div className="mt-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
               <ClipboardCheck size={21} />
             </span>
 
             <div>
-              <p className="text-sm font-medium text-blue-600">Учебный процесс</p>
+              <p className="text-sm font-medium text-primary">Учебный процесс</p>
 
-              <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Домашние задания</h1>
+              <h1 className="page-title mt-1">Домашние задания</h1>
 
-              <p className="mt-2 text-sm text-slate-500">Назначенные задания и состояние их выполнения.</p>
+              <p className="mt-2 text-sm text-foreground-muted">Назначенные задания и состояние их выполнения.</p>
             </div>
           </div>
 
@@ -94,21 +94,21 @@ export function TeacherStudentHomeworksView({
       <StudentProfileNav active="homework" studentId={studentId} />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
+        <section className="surface min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-semibold text-slate-950">Задания ученика</h2>
+              <h2 className="section-title">Задания ученика</h2>
 
-              <p className="mt-1 text-sm text-slate-500">Фильтруйте по программе и статусу.</p>
+              <p className="mt-1 text-sm text-foreground-muted">Фильтруйте по программе и статусу.</p>
             </div>
 
-            <Filter size={19} className="text-slate-400" />
+            <Filter size={19} className="text-foreground-subtle" />
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-3 rounded-2xl bg-slate-50 p-3">
-            <select
+          <div className="mt-5 flex flex-wrap gap-3 rounded-surface bg-surface-subtle p-3">
+            <Select
               aria-label="Программа"
-              className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100"
+
               value={studentProgramId ?? ""}
               onChange={(event) =>
                 navigate({
@@ -124,11 +124,11 @@ export function TeacherStudentHomeworksView({
                   {program.title}
                 </option>
               ))}
-            </select>
+            </Select>
 
-            <select
+            <Select
               aria-label="Статус"
-              className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100"
+
               value={status ?? ""}
               onChange={(event) =>
                 navigate({
@@ -141,19 +141,19 @@ export function TeacherStudentHomeworksView({
               <option value="ASSIGNED">Назначено</option>
               <option value="COMPLETED">Выполнено</option>
               <option value="CANCELLED">Отменено</option>
-            </select>
+            </Select>
           </div>
 
           <div className="mt-5">
             {homeworks.isPending && (
-              <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+              <p className="rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
                 Загружаем домашние задания…
               </p>
             )}
 
             {homeworks.isError && (
-              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-                <p className="text-sm text-red-700">Не удалось загрузить домашние задания.</p>
+              <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
+                <p className="text-sm text-danger">Не удалось загрузить домашние задания.</p>
 
                 <Button type="button" variant="secondary" onClick={() => homeworks.refetch()}>
                   Повторить
@@ -162,10 +162,10 @@ export function TeacherStudentHomeworksView({
             )}
 
             {homeworks.data?.items.length === 0 && (
-              <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
-                <ClipboardCheck size={28} className="mx-auto text-blue-500" />
+              <div className="rounded-surface border border-dashed border-border bg-surface-subtle/60 p-10 text-center">
+                <ClipboardCheck size={28} className="mx-auto text-primary" />
 
-                <p className="mt-4 font-semibold text-slate-950">Домашних заданий пока нет</p>
+                <p className="mt-4 font-semibold text-foreground">Домашних заданий пока нет</p>
 
                 {programs.data && programs.data.length > 0 ? (
                   <Link className={`${primaryLinkClassName} mt-5`} href={`/teacher/students/${studentId}/homework/new`}>
@@ -173,10 +173,10 @@ export function TeacherStudentHomeworksView({
                   </Link>
                 ) : programs.data?.length === 0 ? (
                   <>
-                    <p className="mt-2 text-sm text-slate-500">Сначала назначьте ученику программу обучения</p>
+                    <p className="mt-2 text-sm text-foreground-muted">Сначала назначьте ученику программу обучения</p>
 
                     <Link
-                      className="mt-4 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+                      className="mt-4 inline-flex text-sm font-medium text-primary hover:text-primary"
                       href={`/teacher/students/${studentId}/program`}
                     >
                       Перейти в раздел «Программа»
@@ -193,11 +193,11 @@ export function TeacherStudentHomeworksView({
 
           {homeworks.data && homeworks.data.totalPages > 1 && (
             <nav
-              className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5"
+              className="mt-5 flex items-center justify-between border-t border-border pt-5"
               aria-label="Пагинация домашних заданий"
             >
               <button
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-surface border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-muted transition hover:bg-surface-subtle disabled:opacity-40"
                 type="button"
                 disabled={page === 0 || homeworks.isFetching}
                 onClick={() =>
@@ -209,12 +209,12 @@ export function TeacherStudentHomeworksView({
                 Назад
               </button>
 
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-foreground-muted">
                 Страница {homeworks.data.page + 1} из {homeworks.data.totalPages}
               </span>
 
               <button
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+                className="rounded-surface border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-muted transition hover:bg-surface-subtle disabled:opacity-40"
                 type="button"
                 disabled={page + 1 >= homeworks.data.totalPages || homeworks.isFetching}
                 onClick={() =>
@@ -230,21 +230,21 @@ export function TeacherStudentHomeworksView({
         </section>
 
         <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
-            <ClipboardCheck size={20} className="text-blue-600" />
+          <section className="rounded-surface border border-primary-border bg-surface-subtle p-6">
+            <ClipboardCheck size={20} className="text-primary" />
 
-            <h2 className="mt-4 font-semibold text-slate-950">Домашняя работа</h2>
+            <h2 className="section-title mt-4">Домашняя работа</h2>
 
-            <div className="mt-5 flex items-end justify-between rounded-2xl bg-white/80 p-4">
-              <span className="text-sm text-slate-500">Найдено</span>
+            <div className="mt-5 flex items-end justify-between rounded-surface bg-surface/80 p-4">
+              <span className="text-sm text-foreground-muted">Найдено</span>
 
-              <span className="text-2xl font-semibold text-slate-950">{homeworks.data?.totalElements ?? "—"}</span>
+              <span className="text-2xl font-semibold text-foreground">{homeworks.data?.totalElements ?? "—"}</span>
             </div>
 
-            <div className="mt-3 flex items-end justify-between rounded-2xl bg-white/80 p-4">
-              <span className="text-sm text-slate-500">Программ</span>
+            <div className="mt-3 flex items-end justify-between rounded-surface bg-surface/80 p-4">
+              <span className="text-sm text-foreground-muted">Программ</span>
 
-              <span className="text-2xl font-semibold text-slate-950">{programs.data?.length ?? "—"}</span>
+              <span className="text-2xl font-semibold text-foreground">{programs.data?.length ?? "—"}</span>
             </div>
           </section>
         </aside>

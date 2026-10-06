@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
@@ -124,22 +125,22 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
       <dialog
         ref={dialogRef}
         aria-labelledby="create-learning-program-title"
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit} noValidate>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 id="create-learning-program-title" className="text-xl font-semibold">
+              <h2 id="create-learning-program-title" className="section-title">
                 Создать программу
               </h2>
 
-              <p className="mt-1 text-sm text-neutral-600">Новая программа будет создана как черновик.</p>
+              <p className="mt-1 text-sm text-foreground-muted">Новая программа будет создана как черновик.</p>
             </div>
 
             <button
               type="button"
-              className="rounded px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100"
+              className="rounded px-2 py-1 text-sm text-foreground-muted hover:bg-surface-subtle"
               onClick={close}
             >
               Закрыть
@@ -147,13 +148,13 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
           </div>
 
           {subjects.isPending && (
-            <p className="text-sm text-neutral-600" aria-busy="true">
+            <p className="text-sm text-foreground-muted" aria-busy="true">
               Загружаем предметы…
             </p>
           )}
 
           {subjects.isError && (
-            <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-4" role="alert">
+            <div className="space-y-3 rounded-inset border border-danger-border bg-danger-subtle p-4" role="alert">
               <p>Не удалось загрузить предметы.</p>
 
               <Button type="button" onClick={() => void subjects.refetch()}>
@@ -165,11 +166,11 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
           {!subjects.isPending && !subjects.isError && (
             <>
               <label className="block space-y-2">
-                <span className="text-sm font-medium">Предмет</span>
+                <span className="field-label">Предмет</span>
 
-                <select
+                <Select
                   aria-label="Предмет"
-                  className="h-11 w-full rounded-md border border-neutral-300 bg-white px-3"
+
                   value={subjectId}
                   onChange={(event) => {
                     setSubjectId(event.target.value);
@@ -185,14 +186,13 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
                         {subject.name}
                       </option>
                     ))}
-                </select>
+                </Select>
               </label>
 
               <label className="block space-y-2">
-                <span className="text-sm font-medium">Название</span>
+                <span className="field-label">Название</span>
 
-                <input
-                  className="h-11 w-full rounded-md border border-neutral-300 px-3"
+                <Input
                   maxLength={200}
                   value={title}
                   onChange={(event) => {
@@ -204,13 +204,13 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
               </label>
 
               <label className="block space-y-2">
-                <span className="text-sm font-medium">
+                <span className="field-label">
                   Описание
-                  <span className="ml-1 font-normal text-neutral-500">(необязательно)</span>
+                  <span className="ml-1 font-normal text-foreground-muted">(необязательно)</span>
                 </span>
 
-                <textarea
-                  className="min-h-32 w-full resize-y rounded-md border border-neutral-300 p-3"
+                <Textarea
+                  className="min-h-32 resize-y"
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                   placeholder="Для кого программа и чему она посвящена"
@@ -220,7 +220,7 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
           )}
 
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}
@@ -228,7 +228,7 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
           <div className="flex justify-end gap-3">
             <button
               type="button"
-              className="h-10 rounded-md border border-neutral-300 px-4 text-sm font-medium"
+              className="h-10 rounded-control border border-border-strong px-4 text-sm font-medium"
               disabled={mutation.isPending}
               onClick={close}
             >

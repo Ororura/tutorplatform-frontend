@@ -5,9 +5,9 @@ import type { Subject, Task, TaskStatus } from "../api/task-queries";
 import { taskDifficultyPresentation, taskStatusPresentation, taskTypePresentation } from "../model/task-presentation";
 
 const statusClassNames: Record<TaskStatus, string> = {
-  DRAFT: "bg-amber-50 text-amber-700",
-  ACTIVE: "bg-emerald-50 text-emerald-700",
-  ARCHIVED: "bg-slate-100 text-slate-600",
+  DRAFT: "bg-warning-subtle text-warning",
+  ACTIVE: "bg-success-subtle text-success",
+  ARCHIVED: "bg-surface-subtle text-foreground-muted",
 };
 
 export function TaskList({
@@ -20,23 +20,23 @@ export function TaskList({
   const subjectNames = new Map(subjects.map((subject) => [subject.id, subject.name]));
 
   return (
-    <ul className="divide-y divide-(--border) border-y">
+    <ul className="divide-y divide-(--border) border-y border-border divide-border">
       {tasks.map((task) => {
         const TypeIcon = task.taskType === "CODE" ? Code2 : FileText;
 
         return (
           <li key={task.id}>
             <Link
-              className="group flex flex-col gap-3 px-3 py-4 transition hover:bg-white/80 focus-visible:-outline-offset-2 sm:flex-row sm:items-center"
+              className="group flex flex-col gap-3 px-3 py-4 transition hover:bg-surface/80 focus-visible:-outline-offset-2 sm:flex-row sm:items-center"
               href={`/teacher/tasks/${task.id}`}
             >
               <span className="flex min-w-0 flex-1 items-center gap-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-(--text-secondary)">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-surface bg-surface-subtle text-(--text-secondary)">
                   <TypeIcon size={19} />
                 </span>
 
                 <span className="min-w-0">
-                  <span className="block wrap-break-word font-semibold text-slate-900">{task.title}</span>
+                  <span className="block wrap-break-word font-semibold text-foreground">{task.title}</span>
 
                   <span className="mt-1 block wrap-break-word text-sm text-(--text-secondary)">
                     {subjectNames.get(task.subjectId) ?? "Без предмета"}
@@ -45,20 +45,18 @@ export function TaskList({
               </span>
 
               <span className="flex flex-wrap gap-2">
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                <span className="badge bg-surface-subtle text-foreground-muted">
                   {taskTypePresentation[task.taskType]}
                 </span>
 
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                <span className="badge bg-surface-subtle text-foreground-muted">
                   {taskDifficultyPresentation[task.difficulty]}
                 </span>
 
-                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusClassNames[task.status]}`}>
-                  {taskStatusPresentation[task.status]}
-                </span>
+                <span className={`badge  ${statusClassNames[task.status]}`}>{taskStatusPresentation[task.status]}</span>
               </span>
 
-              <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-blue-600">
+              <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-primary">
                 Открыть
                 <ChevronRight size={17} className="transition group-hover:translate-x-0.5" />
               </span>

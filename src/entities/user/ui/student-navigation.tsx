@@ -39,26 +39,13 @@ export function StudentNavigation({ mobile = false }: Readonly<{ mobile?: boolea
   return (
     <nav
       aria-label={mobile ? "Мобильная навигация ученика" : "Навигация ученика"}
-      className={
-        mobile
-          ? "flex gap-1 overflow-x-auto border-t border-slate-100 px-3 py-2 xl:hidden"
-          : "hidden h-full items-center gap-1 xl:flex"
-      }
+      className={mobile ? "nav-mobile xl:hidden" : "hidden h-full items-center gap-1 xl:flex"}
     >
       {navigation.map(({ href, label, icon: Icon }) => {
         const active = isActivePath(pathname, href);
 
         return (
-          <Link
-            key={href}
-            href={href}
-            aria-current={active ? "page" : undefined}
-            className={[
-              "flex shrink-0 items-center gap-2 rounded-[10px] text-sm font-medium transition focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600",
-              mobile ? "px-3 py-2" : "h-9 px-3",
-              active ? "bg-blue-50/70 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950",
-            ].join(" ")}
-          >
+          <Link key={href} href={href} aria-current={active ? "page" : undefined} className="nav-item">
             <Icon size={mobile ? 16 : 17} aria-hidden="true" />
             {label}
           </Link>

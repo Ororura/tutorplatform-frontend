@@ -38,7 +38,7 @@ export function TeacherStudentView({
 
   if (student.isPending || student.isError) {
     return (
-      <main className="mx-auto max-w-7xl space-y-4">
+      <main className="page-stack">
         <StudentDetailQueryState
           isPending={student.isPending}
           isError={student.isError}
@@ -47,7 +47,7 @@ export function TeacherStudentView({
         />
 
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
           href="/teacher/students"
         >
           <ArrowLeft size={16} />
@@ -64,10 +64,10 @@ export function TeacherStudentView({
   const initials = `${student.data.firstName[0] ?? ""}${student.data.lastName?.[0] ?? ""}`.toUpperCase();
 
   return (
-    <main className="mx-auto max-w-7xl space-y-4">
-      <section className="rounded-2xl border border-(--border) bg-white p-6 sm:p-7">
+    <main className="page-stack">
+      <section className="pb-2">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
           href="/teacher/students"
         >
           <ArrowLeft size={16} />
@@ -76,23 +76,23 @@ export function TeacherStudentView({
 
         <div className="mt-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
           <div className="flex min-w-0 items-center gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-blue-50 to-indigo-100 text-lg font-semibold text-blue-700 ring-1 ring-blue-100">
+            <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-surface-subtle text-lg font-semibold text-foreground-muted">
               {initials}
             </div>
 
             <div className="min-w-0">
-              <p className="text-sm font-medium text-blue-600">Профиль ученика</p>
+              <p className="text-sm font-medium text-primary">Профиль ученика</p>
 
-              <h1 className="mt-1 truncate text-3xl font-semibold tracking-tight text-slate-950">
+              <h1 className="page-title mt-1 wrap-break-word">
                 {student.data.firstName} {student.data.lastName ?? ""}
               </h1>
 
               <div className="mt-2 flex flex-wrap gap-2">
-                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                <span className="badge bg-success-subtle text-success">
                   {getStudentStatusLabel(student.data.status)}
                 </span>
 
-                <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+                <span className="badge bg-primary-subtle text-primary">
                   {getStudentAccountStatusLabel(student.data.account.status)}
                 </span>
               </div>
@@ -117,28 +117,28 @@ export function TeacherStudentView({
             <StudentDetailsCard student={student.data} />
           )}
 
-          <section
-            className="rounded-2xl border border-(--border) bg-white p-6"
-            aria-labelledby="invite-history-heading"
-          >
+          <section className="surface" aria-labelledby="invite-history-heading">
             <div>
-              <p className="text-sm font-medium text-blue-600">Доступ</p>
+              <p className="text-sm font-medium text-primary">Доступ</p>
 
-              <h2 id="invite-history-heading" className="mt-1 text-xl font-semibold text-slate-950">
+              <h2 id="invite-history-heading" className="section-title mt-1">
                 История приглашений
               </h2>
             </div>
 
             <div className="mt-5">
               {invites.isPending && (
-                <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+                <p className="rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
                   Загружаем приглашения…
                 </p>
               )}
 
               {invites.isError && (
-                <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-                  <p className="text-sm text-red-700">Не удалось загрузить приглашения.</p>
+                <div
+                  className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5"
+                  role="alert"
+                >
+                  <p className="text-sm text-danger">Не удалось загрузить приглашения.</p>
 
                   <Button type="button" variant="secondary" onClick={() => invites.refetch()}>
                     Повторить
@@ -159,7 +159,7 @@ export function TeacherStudentView({
               )}
 
               {revokeInvite.isError && (
-                <p className="mt-4 text-sm text-red-700" role="alert">
+                <p className="mt-4 text-sm text-danger" role="alert">
                   Не удалось отозвать приглашение.
                 </p>
               )}
@@ -168,28 +168,28 @@ export function TeacherStudentView({
         </div>
 
         <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
-            <span className="flex size-11 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
+          <section className="rounded-surface border border-primary-border bg-surface-subtle p-6">
+            <span className="flex size-11 items-center justify-center rounded-surface bg-surface text-primary">
               {student.data.account.status === "REGISTERED" ? <ShieldCheck size={20} /> : <UserRound size={20} />}
             </span>
 
-            <h2 className="mt-5 text-lg font-semibold text-slate-950">Доступ ученика</h2>
+            <h2 className="section-title mt-5">Доступ ученика</h2>
 
             {student.data.account.status === "REGISTERED" ? (
               <>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
+                <p className="mt-2 text-sm leading-6 text-foreground-muted">
                   Аккаунт ученика зарегистрирован и связан с профилем.
                 </p>
 
                 {student.data.account.email && (
-                  <p className="mt-4 break-all rounded-2xl bg-white/80 p-3 text-sm font-medium text-slate-700">
+                  <p className="mt-4 break-all rounded-surface bg-surface/80 p-3 text-sm font-medium text-foreground-muted">
                     {student.data.account.email}
                   </p>
                 )}
               </>
             ) : (
               <>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
+                <p className="mt-2 text-sm leading-6 text-foreground-muted">
                   Отправьте приглашение, чтобы ученик смог войти в свой кабинет.
                 </p>
 
@@ -198,7 +198,7 @@ export function TeacherStudentView({
                 </div>
 
                 {hasActiveInvite && (
-                  <p className="mt-4 rounded-2xl bg-white/80 p-3 text-sm text-slate-600">
+                  <p className="mt-4 rounded-surface bg-surface/80 p-3 text-sm text-foreground-muted">
                     У ученика уже есть активное приглашение.
                   </p>
                 )}

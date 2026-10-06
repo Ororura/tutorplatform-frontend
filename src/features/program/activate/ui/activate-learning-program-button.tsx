@@ -47,7 +47,7 @@ export function ActivateLearningProgramButton({ programId, triggerVariant = "pri
       </Button>
 
       {error && (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="text-sm text-danger" role="alert">
           {error}
         </p>
       )}

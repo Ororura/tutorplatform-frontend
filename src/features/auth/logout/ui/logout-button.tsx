@@ -26,7 +26,7 @@ export function LogoutButton() {
       </Button>
 
       {logout.isError && (
-        <p className="max-w-40 text-xs text-red-600" role="alert">
+        <p className="max-w-40 text-xs text-danger" role="alert">
           Не удалось выйти.
         </p>
       )}

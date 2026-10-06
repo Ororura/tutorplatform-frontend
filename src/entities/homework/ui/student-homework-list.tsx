@@ -29,15 +29,15 @@ export function StudentHomeworkList({
           <li key={homework.id}>
             <article
               aria-label={homework.title}
-              className={`flex min-w-0 flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:gap-5 sm:px-5 ${overdue ? "" : "sm:py-3"}`}
+              className={`flex min-w-0 flex-col gap-4 rounded-surface border border-border/80 bg-surface p-4  sm:flex-row sm:items-center sm:gap-5 sm:px-5 ${overdue ? "" : "sm:py-3"}`}
             >
               <div className="flex min-w-0 flex-1 items-start gap-4 sm:items-center sm:gap-6">
                 <StudentHomeworkIcon />
                 <div className="min-w-0 flex-1">
-                  <h3 className="wrap-break-word text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
+                  <h3 className="wrap-break-word text-lg font-semibold tracking-tight text-foreground sm:text-xl">
                     {homework.title}
                   </h3>
-                  <p className="mt-1 wrap-break-word text-sm leading-6 text-slate-500">
+                  <p className="mt-1 wrap-break-word text-sm leading-6 text-foreground-muted">
                     {programTitle && (
                       <>
                         {programTitle}
@@ -47,7 +47,7 @@ export function StudentHomeworkList({
                     {formatHomeworkItemsCount(homework.itemsCount)}
                   </p>
                   <p
-                    className={`mt-1 flex items-start gap-2 text-sm leading-6 ${overdue ? "text-red-600" : "text-slate-600"}`}
+                    className={`mt-1 flex items-start gap-2 text-sm leading-6 ${overdue ? "text-danger" : "text-foreground-muted"}`}
                   >
                     <CalendarDays size={17} className="mt-1 shrink-0" aria-hidden="true" />
                     <span>
@@ -70,7 +70,7 @@ export function StudentHomeworkList({
                   aria-label={`Открыть: ${homework.title}`}
                   className={buttonClassName(
                     overdue ? "primary" : "ghost",
-                    `w-full gap-2 sm:w-auto ${overdue ? "" : "bg-blue-50 text-blue-600 hover:bg-blue-100"}`,
+                    `w-full gap-2 sm:w-auto ${overdue ? "" : "bg-primary-subtle text-primary hover:bg-primary-subtle"}`,
                   )}
                 >
                   Открыть <ArrowRight size={16} aria-hidden="true" />

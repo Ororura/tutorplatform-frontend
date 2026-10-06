@@ -56,6 +56,28 @@ vi.mock("@/features/submission/submit-text", () => ({ useSubmitTextAnswerMutatio
 vi.mock("@/features/execution/run-code", () => ({ useRunStudentCodeMutation: () => mocks.runCode }));
 vi.mock("@/features/submission/submit-code", () => ({ useSubmitCodeAnswerMutation: () => mocks.submitCode }));
 
+vi.mock("@/shared/ui/code-editor", () => ({
+  CodeEditor: ({
+    language,
+    value,
+    onChange,
+    disabled,
+  }: {
+    language: string;
+    value: string;
+    onChange: (value: string) => void;
+    disabled?: boolean;
+  }) => (
+    <textarea
+      aria-label="Код решения"
+      data-language={language.toLowerCase()}
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      disabled={disabled}
+    />
+  ),
+}));
+
 const base = {
   id: "item-1",
   taskId: "task-1",
@@ -491,4 +513,40 @@ describe("StudentTaskSolution widget", () => {
     expect(screen.getByText(message)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Отправить" })).not.toBeInTheDocument();
   });
+});
+
+it("opens Java starter and sends the unchanged Run/Submit contract without a student language", () => {
+  mocks.useQuery.mockReturnValue({ data: { items: [] }, isPending: false });
+  mocks.runCode.isPending = false;
+  mocks.submitCode.isPending = false;
+  render(
+    <StudentTaskSolution
+      homeworkId="hw"
+      homeworkStatus="ASSIGNED"
+      item={{
+        ...base,
+        task: {
+          ...base.task,
+          taskType: "CODE",
+          codeExecution: {
+            language: "JAVA",
+            starterCode: "class Main {}",
+            executionEnabled: true,
+            timeLimitMs: 5000,
+            memoryLimitMb: 128,
+          },
+        },
+      }}
+    />,
+  );
+  const editor = screen.getByLabelText("Код решения");
+  expect(editor).toHaveAttribute("data-language", "java");
+  expect(editor).toHaveValue("class Main {}");
+  expect(screen.getByText(/Программа запускается из класса Main/)).toBeVisible();
+  fireEvent.change(editor, { target: { value: "public class Main {}" } });
+  fireEvent.click(screen.getByRole("button", { name: "Запустить" }));
+  fireEvent.click(screen.getByRole("button", { name: "Отправить решение" }));
+  const request = { taskId: "task-1", homeworkItemId: "item-1", sourceCode: "public class Main {}" };
+  expect(mocks.runCode.mutate).toHaveBeenLastCalledWith(request);
+  expect(mocks.submitCode.mutate).toHaveBeenLastCalledWith(request);
 });

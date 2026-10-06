@@ -51,3 +51,13 @@ in the standalone runtime's Next.js 16.3.5. Update Next.js and its matching
 The production gate checks the packages actually shipped in the standalone
 image; development/build dependencies remain outside that image. No allow-list
 is needed.
+
+## CVE-2026-93749 remediation (2026-10-06)
+
+The production image scan found one HIGH finding in `source-map-js:1.2.1`:
+[CVE-2026-93749 / GHSA-68fv-2mgg-jv7q](https://github.com/advisories/GHSA-68fv-2mgg-jv7q).
+Update the existing transitive dependency in the lockfile to the fixed patch
+version 1.2.2. Its consumers (including Next.js/PostCSS) already permit that
+version, so no direct dependency or override is needed. `npm ci` then ships
+1.2.2 in the standalone runtime. The security gate is unchanged and no finding
+is suppressed.

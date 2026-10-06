@@ -17,15 +17,15 @@ export function ReportPublicationManagement({
   const published = status === "PUBLISHED";
 
   return (
-    <section className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
+    <section className="surface">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
             <Link2 size={18} aria-hidden="true" />
           </span>
           <div>
-            <h2 className="text-lg font-semibold text-slate-950">Публикация для родителя</h2>
-            <p className="mt-1 text-sm leading-6 text-slate-500">
+            <h2 className="section-title">Публикация для родителя</h2>
+            <p className="mt-1 text-sm leading-6 text-foreground-muted">
               PDF и публичная ссылка содержат исторический snapshot отчёта на момент публикации.
             </p>
           </div>
@@ -37,7 +37,7 @@ export function ReportPublicationManagement({
         {published ? (
           <CreateReportShareForm reportId={reportId} />
         ) : (
-          <div className="rounded-2xl border border-amber-100 bg-amber-50 p-4 text-sm text-amber-800">
+          <div className="rounded-surface border border-warning-border bg-warning-subtle p-4 text-sm text-warning">
             {status === "DRAFT"
               ? "Сначала опубликуйте отчёт. Backend не создаёт публичные ссылки для черновиков."
               : "Для архивного отчёта нельзя создавать новые публичные ссылки."}
@@ -45,16 +45,16 @@ export function ReportPublicationManagement({
         )}
       </div>
 
-      <div className="mt-7 border-t border-slate-100 pt-6">
-        <h3 className="font-semibold text-slate-950">История ссылок</h3>
+      <div className="mt-7 border-t border-border pt-6">
+        <h3 className="font-semibold text-foreground">История ссылок</h3>
         {shares.isPending && (
-          <p className="mt-4 rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+          <p className="mt-4 rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
             Загружаем историю ссылок…
           </p>
         )}
         {shares.isError && (
-          <div className="mt-4 space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-            <p className="text-sm text-red-700">Не удалось загрузить историю ссылок.</p>
+          <div className="mt-4 space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
+            <p className="text-sm text-danger">Не удалось загрузить историю ссылок.</p>
             <Button type="button" variant="secondary" onClick={() => void shares.refetch()}>
               Повторить
             </Button>

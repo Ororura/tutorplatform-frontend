@@ -57,6 +57,21 @@ for (const width of [1440, 1024, 768, 375]) {
     await page.route("**/api/v1/student/homeworks?*", (route) =>
       route.fulfill({ json: { items: [], page: 0, size: 20, totalElements: 0, totalPages: 0 } }),
     );
+    // Program cards load progress and details after keyboard navigation too.
+    await page.route("**/api/v1/student/progress?*", (route) =>
+      route.fulfill({ json: { totalTopics: 0, topics: { completed: [] } } }),
+    );
+    await page.route("**/api/v1/student/programs/program", (route) =>
+      route.fulfill({
+        json: {
+          id: "program",
+          title: "ПрограммаОбучения".repeat(12),
+          subject: { id: "python", name: "Python" },
+          status: "ACTIVE",
+          modules: [],
+        },
+      }),
+    );
     await page.goto("/student");
     await expect(page.getByText("Невыполненных заданий нет")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);

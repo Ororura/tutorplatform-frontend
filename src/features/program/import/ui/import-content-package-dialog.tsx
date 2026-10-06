@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -85,9 +86,9 @@ function TaskPreview({ task }: Readonly<{ task: ContentPackagePreviewTask }>) {
   const config = task.programmingConfig;
 
   return (
-    <li className="rounded-md bg-slate-50 p-3 text-sm">
-      <p className="font-medium text-slate-900">{task.title}</p>
-      <p className="mt-1 text-xs text-slate-600">
+    <li className="rounded-control bg-surface-subtle p-3 text-sm">
+      <p className="font-medium text-foreground">{task.title}</p>
+      <p className="mt-1 text-xs text-foreground-muted">
         {task.taskType} · {difficultyLabels[task.difficulty ?? ""] ?? task.difficulty} ·{" "}
         {task.required ? "Обязательное" : "Необязательное"}
       </p>
@@ -97,8 +98,14 @@ function TaskPreview({ task }: Readonly<{ task: ContentPackagePreviewTask }>) {
         </div>
       )}
       {task.taskType === "CODE" && (
-        <div className="mt-2 space-y-1 text-slate-700">
-          <p>{config?.language === "PYTHON" ? "Python" : (config?.language ?? "Язык не указан")}</p>
+        <div className="mt-2 space-y-1 text-foreground-muted">
+          <p>
+            {config?.language === "PYTHON"
+              ? "Python"
+              : config?.language === "JAVA"
+                ? "Java"
+                : (config?.language ?? "Язык не указан")}
+          </p>
           <p>Выполнение кода: {config?.executionEnabled ? "включено" : "выключено"}</p>
           <p>Лимит времени: {config?.timeLimitMs === undefined ? "—" : `${config.timeLimitMs} мс`}</p>
           <p>Лимит памяти: {config?.memoryLimitMb === undefined ? "—" : `${config.memoryLimitMb} МБ`}</p>
@@ -106,7 +113,7 @@ function TaskPreview({ task }: Readonly<{ task: ContentPackagePreviewTask }>) {
             Тестов: {task.testCaseCount ?? 0} · скрытых: {task.hiddenTestCaseCount ?? 0}
           </p>
           {config?.starterCode && (
-            <pre className="overflow-x-auto rounded-md bg-slate-900 p-3 text-slate-50">
+            <pre className="overflow-x-auto rounded-control bg-code-surface p-3 text-code-foreground">
               <code>{config.starterCode}</code>
             </pre>
           )}
@@ -119,7 +126,7 @@ function TaskPreview({ task }: Readonly<{ task: ContentPackagePreviewTask }>) {
 function PreviewTree({ preview }: Readonly<{ preview: Preview }>) {
   return (
     <section className="space-y-4" aria-label="Предварительный просмотр модулей">
-      <div className="flex flex-wrap gap-3 text-sm font-medium text-slate-700">
+      <div className="flex flex-wrap gap-3 text-sm font-medium text-foreground-muted">
         <span>Модулей: {preview.moduleCount ?? 0}</span>
         <span>Тем: {preview.topicCount ?? 0}</span>
         <span>Материалов: {preview.materialCount ?? 0}</span>
@@ -127,20 +134,20 @@ function PreviewTree({ preview }: Readonly<{ preview: Preview }>) {
       </div>
       <ol className="space-y-4">
         {preview.modules?.map((module, moduleIndex) => (
-          <li key={moduleIndex} className="rounded-lg border border-slate-200 p-4">
-            <h3 className="font-semibold text-slate-950">{module.title}</h3>
+          <li key={moduleIndex} className="rounded-inset border border-border p-4">
+            <h3 className="font-semibold text-foreground">{module.title}</h3>
             {module.description && (
-              <p className="mt-1 whitespace-pre-wrap text-sm text-slate-600">{module.description}</p>
+              <p className="mt-1 whitespace-pre-wrap text-sm text-foreground-muted">{module.description}</p>
             )}
-            <ol className="mt-3 space-y-3 border-l-2 border-blue-100 pl-4">
+            <ol className="mt-3 space-y-3 border-l-2 border-primary-border pl-4">
               {module.topics?.map((topic, topicIndex) => (
                 <li key={topicIndex}>
-                  <h4 className="font-medium text-slate-900">{topic.title}</h4>
+                  <h4 className="font-medium text-foreground">{topic.title}</h4>
                   <ol className="mt-2 space-y-2">
                     {topic.materials?.map((material, materialIndex) => (
-                      <li key={materialIndex} className="rounded-md bg-slate-50 p-3 text-sm">
-                        <p className="font-medium text-slate-900">{material.title}</p>
-                        <p className="mb-2 text-xs text-slate-500">{material.materialType}</p>
+                      <li key={materialIndex} className="rounded-control bg-surface-subtle p-3 text-sm">
+                        <p className="font-medium text-foreground">{material.title}</p>
+                        <p className="mb-2 text-xs text-foreground-muted">{material.materialType}</p>
                         {material.materialType && (
                           <MaterialRenderer
                             preview
@@ -157,7 +164,7 @@ function PreviewTree({ preview }: Readonly<{ preview: Preview }>) {
                   </ol>
                   {topic.tasks && topic.tasks.length > 0 && (
                     <section className="mt-3" aria-label="Практические задания">
-                      <h5 className="text-sm font-semibold text-slate-900">Практические задания</h5>
+                      <h5 className="text-sm font-semibold text-foreground">Практические задания</h5>
                       <ol className="mt-2 space-y-2">
                         {topic.tasks.map((task, taskIndex) => (
                           <TaskPreview key={taskIndex} task={task} />
@@ -298,7 +305,7 @@ export function ImportContentPackageDialog({
         ref={dialogRef}
         aria-labelledby="import-content-package-title"
         aria-describedby="import-content-package-description"
-        className="m-auto max-h-[min(90vh,50rem)] w-[min(48rem,calc(100%-2rem))] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(48rem,calc(100%-2rem))]"
         onCancel={(event) => {
           if (busyRef.current) event.preventDefault();
         }}
@@ -306,7 +313,7 @@ export function ImportContentPackageDialog({
       >
         <form className="space-y-5 p-6" onSubmit={(event) => void checkFile(event)} noValidate aria-busy={busy}>
           <div className="flex items-start justify-between gap-4">
-            <h2 id="import-content-package-title" className="text-xl font-semibold text-slate-950">
+            <h2 id="import-content-package-title" className="section-title">
               Импорт учебных модулей
             </h2>
             <button type="button" className="text-sm underline" onClick={close} disabled={busy}>
@@ -315,7 +322,7 @@ export function ImportContentPackageDialog({
           </div>
           {flow.phase === "IMPORT_SUCCESS" ? (
             <>
-              <p className="text-sm text-emerald-700" role="status">
+              <p className="text-sm text-success" role="status">
                 Импорт завершён. Создано модулей: {flow.result.moduleCount ?? 0}, тем: {flow.result.topicCount ?? 0},
                 материалов: {flow.result.materialCount ?? 0}, заданий: {flow.result.taskCount ?? 0}.
               </p>
@@ -327,18 +334,18 @@ export function ImportContentPackageDialog({
             </>
           ) : (
             <>
-              <p id="import-content-package-description" className="text-sm leading-6 text-slate-600">
+              <p id="import-content-package-description" className="text-sm leading-6 text-foreground-muted">
                 Загрузите YAML-файл, чтобы добавить готовые модули, темы и материалы в текущую программу.
               </p>
               <Button type="button" variant="secondary" disabled={busy} onClick={() => setPromptOpen(true)}>
                 Создать с помощью нейросети
               </Button>
               <label className="block space-y-2">
-                <span className="text-sm font-medium text-slate-950">
+                <span className="text-sm font-medium text-foreground">
                   {file ? "Заменить файл" : "Выберите YAML-файл"}
                 </span>
-                <input
-                  className="block w-full rounded-md border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:px-3 file:py-2"
+                <Input
+                  className="block file:mr-3 file:px-3 file:py-2"
                   type="file"
                   accept=".yaml,.yml"
                   disabled={busy}
@@ -349,18 +356,18 @@ export function ImportContentPackageDialog({
                 />
               </label>
               {file && (
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-foreground-muted">
                   {file.name} · {formatFileSize(file.size)}
                 </p>
               )}
               {flow.phase === "SELECT_FILE" && flow.error && (
-                <p className="text-sm text-red-700" role="alert">
+                <p className="text-sm text-danger" role="alert">
                   {flow.error}
                 </p>
               )}
               {flow.phase === "ERROR" && (
                 <div className="space-y-3 text-sm">
-                  <div className="space-y-2 text-red-700" role="alert">
+                  <div className="space-y-2 text-danger" role="alert">
                     <p>{errorMessage(flow.error)}</p>
                     {validationErrors.length > 0 && (
                       <ul className="list-inside list-disc">
@@ -372,7 +379,7 @@ export function ImportContentPackageDialog({
                   </div>
                   {validationErrors.length > 0 && (
                     <>
-                      <details className="rounded-md border border-slate-200 p-3 text-slate-700">
+                      <details className="rounded-control border border-border p-3 text-foreground-muted">
                         <summary className="cursor-pointer font-medium">Технические подробности</summary>
                         <pre className="mt-2 overflow-x-auto whitespace-pre-wrap select-text">
                           {serializeContentPackageErrors(validationErrors)}
@@ -388,7 +395,7 @@ export function ImportContentPackageDialog({
                         Скопировать ошибки
                       </Button>
                       {copyStatus && (
-                        <p role="status" className="text-slate-700">
+                        <p role="status" className="text-foreground-muted">
                           {copyStatus}
                         </p>
                       )}
@@ -400,25 +407,21 @@ export function ImportContentPackageDialog({
               {flow.phase === "IMPORT_LOADING" && <p role="status">Импортируем модули…</p>}
               {preview && <PreviewTree preview={preview} />}
               {!preview && (
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-                  <p className="font-medium text-slate-950">Готового файла нет?</p>
+                <div className="rounded-inset border border-border bg-surface-subtle p-4 text-sm text-foreground-muted">
+                  <p className="font-medium text-foreground">Готового файла нет?</p>
                   <p className="mt-1">
                     Шаблон содержит структуру модулей, тем и материалов. Замените примерное содержимое своим и загрузите
                     файл обратно.
                   </p>
                   <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
                     <a
-                      className="font-medium text-blue-700 underline"
+                      className="font-medium text-primary underline"
                       href="/templates/tutor-content-package.yaml"
                       download
                     >
                       Скачать шаблон YAML
                     </a>
-                    <a
-                      className="font-medium text-blue-700 underline"
-                      href="/templates/python-conditions.yaml"
-                      download
-                    >
+                    <a className="font-medium text-primary underline" href="/templates/python-conditions.yaml" download>
                       Скачать заполненный пример
                     </a>
                   </div>

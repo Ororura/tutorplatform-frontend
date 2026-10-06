@@ -1,8 +1,6 @@
 import { BookOpenText, CalendarDays, ChartNoAxesCombined, ClipboardCheck, FileText, UserRound } from "lucide-react";
 import Link from "next/link";
 
-import { cn } from "@/shared/lib/cn";
-
 type StudentProfileSection = "overview" | "program" | "progress" | "reports" | "sessions" | "homework";
 
 const items = [
@@ -57,23 +55,12 @@ export function StudentProfileNav({
   studentId: string;
 }>) {
   return (
-    <nav
-      className="flex gap-1 overflow-x-auto rounded-2xl border border-(--border) bg-white p-2"
-      aria-label="Разделы ученика"
-    >
+    <nav className="flex gap-1 overflow-x-auto border-b border-border pb-2" aria-label="Разделы ученика">
       {items.map(({ id, label, icon: Icon, href }) => {
         const selected = active === id;
 
         return (
-          <Link
-            key={id}
-            aria-current={selected ? "page" : undefined}
-            className={cn(
-              "inline-flex h-11 shrink-0 items-center gap-2 rounded-2xl px-4 text-sm font-medium transition",
-              selected ? "bg-blue-50 text-blue-700" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
-            )}
-            href={href(studentId)}
-          >
+          <Link key={id} aria-current={selected ? "page" : undefined} className="nav-item" href={href(studentId)}>
             <Icon size={17} aria-hidden="true" />
             {label}
           </Link>

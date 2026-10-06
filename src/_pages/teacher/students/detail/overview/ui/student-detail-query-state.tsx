@@ -11,7 +11,7 @@ type Props = {
 export function StudentDetailQueryState({ isPending, isError, error, onRetry }: Readonly<Props>) {
   if (isPending) {
     return (
-      <div className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
+      <div className="surface text-sm text-foreground-muted" aria-busy="true">
         Загружаем ученика…
       </div>
     );
@@ -20,17 +20,17 @@ export function StudentDetailQueryState({ isPending, isError, error, onRetry }: 
   if (isError) {
     if (error instanceof ApiClientError && error.status === 404) {
       return (
-        <div className="rounded-2xl border border-(--border) bg-white p-7" role="alert">
-          <h1 className="text-2xl font-semibold text-slate-950">Ученик не найден</h1>
+        <div className="rounded-surface border border-(--border) bg-surface p-7" role="alert">
+          <h1 className="page-title">Ученик не найден</h1>
 
-          <p className="mt-2 text-sm text-slate-500">Проверьте ссылку или вернитесь к списку учеников.</p>
+          <p className="mt-2 text-sm text-foreground-muted">Проверьте ссылку или вернитесь к списку учеников.</p>
         </div>
       );
     }
 
     return (
-      <div className="space-y-4 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
-        <p className="text-sm text-red-700">Не удалось загрузить карточку ученика.</p>
+      <div className="space-y-4 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
+        <p className="text-sm text-danger">Не удалось загрузить карточку ученика.</p>
 
         <Button type="button" variant="secondary" onClick={onRetry}>
           Повторить

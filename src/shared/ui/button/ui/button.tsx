@@ -1,35 +1,40 @@
 import { type ButtonHTMLAttributes, forwardRef } from "react";
-
+import { LoaderCircle } from "lucide-react";
 import { cn } from "@/shared/lib/cn";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
-
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: ButtonVariant;
-};
-
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant; loading?: boolean };
 const variantClassNames: Record<ButtonVariant, string> = {
   primary:
-    "bg-blue-600 text-white shadow-xs hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-600 disabled:bg-blue-100 disabled:text-blue-800",
+    "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-hover disabled:bg-primary-subtle disabled:text-primary",
   secondary:
-    "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 active:bg-slate-100 active:text-slate-900 focus-visible:ring-blue-600 disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-600",
+    "border border-border-strong bg-surface text-foreground hover:bg-surface-subtle active:bg-surface-hover disabled:border-border disabled:bg-surface-subtle disabled:text-foreground-muted",
   ghost:
-    "bg-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-950 active:bg-slate-200 active:text-slate-950 focus-visible:ring-blue-600 disabled:text-slate-600",
+    "bg-transparent text-foreground-muted hover:bg-surface-hover hover:text-foreground active:bg-surface-hover disabled:text-foreground-muted",
   danger:
-    "bg-red-600 text-white shadow-xs hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-600 disabled:bg-red-100 disabled:text-red-800",
+    "bg-danger text-danger-foreground hover:bg-danger-hover active:bg-danger-hover disabled:bg-danger-subtle disabled:text-danger",
 };
-
 export function buttonClassName(variant: ButtonVariant = "primary", className?: string) {
   return cn(
-    "inline-flex h-10 items-center justify-center rounded-xl px-4 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-4 disabled:pointer-events-none disabled:cursor-not-allowed disabled:shadow-none",
+    "inline-flex min-h-(--control-height) items-center justify-center gap-2 rounded-control px-4 py-2 text-sm font-medium transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:shadow-none",
     variantClassNames[variant],
     className,
   );
 }
-
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant = "primary", ...props },
+  { className, variant = "primary", loading = false, disabled, children, ...props },
   ref,
 ) {
-  return <button ref={ref} className={buttonClassName(variant, className)} {...props} />;
+  return (
+    <button
+      ref={ref}
+      className={buttonClassName(variant, className)}
+      disabled={disabled || loading}
+      {...props}
+      aria-busy={loading || props["aria-busy"]}
+    >
+      {loading && <LoaderCircle size={16} className="shrink-0 motion-safe:animate-spin" aria-hidden="true" />}
+      {children}
+    </button>
+  );
 });

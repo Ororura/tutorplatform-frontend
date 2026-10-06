@@ -14,17 +14,17 @@ export function RegistrationAvailability() {
 
   if (settings.data.registrationMode === "INVITE_ONLY") {
     return (
-      <p className="border-t border-slate-200 pt-5 text-center text-sm leading-6 text-slate-500">
+      <p className="border-t border-border pt-5 text-center text-sm leading-6 text-foreground-muted">
         Регистрация преподавателей доступна по приглашению.
       </p>
     );
   }
 
   return (
-    <p className="border-t border-slate-200 pt-5 text-center text-sm text-slate-500">
+    <p className="border-t border-border pt-5 text-center text-sm text-foreground-muted">
       Нет аккаунта?{" "}
       <Link
-        className="font-semibold text-blue-600 transition hover:text-blue-700 focus-visible:rounded focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-100"
+        className="font-semibold text-primary transition hover:text-primary focus-visible:rounded focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-focus-ring"
         href="/register"
       >
         Зарегистрироваться <span aria-hidden="true">→</span>

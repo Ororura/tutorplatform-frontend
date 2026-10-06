@@ -17,14 +17,14 @@ export function TeacherStudentHomeworkEditPage({
   const homework = useQuery(homeworkQueries.detail(studentId, homeworkId));
   if (homework.isPending)
     return (
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <main className="page-form page-stack">
         <p aria-busy="true">Загружаем домашнее задание…</p>
       </main>
     );
   if (homework.isError || homework.data.status !== "ASSIGNED") {
     const missing = homework.error instanceof ApiClientError && homework.error.status === 404;
     return (
-      <main className="mx-auto max-w-4xl space-y-4 px-6 py-12">
+      <main className="page-form page-stack">
         <p role="alert">{missing ? "Домашнее задание не найдено" : "Это домашнее задание нельзя редактировать."}</p>
         <Link className="underline" href={`/teacher/students/${studentId}/homework/${homeworkId}`}>
           Вернуться к заданию
@@ -33,15 +33,15 @@ export function TeacherStudentHomeworkEditPage({
     );
   }
   return (
-    <main className="mx-auto max-w-4xl space-y-8 px-6 py-12">
+    <main className="page-form page-stack">
       <div>
         <Link
-          className="text-sm text-neutral-600 underline"
+          className="text-sm text-foreground-muted underline"
           href={`/teacher/students/${studentId}/homework/${homeworkId}`}
         >
           ← Домашнее задание
         </Link>
-        <h1 className="mt-4 text-3xl font-semibold">Редактировать домашнее задание</h1>
+        <h1 className="page-title mt-4">Редактировать домашнее задание</h1>
       </div>
       <HomeworkForm studentId={studentId} homework={homework.data} />
     </main>

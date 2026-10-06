@@ -2,6 +2,7 @@ import { BookOpenText } from "lucide-react";
 
 import { getTopicCompletion, type CurrentProgress } from "@/entities/progress";
 import { cn } from "@/shared/lib/cn";
+import { Badge } from "@/shared/ui/badge";
 import { ProgressBar } from "@/shared/ui/progress-bar";
 
 import type { StudentProgramSummary } from "../api/student-program-queries";
@@ -9,14 +10,11 @@ import { programStatusLabels } from "../model/student-program-labels";
 
 export function ProgramStatusBadge({ status }: Readonly<{ status: StudentProgramSummary["status"] }>) {
   return (
-    <span
-      className={cn(
-        "inline-block shrink-0 rounded-lg px-2 py-1 text-xs font-medium",
-        status === "ACTIVE" ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600",
-      )}
+    <Badge
+      tone={status === "ACTIVE" || status === "COMPLETED" ? "success" : status === "PAUSED" ? "warning" : "neutral"}
     >
       {programStatusLabels[status]}
-    </span>
+    </Badge>
   );
 }
 
@@ -24,11 +22,11 @@ export function ProgramIcon({ large = false }: Readonly<{ large?: boolean }>) {
   return (
     <span
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600",
-        large ? "size-14 sm:size-16" : "size-12",
+        "flex shrink-0 items-center justify-center rounded-inset bg-surface-subtle text-foreground-muted",
+        large ? "size-11" : "size-10",
       )}
     >
-      <BookOpenText size={large ? 28 : 23} aria-hidden="true" />
+      <BookOpenText size={large ? 24 : 20} aria-hidden="true" />
     </span>
   );
 }
@@ -44,7 +42,7 @@ export function ProgramTopicProgress({
     <div>
       <div
         className={cn(
-          "mb-2 flex flex-wrap items-center justify-between gap-2 font-medium text-slate-600",
+          "mb-2 flex flex-wrap items-center justify-between gap-2 font-medium text-foreground-muted",
           compact ? "text-xs" : "text-sm",
         )}
       >

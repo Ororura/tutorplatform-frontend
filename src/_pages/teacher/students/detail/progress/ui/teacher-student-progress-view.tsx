@@ -1,4 +1,5 @@
 "use client";
+import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ChartNoAxesCombined } from "lucide-react";
@@ -8,7 +9,7 @@ import { useState } from "react";
 import { CurrentProgressOverview, progressQueries } from "@/entities/progress";
 import { StudentProfileNav } from "@/entities/student";
 import { studentProgramQueries } from "@/entities/student-program";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonClassName } from "@/shared/ui/button";
 
 import { ProgressShareManagement } from "./progress-share-management";
 
@@ -25,10 +26,10 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
   });
 
   return (
-    <main className="mx-auto max-w-7xl space-y-4">
-      <section className="rounded-2xl border border-(--border) bg-white p-6 sm:p-7">
+    <main className="page-content page-stack">
+      <section className="surface sm:p-7">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
           href={`/teacher/students/${studentId}`}
         >
           <ArrowLeft size={16} />
@@ -36,30 +37,30 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
         </Link>
 
         <div className="mt-5 flex items-center gap-4">
-          <span className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
             <ChartNoAxesCombined size={21} />
           </span>
 
           <div>
-            <p className="text-sm font-medium text-blue-600">Учебный процесс</p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Прогресс ученика</h1>
-            <p className="mt-2 text-sm text-slate-500">Показатели обучения по назначенной программе.</p>
+            <p className="text-sm font-medium text-primary">Учебный процесс</p>
+            <h1 className="page-title mt-1">Прогресс ученика</h1>
+            <p className="mt-2 text-sm text-foreground-muted">Показатели обучения по назначенной программе.</p>
           </div>
         </div>
       </section>
 
       <StudentProfileNav active="progress" studentId={studentId} />
 
-      <section className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
+      <section className="surface">
         {programs.isPending && (
-          <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+          <p className="rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
             Загружаем программы…
           </p>
         )}
 
         {programs.isError && (
-          <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-            <p className="text-sm text-red-700">Не удалось загрузить программы ученика.</p>
+          <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
+            <p className="text-sm text-danger">Не удалось загрузить программы ученика.</p>
             <Button type="button" variant="secondary" onClick={() => programs.refetch()}>
               Повторить
             </Button>
@@ -67,16 +68,13 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
         )}
 
         {programs.data?.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
-            <ChartNoAxesCombined size={28} className="mx-auto text-blue-500" />
-            <p className="mt-4 font-semibold text-slate-950">Нет программ для отображения прогресса</p>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+          <div className="rounded-surface border border-dashed border-border bg-surface-subtle/60 p-10 text-center">
+            <ChartNoAxesCombined size={28} className="mx-auto text-primary" />
+            <p className="mt-4 font-semibold text-foreground">Нет программ для отображения прогресса</p>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-foreground-muted">
               Сначала назначьте ученику программу обучения.
             </p>
-            <Link
-              className="mt-5 inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700"
-              href={`/teacher/students/${studentId}/program`}
-            >
+            <Link className={buttonClassName("primary", "mt-5")} href={`/teacher/students/${studentId}/program`}>
               Перейти к программам
             </Link>
           </div>
@@ -85,12 +83,12 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
         {programs.data && programs.data.length > 0 && (
           <div className="space-y-6">
             <div className="max-w-xl">
-              <label htmlFor="student-progress-program" className="text-sm font-medium text-slate-700">
+              <label htmlFor="student-progress-program" className="text-sm font-medium text-foreground-muted">
                 Программа обучения
               </label>
-              <select
+              <Select
                 id="student-progress-program"
-                className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:ring-3 focus:ring-blue-100"
+                className="mt-2"
                 value={activeProgramId}
                 disabled={programs.data.length === 1}
                 onChange={(event) => setSelectedProgramId(event.target.value)}
@@ -100,18 +98,18 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
                     {program.title}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             {progress.isPending && (
-              <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+              <p className="rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
                 Загружаем прогресс…
               </p>
             )}
 
             {progress.isError && (
-              <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-                <p className="text-sm text-red-700">Не удалось загрузить прогресс ученика.</p>
+              <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
+                <p className="text-sm text-danger">Не удалось загрузить прогресс ученика.</p>
                 <Button type="button" variant="secondary" onClick={() => progress.refetch()}>
                   Повторить
                 </Button>

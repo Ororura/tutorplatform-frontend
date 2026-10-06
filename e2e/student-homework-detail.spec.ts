@@ -1,3 +1,4 @@
+import { fillCodeEditor } from "./helpers/journeys";
 import { expect, test, type Page } from "@playwright/test";
 
 import type { StudentHomeworkDetails, StudentHomeworkPage } from "../src/entities/homework";
@@ -92,7 +93,10 @@ test("real completed homework opens from the list and preserves answers, statuse
   }
   const codeTask = homework.items.find((item) => item.task.taskType === "CODE")!;
   await page.getByRole("button", { name: `Открыть: ${codeTask.task.title}`, exact: true }).click();
-  await expect(page.getByLabel("Код решения")).toBeDisabled();
+  const editorContent = page.locator(".monaco-editor .view-lines");
+  const originalCode = await editorContent.innerText();
+  await fillCodeEditor(page, "readonly editor must keep its code");
+  await expect(editorContent).toHaveText(originalCode);
   await expect(page.getByRole("button", { name: "Запустить", exact: true })).toBeDisabled();
   await expect(page.getByRole("button", { name: "Отправить решение" })).toBeDisabled();
   await noOverflow(page);
@@ -107,8 +111,10 @@ test("real assigned homework keeps the specialized code run and submit flow", as
   await page.goto(`/student/homework/${homework.id}`);
   const codeTask = homework.items.find((item) => item.task.taskType === "CODE")!;
   await page.getByRole("button", { name: `Открыть: ${codeTask.task.title}`, exact: true }).click();
-  await expect(page.getByLabel("Код решения")).toHaveValue(codeTask.task.codeExecution?.starterCode ?? "");
-  await page.getByLabel("Код решения").fill('print("Hello, World!")');
+  await expect(page.locator(".monaco-editor .view-lines")).toContainText(
+    codeTask.task.codeExecution?.starterCode?.split("\n")[0] ?? "",
+  );
+  await fillCodeEditor(page, 'print("Hello, World!")');
   await page.getByRole("button", { name: "Запустить", exact: true }).click();
   const run = page.getByRole("region", { name: "Результат запуска" });
   await expect(run).toBeVisible({ timeout: 60_000 });

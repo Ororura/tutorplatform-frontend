@@ -8,21 +8,21 @@ export function PublicStudentInviteDetails({ invite }: Readonly<{ invite: Public
   }).format(new Date(invite.expiresAt));
 
   return (
-    <dl className="grid gap-4 rounded-xl border border-neutral-200 bg-white p-5 sm:grid-cols-2">
+    <dl className="grid gap-4 rounded-surface border border-border bg-surface p-5 sm:grid-cols-2">
       <div>
-        <dt className="text-sm text-neutral-500">Ученик</dt>
+        <dt className="text-sm text-foreground-muted">Ученик</dt>
         <dd className="mt-1 font-medium">{studentName}</dd>
       </div>
       <div>
-        <dt className="text-sm text-neutral-500">Преподаватель</dt>
+        <dt className="text-sm text-foreground-muted">Преподаватель</dt>
         <dd className="mt-1 font-medium">{invite.teacher.displayName}</dd>
       </div>
       <div>
-        <dt className="text-sm text-neutral-500">Email</dt>
+        <dt className="text-sm text-foreground-muted">Email</dt>
         <dd className="mt-1 break-all font-medium">{invite.email}</dd>
       </div>
       <div>
-        <dt className="text-sm text-neutral-500">Действительно до</dt>
+        <dt className="text-sm text-foreground-muted">Действительно до</dt>
         <dd className="mt-1 font-medium">{expiration}</dd>
       </div>
     </dl>

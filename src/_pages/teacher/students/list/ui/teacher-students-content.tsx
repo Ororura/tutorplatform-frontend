@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
@@ -7,6 +8,8 @@ import { type FormEvent, useCallback, useEffect, useState } from "react";
 
 import { type StudentAccountStatus, type StudentListParams, studentQueries } from "@/entities/student";
 import { CreateStudentDialog } from "@/features/student/create";
+
+import { PageHeader } from "@/shared/ui/page-header";
 
 import { StudentListState } from "./student-list-state";
 
@@ -70,26 +73,20 @@ export function TeacherStudentsContent() {
   const hasActiveFilters = Boolean(search || accountStatus);
 
   return (
-    <main className="space-y-6">
-      <header className="flex flex-col items-start justify-between gap-4 py-2 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Ученики</h1>
-
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-(--text-secondary)">
-            Управляйте учениками, отслеживайте состояние аккаунтов и переходите к учебным программам.
-          </p>
-        </div>
-
-        <CreateStudentDialog open={createOpen} onOpenChange={setCreateOpen} />
-      </header>
+    <main className="page-stack">
+      <PageHeader
+        title="Ученики"
+        description="Управляйте учениками, отслеживайте состояние аккаунтов и переходите к учебным программам."
+        actions={<CreateStudentDialog open={createOpen} onOpenChange={setCreateOpen} />}
+      />
 
       <section className="min-w-0" aria-labelledby="student-list-title">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 id="student-list-title" className="text-base font-semibold text-slate-950">
+            <h2 id="student-list-title" className="section-title">
               Список учеников{" "}
               {students.data && (
-                <span className="font-normal text-slate-500">
+                <span className="font-normal text-foreground-muted">
                   {" · "}
                   {students.data.totalElements}
                 </span>
@@ -98,22 +95,22 @@ export function TeacherStudentsContent() {
           </div>
 
           {students.isFetching && !students.isPending && (
-            <span className="text-sm text-blue-600" role="status">
+            <span className="text-sm text-primary" role="status">
               Обновляем…
             </span>
           )}
         </div>
 
-        <div className="mt-3 flex flex-col gap-3 rounded-xl border border-(--border) bg-(--surface-muted) p-3 lg:flex-row">
+        <div className="mt-3 flex flex-col gap-3 rounded-surface border border-(--border) bg-(--surface-muted) p-3 lg:flex-row">
           <StudentSearch key={search} initialSearch={search} navigate={navigate} />
 
           <label>
             <span className="sr-only">Статус аккаунта</span>
 
-            <select
+            <Select
               id="account-status-filter"
               aria-label="Статус аккаунта"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100 lg:w-auto"
+              className="lg:w-auto"
               value={accountStatus ?? ""}
               onChange={(event) =>
                 navigate({
@@ -126,16 +123,16 @@ export function TeacherStudentsContent() {
               <option value="UNREGISTERED">Без аккаунта</option>
               <option value="INVITED">Приглашён</option>
               <option value="REGISTERED">Зарегистрирован</option>
-            </select>
+            </Select>
           </label>
 
           <label>
             <span className="sr-only">Сортировка</span>
 
-            <select
+            <Select
               id="student-sort"
               aria-label="Сортировка"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100 lg:w-auto"
+              className="lg:w-auto"
               value={sort}
               onChange={(event) =>
                 navigate({
@@ -148,7 +145,7 @@ export function TeacherStudentsContent() {
               <option value="createdAt,asc">Сначала старые</option>
               <option value="firstName,asc">По имени</option>
               <option value="lastName,asc">По фамилии</option>
-            </select>
+            </Select>
           </label>
         </div>
 
@@ -165,11 +162,11 @@ export function TeacherStudentsContent() {
 
         {students.data && students.data.totalPages > 1 && (
           <nav
-            className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-5"
+            className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5"
             aria-label="Пагинация учеников"
           >
             <button
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+              className="rounded-surface border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-muted transition hover:bg-surface-subtle disabled:opacity-40"
               type="button"
               disabled={page === 0 || students.isFetching}
               onClick={() =>
@@ -181,7 +178,7 @@ export function TeacherStudentsContent() {
               Назад
             </button>
 
-            <div className="flex items-center gap-3 text-sm text-slate-500">
+            <div className="flex items-center gap-3 text-sm text-foreground-muted">
               <span>
                 Страница {students.data.page + 1} из {students.data.totalPages}
               </span>
@@ -190,9 +187,9 @@ export function TeacherStudentsContent() {
                 На странице
               </label>
 
-              <select
+              <Select
                 id="student-page-size"
-                className="h-9 rounded-xl border border-slate-200 bg-white px-2"
+
                 value={size}
                 onChange={(event) =>
                   navigate({
@@ -206,11 +203,11 @@ export function TeacherStudentsContent() {
                     {value}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             <button
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+              className="rounded-surface border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-muted transition hover:bg-surface-subtle disabled:opacity-40"
               type="button"
               disabled={page + 1 >= students.data.totalPages || students.isFetching}
               onClick={() =>
@@ -273,13 +270,13 @@ function StudentSearch({
         <Search
           aria-hidden="true"
           size={17}
-          className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+          className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground-subtle"
         />
 
-        <input
+        <Input
           id="student-search"
           name="search"
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm outline-none transition placeholder:text-slate-400 focus:ring-4 focus:ring-blue-100"
+          className="pl-10 pr-3 placeholder:text-foreground-subtle"
           maxLength={100}
           placeholder="Имя или фамилия"
           value={value}
@@ -288,7 +285,7 @@ function StudentSearch({
       </div>
 
       <button
-        className="rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        className="rounded-surface border border-border bg-surface px-4 text-sm font-medium text-foreground-muted transition hover:bg-surface-subtle"
         type="submit"
       >
         Найти

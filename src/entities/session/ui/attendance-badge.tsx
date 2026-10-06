@@ -1,14 +1,15 @@
+import { Check, Minus, X } from "lucide-react";
+import { Badge, type BadgeTone } from "@/shared/ui/badge";
 import { attendancePresentation } from "../model/session-presentation";
 import type { AttendanceStatus } from "../api/session-queries";
-
+const tones: Record<AttendanceStatus, BadgeTone> = { ATTENDED: "success", MISSED: "warning", CANCELLED: "neutral" };
+const icons = { ATTENDED: Check, MISSED: X, CANCELLED: Minus };
 export function AttendanceBadge({ status }: Readonly<{ status: AttendanceStatus }>) {
-  const presentation = attendancePresentation[status];
+  const Icon = icons[status];
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-medium ${presentation.className}`}
-    >
-      <span aria-hidden="true">{presentation.icon}</span>
-      {presentation.label}
-    </span>
+    <Badge tone={tones[status]}>
+      <Icon size={13} aria-hidden="true" />
+      {attendancePresentation[status].label}
+    </Badge>
   );
 }

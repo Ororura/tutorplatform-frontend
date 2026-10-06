@@ -1,4 +1,5 @@
 "use client";
+import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -51,10 +52,10 @@ export function TeacherTasksView() {
   };
 
   return (
-    <main className="space-y-6">
+    <main className="page-stack">
       <header className="flex flex-col items-start justify-between gap-4 py-2 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Банк заданий</h1>
+          <h1 className="page-title">Банк заданий</h1>
 
           <p className="mt-2 max-w-2xl text-sm leading-6 text-(--text-secondary)">
             Создавайте практику и используйте задания в домашних работах учеников.
@@ -67,7 +68,7 @@ export function TeacherTasksView() {
       <section className="min-w-0" aria-labelledby="task-list-title">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 id="task-list-title" className="text-base font-semibold text-slate-950">
+            <h2 id="task-list-title" className="section-title">
               Задания
             </h2>
             <p className="mt-1 text-sm text-(--text-secondary)">Фильтруйте по предмету, статусу и сложности.</p>
@@ -77,20 +78,20 @@ export function TeacherTasksView() {
         <dl className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm" aria-label="Состояние банка заданий">
           <div className="flex items-center gap-2">
             <dt className="text-(--text-secondary)">Найдено заданий</dt>
-            <dd className="font-medium tabular-nums text-slate-900">{tasks.data?.totalElements ?? "—"}</dd>
+            <dd className="font-medium tabular-nums text-foreground">{tasks.data?.totalElements ?? "—"}</dd>
           </div>
           <div className="flex items-center gap-2">
             <dt className="text-(--text-secondary)">Предметов</dt>
-            <dd className="font-medium tabular-nums text-slate-900">{subjects.data?.length ?? "—"}</dd>
+            <dd className="font-medium tabular-nums text-foreground">{subjects.data?.length ?? "—"}</dd>
           </div>
         </dl>
-        <div className="mt-3 flex flex-col gap-3 rounded-xl border border-(--border) bg-(--surface-muted) p-3 sm:flex-row sm:flex-wrap">
+        <div className="mt-3 flex flex-col gap-3 rounded-surface border border-(--border) bg-(--surface-muted) p-3 sm:flex-row sm:flex-wrap">
           <label className="min-w-0 sm:max-w-full">
             <span className="sr-only">Предмет</span>
 
-            <select
+            <Select
               aria-label="Предмет"
-              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100"
+              className="min-w-0"
               value={subjectId ?? ""}
               onChange={(event) =>
                 navigate({
@@ -106,15 +107,15 @@ export function TeacherTasksView() {
                   {subject.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
 
           <label className="min-w-0 sm:max-w-full">
             <span className="sr-only">Статус</span>
 
-            <select
+            <Select
               aria-label="Статус"
-              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100"
+              className="min-w-0"
               value={status ?? ""}
               onChange={(event) =>
                 navigate({
@@ -127,15 +128,15 @@ export function TeacherTasksView() {
               <option value="DRAFT">Черновики</option>
               <option value="ACTIVE">Активные</option>
               <option value="ARCHIVED">Архив</option>
-            </select>
+            </Select>
           </label>
 
           <label className="min-w-0 sm:max-w-full">
             <span className="sr-only">Сложность</span>
 
-            <select
+            <Select
               aria-label="Сложность"
-              className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:ring-4 focus:ring-blue-100"
+              className="min-w-0"
               value={difficulty ?? ""}
               onChange={(event) =>
                 navigate({
@@ -148,20 +149,20 @@ export function TeacherTasksView() {
               <option value="EASY">Лёгкая</option>
               <option value="MEDIUM">Средняя</option>
               <option value="HARD">Сложная</option>
-            </select>
+            </Select>
           </label>
         </div>
 
         <div className="mt-5">
           {(tasks.isPending || subjects.isPending) && (
-            <div className="rounded-2xl bg-slate-50 p-6 text-sm text-(--text-secondary)" aria-busy="true">
+            <div className="rounded-surface bg-surface-subtle p-6 text-sm text-(--text-secondary)" aria-busy="true">
               Загружаем задания…
             </div>
           )}
 
           {(tasks.isError || subjects.isError) && (
-            <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-              <p className="text-sm text-red-700">Не удалось загрузить банк заданий.</p>
+            <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
+              <p className="text-sm text-danger">Не удалось загрузить банк заданий.</p>
 
               <Button
                 type="button"
@@ -177,8 +178,8 @@ export function TeacherTasksView() {
           )}
 
           {tasks.data?.items.length === 0 && (
-            <div className="rounded-xl bg-(--surface-muted) px-4 py-6 text-center">
-              <p className="font-semibold text-slate-900">Задания не найдены</p>
+            <div className="rounded-surface bg-(--surface-muted) px-4 py-6 text-center">
+              <p className="font-semibold text-foreground">Задания не найдены</p>
 
               <p className="mt-2 text-sm text-(--text-secondary)">Измените фильтры или создайте новое задание.</p>
             </div>
@@ -191,7 +192,7 @@ export function TeacherTasksView() {
 
         {tasks.data && tasks.data.totalPages > 1 && (
           <nav
-            className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-5"
+            className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5"
             aria-label="Пагинация заданий"
           >
             <Button

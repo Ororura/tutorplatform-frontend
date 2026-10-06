@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -64,55 +65,59 @@ export function EditStudentForm({ student, onDone }: Readonly<Props>) {
   });
 
   return (
-    <form className="space-y-5 rounded-xl border border-(--border) bg-white p-4 sm:p-6" onSubmit={onSubmit} noValidate>
+    <form
+      className="space-y-5 rounded-surface border border-(--border) bg-surface p-4 sm:p-6"
+      onSubmit={onSubmit}
+      noValidate
+    >
       <div>
-        <p className="text-sm font-medium text-blue-600">Редактирование</p>
+        <p className="text-sm font-medium text-primary">Редактирование</p>
 
-        <h2 className="mt-1 text-xl font-semibold text-slate-950">Данные ученика</h2>
+        <h2 className="section-title mt-1">Данные ученика</h2>
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="edit-student-first-name">
+        <label className="mb-2 block text-sm font-medium text-foreground-muted" htmlFor="edit-student-first-name">
           Имя
         </label>
 
-        <input
+        <Input
           id="edit-student-first-name"
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 outline-none transition focus:ring-4 focus:ring-blue-100"
+
           aria-invalid={Boolean(errors.firstName)}
           aria-describedby={errors.firstName ? "edit-student-first-name-error" : undefined}
           {...register("firstName")}
         />
 
         {errors.firstName && (
-          <p id="edit-student-first-name-error" className="mt-1 text-sm text-red-700">
+          <p id="edit-student-first-name-error" className="mt-1 text-sm text-danger">
             {errors.firstName.message}
           </p>
         )}
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="edit-student-last-name">
+        <label className="mb-2 block text-sm font-medium text-foreground-muted" htmlFor="edit-student-last-name">
           Фамилия
         </label>
 
-        <input
+        <Input
           id="edit-student-last-name"
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 outline-none transition focus:ring-4 focus:ring-blue-100"
+
           aria-invalid={Boolean(errors.lastName)}
           aria-describedby={errors.lastName ? "edit-student-last-name-error" : undefined}
           {...register("lastName")}
         />
 
         {errors.lastName && (
-          <p id="edit-student-last-name-error" className="mt-1 text-sm text-red-700">
+          <p id="edit-student-last-name-error" className="mt-1 text-sm text-danger">
             {errors.lastName.message}
           </p>
         )}
       </div>
 
       {errors.root?.server && (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="text-sm text-danger" role="alert">
           {errors.root.server.message}
         </p>
       )}

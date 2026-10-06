@@ -1,4 +1,5 @@
 "use client";
+import { Input, Textarea } from "@/shared/ui/form-controls";
 
 import { useState } from "react";
 
@@ -97,15 +98,15 @@ export function AssessmentForm({
 
   return (
     <form className="space-y-5" onSubmit={submit} noValidate>
-      <p className="text-sm text-neutral-600">Все поля необязательны. Оценки выставляются по шкале от 1 до 5.</p>
+      <p className="text-sm text-foreground-muted">Все поля необязательны. Оценки выставляются по шкале от 1 до 5.</p>
       <div className="grid gap-4 sm:grid-cols-2">
         {scoreFields.map(([field, label]) => (
           <label className="block space-y-2" key={field}>
-            <span className="text-sm font-medium">{label}</span>
-            <input
+            <span className="field-label">{label}</span>
+            <Input
               aria-describedby={errors[field] ? `${field}-error` : undefined}
               aria-invalid={Boolean(errors[field])}
-              className="h-11 w-full rounded-md border border-neutral-300 px-3"
+
               inputMode="numeric"
               max={5}
               min={1}
@@ -118,7 +119,7 @@ export function AssessmentForm({
               }}
             />
             {errors[field] && (
-              <p className="text-sm text-red-700" id={`${field}-error`}>
+              <p className="text-sm text-danger" id={`${field}-error`}>
                 {errors[field]}
               </p>
             )}
@@ -126,9 +127,9 @@ export function AssessmentForm({
         ))}
       </div>
       <label className="block space-y-2">
-        <span className="text-sm font-medium">Комментарий для ученика</span>
-        <textarea
-          className="min-h-28 w-full rounded-md border border-neutral-300 p-3"
+        <span className="field-label">Комментарий для ученика</span>
+        <Textarea
+          className="min-h-28"
           value={values.publicComment}
           onChange={(event) => {
             setValues((current) => ({ ...current, publicComment: event.target.value }));
@@ -137,7 +138,7 @@ export function AssessmentForm({
         />
       </label>
       {errors.server && (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="text-sm text-danger" role="alert">
           {errors.server}
         </p>
       )}

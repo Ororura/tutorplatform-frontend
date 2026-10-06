@@ -38,7 +38,7 @@ export function TeacherStudentHomeworkDetailView({
 
   if (homework.isPending) {
     return (
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <main className="page-stack">
         <p aria-busy="true">Загружаем домашнее задание…</p>
       </main>
     );
@@ -48,8 +48,8 @@ export function TeacherStudentHomeworkDetailView({
     const notFound = homework.error instanceof ApiClientError && homework.error.status === 404;
 
     return (
-      <main className="mx-auto max-w-4xl space-y-4 px-6 py-12">
-        <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-5" role="alert">
+      <main className="page-stack">
+        <div className="space-y-3 rounded-inset border border-danger-border bg-danger-subtle p-5" role="alert">
           <p>{notFound ? "Домашнее задание не найдено" : "Не удалось загрузить домашнее задание."}</p>
 
           {!notFound && (
@@ -89,19 +89,19 @@ export function TeacherStudentHomeworkDetailView({
   };
 
   return (
-    <main className="mx-auto max-w-4xl space-y-8 px-6 py-12">
+    <main className="page-stack">
       <div>
-        <Link className="text-sm text-neutral-600 underline" href={`/teacher/students/${studentId}/homework`}>
+        <Link className="text-sm text-foreground-muted underline" href={`/teacher/students/${studentId}/homework`}>
           ← Домашние задания
         </Link>
 
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-semibold">{homework.data.title}</h1>
+            <h1 className="page-title">{homework.data.title}</h1>
 
             <span
-              className={`mt-3 inline-block rounded-full px-2.5 py-1 text-sm ${
-                state === "OVERDUE" ? "bg-red-50 text-red-800" : "bg-neutral-100"
+              className={`badge mt-3 inline-block  ${
+                state === "OVERDUE" ? "bg-danger-subtle text-danger" : "bg-surface-subtle"
               }`}
             >
               {homeworkStatusPresentation[state]}
@@ -111,7 +111,7 @@ export function TeacherStudentHomeworkDetailView({
           {homework.data.status === "ASSIGNED" && (
             <div className="flex gap-3">
               <Link
-                className="inline-flex h-10 items-center rounded-xl border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-600"
+                className="inline-flex h-10 items-center rounded-surface border border-border-strong bg-surface px-4 text-sm font-medium text-foreground-muted transition hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-focus-ring"
                 href={`/teacher/students/${studentId}/homework/${homeworkId}/edit`}
               >
                 Редактировать
@@ -126,41 +126,41 @@ export function TeacherStudentHomeworkDetailView({
       </div>
 
       {cancelError && (
-        <p className="text-red-700" role="alert">
+        <p className="text-danger" role="alert">
           {cancelError}
         </p>
       )}
 
-      <section className="rounded-lg border bg-white p-6">
+      <section className="rounded-inset border bg-surface p-6 border-border">
         <dl className="grid gap-4 sm:grid-cols-2">
           <div>
-            <dt className="text-sm text-neutral-500">Программа</dt>
+            <dt className="text-sm text-foreground-muted">Программа</dt>
 
             <dd>{program ? `${program.title} · ${program.subject.name}` : "—"}</dd>
           </div>
 
           <div>
-            <dt className="text-sm text-neutral-500">Назначено</dt>
+            <dt className="text-sm text-foreground-muted">Назначено</dt>
 
             <dd>{formatHomeworkDate(homework.data.assignedAt)}</dd>
           </div>
 
           <div>
-            <dt className="text-sm text-neutral-500">Срок</dt>
+            <dt className="text-sm text-foreground-muted">Срок</dt>
 
             <dd>{homework.data.dueAt ? formatHomeworkDate(homework.data.dueAt) : "Без срока"}</dd>
           </div>
 
           <div>
-            <dt className="text-sm text-neutral-500">Выполнено</dt>
+            <dt className="text-sm text-foreground-muted">Выполнено</dt>
 
             <dd>{homework.data.completedAt ? formatHomeworkDate(homework.data.completedAt) : "—"}</dd>
           </div>
         </dl>
 
         {homework.data.description && (
-          <div className="mt-5 border-t pt-5">
-            <h2 className="mb-2 font-medium">Описание</h2>
+          <div className="mt-5 border-t pt-5 border-border">
+            <h2 className="section-title mb-2">Описание</h2>
 
             <p className="whitespace-pre-wrap">{homework.data.description}</p>
           </div>
@@ -168,12 +168,12 @@ export function TeacherStudentHomeworkDetailView({
       </section>
 
       <section className="space-y-4" aria-labelledby="items-heading">
-        <h2 className="text-xl font-semibold" id="items-heading">
+        <h2 className="section-title" id="items-heading">
           Задания
         </h2>
 
         {submissions.isError && (
-          <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-4" role="alert">
+          <div className="space-y-3 rounded-inset border border-danger-border bg-danger-subtle p-4" role="alert">
             <p>Не удалось загрузить решения ученика.</p>
 
             <Button type="button" onClick={() => submissions.refetch()}>
@@ -182,14 +182,14 @@ export function TeacherStudentHomeworkDetailView({
           </div>
         )}
 
-        <ol className="divide-y rounded-lg border bg-white">
+        <ol className="divide-y rounded-inset border bg-surface border-border divide-border">
           {items.map((item) => {
             const submission = latestSubmissions.get(item.id);
 
             return (
               <li className="space-y-4 p-4" key={item.id}>
                 <div className="flex items-center gap-4">
-                  <span className="text-neutral-500">{item.position + 1}.</span>
+                  <span className="text-foreground-muted">{item.position + 1}.</span>
 
                   {item.taskId ? (
                     <Link
@@ -202,9 +202,7 @@ export function TeacherStudentHomeworkDetailView({
                     <span className="flex-1">{item.taskTitle ?? "Задание"}</span>
                   )}
 
-                  <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs">
-                    {item.required ? "Обязательное" : "Необязательное"}
-                  </span>
+                  <span className="badge bg-surface-subtle">{item.required ? "Обязательное" : "Необязательное"}</span>
                 </div>
 
                 {submission?.textAnswer !== undefined && (
@@ -234,7 +232,7 @@ function TextSubmissionReview({
 
   return (
     <section
-      className="ml-8 space-y-3 rounded-md border border-neutral-200 bg-neutral-50 p-4"
+      className="ml-8 space-y-3 rounded-control border border-border bg-surface-subtle p-4"
       aria-label="Ответ ученика"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -243,14 +241,14 @@ function TextSubmissionReview({
         <div className="flex items-center gap-2">
           <SubmissionStatus status={submission.status} />
 
-          <span className="text-xs text-neutral-500">Попытка {submission.attemptNo}</span>
+          <span className="text-xs text-foreground-muted">Попытка {submission.attemptNo}</span>
         </div>
       </div>
 
       <p className="whitespace-pre-wrap text-sm">{submission.textAnswer}</p>
 
       {submission.status === "NEEDS_REVIEW" && (
-        <div className="space-y-3 border-t pt-3">
+        <div className="space-y-3 border-t pt-3 border-border">
           <div className="flex flex-wrap gap-2">
             <Button
               disabled={review.isPending}
@@ -283,7 +281,7 @@ function TextSubmissionReview({
           </div>
 
           {review.isError && isCurrentSubmission && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               Не удалось проверить решение. Попробуйте ещё раз.
             </p>
           )}
@@ -302,16 +300,16 @@ function SubmissionStatus({
 
   switch (status) {
     case "NEEDS_REVIEW":
-      return <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs text-amber-800">Ожидает проверки</span>;
+      return <span className="badge bg-warning-subtle text-warning">Ожидает проверки</span>;
 
     case "PASSED":
-      return <span className="rounded-full bg-green-50 px-2.5 py-1 text-xs text-green-800">Принято</span>;
+      return <span className="badge bg-success-subtle text-success">Принято</span>;
 
     case "FAILED":
-      return <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs text-red-800">Не принято</span>;
+      return <span className="badge bg-danger-subtle text-danger">Не принято</span>;
 
     default:
-      return <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs">{label}</span>;
+      return <span className="badge bg-surface-subtle">{label}</span>;
   }
 }
 

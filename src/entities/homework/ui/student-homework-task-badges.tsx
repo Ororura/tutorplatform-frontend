@@ -8,10 +8,10 @@ const typeLabels: Readonly<Record<string, string>> = { ...taskTypePresentation, 
 export function StudentHomeworkTaskBadges({ item }: Readonly<{ item: StudentHomeworkItem }>) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+      <span className="badge bg-surface-subtle text-foreground-muted">
         {typeLabels[item.task.taskType] ?? item.task.taskType}
       </span>
-      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+      <span className="badge bg-surface-subtle text-foreground-muted">
         {item.required ? "Обязательное" : "Дополнительное"}
       </span>
       <SubmissionStatusBadge status={item.passed ? "PASSED" : item.latestSubmissionStatus} />

@@ -9,6 +9,8 @@ import {
   type StudentHomeworkSummary,
 } from "@/entities/homework";
 
+import { buttonClassName } from "@/shared/ui/button";
+
 import { formatDashboardDeadline, getDeadlineHint, isHomeworkOverdue } from "../model/dashboard-presentation";
 import { DashboardProgress } from "./dashboard-primitives";
 
@@ -36,7 +38,7 @@ export function StudentHomeworkCard({
   return (
     <article
       aria-label={homework.title}
-      className={`rounded-2xl border p-4 transition sm:p-5 ${priority && overdue ? "border-red-200 bg-red-50/30 hover:border-red-300" : priority ? "border-blue-200 bg-blue-50/20 hover:border-blue-300" : "border-slate-200 hover:border-blue-200 hover:bg-blue-50/10"}`}
+      className={`rounded-surface border bg-surface p-4 transition sm:p-5 ${priority && overdue ? "border-danger-border hover:bg-danger-subtle" : priority ? "border-border hover:bg-surface-subtle" : "border-border hover:bg-surface-subtle"}`}
     >
       <div className="grid gap-4 min-[1380px]:grid-cols-[minmax(0,1fr)_240px]">
         <div className="min-w-0">
@@ -44,17 +46,15 @@ export function StudentHomeworkCard({
             (overdue ? (
               <StudentHomeworkStatusBadge state="OVERDUE" />
             ) : (
-              <span className="inline-flex rounded-lg bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+              <span className="inline-flex rounded-inset bg-primary-subtle px-3 py-1 text-xs font-medium text-primary">
                 Ближайшее задание
               </span>
             ))}
           <div className={`flex items-start gap-3 ${priority ? "mt-3" : ""}`}>
             {!priority && <StudentHomeworkIcon />}
             <div className="min-w-0 flex-1">
-              <h3 className="wrap-break-word text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
-                {homework.title}
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-slate-500">
+              <h3 className="card-title wrap-break-word">{homework.title}</h3>
+              <p className="mt-1 text-sm leading-6 text-foreground-muted">
                 {programTitle && (
                   <>
                     {programTitle}
@@ -64,18 +64,20 @@ export function StudentHomeworkCard({
                 Заданий: {homework.itemsCount}
               </p>
               {data?.description && (
-                <p className="mt-2 line-clamp-3 wrap-break-word text-sm leading-5 text-slate-500">{data.description}</p>
+                <p className="mt-2 line-clamp-3 wrap-break-word text-sm leading-5 text-foreground-muted">
+                  {data.description}
+                </p>
               )}
               {percent !== undefined && (
                 <div className="mt-4">
-                  <p className="mb-1.5 text-sm font-medium text-slate-600">
+                  <p className="mb-1.5 text-sm font-medium text-foreground-muted">
                     {completed} из {total} выполнено
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="min-w-0 flex-1">
                       <DashboardProgress value={percent} label={`Выполнение: ${homework.title}`} />
                     </div>
-                    <span className="text-xs font-medium text-slate-500">{percent}%</span>
+                    <span className="text-xs font-medium text-foreground-muted">{percent}%</span>
                   </div>
                 </div>
               )}
@@ -87,15 +89,15 @@ export function StudentHomeworkCard({
             <div className="flex items-start gap-2 text-sm">
               <CalendarClock
                 size={17}
-                className={`mt-0.5 shrink-0 ${overdue ? "text-red-500" : today ? "text-amber-600" : "text-slate-400"}`}
+                className={`mt-0.5 shrink-0 ${overdue ? "text-danger" : today ? "text-warning" : "text-foreground-subtle"}`}
                 aria-hidden="true"
               />
               <div className="min-w-0">
-                <p className="text-slate-500">
+                <p className="text-foreground-muted">
                   {overdue ? "Срок был " : "До "}
                   {formatDashboardDeadline(homework.dueAt, now)}
                 </p>
-                <p className={`mt-1 ${overdue ? "text-red-600" : today ? "text-amber-700" : "text-slate-500"}`}>
+                <p className={`mt-1 ${overdue ? "text-danger" : today ? "text-warning" : "text-foreground-muted"}`}>
                   {getDeadlineHint(homework.dueAt, now)}
                 </p>
               </div>
@@ -103,7 +105,7 @@ export function StudentHomeworkCard({
           )}
           <Link
             href={`/student/homework/${homework.id}`}
-            className={`group inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${priority ? "bg-blue-600 text-white hover:bg-blue-700" : "border border-slate-200 bg-white text-slate-900 hover:border-blue-200 hover:bg-blue-50"}`}
+            className={buttonClassName(priority ? "primary" : "secondary", "group")}
           >
             {action}
             <ArrowRight size={16} className="shrink-0 transition group-hover:translate-x-0.5" aria-hidden="true" />

@@ -91,7 +91,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
     return (
       <main>
         <p
-          className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-(--text-secondary)"
+          className="rounded-surface border border-(--border) bg-surface p-6 text-sm text-(--text-secondary)"
           aria-busy="true"
         >
           Загружаем тему…
@@ -116,10 +116,10 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
           : "Не удалось загрузить тему";
 
     return (
-      <main className="mx-auto min-w-0 max-w-5xl space-y-5">
-        <section className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
-          <h1 className="text-xl font-semibold text-slate-950">{title}</h1>
-          <p className="text-sm leading-6 text-red-700">
+      <main className="page-content page-stack min-w-0">
+        <section className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
+          <h1 className="page-title">{title}</h1>
+          <p className="text-sm leading-6 text-danger">
             {locked
               ? "Преподаватель ещё не открыл доступ к этой теме."
               : status === 403
@@ -142,7 +142,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
           )}
         </section>
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-primary"
           href={`/student/programs/${studentProgramId}`}
         >
           <ArrowLeft size={16} aria-hidden="true" />
@@ -165,40 +165,38 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
   const selectedTask = practiceTasks.find((task) => task.id === selectedTaskId);
 
   return (
-    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+    <main className="page-content page-stack min-w-0">
       <section className="py-2">
         <nav aria-label="Хлебные крошки">
           <ol className="flex flex-wrap items-center wrap-break-word gap-x-2 gap-y-1 text-sm text-(--text-secondary)">
             <li className="min-w-0">
-              <Link className="transition hover:text-blue-600" href="/student/programs">
+              <Link className="transition hover:text-primary" href="/student/programs">
                 Мои программы
               </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li className="min-w-0">
-              <Link className="transition hover:text-blue-600" href={`/student/programs/${studentProgramId}`}>
+              <Link className="transition hover:text-primary" href={`/student/programs/${studentProgramId}`}>
                 {program.data.title}
               </Link>
             </li>
             <li aria-hidden="true">/</li>
             <li>{topic.data.moduleTitle}</li>
             <li aria-hidden="true">/</li>
-            <li className="font-medium text-slate-700" aria-current="page">
+            <li className="font-medium text-foreground-muted" aria-current="page">
               {topic.data.title}
             </li>
           </ol>
         </nav>
 
         <div className="mt-6 flex items-start gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
             <BookOpenText size={22} aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-blue-600">{topic.data.moduleTitle}</p>
-            <h1 className="mt-1 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-              {topic.data.title}
-            </h1>
-            <div className="mt-4 text-sm text-slate-600">
+            <p className="text-sm font-medium text-primary">{topic.data.moduleTitle}</p>
+            <h1 className="page-title mt-1 wrap-break-word">{topic.data.title}</h1>
+            <div className="mt-4 text-sm text-foreground-muted">
               {topic.data.description ? (
                 <SafeMarkdown>{topic.data.description}</SafeMarkdown>
               ) : (
@@ -209,24 +207,21 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         </div>
       </section>
 
-      <section
-        className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6"
-        aria-labelledby="topic-materials-heading"
-      >
-        <h2 className="text-xl font-semibold text-slate-950" id="topic-materials-heading">
+      <section className="surface" aria-labelledby="topic-materials-heading">
+        <h2 className="section-title" id="topic-materials-heading">
           Учебные материалы
         </h2>
 
         {topic.data.materials.length === 0 ? (
-          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-(--text-secondary)">
+          <p className="mt-5 rounded-surface border border-dashed border-border bg-surface-subtle/60 p-8 text-center text-sm text-(--text-secondary)">
             Для этой темы пока нет материалов.
           </p>
         ) : (
-          <ol className="mt-4 divide-y divide-slate-200">
+          <ol className="mt-4 divide-y divide-border">
             {topic.data.materials.map((material) => (
               <li className="min-w-0 py-4" key={material.id}>
-                <h3 className="mb-3 font-semibold text-slate-950">{material.title}</h3>
-                <div className="text-sm text-slate-700">
+                <h3 className="mb-3 font-semibold text-foreground">{material.title}</h3>
+                <div className="text-sm text-foreground-muted">
                   <MaterialRenderer
                     material={material}
                     getDownloadUrl={getStudentDownloadUrl}
@@ -242,7 +237,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
                     }
                   />
                   {downloadErrorId === material.id && (
-                    <p className="mt-2 text-sm text-red-700" role="alert">
+                    <p className="mt-2 text-sm text-danger" role="alert">
                       Не удалось скачать файл. Попробуйте ещё раз.
                     </p>
                   )}
@@ -253,17 +248,14 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         )}
       </section>
 
-      <section
-        className="rounded-2xl border border-(--border) bg-white p-5 sm:p-6"
-        aria-labelledby="topic-practice-heading"
-      >
+      <section className="surface" aria-labelledby="topic-practice-heading">
         <div className="flex items-start gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
             <Code2 size={19} aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm font-medium text-indigo-600">Самостоятельная практика</p>
-            <h2 className="mt-1 text-xl font-semibold text-slate-950" id="topic-practice-heading">
+            <p className="text-sm font-medium text-primary">Самостоятельная практика</p>
+            <h2 className="section-title mt-1" id="topic-practice-heading">
               Практические задания
             </h2>
             <p className="mt-1 text-sm text-(--text-secondary)">Выберите задание и проверьте решение по тестам.</p>
@@ -271,17 +263,17 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         </div>
 
         {tasks.isPending && (
-          <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-(--text-secondary)" aria-busy="true">
+          <p className="mt-5 rounded-surface bg-surface-subtle p-4 text-sm text-(--text-secondary)" aria-busy="true">
             Загружаем задания…
           </p>
         )}
 
         {tasks.isError && (
           <div
-            className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-red-50 p-4"
+            className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-surface bg-danger-subtle p-4"
             role="alert"
           >
-            <p className="text-sm text-red-700">Не удалось загрузить практические задания.</p>
+            <p className="text-sm text-danger">Не удалось загрузить практические задания.</p>
             <Button type="button" variant="secondary" onClick={() => void tasks.refetch()}>
               Повторить
             </Button>
@@ -289,25 +281,25 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         )}
 
         {tasks.isSuccess && practiceTasks.length === 0 && (
-          <p className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center text-sm text-(--text-secondary)">
+          <p className="mt-5 rounded-surface border border-dashed border-border bg-surface-subtle/60 p-8 text-center text-sm text-(--text-secondary)">
             Для этой темы пока нет практических заданий.
           </p>
         )}
 
         {practiceTasks.length > 0 && (
-          <ol className="mt-5 divide-y divide-slate-100">
+          <ol className="mt-5 divide-y divide-border">
             {practiceTasks.map((task, index) => (
               <li className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center" key={task.id}>
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-semibold text-(--text-secondary)">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-surface bg-surface-subtle text-sm font-semibold text-(--text-secondary)">
                   {index + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-slate-950">{task.title}</h3>
-                  <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-600">
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                  <h3 className="font-semibold text-foreground">{task.title}</h3>
+                  <div className="mt-2 flex flex-wrap gap-2 text-xs text-foreground-muted">
+                    <span className="rounded-full bg-surface-subtle px-2.5 py-1">
                       {task.taskType === "CODE" ? "Код" : "Текст"}
                     </span>
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                    <span className="rounded-full bg-surface-subtle px-2.5 py-1">
                       {task.required ? "Обязательное" : "Дополнительное"}
                     </span>
                   </div>
@@ -326,52 +318,49 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
         <StudentTaskSolution key={selectedTask.id} practice={{ studentProgramId, topicId, task: selectedTask }} />
       )}
 
-      <nav
-        className="grid gap-3 rounded-2xl border border-(--border) bg-white p-5 sm:grid-cols-2 sm:p-6"
-        aria-label="Навигация по темам"
-      >
+      <nav className="grid gap-3 sm:grid-cols-2" aria-label="Навигация по темам">
         {previousTopic && !previousTopicLocked ? (
           <Link
-            className="flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-blue-200 hover:bg-blue-50/40"
+            className="flex items-center gap-3 rounded-surface border border-border p-4 transition hover:border-primary-border hover:bg-primary-subtle/40"
             href={`/student/programs/${studentProgramId}/topics/${previousTopic.id}`}
           >
-            <ArrowLeft className="shrink-0 text-blue-600" size={18} aria-hidden="true" />
+            <ArrowLeft className="shrink-0 text-primary" size={18} aria-hidden="true" />
 
             <span className="min-w-0">
               <span className="block text-xs text-(--text-secondary)">Предыдущая тема</span>
 
-              <span className="mt-1 block truncate font-medium text-slate-900">{previousTopic.title}</span>
+              <span className="mt-1 block truncate font-medium text-foreground">{previousTopic.title}</span>
             </span>
           </Link>
         ) : previousTopicLocked ? (
-          <p className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+          <p className="rounded-surface border border-dashed border-border bg-surface-subtle p-4 text-sm text-foreground-muted">
             Предыдущая тема заблокирована
           </p>
         ) : (
-          <p className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm text-slate-400">
+          <p className="rounded-surface border border-dashed border-border p-4 text-sm text-foreground-subtle">
             Предыдущей темы нет
           </p>
         )}
 
         {nextTopic && !nextTopicLocked ? (
           <Link
-            className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 p-4 text-right transition hover:border-blue-200 hover:bg-blue-50/40"
+            className="flex items-center justify-between gap-3 rounded-surface border border-border p-4 text-right transition hover:border-primary-border hover:bg-primary-subtle/40"
             href={`/student/programs/${studentProgramId}/topics/${nextTopic.id}`}
           >
             <span className="min-w-0">
               <span className="block text-xs text-(--text-secondary)">Следующая тема</span>
 
-              <span className="mt-1 block truncate font-medium text-slate-900">{nextTopic.title}</span>
+              <span className="mt-1 block truncate font-medium text-foreground">{nextTopic.title}</span>
             </span>
 
-            <ArrowRight className="shrink-0 text-blue-600" size={18} aria-hidden="true" />
+            <ArrowRight className="shrink-0 text-primary" size={18} aria-hidden="true" />
           </Link>
         ) : nextTopicLocked ? (
-          <p className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-right text-sm text-slate-500">
+          <p className="rounded-surface border border-dashed border-border bg-surface-subtle p-4 text-right text-sm text-foreground-muted">
             Следующая тема заблокирована
           </p>
         ) : (
-          <p className="rounded-2xl border border-dashed border-slate-200 p-4 text-right text-sm text-slate-400">
+          <p className="rounded-surface border border-dashed border-border p-4 text-right text-sm text-foreground-subtle">
             Следующей темы нет
           </p>
         )}

@@ -28,7 +28,7 @@ export function RevokeProgressShareButton({
         {mutation.isPending ? "Отзываем…" : "Отозвать"}
       </Button>
       {mutation.isError && (
-        <p className="max-w-xs text-sm text-red-700" role="alert">
+        <p className="max-w-xs text-sm text-danger" role="alert">
           {mutation.error instanceof ApiClientError
             ? mutation.error.body.message
             : "Не удалось отозвать публичную ссылку."}

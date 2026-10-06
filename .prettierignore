@@ -13,3 +13,5 @@ e2e-artifacts
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+public/monaco

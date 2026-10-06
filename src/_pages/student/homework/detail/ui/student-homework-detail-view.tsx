@@ -39,9 +39,9 @@ export function StudentHomeworkDetailView({
         : (homework.error as { status?: number }).status === 404;
 
     return (
-      <main className="mx-auto min-w-0 max-w-6xl space-y-5">
-        <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
-          <p className="text-sm text-red-700">
+      <main className="page-stack min-w-0">
+        <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
+          <p className="text-sm text-danger">
             {notFound ? "Домашнее задание не найдено" : "Не удалось загрузить домашнее задание."}
           </p>
 
@@ -53,7 +53,7 @@ export function StudentHomeworkDetailView({
         </div>
 
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring"
           href="/student/homework"
         >
           <ArrowLeft size={16} />
@@ -77,10 +77,10 @@ export function StudentHomeworkDetailView({
   const progress = requiredItems.length ? (passedRequired / requiredItems.length) * 100 : 0;
 
   return (
-    <main className="mx-auto min-w-0 max-w-6xl space-y-5">
+    <main className="page-stack min-w-0">
       <section className="py-2">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring"
           href="/student/homework"
         >
           <ArrowLeft size={16} />
@@ -92,11 +92,9 @@ export function StudentHomeworkDetailView({
             <StudentHomeworkIcon />
 
             <div className="min-w-0">
-              <p className="text-sm font-medium text-blue-600">Домашняя работа</p>
+              <p className="text-sm font-medium text-primary">Домашняя работа</p>
 
-              <h1 className="mt-1 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                {data.title}
-              </h1>
+              <h1 className="page-title mt-1 wrap-break-word">{data.title}</h1>
             </div>
           </div>
 
@@ -106,37 +104,36 @@ export function StudentHomeworkDetailView({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-(--border) bg-white p-5 shadow-xs sm:p-6">
+      <section className="surface">
         <dl className="grid gap-5 sm:grid-cols-3">
           <HomeworkDate label="Назначено" value={data.assignedAt} />
           {data.dueAt && <HomeworkDate label="Срок" value={data.dueAt} />}
           {data.completedAt && <HomeworkDate label="Выполнено" value={data.completedAt} completed />}
         </dl>
         {data.description && (
-          <div className="mt-5 border-t border-slate-100 pt-4">
-            <p className="wrap-break-word whitespace-pre-wrap text-sm leading-7 text-slate-700">{data.description}</p>
+          <div className="mt-5 border-t border-border pt-4">
+            <p className="wrap-break-word whitespace-pre-wrap text-sm leading-7 text-foreground-muted">
+              {data.description}
+            </p>
           </div>
         )}
       </section>
 
-      <section
-        className="rounded-2xl border border-(--border) bg-white p-4 shadow-xs sm:p-5"
-        aria-labelledby="items-heading"
-      >
+      <section className="surface" aria-labelledby="items-heading">
         <div className="flex items-center gap-4">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
             <ClipboardList size={22} aria-hidden="true" />
           </span>
           <div>
-            <h2 className="text-lg font-semibold text-slate-950" id="items-heading">
-              Задания <span className="font-normal text-slate-500">· {items.length}</span>
+            <h2 className="section-title" id="items-heading">
+              Задания <span className="font-normal text-foreground-muted">· {items.length}</span>
             </h2>
             <p className="mt-1 text-sm leading-5 text-(--text-secondary)">
               Выполняйте задания по порядку. Некоторые задания могут зависеть от предыдущих.
             </p>
           </div>
         </div>
-        {items.length === 0 && <p className="mt-5 text-sm text-slate-600">В этой работе пока нет заданий.</p>}
+        {items.length === 0 && <p className="mt-5 text-sm text-foreground-muted">В этой работе пока нет заданий.</p>}
         <ol className="mt-5 space-y-2" aria-label="Задания">
           {items.map((item) => {
             const supported = item.task.taskType === "TEXT" || item.task.taskType === "CODE";
@@ -144,25 +141,25 @@ export function StudentHomeworkDetailView({
             return (
               <li
                 className={cn(
-                  "flex min-w-0 flex-col gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center sm:gap-4",
+                  "flex min-w-0 flex-col gap-3 rounded-surface border p-4 sm:flex-row sm:items-center sm:gap-4",
                   selected
-                    ? "border-blue-200 bg-blue-50/40"
+                    ? "border-primary-border bg-primary-subtle/40"
                     : item.passed
-                      ? "border-emerald-100 bg-emerald-50/30"
-                      : "border-slate-100 bg-white",
+                      ? "border-success-border bg-success-subtle/30"
+                      : "border-border bg-surface",
                 )}
                 key={item.id}
               >
                 <span
                   className={cn(
-                    "flex size-10 shrink-0 items-center justify-center rounded-xl text-sm font-semibold",
-                    item.passed ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600",
+                    "flex size-10 shrink-0 items-center justify-center rounded-surface text-sm font-semibold",
+                    item.passed ? "bg-success-subtle text-success" : "bg-surface-subtle text-foreground-muted",
                   )}
                 >
                   {item.position + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="wrap-break-word font-semibold text-slate-950">{item.task.title}</h3>
+                  <h3 className="wrap-break-word font-semibold text-foreground">{item.task.title}</h3>
                   <div className="mt-2">
                     <StudentHomeworkTaskBadges item={item} />
                   </div>
@@ -176,7 +173,7 @@ export function StudentHomeworkDetailView({
                     aria-label={`${selected ? "Открыто" : "Открыть"}: ${item.task.title}`}
                     className={cn(
                       "shrink-0 self-start sm:self-auto",
-                      item.passed && !selected && "border-transparent bg-transparent text-emerald-700 shadow-none",
+                      item.passed && !selected && "border-transparent bg-transparent text-success shadow-none",
                     )}
                     onClick={() => setOpenedItemId(item.id)}
                   >
@@ -185,7 +182,7 @@ export function StudentHomeworkDetailView({
                     <ChevronRight size={16} className="ml-2" aria-hidden="true" />
                   </Button>
                 ) : (
-                  <span className="text-sm text-slate-500">Пока не поддерживается</span>
+                  <span className="text-sm text-foreground-muted">Пока не поддерживается</span>
                 )}
               </li>
             );
@@ -197,24 +194,21 @@ export function StudentHomeworkDetailView({
         <StudentTaskSolution homeworkId={data.id} homeworkStatus={data.status} item={openedItem} key={openedItem.id} />
       )}
 
-      <section
-        className="flex items-start gap-4 rounded-2xl border border-(--border) bg-white p-5 shadow-xs sm:p-6"
-        aria-labelledby="progress-heading"
-      >
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+      <section className="surface flex items-start gap-4" aria-labelledby="progress-heading">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
           <ListChecks size={22} aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="font-semibold text-slate-950" id="progress-heading">
+          <h2 className="section-title" id="progress-heading">
             Прогресс работы
           </h2>
           <div className="mt-3 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:gap-6">
             <div className="flex-1">
               <ProgressBar value={progress} label="Выполнено обязательных заданий" />
             </div>
-            <p className="shrink-0 text-xl font-semibold text-slate-950">
+            <p className="shrink-0 text-xl font-semibold text-foreground">
               {passedRequired}
-              <span className="text-sm font-medium text-slate-500"> / {requiredItems.length}</span>
+              <span className="text-sm font-medium text-foreground-muted"> / {requiredItems.length}</span>
             </p>
           </div>
           <p className="mt-2 text-sm text-(--text-secondary)">
@@ -242,13 +236,13 @@ function HomeworkDate({
   return (
     <div className="flex min-w-0 items-center gap-4">
       <span
-        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl ${completed ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600"}`}
+        className={`flex size-11 shrink-0 items-center justify-center rounded-surface ${completed ? "bg-success-subtle text-success" : "bg-primary-subtle text-primary"}`}
       >
         <Icon size={21} aria-hidden="true" />
       </span>
       <div className="min-w-0">
         <dt className="text-sm text-(--text-secondary)">{label}</dt>
-        <dd className="mt-1 wrap-break-word text-sm font-medium text-slate-900">
+        <dd className="mt-1 wrap-break-word text-sm font-medium text-foreground">
           <time dateTime={value}>{formatHomeworkDate(value)}</time>
         </dd>
       </div>
@@ -258,25 +252,25 @@ function HomeworkDate({
 
 function HomeworkDetailSkeleton() {
   return (
-    <main className="mx-auto min-w-0 max-w-6xl space-y-5" role="status" aria-busy="true">
+    <main className="page-stack min-w-0" role="status" aria-busy="true">
       <span className="sr-only">Загружаем домашнее задание…</span>
       <div aria-hidden="true" className="space-y-5 motion-safe:animate-pulse">
-        <div className="h-4 w-40 rounded bg-slate-200" />
-        <div className="h-14 w-2/3 rounded-xl bg-slate-200" />
-        <div className="grid gap-5 rounded-2xl border border-slate-100 bg-white p-6 sm:grid-cols-3">
+        <div className="h-4 w-40 rounded bg-surface-hover" />
+        <div className="h-14 w-2/3 rounded-surface bg-surface-hover" />
+        <div className="surface grid gap-5 sm:grid-cols-3">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-12 rounded-xl bg-slate-100" />
+            <div key={n} className="h-12 rounded-surface bg-surface-subtle" />
           ))}
         </div>
-        <div className="space-y-3 rounded-2xl border border-slate-100 bg-white p-5">
-          <div className="h-6 w-32 rounded bg-slate-100" />
+        <div className="surface space-y-3">
+          <div className="h-6 w-32 rounded bg-surface-subtle" />
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-20 rounded-xl bg-slate-100" />
+            <div key={n} className="h-20 rounded-surface bg-surface-subtle" />
           ))}
         </div>
-        <div className="space-y-5 rounded-2xl border border-slate-100 bg-white p-6">
-          <div className="h-7 w-2/3 rounded bg-slate-100" />
-          <div className="h-32 rounded-xl bg-slate-100" />
+        <div className="surface space-y-5">
+          <div className="h-7 w-2/3 rounded bg-surface-subtle" />
+          <div className="h-32 rounded-surface bg-surface-subtle" />
         </div>
       </div>
     </main>

@@ -10,6 +10,8 @@ import { GuestGuard } from "@/entities/user";
 import { AcceptTeacherInvitationForm } from "@/features/teacher-invitation/accept";
 
 import { Button } from "@/shared/ui/button";
+import { PageHeader } from "@/shared/ui/page-header";
+import { Surface } from "@/shared/ui/surface";
 
 const unavailableMessages = {
   ACCEPTED: "Это приглашение уже было использовано.",
@@ -36,19 +38,19 @@ function InvitationContent({ token }: Readonly<Props>) {
 
   if (invitation.isPending) {
     return (
-      <main className="grid min-h-screen place-items-center px-6" aria-busy="true">
-        <p className="text-sm text-neutral-600">Проверяем приглашение…</p>
+      <main className="grid min-h-svh place-items-center px-(--page-gutter)" aria-busy="true">
+        <p className="feedback">Проверяем приглашение…</p>
       </main>
     );
   }
 
   if (invitation.isError) {
     return (
-      <main className="grid min-h-screen place-items-center px-6">
-        <div className="max-w-md space-y-5 text-center">
-          <h1 className="text-2xl font-semibold">Приглашение недоступно</h1>
+      <main className="grid min-h-svh place-items-center px-(--page-gutter)">
+        <div className="page-form surface space-y-5 text-center">
+          <h1 className="page-title">Приглашение недоступно</h1>
 
-          <p role="alert" className="text-neutral-600">
+          <p role="alert" className="text-foreground-muted">
             {getTeacherInvitationErrorMessage(invitation.error)}
           </p>
 
@@ -62,11 +64,11 @@ function InvitationContent({ token }: Readonly<Props>) {
 
   if (invitation.data.status !== "ACTIVE") {
     return (
-      <main className="grid min-h-screen place-items-center px-6">
-        <div className="max-w-md space-y-5 text-center">
-          <h1 className="text-2xl font-semibold">Приглашение недействительно</h1>
+      <main className="grid min-h-svh place-items-center px-(--page-gutter)">
+        <div className="page-form surface space-y-5 text-center">
+          <h1 className="page-title">Приглашение недействительно</h1>
 
-          <p className="text-neutral-600">{unavailableMessages[invitation.data.status]}</p>
+          <p className="text-foreground-muted">{unavailableMessages[invitation.data.status]}</p>
 
           <Link href="/login" className="inline-block text-sm font-medium underline underline-offset-4">
             Перейти ко входу
@@ -79,40 +81,37 @@ function InvitationContent({ token }: Readonly<Props>) {
   const expiresAt = new Date(invitation.data.expiresAt);
 
   return (
-    <main className="mx-auto max-w-xl px-6 py-12 sm:py-16">
-      <header className="border-b border-neutral-200 pb-8">
-        <p className="text-sm text-neutral-500">Умнее Вместе</p>
-
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight">Присоединиться к платформе</h1>
-
-        <p className="mt-3 text-neutral-600">Вас пригласили зарегистрироваться в качестве преподавателя.</p>
-      </header>
-
-      <section className="mt-8 rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
-        <p className="text-sm text-neutral-500">Email аккаунта</p>
+    <main className="page-form page-stack px-(--page-gutter) py-8 sm:py-12">
+      <PageHeader
+        eyebrow="Умнее Вместе"
+        title="Присоединиться к платформе"
+        description="Вас пригласили зарегистрироваться в качестве преподавателя."
+      />
+      <Surface inset>
+        <p className="text-sm text-foreground-muted">Email аккаунта</p>
 
         <p className="mt-1 break-all font-medium">{invitation.data.email}</p>
 
-        <p className="mt-4 text-sm text-neutral-500">Приглашение действительно до</p>
+        <p className="mt-4 text-sm text-foreground-muted">Приглашение действительно до</p>
 
         <p className="mt-1 text-sm font-medium">
           {Number.isNaN(expiresAt.getTime()) ? "Нет данных" : expiresAt.toLocaleString("ru-RU")}
         </p>
 
-        <p className="mt-4 text-sm leading-6 text-neutral-600">
+        <p className="mt-4 text-sm leading-6 text-foreground-muted">
           Этот email привязан к приглашению. Изменить его при регистрации нельзя.
         </p>
-      </section>
+      </Surface>
 
-      <section className="mt-8">
-        <h2 className="mb-6 text-xl font-semibold">Создание аккаунта</h2>
+      <section>
+        <h2 className="section-title mb-5">Создание аккаунта</h2>
 
         <AcceptTeacherInvitationForm token={token} />
       </section>
 
-      <p className="mt-8 text-sm text-neutral-600">
+      <p className="text-sm text-foreground-muted">
         Уже есть аккаунт?{" "}
-        <Link href="/login" className="font-medium text-neutral-900 underline underline-offset-4">
+        <Link href="/login" className="font-medium text-foreground underline underline-offset-4">
           Войти
         </Link>
       </p>

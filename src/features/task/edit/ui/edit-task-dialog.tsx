@@ -1,4 +1,5 @@
 "use client";
+import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -12,6 +13,12 @@ import {
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
+import {
+  javaStarterCode,
+  programmingLanguageLabels,
+  type ProgrammingLanguage,
+} from "@/entities/task/model/programming-language";
+
 import { useUpdateTaskMutation } from "../api/update-task";
 
 export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
@@ -21,6 +28,8 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
   const [description, setDescription] = useState(task.descriptionMarkdown);
   const [difficulty, setDifficulty] = useState<TaskDifficulty>(task.difficulty);
   const [status, setStatus] = useState<TaskStatus>(task.status);
+  const [language, setLanguage] = useState<ProgrammingLanguage>(task.programmingConfig?.language ?? "PYTHON");
+  const [starterCode, setStarterCode] = useState(task.programmingConfig?.starterCode ?? "");
   const [error, setError] = useState("");
   const mutation = useUpdateTaskMutation(task.id);
   useEffect(() => {
@@ -41,6 +50,17 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
         difficulty,
         status,
         version: task.version,
+        ...(task.programmingConfig
+          ? {
+              programmingConfig: {
+                language,
+                starterCode,
+                executionEnabled: task.programmingConfig.executionEnabled,
+                timeLimitMs: task.programmingConfig.timeLimitMs,
+                memoryLimitMb: task.programmingConfig.memoryLimitMb,
+              },
+            }
+          : {}),
       });
       setOpen(false);
     } catch (caught) {
@@ -59,12 +79,12 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
       <dialog
         ref={dialogRef}
         aria-labelledby="edit-task-title"
-        className="m-auto w-[min(42rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+        className="dialog-surface w-[min(42rem,calc(100%-2rem))] overflow-auto"
         onClose={() => setOpen(false)}
       >
         <form className="space-y-5 p-6" onSubmit={submit}>
           <div className="flex justify-between">
-            <h2 id="edit-task-title" className="text-xl font-semibold">
+            <h2 id="edit-task-title" className="section-title">
               Редактировать задание
             </h2>
             <button className="text-sm underline" type="button" onClick={() => setOpen(false)}>
@@ -72,54 +92,72 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
             </button>
           </div>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Название</span>
-            <input
-              className="h-11 w-full rounded-md border px-3"
-              maxLength={220}
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-            />
+            <span className="field-label">Название</span>
+            <Input maxLength={220} value={title} onChange={(event) => setTitle(event.target.value)} />
           </label>
           <label className="block space-y-2">
-            <span className="text-sm font-medium">Описание Markdown</span>
-            <textarea
-              className="min-h-36 w-full rounded-md border p-3"
+            <span className="field-label">Описание Markdown</span>
+            <Textarea
+              className="min-h-36"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
             />
           </label>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="space-y-2">
-              <span className="block text-sm font-medium">Сложность</span>
-              <select
-                className="h-11 w-full rounded-md border px-3"
-                value={difficulty}
-                onChange={(event) => setDifficulty(event.target.value as TaskDifficulty)}
-              >
+              <span className="field-label">Сложность</span>
+              <Select value={difficulty} onChange={(event) => setDifficulty(event.target.value as TaskDifficulty)}>
                 {(Object.keys(taskDifficultyPresentation) as TaskDifficulty[]).map((value) => (
                   <option key={value} value={value}>
                     {taskDifficultyPresentation[value]}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
             <label className="space-y-2">
-              <span className="block text-sm font-medium">Статус</span>
-              <select
-                className="h-11 w-full rounded-md border px-3"
-                value={status}
-                onChange={(event) => setStatus(event.target.value as TaskStatus)}
-              >
+              <span className="field-label">Статус</span>
+              <Select value={status} onChange={(event) => setStatus(event.target.value as TaskStatus)}>
                 {(Object.keys(taskStatusPresentation) as TaskStatus[]).map((value) => (
                   <option key={value} value={value}>
                     {taskStatusPresentation[value]}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
           </div>
+          {task.programmingConfig && (
+            <fieldset className="space-y-4 rounded-inset border border-border p-4">
+              <legend className="px-1 font-medium">Конфигурация программы</legend>
+              <label className="block space-y-2">
+                <span className="field-label">Язык</span>
+                <Select
+                  aria-label="Язык"
+                  value={language}
+                  onChange={(event) => {
+                    const next = event.target.value as ProgrammingLanguage;
+                    setLanguage(next);
+                    if (next === "JAVA" && !starterCode.trim()) setStarterCode(javaStarterCode);
+                  }}
+                >
+                  {Object.entries(programmingLanguageLabels).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </Select>
+              </label>
+              <label className="block space-y-2">
+                <span className="field-label">Стартовый код</span>
+                <Textarea
+                  className="min-h-28 font-mono"
+                  value={starterCode}
+                  onChange={(event) => setStarterCode(event.target.value)}
+                />
+              </label>
+            </fieldset>
+          )}
           {error && (
-            <p className="text-sm text-red-700" role="alert">
+            <p className="text-sm text-danger" role="alert">
               {error}
             </p>
           )}

@@ -34,7 +34,7 @@ export function applicationCsp(nonce?: string) {
     "img-src 'self' blob:",
     "font-src 'self'",
     "connect-src 'self'",
-    "worker-src 'none'",
+    "worker-src 'self'",
     "media-src 'none'",
     "object-src 'none'",
     "frame-src 'none'",

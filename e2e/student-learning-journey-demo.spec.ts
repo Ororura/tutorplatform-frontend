@@ -1,3 +1,4 @@
+import { fillCodeEditor } from "./helpers/journeys";
 import { expect, test, type Page } from "@playwright/test";
 
 const studentEmail = "alex.demo@tutor.local";
@@ -30,7 +31,7 @@ test("demo student completes the learning journey", async ({ page }) => {
   await expect(programOverview.getByRole("progressbar").first()).toBeVisible();
   await expect(page.getByText("Быстрые действия")).toHaveCount(0);
 
-  const mascot = page.locator("main header img");
+  const dashboardTitle = page.getByRole("heading", { name: "Добрый день, Алексей!", exact: true });
 
   for (const width of [1536, 1440, 1280, 1024, 768, 390]) {
     await page.setViewportSize({ width, height: 1000 });
@@ -41,12 +42,12 @@ test("demo student completes the learning journey", async ({ page }) => {
     expect(homeworkBox).not.toBeNull();
     expect(programBox).not.toBeNull();
     if (width >= 1280) {
-      await expect(mascot).toBeVisible();
-      await expect.poll(() => mascot.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+      await expect(dashboardTitle).toBeVisible();
+      await expect(dashboardTitle).toHaveClass(/page-title/);
       expect(homeworkBox!.width / programBox!.width).toBeGreaterThan(1.7);
       expect(homeworkBox!.width / programBox!.width).toBeLessThan(1.9);
     } else {
-      await expect(mascot).toBeHidden();
+      await expect(dashboardTitle).toBeVisible();
       expect(homeworkBox!.y + homeworkBox!.height).toBeLessThan(programBox!.y);
     }
     if (width === 1440 || width === 390) {
@@ -91,7 +92,13 @@ test("demo student completes the learning journey", async ({ page }) => {
   await expect(codeTask.getByText("Код", { exact: true })).toBeVisible();
   await codeTask.getByRole("button", { name: "Решить" }).click();
 
-  await page.getByLabel("Код решения").fill('print("Hello, World!")');
+  await fillCodeEditor(page, 'print("Hello, World!")');
+  for (const width of [375, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    await expect(page.locator(".monaco-editor")).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath(`student-code-solution-${width}.png`), fullPage: true });
+  }
   await page.getByRole("button", { name: "Отправить решение" }).click();
 
   const submissionResult = page.getByRole("region", { name: "Результат отправки" });

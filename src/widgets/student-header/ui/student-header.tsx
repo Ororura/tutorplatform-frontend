@@ -1,9 +1,7 @@
 "use client";
 
-import { BookOpen } from "lucide-react";
-import Link from "next/link";
-
 import { StudentNavigation, useCurrentUserQuery } from "@/entities/user";
+import { AppBrand } from "@/shared/ui/app-brand";
 import { LogoutButton } from "@/features/auth/logout";
 
 function getInitials(name?: string) {
@@ -23,36 +21,23 @@ export function StudentHeader() {
   const displayName = currentUser.data?.displayName ?? "Ученик";
 
   return (
-    <header className="sticky top-0 z-40 pt-3">
-      <div className="mx-auto max-w-[1600px] px-3 sm:px-5">
-        <div className="overflow-hidden rounded-2xl border border-(--border) bg-white/95 shadow-(--shadow-header) backdrop-blur-xl">
-          <div className="flex h-15 items-center gap-5 px-4 sm:px-5">
-            <Link
-              aria-label="Умнее Вместе — главная"
-              className="flex shrink-0 items-center gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              href="/student"
-            >
-              <span className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 text-white">
-                <BookOpen size={21} strokeWidth={2.1} aria-hidden="true" />
-              </span>
-
-              <span className="hidden leading-tight sm:block">
-                <span className="block text-[15px] font-semibold tracking-tight text-slate-950">Умнее Вместе</span>
-                <span className="mt-0.5 block text-[11px] text-slate-500">Кабинет ученика</span>
-              </span>
-            </Link>
+    <header className="app-header">
+      <div className="app-container">
+        <div className="min-w-0">
+          <div className="app-header-row">
+            <AppBrand href="/student" subtitle="Кабинет ученика" />
 
             <StudentNavigation />
 
             <div className="ml-auto flex items-center gap-3">
-              <div className="hidden items-center gap-3 border-r border-slate-100 pr-4 md:flex">
-                <span className="flex size-9 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-blue-700">
+              <div className="hidden items-center gap-3 border-r border-border pr-4 md:flex">
+                <span className="flex size-9 items-center justify-center rounded-full bg-surface-subtle text-sm font-semibold text-foreground-muted">
                   {getInitials(displayName)}
                 </span>
 
                 <span className="hidden leading-tight xl:block">
-                  <span className="block max-w-40 truncate text-sm font-medium text-slate-900">{displayName}</span>
-                  <span className="block text-xs text-slate-500">Ученик</span>
+                  <span className="block max-w-40 truncate text-sm font-medium text-foreground">{displayName}</span>
+                  <span className="block text-xs text-foreground-muted">Ученик</span>
                 </span>
               </div>
 

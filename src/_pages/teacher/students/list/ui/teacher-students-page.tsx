@@ -6,7 +6,7 @@ export function TeacherStudentsPage() {
   return (
     <Suspense
       fallback={
-        <div className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
+        <div className="surface text-sm text-foreground-muted" aria-busy="true">
           Загружаем страницу…
         </div>
       }

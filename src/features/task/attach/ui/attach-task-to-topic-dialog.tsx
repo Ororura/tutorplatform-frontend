@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -78,16 +79,16 @@ export function AttachTaskToTopicDialog({
         <dialog
           ref={dialogRef}
           aria-labelledby="attach-task-title"
-          className="m-auto w-[min(48rem,calc(100%-2rem))] rounded-xl border border-neutral-200 bg-white p-0 shadow-xl"
+          className="dialog-surface w-[min(48rem,calc(100%-2rem))]"
           onClose={close}
         >
           <div className="space-y-5 p-5 sm:p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 id="attach-task-title" className="text-xl font-semibold text-slate-950">
+                <h2 id="attach-task-title" className="section-title">
                   Прикрепить задание
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">Доступны активные задания предмета этой программы.</p>
+                <p className="mt-1 text-sm text-foreground-muted">Доступны активные задания предмета этой программы.</p>
               </div>
               <button type="button" className="text-sm underline" onClick={close}>
                 Закрыть
@@ -95,34 +96,39 @@ export function AttachTaskToTopicDialog({
             </div>
 
             <label className="block space-y-2">
-              <span className="text-sm font-medium">Поиск по названию</span>
-              <input
+              <span className="field-label">Поиск по названию</span>
+              <Input
                 aria-label="Поиск по названию"
-                className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm"
+
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
               />
             </label>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
-              <input checked={required} type="checkbox" onChange={(event) => setRequired(event.target.checked)} />
+            <label className="flex items-center gap-2 text-sm text-foreground-muted">
+              <Input checked={required} type="checkbox" onChange={(event) => setRequired(event.target.checked)} />
               Обязательное задание
             </label>
 
             {error && (
-              <p className="rounded-xl border border-red-100 bg-red-50 p-3 text-sm text-red-700" role="alert">
+              <p
+                className="rounded-surface border border-danger-border bg-danger-subtle p-3 text-sm text-danger"
+                role="alert"
+              >
                 {error}
               </p>
             )}
 
             {availableTasks.length === 0 ? (
-              <p className="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">Подходящих заданий не найдено.</p>
+              <p className="rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted">
+                Подходящих заданий не найдено.
+              </p>
             ) : (
-              <ul className="max-h-80 divide-y overflow-y-auto rounded-xl border border-slate-100">
+              <ul className="max-h-80 divide-y overflow-y-auto rounded-surface border border-border divide-border">
                 {availableTasks.map((task) => (
                   <li key={task.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
                     <div>
-                      <p className="font-medium text-slate-900">{task.title}</p>
-                      <p className="mt-1 text-sm text-slate-500">
+                      <p className="font-medium text-foreground">{task.title}</p>
+                      <p className="mt-1 text-sm text-foreground-muted">
                         {taskTypePresentation[task.taskType]} · {taskDifficultyPresentation[task.difficulty]}
                       </p>
                     </div>

@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -48,52 +49,52 @@ export function CreateStudentForm({ onSuccess }: Readonly<{ onSuccess?: () => vo
 
   return (
     <form
-      className="grid gap-4 rounded-lg border border-neutral-200 bg-white p-5 sm:grid-cols-2"
+      className="grid gap-4 rounded-inset border border-border bg-surface p-5 sm:grid-cols-2"
       onSubmit={onSubmit}
       noValidate
     >
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="create-student-first-name">
+        <label className="field-label" htmlFor="create-student-first-name">
           Имя
         </label>
-        <input
+        <Input
           autoFocus
           id="create-student-first-name"
-          className="h-10 w-full rounded-md border border-neutral-300 px-3 outline-none focus:ring-2 focus:ring-neutral-300"
+
           aria-invalid={Boolean(errors.firstName)}
           aria-describedby={errors.firstName ? "create-student-first-name-error" : undefined}
           {...register("firstName")}
         />
         {errors.firstName && (
-          <p id="create-student-first-name-error" className="text-sm text-red-700">
+          <p id="create-student-first-name-error" className="text-sm text-danger">
             {errors.firstName.message}
           </p>
         )}
       </div>
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="create-student-last-name">
+        <label className="field-label" htmlFor="create-student-last-name">
           Фамилия
         </label>
-        <input
+        <Input
           id="create-student-last-name"
-          className="h-10 w-full rounded-md border border-neutral-300 px-3 outline-none focus:ring-2 focus:ring-neutral-300"
+
           aria-invalid={Boolean(errors.lastName)}
           aria-describedby={errors.lastName ? "create-student-last-name-error" : undefined}
           {...register("lastName")}
         />
         {errors.lastName && (
-          <p id="create-student-last-name-error" className="text-sm text-red-700">
+          <p id="create-student-last-name-error" className="text-sm text-danger">
             {errors.lastName.message}
           </p>
         )}
       </div>
       {errors.root?.server && (
-        <p className="text-sm text-red-700 sm:col-span-2" role="alert">
+        <p className="text-sm text-danger sm:col-span-2" role="alert">
           {errors.root.server.message}
         </p>
       )}
       {mutation.isSuccess && (
-        <p className="text-sm text-green-700 sm:col-span-2" role="status">
+        <p className="text-sm text-success sm:col-span-2" role="status">
           Ученик создан.
         </p>
       )}

@@ -1,4 +1,5 @@
 "use client";
+import { Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Clock3, FileText } from "lucide-react";
@@ -56,7 +57,7 @@ export function TeacherStudentReportDetailView({
 
   if (report.isPending) {
     return (
-      <main className="mx-auto max-w-5xl px-6 py-12">
+      <main className="page-content page-stack">
         <p aria-busy="true">Загружаем отчёт…</p>
       </main>
     );
@@ -64,14 +65,14 @@ export function TeacherStudentReportDetailView({
 
   if (report.isError) {
     return (
-      <main className="mx-auto max-w-5xl space-y-4 px-6 py-12">
-        <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-          <p className="text-sm text-red-700">Не удалось загрузить отчёт.</p>
+      <main className="page-content page-stack">
+        <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
+          <p className="text-sm text-danger">Не удалось загрузить отчёт.</p>
           <Button type="button" variant="secondary" onClick={() => report.refetch()}>
             Повторить
           </Button>
         </div>
-        <Link className="text-sm font-medium text-blue-600" href={`/teacher/students/${studentId}/reports`}>
+        <Link className="text-sm font-medium text-primary" href={`/teacher/students/${studentId}/reports`}>
           Вернуться к отчётам
         </Link>
       </main>
@@ -155,35 +156,31 @@ function ReportDetails({
   };
 
   return (
-    <main className="mx-auto max-w-5xl space-y-5 px-6 py-12">
+    <main className="page-content page-stack">
       <Link
-        className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600"
+        className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted hover:text-primary"
         href={`/teacher/students/${studentId}/reports`}
       >
         <ArrowLeft size={16} /> Все отчёты
       </Link>
 
-      <section className="rounded-2xl border border-(--border) bg-white p-6">
+      <section className="surface">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-4">
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
               <FileText size={21} />
             </span>
             <div>
-              <p className="text-sm font-medium text-blue-600">Отчёт об успеваемости</p>
-              <h1 className="mt-1 text-2xl font-semibold text-slate-950">
-                {formatReportPeriod(report.periodStartedAt, report.periodEndedAt)}
-              </h1>
+              <p className="text-sm font-medium text-primary">Отчёт об успеваемости</p>
+              <h1 className="page-title mt-1">{formatReportPeriod(report.periodStartedAt, report.periodEndedAt)}</h1>
             </div>
           </div>
-          <span
-            className={`rounded-full px-2.5 py-1 text-xs font-medium ${progressReportStatusClassNames[report.status]}`}
-          >
+          <span className={`badge  ${progressReportStatusClassNames[report.status]}`}>
             {progressReportStatusLabels[report.status]}
           </span>
         </div>
         {!editable && (
-          <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+          <p className="mt-5 rounded-surface bg-surface-subtle p-4 text-sm text-foreground-muted">
             Этот отчёт хранит исторический snapshot и доступен только для чтения.
           </p>
         )}
@@ -191,11 +188,11 @@ function ReportDetails({
 
       <ReportPublicationManagement reportId={report.id} status={report.status} />
 
-      <section className="rounded-2xl border border-(--border) bg-white p-6" aria-labelledby="report-snapshot-heading">
-        <h2 id="report-snapshot-heading" className="text-xl font-semibold text-slate-950">
+      <section className="surface" aria-labelledby="report-snapshot-heading">
+        <h2 id="report-snapshot-heading" className="section-title">
           Результаты периода
         </h2>
-        <p className="mt-1 text-sm text-slate-500">Зафиксированы при создании отчёта и не пересчитываются.</p>
+        <p className="mt-1 text-sm text-foreground-muted">Зафиксированы при создании отчёта и не пересчитываются.</p>
 
         <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <Metric
@@ -222,7 +219,7 @@ function ReportDetails({
         </div>
 
         <section className="mt-6" aria-labelledby="report-assessments-heading">
-          <h3 id="report-assessments-heading" className="font-semibold text-slate-950">
+          <h3 id="report-assessments-heading" className="font-semibold text-foreground">
             Средние оценки
           </h3>
           <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -233,22 +230,22 @@ function ReportDetails({
         </section>
       </section>
 
-      <section className="rounded-2xl border border-(--border) bg-white p-6">
-        <h2 className="text-xl font-semibold text-slate-950">Комментарий преподавателя</h2>
+      <section className="surface">
+        <h2 className="section-title">Комментарий преподавателя</h2>
         {editable ? (
           <form className="mt-5 space-y-5" onSubmit={save}>
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-slate-700">Итоги периода</span>
-              <textarea
-                className="min-h-36 w-full resize-y rounded-xl border border-slate-200 p-3 text-slate-900 outline-none focus:ring-3 focus:ring-blue-100"
+              <span className="text-sm font-medium text-foreground-muted">Итоги периода</span>
+              <Textarea
+                className="min-h-36 resize-y"
                 value={teacherSummary}
                 onChange={(event) => setTeacherSummary(event.target.value)}
               />
             </label>
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-slate-700">План на следующий период</span>
-              <textarea
-                className="min-h-36 w-full resize-y rounded-xl border border-slate-200 p-3 text-slate-900 outline-none focus:ring-3 focus:ring-blue-100"
+              <span className="text-sm font-medium text-foreground-muted">План на следующий период</span>
+              <Textarea
+                className="min-h-36 resize-y"
                 value={nextPeriodPlan}
                 onChange={(event) => setNextPeriodPlan(event.target.value)}
               />
@@ -260,7 +257,7 @@ function ReportDetails({
               <Button type="button" variant="secondary" disabled={busy || dirty} onClick={publish}>
                 {publishReport.isPending ? "Публикуем…" : "Опубликовать"}
               </Button>
-              {dirty && <p className="text-sm text-slate-500">Сохраните изменения перед публикацией.</p>}
+              {dirty && <p className="text-sm text-foreground-muted">Сохраните изменения перед публикацией.</p>}
             </div>
           </form>
         ) : (
@@ -272,17 +269,17 @@ function ReportDetails({
 
         {actionError && (
           <div
-            className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-red-100 bg-red-50 p-4"
+            className="mt-5 flex flex-wrap items-center gap-3 rounded-surface border border-danger-border bg-danger-subtle p-4"
             role="alert"
           >
-            <p className="flex-1 text-sm text-red-700">{actionError}</p>
+            <p className="flex-1 text-sm text-danger">{actionError}</p>
             <Button type="button" variant="secondary" onClick={reload}>
               Обновить данные
             </Button>
           </div>
         )}
         {notice && (
-          <p className="mt-5 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-700" role="status">
+          <p className="mt-5 rounded-surface bg-success-subtle p-4 text-sm text-success" role="status">
             {notice}
           </p>
         )}
@@ -293,13 +290,13 @@ function ReportDetails({
 
 function Metric({ label, value, hint }: Readonly<{ label: string; value: string; hint?: string }>) {
   return (
-    <div className="rounded-2xl bg-slate-50 p-4">
-      <dt className="text-sm text-slate-500">{label}</dt>
-      <dd className="mt-1 inline-flex items-center gap-2 text-xl font-semibold text-slate-950">
+    <div className="rounded-surface bg-surface-subtle p-4">
+      <dt className="text-sm text-foreground-muted">{label}</dt>
+      <dd className="mt-1 inline-flex items-center gap-2 text-xl font-semibold text-foreground">
         {label === "Учебное время" && <Clock3 size={16} />}
         {value}
       </dd>
-      {hint && <p className="mt-1 text-xs text-slate-400">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-foreground-subtle">{hint}</p>}
     </div>
   );
 }
@@ -312,18 +309,21 @@ function TopicList({
   topics?: Array<{ id?: string; title?: string }>;
 }>) {
   return (
-    <section className="rounded-2xl border border-slate-200 p-4">
-      <h3 className="font-semibold text-slate-950">{title}</h3>
+    <section className="rounded-surface border border-border p-4">
+      <h3 className="font-semibold text-foreground">{title}</h3>
       {topics?.length ? (
         <ul className="mt-3 space-y-2">
           {topics.map((topic, index) => (
-            <li className="rounded-xl bg-slate-50 px-3 py-2 text-sm text-slate-700" key={topic.id ?? index}>
+            <li
+              className="rounded-surface bg-surface-subtle px-3 py-2 text-sm text-foreground-muted"
+              key={topic.id ?? index}
+            >
               {topic.title ?? "Без названия"}
             </li>
           ))}
         </ul>
       ) : (
-        <p className="mt-3 text-sm text-slate-500">Нет тем.</p>
+        <p className="mt-3 text-sm text-foreground-muted">Нет тем.</p>
       )}
     </section>
   );
@@ -332,8 +332,10 @@ function TopicList({
 function ReadonlyText({ label, value }: Readonly<{ label: string; value?: string | null }>) {
   return (
     <div>
-      <dt className="text-sm font-medium text-slate-500">{label}</dt>
-      <dd className="mt-2 whitespace-pre-wrap rounded-2xl bg-slate-50 p-4 text-slate-800">{value || "Не заполнено"}</dd>
+      <dt className="text-sm font-medium text-foreground-muted">{label}</dt>
+      <dd className="mt-2 whitespace-pre-wrap rounded-surface bg-surface-subtle p-4 text-foreground">
+        {value || "Не заполнено"}
+      </dd>
     </div>
   );
 }

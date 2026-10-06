@@ -21,10 +21,10 @@ export function TeacherStudentProgramView({
   const router = useRouter();
 
   return (
-    <main className="mx-auto max-w-7xl space-y-4">
-      <section className="rounded-2xl border border-(--border) bg-white p-6 sm:p-7">
+    <main className="page-stack">
+      <section className="surface sm:p-7">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
           href={`/teacher/students/${studentId}`}
         >
           <ArrowLeft size={16} />
@@ -32,16 +32,16 @@ export function TeacherStudentProgramView({
         </Link>
 
         <div className="mt-5 flex items-center gap-4">
-          <span className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
             <BookOpenText size={21} />
           </span>
 
           <div>
-            <p className="text-sm font-medium text-blue-600">Учебный процесс</p>
+            <p className="text-sm font-medium text-primary">Учебный процесс</p>
 
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Программа обучения</h1>
+            <h1 className="page-title mt-1">Программа обучения</h1>
 
-            <p className="mt-2 text-sm text-slate-500">Назначенные ученику учебные программы.</p>
+            <p className="mt-2 text-sm text-foreground-muted">Назначенные ученику учебные программы.</p>
           </div>
         </div>
       </section>
@@ -49,16 +49,16 @@ export function TeacherStudentProgramView({
       <StudentProfileNav active="program" studentId={studentId} />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 rounded-2xl border border-(--border) bg-white p-5 sm:p-6">
+        <section className="surface min-w-0">
           {programs.isPending && (
-            <p className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500" aria-busy="true">
+            <p className="rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
               Загружаем программы…
             </p>
           )}
 
           {programs.isError && (
-            <div className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-5" role="alert">
-              <p className="text-sm text-red-700">
+            <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
+              <p className="text-sm text-danger">
                 {programs.error instanceof ApiClientError && programs.error.status === 404
                   ? "Ученик не найден"
                   : "Не удалось загрузить программы ученика."}
@@ -73,12 +73,12 @@ export function TeacherStudentProgramView({
           )}
 
           {programs.data?.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
-              <BookOpenText size={28} className="mx-auto text-blue-500" />
+            <div className="rounded-surface border border-dashed border-border bg-surface-subtle/60 p-10 text-center">
+              <BookOpenText size={28} className="mx-auto text-primary" />
 
-              <p className="mt-4 font-semibold text-slate-950">У ученика пока нет программы обучения</p>
+              <p className="mt-4 font-semibold text-foreground">У ученика пока нет программы обучения</p>
 
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-foreground-muted">
                 Назначьте программу, после чего можно будет добавлять занятия и домашние задания.
               </p>
 
@@ -96,11 +96,13 @@ export function TeacherStudentProgramView({
             <div className="space-y-5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-slate-950">
+                  <h2 className="section-title">
                     {programs.data.length === 1 ? "Программа ученика" : "Программы ученика"}
                   </h2>
 
-                  <p className="mt-1 text-sm text-slate-500">Откройте программу, чтобы посмотреть модули и темы.</p>
+                  <p className="mt-1 text-sm text-foreground-muted">
+                    Откройте программу, чтобы посмотреть модули и темы.
+                  </p>
                 </div>
 
                 <AssignLearningProgramDialog
@@ -119,17 +121,17 @@ export function TeacherStudentProgramView({
         </section>
 
         <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-indigo-50 p-6">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-white text-blue-600">
+          <section className="rounded-surface border border-primary-border bg-surface-subtle p-6">
+            <span className="flex size-10 items-center justify-center rounded-surface bg-surface text-primary">
               <Layers3 size={19} />
             </span>
 
-            <h2 className="mt-4 font-semibold text-slate-950">Сводка по программам</h2>
+            <h2 className="section-title mt-4">Сводка по программам</h2>
 
-            <div className="mt-5 flex items-end justify-between rounded-2xl bg-white/80 p-4">
-              <span className="text-sm text-slate-500">Назначено</span>
+            <div className="mt-5 flex items-end justify-between rounded-surface bg-surface/80 p-4">
+              <span className="text-sm text-foreground-muted">Назначено</span>
 
-              <span className="text-2xl font-semibold text-slate-950">{programs.data?.length ?? "—"}</span>
+              <span className="text-2xl font-semibold text-foreground">{programs.data?.length ?? "—"}</span>
             </div>
           </section>
         </aside>

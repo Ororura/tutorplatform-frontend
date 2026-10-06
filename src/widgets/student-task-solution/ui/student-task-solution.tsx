@@ -1,4 +1,6 @@
 "use client";
+import { CodeEditor } from "@/shared/ui/code-editor";
+import { Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -6,6 +8,7 @@ import { Info } from "lucide-react";
 
 import { formatHomeworkDate, StudentHomeworkTaskBadges, type StudentHomeworkItem } from "@/entities/homework";
 import type { StudentTopicTask } from "@/entities/task";
+import { programmingLanguageLabels } from "@/entities/task/model/programming-language";
 import { SafeMarkdown } from "@/entities/material/ui/safe-markdown";
 import {
   executionStatusPresentation,
@@ -120,7 +123,7 @@ function TaskSolutionContent({
 
   return (
     <section
-      className="min-w-0 space-y-6 rounded-2xl border border-(--border) bg-white p-5 shadow-xs sm:p-6"
+      className="surface min-w-0 space-y-6"
       id={`task-${item.id}-solution`}
       aria-labelledby={`task-${item.id}-heading`}
     >
@@ -128,10 +131,10 @@ function TaskSolutionContent({
 
       {readOnly && (
         <div
-          className="flex items-start gap-3 rounded-2xl bg-blue-50/60 p-4 text-sm leading-6 text-slate-600"
+          className="flex items-start gap-3 rounded-surface bg-primary-subtle/60 p-4 text-sm leading-6 text-foreground-muted"
           role="note"
         >
-          <Info size={20} className="mt-0.5 shrink-0 text-blue-600" aria-hidden="true" />
+          <Info size={20} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
           <div>
             <p>
               {homeworkStatus === "CANCELLED"
@@ -155,7 +158,7 @@ function TaskSolutionContent({
       )}
 
       {item.task.taskType === "TEXT" && practice && (
-        <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+        <p className="rounded-surface bg-surface-subtle p-4 text-sm text-foreground-muted">
           Самостоятельная отправка текстовых решений пока недоступна.
         </p>
       )}
@@ -165,11 +168,13 @@ function TaskSolutionContent({
       )}
 
       {item.task.taskType !== "TEXT" && item.task.taskType !== "CODE" && (
-        <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Этот тип задания пока не поддерживается.</p>
+        <p className="rounded-surface bg-surface-subtle p-4 text-sm text-foreground-muted">
+          Этот тип задания пока не поддерживается.
+        </p>
       )}
 
       {submissionsError && (
-        <p className="text-sm text-red-700" role="alert">
+        <p className="text-sm text-danger" role="alert">
           Не удалось загрузить историю попыток.
         </p>
       )}
@@ -183,10 +188,7 @@ function TaskHeader({ item }: Readonly<{ item: StudentHomeworkItem }>) {
   return (
     <div className="space-y-3">
       <StudentHomeworkTaskBadges item={item} />
-      <h2
-        className="wrap-break-word text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl"
-        id={`task-${item.id}-heading`}
-      >
+      <h2 className="section-title wrap-break-word" id={`task-${item.id}-heading`}>
         {item.task.title}
       </h2>
 
@@ -223,19 +225,19 @@ function TextSolution({
           Ваш ответ
         </p>
         {submissionsPending ? (
-          <p className="text-sm text-slate-500" role="status">
+          <p className="text-sm text-foreground-muted" role="status">
             Загружаем отправленный ответ…
           </p>
         ) : submittedAnswer ? (
-          <textarea
-            className="min-h-28 w-full rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600 outline-none focus:ring-4 focus:ring-blue-100"
+          <Textarea
+            className="min-h-28 leading-6"
             id={`answer-${item.id}`}
             aria-labelledby={`answer-${item.id}-label`}
             readOnly
             value={submittedAnswer}
           />
         ) : (
-          <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
+          <p className="rounded-surface bg-surface-subtle p-4 text-sm text-foreground-muted">
             {submissionsError ? "Отправленный ответ пока недоступен." : "Ответ ещё не отправлен."}
           </p>
         )}
@@ -261,8 +263,8 @@ function TextSolution({
       <label className="block space-y-2" htmlFor={`answer-${item.id}`}>
         <span className="font-medium">Ваш ответ</span>
 
-        <textarea
-          className="min-h-40 w-full rounded-xl border border-slate-200 bg-white p-3 outline-none transition focus:ring-4 focus:ring-blue-100"
+        <Textarea
+          className="min-h-40"
           disabled={disabled || submit.isPending}
           id={`answer-${item.id}`}
           onChange={(event) => setTextAnswer(event.target.value)}
@@ -301,7 +303,9 @@ function CodeSolution({
 
   if (!config) {
     return (
-      <p className="rounded-md bg-red-50 p-3 text-sm text-red-800">Для задания недоступна конфигурация запуска.</p>
+      <p className="rounded-control bg-danger-subtle p-3 text-sm text-danger">
+        Для задания недоступна конфигурация запуска.
+      </p>
     );
   }
 
@@ -346,8 +350,8 @@ function CodeSolution({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
-        <span>Язык: {languagePresentation[config.language] ?? config.language}</span>
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-foreground-muted">
+        <span>Язык: {programmingLanguageLabels[config.language] ?? config.language}</span>
 
         {config.timeLimitMs !== undefined && <span>Лимит времени: {config.timeLimitMs} мс</span>}
 
@@ -355,103 +359,98 @@ function CodeSolution({
       </div>
 
       {!config.executionEnabled && (
-        <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Запуск и отправка кода сейчас недоступны.</p>
+        <p className="rounded-surface bg-surface-subtle p-4 text-sm text-foreground-muted">
+          Запуск и отправка кода сейчас недоступны.
+        </p>
       )}
 
-      <details className="rounded-xl border border-slate-200 bg-slate-50/60 px-3 py-2 text-sm" open>
-        <summary className="cursor-pointer font-medium text-slate-700">Как выполнить задание</summary>
-        <div className="mt-3 space-y-3 text-slate-600">
-          <p>
-            Напишите программу на Python, которая решает задачу. Для чтения входных данных используйте input(), для
-            вывода результата — print().
-          </p>
-          <p>
-            Преподаватель мог заранее подготовить для вас часть решения. Если в редакторе уже есть код, внимательно
-            изучите его и дополните или измените согласно условию задания. Необязательно писать программу с нуля
-          </p>
-          <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100">
-            <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
-          </pre>
-          <p className="text-xs text-slate-500">Программа считывает два числа из одной строки и выводит их сумму</p>
-          <ul className="space-y-1 text-xs">
-            <li>«Запустить» — проверить код и посмотреть результат без отправки окончательного решения.</li>
-            <li>«Отправить решение» — сохранить ответ и проверить его по тестам задания.</li>
-          </ul>
-          <p className="text-xs text-slate-500">
-            Входные данные для проверки подаются автоматически. Вводить их вручную после запуска не нужно
-          </p>
-          <div className="space-y-3 border-t border-slate-200 pt-3">
-            <h3 className="font-medium text-slate-700">Когда решение считается верным?</h3>
+      {config.language === "JAVA" ? (
+        <p className="rounded-surface border border-border bg-surface-subtle/60 p-3 text-sm text-foreground-muted">
+          Программа запускается из класса Main без package. Точка входа — public static void main(String[] args).
+          Входные данные передаются через System.in. Выводите результат через System.out.print / System.out.println:
+          система сравнивает вывод программы с ожидаемым результатом тестов.
+        </p>
+      ) : (
+        <details className="rounded-surface border border-border bg-surface-subtle/60 px-3 py-2 text-sm" open>
+          <summary className="cursor-pointer font-medium text-foreground-muted">Как выполнить задание</summary>
+          <div className="mt-3 space-y-3 text-foreground-muted">
             <p>
-              Программа считается верной, когда успешно проходит все тесты задания. Система автоматически передаёт вашей
-              программе входные данные и сравнивает полученный результат с ожидаемым ответом.
+              Напишите программу на Python, которая решает задачу. Для чтения входных данных используйте input(), для
+              вывода результата — print().
             </p>
             <p>
-              Для вывода результата используйте print(). Именно то, что программа выводит в консоль, проверяется
-              системой.
+              Преподаватель мог заранее подготовить для вас часть решения. Если в редакторе уже есть код, внимательно
+              изучите его и дополните или измените согласно условию задания. Необязательно писать программу с нуля
             </p>
-            <p>
-              Выводите только то, что требуется в условии. Не добавляйте пояснения вроде &quot;Ответ:&quot;,
-              &quot;Результат:&quot; или &quot;Введите число:&quot;, если задание этого не требует
+            <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
+              <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
+            </pre>
+            <p className="text-xs text-foreground-muted">
+              Программа считывает два числа из одной строки и выводит их сумму
             </p>
-            <div className="space-y-2">
-              <p>Условие: «Прочитайте два числа и выведите их сумму».</p>
-              <div>
-                <p className="text-xs font-medium text-green-700">Правильно:</p>
-                <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100">
-                  <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
-                </pre>
-              </div>
-              <div>
-                <p className="text-xs font-medium text-red-700">Неправильно:</p>
-                <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs leading-5 text-slate-100">
-                  <code>{'a, b = map(int, input().split())\nprint("Сумма чисел:", a + b)'}</code>
-                </pre>
-              </div>
-              <p className="text-xs text-slate-500">
-                Если ожидаемый ответ — 5, программа должна вывести 5, а не &quot;Сумма чисел: 5&quot;.
-              </p>
-            </div>
             <ul className="space-y-1 text-xs">
-              <li>input() получает входные данные, которые система подаёт автоматически.</li>
-              <li>print() выводит результат, который система сравнивает с ожидаемым.</li>
-              <li>
-                Программа может работать без ошибок, но не пройти проверку из-за неправильного ответа или лишнего текста
-                в выводе.
-              </li>
-              <li>Успешное прохождение одного примера не гарантирует прохождение всех тестов.</li>
+              <li>«Запустить» — проверить код и посмотреть результат без отправки окончательного решения.</li>
+              <li>«Отправить решение» — сохранить ответ и проверить его по тестам задания.</li>
             </ul>
+            <p className="text-xs text-foreground-muted">
+              Входные данные для проверки подаются автоматически. Вводить их вручную после запуска не нужно
+            </p>
+            <div className="space-y-3 border-t border-border pt-3">
+              <h3 className="font-medium text-foreground-muted">Когда решение считается верным?</h3>
+              <p>
+                Программа считается верной, когда успешно проходит все тесты задания. Система автоматически передаёт
+                вашей программе входные данные и сравнивает полученный результат с ожидаемым ответом.
+              </p>
+              <p>
+                Для вывода результата используйте print(). Именно то, что программа выводит в консоль, проверяется
+                системой.
+              </p>
+              <p>
+                Выводите только то, что требуется в условии. Не добавляйте пояснения вроде &quot;Ответ:&quot;,
+                &quot;Результат:&quot; или &quot;Введите число:&quot;, если задание этого не требует
+              </p>
+              <div className="space-y-2">
+                <p>Условие: «Прочитайте два числа и выведите их сумму».</p>
+                <div>
+                  <p className="text-xs font-medium text-success">Правильно:</p>
+                  <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
+                    <code>{"a, b = map(int, input().split())\nprint(a + b)"}</code>
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-danger">Неправильно:</p>
+                  <pre className="overflow-x-auto rounded-inset bg-code-surface p-3 font-mono text-xs leading-5 text-code-foreground">
+                    <code>{'a, b = map(int, input().split())\nprint("Сумма чисел:", a + b)'}</code>
+                  </pre>
+                </div>
+                <p className="text-xs text-foreground-muted">
+                  Если ожидаемый ответ — 5, программа должна вывести 5, а не &quot;Сумма чисел: 5&quot;.
+                </p>
+              </div>
+              <ul className="space-y-1 text-xs">
+                <li>input() получает входные данные, которые система подаёт автоматически.</li>
+                <li>print() выводит результат, который система сравнивает с ожидаемым.</li>
+                <li>
+                  Программа может работать без ошибок, но не пройти проверку из-за неправильного ответа или лишнего
+                  текста в выводе.
+                </li>
+                <li>Успешное прохождение одного примера не гарантирует прохождение всех тестов.</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </details>
+        </details>
+      )}
 
-      <label className="block space-y-2" htmlFor={`source-${item.id}`}>
+      <div className="block space-y-2">
         <span className="font-medium">Код решения</span>
 
-        <textarea
-          className="min-h-72 w-full overflow-auto rounded-xl border border-slate-200 bg-slate-950 p-4 font-mono text-sm text-slate-100 whitespace-pre outline-none transition focus:ring-4 focus:ring-blue-100"
-          disabled={executionDisabled || busy}
-          id={`source-${item.id}`}
-          onChange={(event) => setSourceCode(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key !== "Tab") return;
-
-            event.preventDefault();
-
-            const target = event.currentTarget;
-            const start = target.selectionStart;
-            const end = target.selectionEnd;
-
-            setSourceCode((current) => `${current.slice(0, start)}\t${current.slice(end)}`);
-
-            requestAnimationFrame(() => {
-              target.setSelectionRange(start + 1, start + 1);
-            });
-          }}
-          spellCheck={false}
+        <CodeEditor
+          language={config.language}
           value={sourceCode}
+          onChange={setSourceCode}
+          disabled={executionDisabled || busy}
         />
-      </label>
+      </div>
 
       <div className="flex flex-wrap gap-3">
         <Button variant="secondary" disabled={actionsDisabled} onClick={handleRun} type="button">
@@ -481,19 +480,19 @@ function RunExecutionStatus({
 }>) {
   switch (status) {
     case "PASSED":
-      return <p className="font-medium text-green-700">Все тесты пройдены</p>;
+      return <p className="font-medium text-success">Все тесты пройдены</p>;
 
     case "FAILED":
-      return <p className="font-medium text-red-700">Есть непройденные тесты</p>;
+      return <p className="font-medium text-danger">Есть непройденные тесты</p>;
 
     case "TIMEOUT":
-      return <p className="font-medium text-red-700">Превышен лимит времени</p>;
+      return <p className="font-medium text-danger">Превышен лимит времени</p>;
 
     case "RUNTIME_ERROR":
-      return <p className="font-medium text-red-700">Программа завершилась с ошибкой</p>;
+      return <p className="font-medium text-danger">Программа завершилась с ошибкой</p>;
 
     case "SYSTEM_ERROR":
-      return <p className="font-medium text-red-700">Не удалось выполнить код. Попробуйте ещё раз.</p>;
+      return <p className="font-medium text-danger">Не удалось выполнить код. Попробуйте ещё раз.</p>;
 
     default:
       return <p className="font-medium">{executionStatusPresentation[status]}</p>;
@@ -509,7 +508,7 @@ function RunResult({
 
   return (
     <section
-      className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50/60 p-4"
+      className="space-y-3 rounded-surface border border-border bg-surface-subtle/60 p-4"
       aria-label="Результат запуска"
       aria-live="polite"
     >
@@ -525,7 +524,7 @@ function RunResult({
       )}
 
       {result.executionTimeMs !== undefined && (
-        <p className="text-sm text-slate-500">Время выполнения: {result.executionTimeMs} мс</p>
+        <p className="text-sm text-foreground-muted">Время выполнения: {result.executionTimeMs} мс</p>
       )}
 
       {result.tests && result.tests.length > 0 && (
@@ -534,7 +533,7 @@ function RunResult({
             <li key={test.position}>
               {test.hidden ? "Скрытый тест" : `Тест ${test.position + 1}`}
               {" · "}
-              <span className={test.passed ? "text-green-700" : "text-red-700"}>
+              <span className={test.passed ? "text-success" : "text-danger"}>
                 {test.passed ? "пройден" : "не пройден"}
               </span>
             </li>
@@ -553,14 +552,14 @@ function SubmissionSummary({ submission }: Readonly<{ submission: StudentSubmiss
 
   return (
     <section
-      className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50/60 p-4"
+      className="space-y-3 rounded-surface border border-border bg-surface-subtle/60 p-4"
       aria-label="Результат отправки"
       aria-live="polite"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="font-medium">{submissionStatusPresentation[submission.status] ?? submission.status}</p>
 
-        <span className="text-sm text-slate-400">Попытка {submission.attemptNo}</span>
+        <span className="text-sm text-foreground-subtle">Попытка {submission.attemptNo}</span>
       </div>
 
       {execution && (
@@ -574,7 +573,7 @@ function SubmissionSummary({ submission }: Readonly<{ submission: StudentSubmiss
             </strong>
           </p>
 
-          <p className="text-sm text-slate-500">Время выполнения: {execution.executionTimeMs} мс</p>
+          <p className="text-sm text-foreground-muted">Время выполнения: {execution.executionTimeMs} мс</p>
 
           <Output label="stdout" value={execution.stdoutExcerpt} />
 
@@ -590,19 +589,19 @@ function ExecutionStatus({ status }: Readonly<{ status: ExecutionStatus }>) {
 
   switch (status) {
     case "PASSED":
-      return <p className="font-medium text-green-700">Решение принято</p>;
+      return <p className="font-medium text-success">Решение принято</p>;
 
     case "FAILED":
-      return <p className="font-medium text-red-700">Решение не прошло все тесты</p>;
+      return <p className="font-medium text-danger">Решение не прошло все тесты</p>;
 
     case "TIMEOUT":
-      return <p className="font-medium text-red-700">Превышен лимит времени</p>;
+      return <p className="font-medium text-danger">Превышен лимит времени</p>;
 
     case "RUNTIME_ERROR":
-      return <p className="font-medium text-red-700">Программа завершилась с ошибкой</p>;
+      return <p className="font-medium text-danger">Программа завершилась с ошибкой</p>;
 
     case "SYSTEM_ERROR":
-      return <p className="font-medium text-red-700">Не удалось проверить решение. Попробуйте ещё раз.</p>;
+      return <p className="font-medium text-danger">Не удалось проверить решение. Попробуйте ещё раз.</p>;
 
     default:
       return <p className="font-medium">{presentation}</p>;
@@ -616,10 +615,10 @@ function SubmissionHistory({ submissions }: Readonly<{ submissions: StudentSubmi
     <section className="min-w-0" aria-label="История попыток">
       <h3 className="font-medium">Попытки</h3>
 
-      <ul className="mt-2 space-y-1 text-sm text-slate-600">
+      <ul className="mt-2 space-y-1 text-sm text-foreground-muted">
         {submissions.map((submission) => (
           <li
-            className="flex min-w-0 flex-col gap-2 rounded-xl border border-slate-100 px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
+            className="flex min-w-0 flex-col gap-2 rounded-surface border border-border px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
             key={submission.id}
           >
             <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
@@ -655,7 +654,7 @@ function Output({
     <div>
       <p className="mb-1 text-sm font-medium">{label}</p>
 
-      <pre className="max-h-48 overflow-auto rounded bg-neutral-950 p-3 text-sm text-neutral-100 whitespace-pre-wrap">
+      <pre className="max-h-48 overflow-auto rounded bg-code-surface p-3 text-sm text-code-foreground whitespace-pre-wrap">
         {value}
       </pre>
     </div>
@@ -672,12 +671,8 @@ function MutationError({
   if (!visible) return null;
 
   return (
-    <p className="text-sm text-red-700" role="alert">
+    <p className="text-sm text-danger" role="alert">
       {message}
     </p>
   );
 }
-
-const languagePresentation: Record<string, string> = {
-  PYTHON: "Python",
-};

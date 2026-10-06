@@ -49,7 +49,7 @@ export function MaterialRenderer(props: Readonly<Props>) {
       return <SafeMarkdown>{material.content ?? ""}</SafeMarkdown>;
     case "CODE_EXAMPLE":
       return (
-        <pre className="overflow-x-auto rounded-md bg-neutral-950 p-4 text-sm text-neutral-100">
+        <pre className="overflow-x-auto rounded-control bg-code-surface p-4 text-sm text-code-foreground">
           <code>{material.content ?? ""}</code>
         </pre>
       );
@@ -57,7 +57,7 @@ export function MaterialRenderer(props: Readonly<Props>) {
       const href = externalUrl(material.externalUrl);
       return href ? (
         <a
-          className="inline-flex rounded-md border border-neutral-300 px-3 py-2 text-sm font-medium hover:bg-neutral-50"
+          className="inline-flex rounded-control border border-border-strong px-3 py-2 text-sm font-medium hover:bg-surface-subtle"
           href={href}
           rel="noopener noreferrer"
           target="_blank"
@@ -65,7 +65,7 @@ export function MaterialRenderer(props: Readonly<Props>) {
           {props.preview ? material.externalUrl : "Открыть материал"}
         </a>
       ) : (
-        <p className="text-sm text-neutral-500">Ссылка на материал недоступна.</p>
+        <p className="text-sm text-foreground-muted">Ссылка на материал недоступна.</p>
       );
     }
     case "FILE": {
@@ -86,7 +86,7 @@ export function MaterialRenderer(props: Readonly<Props>) {
           Скачать файл
         </a>
       ) : (
-        <p className="text-sm text-neutral-500">Файл пока недоступен для скачивания.</p>
+        <p className="text-sm text-foreground-muted">Файл пока недоступен для скачивания.</p>
       );
     }
     case "IMAGE": {
@@ -96,10 +96,10 @@ export function MaterialRenderer(props: Readonly<Props>) {
           Открыть изображение
         </a>
       ) : (
-        <p className="text-sm text-neutral-500">Изображение пока недоступно для просмотра.</p>
+        <p className="text-sm text-foreground-muted">Изображение пока недоступно для просмотра.</p>
       );
     }
     default:
-      return <p className="text-sm text-neutral-500">Этот тип материала пока не поддерживается.</p>;
+      return <p className="text-sm text-foreground-muted">Этот тип материала пока не поддерживается.</p>;
   }
 }

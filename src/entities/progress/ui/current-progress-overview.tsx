@@ -31,7 +31,7 @@ export function CurrentProgressOverview({ progress, audience = "teacher" }: Read
   return (
     <div className="space-y-5">
       <section aria-labelledby="progress-metrics-heading">
-        <h2 id="progress-metrics-heading" className="text-xl font-semibold text-slate-950">
+        <h2 id="progress-metrics-heading" className="section-title">
           {isStudent ? "Ваши результаты" : "Основные показатели"}
         </h2>
 
@@ -76,7 +76,7 @@ export function CurrentProgressOverview({ progress, audience = "teacher" }: Read
       </section>
 
       <section aria-labelledby="topic-progress-heading">
-        <h2 id="topic-progress-heading" className="text-xl font-semibold text-slate-950">
+        <h2 id="topic-progress-heading" className="section-title">
           Темы программы
         </h2>
 
@@ -96,16 +96,16 @@ export function CurrentProgressOverview({ progress, audience = "teacher" }: Read
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200/80 bg-white p-5" aria-labelledby="assessment-heading">
-        <h2 id="assessment-heading" className="text-xl font-semibold text-slate-950">
+      <section className="rounded-surface border border-border/80 bg-surface p-5" aria-labelledby="assessment-heading">
+        <h2 id="assessment-heading" className="section-title">
           {isStudent || isParent ? "Оценки преподавателя" : "Средние оценки преподавателя"}
         </h2>
 
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {assessmentItems.map(([label, field]) => (
-            <div key={field} className="rounded-xl bg-slate-50 p-4">
-              <dt className="text-sm text-slate-500">{label}</dt>
-              <dd className="mt-1 text-xl font-semibold text-slate-950">
+            <div key={field} className="rounded-surface bg-surface-subtle p-4">
+              <dt className="text-sm text-foreground-muted">{label}</dt>
+              <dd className="mt-1 text-xl font-semibold text-foreground">
                 {formatAssessmentAverage(progress.assessment?.[field])}
               </dd>
             </div>

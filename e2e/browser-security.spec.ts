@@ -1,3 +1,4 @@
+import { fillCodeEditor } from "./helpers/journeys";
 import { expect, test, type APIResponse, type Page } from "@playwright/test";
 
 // Public tokens are bearer credentials; never record these tests in traces/screenshots.
@@ -110,7 +111,15 @@ test("student code editor, same-origin run/submit and image assets work under CS
   test.setTimeout(120_000);
   const violations = await recordViolations(page);
   await login(page, "student");
-  const image = page.locator('img[src*="student-miku"]');
+  // Keep same-origin image CSP coverage independent of decorative dashboard content.
+  await page.evaluate(() => {
+    const image = document.createElement("img");
+    image.src = "/images/student-miku.png";
+    image.alt = "Проверка локального изображения";
+    image.width = 160;
+    document.body.append(image);
+  });
+  const image = page.getByRole("img", { name: "Проверка локального изображения" });
   await expect(image).toBeVisible();
   await expect
     .poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0))
@@ -123,7 +132,7 @@ test("student code editor, same-origin run/submit and image assets work under CS
   expect(item).toBeTruthy();
   await page.goto(`/student/homework/${homework.id}`);
   await page.getByRole("button", { name: `Открыть: ${item.task.title}`, exact: true }).click();
-  await page.getByLabel("Код решения").fill('print("Hello, World!")');
+  await fillCodeEditor(page, 'print("Hello, World!")');
   await page.getByRole("button", { name: "Запустить", exact: true }).click();
   await expect(page.getByRole("region", { name: "Результат запуска" })).toContainText("Тесты:", { timeout: 60_000 });
   await page.getByRole("button", { name: "Отправить решение", exact: true }).click();

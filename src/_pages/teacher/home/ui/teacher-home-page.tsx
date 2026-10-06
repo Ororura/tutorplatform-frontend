@@ -5,7 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { dashboardQueries, type TeacherDashboard } from "@/entities/dashboard";
 import { studentQueries } from "@/entities/student";
 import { useCurrentUserQuery } from "@/entities/user";
-import { Button } from "@/shared/ui/button";
+import { PageHeader } from "@/shared/ui/page-header";
+import { LoadingState, ErrorState } from "@/shared/ui/feedback";
 import { TeacherAttention } from "@/widgets/teacher-attention";
 import { TeacherDashboardStats } from "@/widgets/teacher-dashboard-stats";
 import { TeacherQuickActions } from "@/widgets/teacher-quick-actions";
@@ -37,16 +38,12 @@ export function TeacherHomePage() {
   }
 
   return (
-    <main className="space-y-4">
-      <header className="py-2">
-        <p className="text-sm font-medium text-(--text-secondary)">Рабочее пространство</p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-          Добрый день, {currentUser.data.displayName}!
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-(--text-secondary)">
-          Здесь собраны ученики и быстрые действия для ежедневной работы.
-        </p>
-      </header>
+    <main className="page-stack">
+      <PageHeader
+        eyebrow="Рабочее пространство"
+        title={`Добрый день, ${currentUser.data.displayName}!`}
+        description="Здесь собраны ученики и быстрые действия для ежедневной работы."
+      />
 
       <TeacherDashboardContent
         data={dashboard.data}
@@ -82,26 +79,11 @@ type DashboardContentProps = {
 
 function TeacherDashboardContent({ data, isPending, isError, onRetry }: Readonly<DashboardContentProps>) {
   if (isPending) {
-    return (
-      <section
-        aria-busy="true"
-        className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-(--text-secondary)"
-      >
-        Загружаем сводку…
-      </section>
-    );
+    return <LoadingState>Загружаем сводку…</LoadingState>;
   }
 
   if (isError || !data) {
-    return (
-      <section className="rounded-2xl border border-red-100 bg-white p-6" role="alert">
-        <h2 className="text-lg font-semibold text-slate-950">Не удалось загрузить сводку</h2>
-        <p className="mt-2 text-sm text-(--text-secondary)">Проверьте соединение и попробуйте ещё раз.</p>
-        <Button className="mt-4" type="button" variant="secondary" onClick={onRetry}>
-          Повторить загрузку сводки
-        </Button>
-      </section>
-    );
+    return <ErrorState title="Не удалось загрузить сводку" onRetry={onRetry} retryLabel="Повторить загрузку сводки" />;
   }
 
   return (
@@ -115,26 +97,15 @@ function TeacherDashboardContent({ data, isPending, isError, onRetry }: Readonly
 function TeacherHomeLoading() {
   return (
     <main>
-      <div
-        className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-(--text-secondary)"
-        aria-busy="true"
-      >
-        Загружаем рабочее пространство…
-      </div>
+      <LoadingState>Загружаем рабочее пространство…</LoadingState>
     </main>
   );
 }
-
 function TeacherHomeError({ onRetry }: Readonly<{ onRetry: () => void }>) {
   return (
-    <main>
-      <div className="rounded-2xl border border-red-100 bg-white p-6" role="alert">
-        <h1 className="text-xl font-semibold text-slate-950">Не удалось загрузить профиль преподавателя</h1>
-        <p className="mt-2 text-sm text-(--text-secondary)">Проверьте соединение и попробуйте ещё раз.</p>
-        <Button className="mt-5" type="button" variant="secondary" onClick={onRetry}>
-          Повторить
-        </Button>
-      </div>
+    <main className="page-stack">
+      <h1 className="page-title">Рабочее пространство</h1>
+      <ErrorState title="Не удалось загрузить профиль преподавателя" onRetry={onRetry} />
     </main>
   );
 }

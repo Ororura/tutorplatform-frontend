@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { Archive, CheckCircle2, ChevronRight, FilePenLine, Layers3 } from "lucide-react";
@@ -43,9 +44,9 @@ const statusPresentation: Record<LearningProgramStatus, string> = {
 };
 
 const statusClassName: Record<LearningProgramStatus, string> = {
-  DRAFT: "bg-amber-50 text-amber-700",
-  ACTIVE: "bg-emerald-50 text-emerald-700",
-  ARCHIVED: "bg-slate-100 text-slate-600",
+  DRAFT: "bg-warning-subtle text-warning",
+  ACTIVE: "bg-success-subtle text-success",
+  ARCHIVED: "bg-surface-subtle text-foreground-muted",
 };
 
 const statusIcon = {
@@ -61,9 +62,9 @@ const topicStatusPresentation = {
 } as const;
 
 const topicStatusClassName = {
-  DRAFT: "bg-amber-50 text-amber-700",
-  ACTIVE: "bg-emerald-50 text-emerald-700",
-  ARCHIVED: "bg-slate-100 text-slate-600",
+  DRAFT: "bg-warning-subtle text-warning",
+  ACTIVE: "bg-success-subtle text-success",
+  ARCHIVED: "bg-surface-subtle text-foreground-muted",
 } as const;
 
 function reorderedIds(ids: string[], index: number, direction: -1 | 1) {
@@ -154,26 +155,24 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
   }, [programId, program.data?.slug, router]);
 
   return (
-    <main className="mx-auto min-w-0 max-w-5xl space-y-5">
+    <main className="page-content page-stack min-w-0">
       <Link
-        className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600"
+        className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted hover:text-primary"
         href="/teacher/programs"
       >
         ← Программы обучения
       </Link>
 
       {program.isPending && (
-        <div className="rounded-2xl border border-(--border) bg-white p-6 text-sm text-slate-500" aria-busy="true">
+        <div className="surface text-sm text-foreground-muted" aria-busy="true">
           Загружаем программу…
         </div>
       )}
 
       {program.isError && (
-        <section className="space-y-3 rounded-2xl border border-red-100 bg-red-50 p-6" role="alert">
-          <h1 className="text-xl font-semibold text-slate-950">
-            {notFound ? "Программа не найдена" : "Не удалось загрузить программу."}
-          </h1>
-          <p className="text-sm text-slate-600">
+        <section className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
+          <h1 className="page-title">{notFound ? "Программа не найдена" : "Не удалось загрузить программу."}</h1>
+          <p className="text-sm text-foreground-muted">
             {notFound
               ? "Возможно, программа была удалена или у вас нет к ней доступа."
               : "Попробуйте обновить страницу ещё раз."}
@@ -193,26 +192,22 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
 
           return (
             <>
-              <section className="rounded-xl border border-(--border) bg-white p-4 sm:p-5">
+              <section className="pb-2">
                 <div className="flex items-start justify-between gap-4">
-                  <p className="min-w-0 wrap-break-word text-sm font-medium text-blue-600">
+                  <p className="min-w-0 wrap-break-word text-sm font-medium text-primary">
                     {program.data.subject.name}
                   </p>
-                  <span
-                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusClassName[program.data.status]}`}
-                  >
+                  <span className={`badge shrink-0  ${statusClassName[program.data.status]}`}>
                     <StatusIcon size={13} />
                     {statusPresentation[program.data.status]}
                   </span>
                 </div>
-                <h1 className="mt-2 wrap-break-word text-2xl font-semibold tracking-tight text-slate-950">
-                  {program.data.title}
-                </h1>
+                <h1 className="page-title mt-2 wrap-break-word">{program.data.title}</h1>
                 <section className="mt-2" aria-labelledby="program-description-heading">
                   <h2 id="program-description-heading" className="sr-only">
                     Описание
                   </h2>
-                  <p className="wrap-break-word whitespace-pre-wrap text-sm leading-6 text-slate-500">
+                  <p className="wrap-break-word whitespace-pre-wrap text-sm leading-6 text-foreground-muted">
                     {program.data.description || "Описание программы пока не добавлено."}
                   </p>
                 </section>
@@ -228,20 +223,17 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                 </div>
               </section>
 
-              <section
-                className="rounded-xl border border-(--border) bg-white p-4 sm:p-5"
-                aria-labelledby="program-modules-heading"
-              >
+              <section className="surface" aria-labelledby="program-modules-heading">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <span className="flex size-10 items-center justify-center rounded-surface bg-primary-subtle text-primary">
                       <Layers3 size={19} />
                     </span>
                     <div>
-                      <h2 id="program-modules-heading" className="text-xl font-semibold text-slate-950">
+                      <h2 id="program-modules-heading" className="section-title">
                         Модули программы
                       </h2>
-                      <p className="mt-1 text-sm text-slate-500">
+                      <p className="mt-1 text-sm text-foreground-muted">
                         {modules.length} {modules.length === 1 ? "модуль" : "модулей"}
                       </p>
                     </div>
@@ -287,12 +279,12 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                 )}
 
                 {modules.length === 0 ? (
-                  <div className="mt-6 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
-                    <h3 className="font-semibold text-slate-950">Модулей пока нет</h3>
-                    <p className="mt-2 text-sm text-slate-500">Структура программы ещё не заполнена.</p>
+                  <div className="mt-6 rounded-surface border border-dashed border-border bg-surface-subtle/60 p-8 text-center">
+                    <h3 className="font-semibold text-foreground">Модулей пока нет</h3>
+                    <p className="mt-2 text-sm text-foreground-muted">Структура программы ещё не заполнена.</p>
                   </div>
                 ) : (
-                  <ol className="mt-4 divide-y divide-slate-200 border-y">
+                  <ol className="mt-4 divide-y divide-border border-y border-border">
                     {modules.map((module, moduleIndex) => {
                       const topics = [...module.topics].sort((a, b) => a.position - b.position);
                       return (
@@ -303,34 +295,34 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                             onToggle={(event) => setExpandedModuleId(event.currentTarget.open ? module.id : null)}
                           >
                             <summary
-                              className={`cursor-pointer list-none rounded-md py-4 focus-visible:outline-2 focus-visible:outline-blue-600 ${program.data.editable && !selecting ? "pr-12" : ""}`}
+                              className={`cursor-pointer list-none rounded-control py-4 focus-visible:outline-2 focus-visible:outline-focus-ring ${program.data.editable && !selecting ? "pr-12" : ""}`}
                             >
                               <div className="flex items-start gap-2 sm:gap-3">
                                 <ChevronRight
                                   size={16}
                                   aria-hidden="true"
-                                  className="mt-1 shrink-0 text-slate-400 transition-transform group-open:rotate-90"
+                                  className="mt-1 shrink-0 text-foreground-subtle transition-transform group-open:rotate-90"
                                 />
-                                <span aria-hidden="true" className="mt-0.5 text-sm tabular-nums text-slate-400">
+                                <span aria-hidden="true" className="mt-0.5 text-sm tabular-nums text-foreground-subtle">
                                   {String(module.position + 1).padStart(2, "0")}.
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                  <h3 className="wrap-break-word font-semibold text-slate-950">{module.title}</h3>
+                                  <h3 className="wrap-break-word font-semibold text-foreground">{module.title}</h3>
                                   {module.description && (
-                                    <p className="mt-1 wrap-break-word text-sm leading-5 text-slate-500">
+                                    <p className="mt-1 wrap-break-word text-sm leading-5 text-foreground-muted">
                                       {module.description}
                                     </p>
                                   )}
-                                  <p className="mt-1 text-xs text-slate-500 sm:hidden">{topics.length} тем</p>
+                                  <p className="mt-1 text-xs text-foreground-muted sm:hidden">{topics.length} тем</p>
                                 </div>
-                                <span className="mt-0.5 hidden shrink-0 text-xs text-slate-500 sm:block">
+                                <span className="mt-0.5 hidden shrink-0 text-xs text-foreground-muted sm:block">
                                   {topics.length} тем
                                 </span>
                               </div>
                             </summary>
-                            <div className="ml-2 border-l border-slate-200 pb-3 pl-3 sm:ml-5 sm:pl-5">
+                            <div className="ml-2 border-l border-border pb-3 pl-3 sm:ml-5 sm:pl-5">
                               <div className="flex flex-wrap items-center justify-between gap-3">
-                                <h4 className="text-sm font-semibold text-slate-950">Темы</h4>
+                                <h4 className="text-sm font-semibold text-foreground">Темы</h4>
                                 <CreateLearningProgramTopicDialog
                                   programId={program.data.id}
                                   moduleId={module.id}
@@ -338,7 +330,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                                 />
                               </div>
                               {topics.length === 0 ? (
-                                <p className="mt-2 text-sm text-slate-500">В этом модуле пока нет тем.</p>
+                                <p className="mt-2 text-sm text-foreground-muted">В этом модуле пока нет тем.</p>
                               ) : (
                                 <TopicList
                                   programId={program.data.id}
@@ -427,36 +419,36 @@ function TopicList({
   const topicIds = topics.map((topic) => topic.id);
 
   return (
-    <ol className="mt-2 divide-y divide-slate-100">
+    <ol className="mt-2 divide-y divide-border">
       {topics.map((topic, topicIndex) => (
-        <li key={topic.id} className="flex items-start gap-2 py-3 text-sm text-slate-700">
+        <li key={topic.id} className="flex items-start gap-2 py-3 text-sm text-foreground-muted">
           {selecting ? (
-            <input
+            <Input
               type="checkbox"
-              className="mt-1 size-4 shrink-0 accent-blue-600"
+              className="mt-1 size-4 shrink-0 accent-primary"
               aria-label={`Выбрать тему «${topic.title}»`}
               checked={selectedIds.has(topic.id)}
               disabled={selectionPending}
               onChange={() => onToggleTopic(topic.id)}
             />
           ) : (
-            <ChevronRight size={16} className="mt-0.5 shrink-0 text-blue-500" />
+            <ChevronRight size={16} className="mt-0.5 shrink-0 text-primary" />
           )}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <Link
-                className="min-w-0 wrap-break-word font-medium text-slate-950 hover:text-blue-600 hover:underline hover:underline-offset-4"
+                className="min-w-0 wrap-break-word font-medium text-foreground hover:text-primary hover:underline hover:underline-offset-4"
                 href={`/teacher/programs/${programSlug}/topics/${topic.slug}`}
               >
                 {topic.title}
               </Link>
-              <span
-                className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${topicStatusClassName[topic.status]}`}
-              >
+              <span className={`badge shrink-0  ${topicStatusClassName[topic.status]}`}>
                 {topicStatusPresentation[topic.status]}
               </span>
             </div>
-            {topic.description && <p className="mt-1 wrap-break-word leading-5 text-slate-500">{topic.description}</p>}
+            {topic.description && (
+              <p className="mt-1 wrap-break-word leading-5 text-foreground-muted">{topic.description}</p>
+            )}
           </div>
           <LearningProgramTopicActions
             programId={programId}
