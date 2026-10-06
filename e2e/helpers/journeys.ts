@@ -102,3 +102,10 @@ export async function expectMobileLayout(page: Page, action: Locator) {
     )
     .toBe(true);
 }
+
+export async function fillCodeEditor(page: Page, source: string) {
+  await expect(page.locator(".monaco-editor .view-lines")).toBeVisible();
+  await page.locator(".monaco-editor .view-lines").click();
+  await page.keyboard.press("ControlOrMeta+A");
+  await page.keyboard.insertText(source);
+}

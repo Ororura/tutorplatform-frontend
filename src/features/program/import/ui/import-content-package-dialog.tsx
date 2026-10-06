@@ -99,7 +99,13 @@ function TaskPreview({ task }: Readonly<{ task: ContentPackagePreviewTask }>) {
       )}
       {task.taskType === "CODE" && (
         <div className="mt-2 space-y-1 text-foreground-muted">
-          <p>{config?.language === "PYTHON" ? "Python" : (config?.language ?? "Язык не указан")}</p>
+          <p>
+            {config?.language === "PYTHON"
+              ? "Python"
+              : config?.language === "JAVA"
+                ? "Java"
+                : (config?.language ?? "Язык не указан")}
+          </p>
           <p>Выполнение кода: {config?.executionEnabled ? "включено" : "выключено"}</p>
           <p>Лимит времени: {config?.timeLimitMs === undefined ? "—" : `${config.timeLimitMs} мс`}</p>
           <p>Лимит памяти: {config?.memoryLimitMb === undefined ? "—" : `${config.memoryLimitMb} МБ`}</p>

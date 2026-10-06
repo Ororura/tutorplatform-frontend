@@ -11,6 +11,12 @@ import { Button } from "@/shared/ui/button";
 
 import { useCreateTaskMutation } from "../api/create-task";
 
+import {
+  javaStarterCode,
+  programmingLanguageLabels,
+  type ProgrammingLanguage,
+} from "@/entities/task/model/programming-language";
+
 type TestCaseDraft = { inputText: string; expectedOutput: string; hidden: boolean };
 
 type Props = {
@@ -28,6 +34,7 @@ export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>
   const [description, setDescription] = useState("");
   const [taskType, setTaskType] = useState<TaskType>("TEXT");
   const [difficulty, setDifficulty] = useState<TaskDifficulty>("EASY");
+  const [language, setLanguage] = useState<ProgrammingLanguage>("PYTHON");
   const [starterCode, setStarterCode] = useState("");
   const [tests, setTests] = useState<TestCaseDraft[]>([{ inputText: "", expectedOutput: "", hidden: false }]);
   const [error, setError] = useState("");
@@ -59,7 +66,7 @@ export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>
         ...(taskType === "CODE"
           ? {
               programmingConfig: {
-                language: "PYTHON",
+                language,
                 starterCode: starterCode || undefined,
                 executionEnabled: true,
                 timeLimitMs: 5000,
@@ -173,7 +180,25 @@ export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>
           </div>
           {taskType === "CODE" && (
             <fieldset className="space-y-4 rounded-inset border border-border p-4">
-              <legend className="px-1 font-medium">Конфигурация Python</legend>
+              <legend className="px-1 font-medium">Конфигурация программы</legend>
+              <label className="block space-y-2">
+                <span className="field-label">Язык</span>
+                <Select
+                  aria-label="Язык"
+                  value={language}
+                  onChange={(event) => {
+                    const next = event.target.value as ProgrammingLanguage;
+                    setLanguage(next);
+                    if (next === "JAVA" && !starterCode.trim()) setStarterCode(javaStarterCode);
+                  }}
+                >
+                  {Object.entries(programmingLanguageLabels).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </Select>
+              </label>
               <label className="block space-y-2">
                 <span className="text-sm">Стартовый код</span>
                 <Textarea

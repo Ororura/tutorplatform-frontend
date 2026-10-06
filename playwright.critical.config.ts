@@ -15,6 +15,7 @@ export default defineConfig(config, {
     "topic-access-journey.spec.ts",
     "teacher-tasks-homework-demo.spec.ts",
     "execution-journey.spec.ts",
+    "java-execution-journey.spec.ts",
     "current-progress-journey-demo.spec.ts",
     "progress-report-journey-demo.spec.ts",
     "program-duplication-evolution-demo.spec.ts",

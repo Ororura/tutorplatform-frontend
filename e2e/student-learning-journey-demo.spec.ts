@@ -1,3 +1,4 @@
+import { fillCodeEditor } from "./helpers/journeys";
 import { expect, test, type Page } from "@playwright/test";
 
 const studentEmail = "alex.demo@tutor.local";
@@ -91,11 +92,11 @@ test("demo student completes the learning journey", async ({ page }) => {
   await expect(codeTask.getByText("Код", { exact: true })).toBeVisible();
   await codeTask.getByRole("button", { name: "Решить" }).click();
 
-  await page.getByLabel("Код решения").fill('print("Hello, World!")');
+  await fillCodeEditor(page, 'print("Hello, World!")');
   for (const width of [375, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
-    await expect(page.getByLabel("Код решения")).toBeVisible();
+    await expect(page.locator(".monaco-editor")).toBeVisible();
     await page.screenshot({ path: test.info().outputPath(`student-code-solution-${width}.png`), fullPage: true });
   }
   await page.getByRole("button", { name: "Отправить решение" }).click();

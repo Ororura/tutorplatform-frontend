@@ -16,3 +16,6 @@ e2e-artifacts
 
 # Operational Python checks
 __pycache__/
+
+# Monaco assets are copied from the locked npm dependency before dev/build.
+public/monaco/
