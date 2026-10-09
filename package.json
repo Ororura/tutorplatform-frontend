@@ -58,7 +58,7 @@
     "lint-staged": "^17.6.0",
     "openapi-typescript": "7.13.0",
     "prettier": "^3.9.9",
-    "tailwind-lint": "^0.12.1",
+    "tailwind-lint": "^0.13.1",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.2"
