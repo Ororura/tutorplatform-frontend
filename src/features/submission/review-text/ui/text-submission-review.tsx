@@ -15,6 +15,8 @@ export function TextSubmissionReview({
 }>) {
   const isCurrentSubmission = review.variables?.submissionId === submission.id;
 
+  const saved = review.isSuccess && isCurrentSubmission;
+  const currentSubmission = saved && review.data ? review.data : submission;
   const reviewing = review.isPending && isCurrentSubmission;
 
   return (
@@ -26,7 +28,7 @@ export function TextSubmissionReview({
         <h3 className="font-medium">Ответ ученика</h3>
 
         <div className="flex items-center gap-2">
-          <SubmissionStatusBadge status={submission.status} />
+          <SubmissionStatusBadge status={currentSubmission.status} />
 
           <span className="text-xs text-foreground-muted">Попытка {submission.attemptNo}</span>
         </div>
@@ -34,7 +36,12 @@ export function TextSubmissionReview({
 
       <p className="whitespace-pre-wrap text-sm">{submission.textAnswer}</p>
 
-      {submission.status === "NEEDS_REVIEW" && (
+      {saved && (
+        <p className="text-sm text-success" role="status">
+          {review.data?.status === "PASSED" ? "Решение принято." : "Решение отклонено."} Изменения сохранены.
+        </p>
+      )}
+      {currentSubmission.status === "NEEDS_REVIEW" && (
         <div className="space-y-3 border-t pt-3 border-border">
           <div className="flex flex-wrap gap-2">
             <Button
@@ -66,13 +73,12 @@ export function TextSubmissionReview({
               {reviewing && review.variables?.status === "FAILED" ? "Отклоняем…" : "Не принять"}
             </Button>
           </div>
-
-          {review.isError && isCurrentSubmission && (
-            <p className="text-sm text-danger" role="alert">
-              Не удалось проверить решение. Попробуйте ещё раз.
-            </p>
-          )}
         </div>
+      )}
+      {review.isError && isCurrentSubmission && (
+        <p className="text-sm text-danger" role="alert">
+          Не удалось проверить решение. Обновите данные и попробуйте ещё раз.
+        </p>
       )}
     </section>
   );

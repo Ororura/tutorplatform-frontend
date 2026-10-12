@@ -36,9 +36,10 @@ export const homeworkQueries = {
       queryFn: () => getStudentHomeworks(studentId, params),
     }),
   details: () => [...homeworkQueries.all(), "detail"] as const,
+  studentDetails: (studentId: string) => [...homeworkQueries.details(), studentId] as const,
   detail: (studentId: string, homeworkId: string) =>
     queryOptions({
-      queryKey: [...homeworkQueries.details(), studentId, homeworkId] as const,
+      queryKey: [...homeworkQueries.studentDetails(studentId), homeworkId] as const,
       queryFn: () => getStudentHomework(studentId, homeworkId),
     }),
 };
