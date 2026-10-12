@@ -951,6 +951,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/teacher/students/{studentId}/submissions/{submissionId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get a teacher's student's submission */
+    get: operations["getTeacherStudentSubmission"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/teacher/students/{studentId}/progress": {
     parameters: {
       query?: never;
@@ -1045,6 +1062,23 @@ export interface paths {
     };
     /** Get the current teacher's workspace summary */
     get: operations["getTeacherDashboard"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/teacher/dashboard/attention": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List teacher attention items */
+    get: operations["listTeacherDashboardAttention"];
     put?: never;
     post?: never;
     delete?: never;
@@ -2724,6 +2758,8 @@ export interface components {
       resourceId: string;
       /** Format: date-time */
       eventAt: string;
+      homeworkTitle?: string | null;
+      taskTitle?: string | null;
       navigation: components["schemas"]["Navigation"];
     };
     Navigation: {
@@ -2752,6 +2788,17 @@ export interface components {
       /** Format: int64 */
       completedLearningPeriodsWithoutPublishedReportCount: number;
       attentionItems: components["schemas"]["AttentionItem"][];
+    };
+    TeacherDashboardAttentionPageResponse: {
+      items: components["schemas"]["AttentionItem"][];
+      /** Format: int32 */
+      page: number;
+      /** Format: int32 */
+      size: number;
+      /** Format: int64 */
+      totalElements: number;
+      /** Format: int32 */
+      totalPages: number;
     };
     StudentSubmissionPageResponse: {
       items: components["schemas"]["StudentSubmissionResponse"][];
@@ -7593,6 +7640,56 @@ export interface operations {
       };
     };
   };
+  getTeacherStudentSubmission: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        studentId: string;
+        submissionId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Submission */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["TeacherSubmissionResponse"];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Student or submission not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
   getTeacherStudentProgress: {
     parameters: {
       query: {
@@ -7899,6 +7996,67 @@ export interface operations {
       };
       /** @description Teacher role required */
       403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+    };
+  };
+  listTeacherDashboardAttention: {
+    parameters: {
+      query?: {
+        type?: "SUBMISSION_NEEDS_REVIEW" | "HOMEWORK_OVERDUE" | "LEARNING_PERIOD_REPORT_MISSING";
+        studentId?: string;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Attention item page */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["TeacherDashboardAttentionPageResponse"];
+        };
+      };
+      /** @description Invalid pagination */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Authentication required */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Teacher role required */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ApiError"];
+        };
+      };
+      /** @description Student not found */
+      404: {
         headers: {
           [name: string]: unknown;
         };

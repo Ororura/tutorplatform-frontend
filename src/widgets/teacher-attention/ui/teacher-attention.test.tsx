@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { TeacherDashboardAttentionItem } from "@/entities/dashboard";
@@ -50,34 +50,61 @@ describe("TeacherAttention", () => {
   it("shows the empty state from real dashboard data", () => {
     render(<TeacherAttention items={[]} />);
 
-    expect(screen.getByRole("heading", { name: "Всё спокойно" })).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "Требует внимания" })).not.toBeInTheDocument();
+    expect(screen.getByText("Всё спокойно")).toBeInTheDocument();
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Всё спокойно" }).closest("section")).toHaveAttribute(
+    expect(screen.getByRole("heading", { name: "Рабочая очередь" }).closest("section")).toHaveAttribute(
       "id",
       "teacher-attention",
     );
-    expect(screen.getByText("Сейчас нет работ и отчётов, требующих действий.")).toBeInTheDocument();
   });
 
   it("links every attention item to its corresponding resource", () => {
     render(<TeacherAttention items={items} />);
 
-    expect(screen.getByRole("heading", { name: "Требует внимания" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Рабочая очередь" })).toBeInTheDocument();
     expect(screen.queryByText("Всё спокойно")).not.toBeInTheDocument();
     expect(screen.getAllByRole("listitem")).toHaveLength(items.length);
 
-    expect(screen.getByRole("link", { name: /Работа ожидает проверки.*Анна Смирнова/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Анна Смирнова.*Работа ожидает проверки/ })).toHaveAttribute(
       "href",
-      "/teacher/students/student-1/homework/homework-1",
+      "/teacher/students/student-1/submissions/submission-1",
     );
-    expect(screen.getByRole("link", { name: /Просрочено домашнее задание.*Борис Петров/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Борис Петров.*Просрочено домашнее задание/ })).toHaveAttribute(
       "href",
       "/teacher/students/student-2/homework/homework-2",
     );
-    expect(screen.getByRole("link", { name: /Отчётный период готов.*Мария Орлова/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Мария Орлова.*Отчётный период готов/ })).toHaveAttribute(
       "href",
       "/teacher/students/student-3/reports/report-1",
     );
+  });
+
+  it("filters categories and dispatches the server filter", () => {
+    const change = vi.fn();
+    render(<TeacherAttention items={items} filter="HOMEWORK_OVERDUE" onFilterChange={change} />);
+    expect(screen.getAllByRole("listitem")).toHaveLength(1);
+    expect(screen.getByRole("button", { name: "Просрочено" })).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(screen.getByRole("button", { name: "На проверку" }));
+    expect(change).toHaveBeenCalledWith("SUBMISSION_NEEDS_REVIEW");
+  });
+  it("sorts by category then oldest first without changing input", () => {
+    const newer = { ...items[0], resourceId: "newer", displayName: "Новая работа", eventAt: "2026-10-01T10:00:00Z" };
+    const unordered = [items[2], newer, items[1], items[0]];
+    render(<TeacherAttention items={unordered} />);
+    const rows = screen.getAllByRole("listitem");
+    expect(rows[0]).toHaveTextContent("Анна Смирнова");
+    expect(rows[1]).toHaveTextContent("Новая работа");
+    expect(rows[2]).toHaveTextContent("Борис Петров");
+    expect(unordered[0]).toBe(items[2]);
+  });
+  it("shows loading, error and retry without stale actions", () => {
+    const retry = vi.fn();
+    const view = render(<TeacherAttention items={items} isPending />);
+    expect(screen.getByRole("status")).toHaveAttribute("aria-busy", "true");
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    view.rerender(<TeacherAttention items={items} isError onRetry={retry} />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Не удалось загрузить рабочую очередь");
+    fireEvent.click(screen.getByRole("button", { name: "Повторить" }));
+    expect(retry).toHaveBeenCalledOnce();
   });
 });

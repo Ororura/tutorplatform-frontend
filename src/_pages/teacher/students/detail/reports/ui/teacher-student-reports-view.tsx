@@ -14,9 +14,13 @@ import { useCreateProgressReportMutation } from "@/features/report/manage";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
-export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: string }>) {
+export function TeacherStudentReportsView({
+  studentId,
+  initialProgramId = "",
+  learningPeriodId,
+}: Readonly<{ studentId: string; initialProgramId?: string; learningPeriodId?: string }>) {
   const router = useRouter();
-  const [selectedProgramId, setSelectedProgramId] = useState("");
+  const [selectedProgramId, setSelectedProgramId] = useState(initialProgramId);
   const [createError, setCreateError] = useState("");
   const createReport = useCreateProgressReportMutation();
   const programs = useQuery(studentProgramQueries.list(studentId));
@@ -186,7 +190,14 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
             {pendingPeriods.length > 0 && (
               <ol className="mt-4 space-y-3">
                 {pendingPeriods.map((period) => (
-                  <li key={period.id} className="rounded-surface bg-surface/80 p-4">
+                  <li
+                    key={period.id}
+                    id={`learning-period-${period.id}`}
+                    className="scroll-mt-28 rounded-surface bg-surface/80 p-4"
+                  >
+                    {period.id === learningPeriodId && (
+                      <p className="mb-2 text-sm font-medium text-primary">Выбран из рабочей очереди</p>
+                    )}
                     <p className="font-medium text-foreground">Период {period.sequenceNo}</p>
                     <p className="mt-1 text-sm text-foreground-muted">
                       Завершён {period.completedAt ? formatReportDate(period.completedAt) : "—"}

@@ -1,8 +1,18 @@
 import { TeacherStudentReportsView } from "./teacher-student-reports-view";
 
-type Props = { params: Promise<{ studentId: string }> };
+type Props = {
+  params: Promise<{ studentId: string }>;
+  searchParams: Promise<{ studentProgramId?: string; learningPeriodId?: string }>;
+};
 
-export async function TeacherStudentReportsPage({ params }: Readonly<Props>) {
+export async function TeacherStudentReportsPage({ params, searchParams }: Readonly<Props>) {
   const { studentId } = await params;
-  return <TeacherStudentReportsView studentId={studentId} />;
+  const { studentProgramId, learningPeriodId } = await searchParams;
+  return (
+    <TeacherStudentReportsView
+      studentId={studentId}
+      initialProgramId={studentProgramId}
+      learningPeriodId={learningPeriodId}
+    />
+  );
 }

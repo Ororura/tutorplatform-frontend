@@ -110,6 +110,14 @@ describe("TeacherHomePage", () => {
     });
 
     mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[1] === "attention") {
+        return {
+          data: { items: dashboard.attentionItems, totalPages: 1, totalElements: 1 },
+          isPending: false,
+          isError: false,
+          refetch: mocks.refetchDashboard,
+        };
+      }
       if (options.queryKey[0] === "dashboard") {
         return {
           data: dashboard,
@@ -142,12 +150,12 @@ describe("TeacherHomePage", () => {
         queryKey: ["students", "list", { page: 0, size: 6, sort: "createdAt,desc" }],
       }),
     );
-    expect(screen.getByRole("heading", { name: "Требует внимания" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Рабочая очередь" })).toBeInTheDocument();
     expect(screen.getByText("Работа ожидает проверки")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /1\s*Активные ученики/ })).toHaveAttribute("href", "/teacher/students");
     expect(screen.getByRole("heading", { name: "Мои ученики" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Быстрые действия" })).toBeInTheDocument();
-    expect(screen.getByText("Анна Смирнова")).toBeInTheDocument();
+    expect(screen.getAllByText("Анна Смирнова").length).toBeGreaterThan(0);
   });
 
   it("shows a page loading state without a fabricated name", () => {
@@ -194,6 +202,14 @@ describe("TeacherHomePage", () => {
 
   it("keeps the rest of the workspace usable when students fail to load", () => {
     mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[1] === "attention") {
+        return {
+          data: { items: dashboard.attentionItems, totalPages: 1, totalElements: 1 },
+          isPending: false,
+          isError: false,
+          refetch: mocks.refetchDashboard,
+        };
+      }
       if (options.queryKey[0] === "dashboard") {
         return {
           data: dashboard,
@@ -214,7 +230,7 @@ describe("TeacherHomePage", () => {
     render(<TeacherHomePage />);
 
     expect(screen.getByRole("heading", { name: "Добрый день, Елена!" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Требует внимания" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Рабочая очередь" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Быстрые действия" })).toBeInTheDocument();
     expect(screen.getByText("Не удалось загрузить учеников.")).toBeInTheDocument();
 
@@ -224,6 +240,14 @@ describe("TeacherHomePage", () => {
 
   it("shows dashboard loading without hiding students", () => {
     mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[1] === "attention") {
+        return {
+          data: { items: dashboard.attentionItems, totalPages: 1, totalElements: 1 },
+          isPending: false,
+          isError: false,
+          refetch: mocks.refetchDashboard,
+        };
+      }
       if (options.queryKey[0] === "dashboard") {
         return {
           data: undefined,
@@ -244,11 +268,19 @@ describe("TeacherHomePage", () => {
     render(<TeacherHomePage />);
 
     expect(screen.getByText("Загружаем сводку…")).toHaveAttribute("aria-busy", "true");
-    expect(screen.getByText("Анна Смирнова")).toBeInTheDocument();
+    expect(screen.getAllByText("Анна Смирнова").length).toBeGreaterThan(0);
   });
 
   it("allows retry after a dashboard error", () => {
     mocks.useQuery.mockImplementation((options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[1] === "attention") {
+        return {
+          data: { items: dashboard.attentionItems, totalPages: 1, totalElements: 1 },
+          isPending: false,
+          isError: false,
+          refetch: mocks.refetchDashboard,
+        };
+      }
       if (options.queryKey[0] === "dashboard") {
         return {
           data: undefined,
@@ -270,6 +302,6 @@ describe("TeacherHomePage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Повторить загрузку сводки" }));
 
     expect(mocks.refetchDashboard).toHaveBeenCalledOnce();
-    expect(screen.getByText("Анна Смирнова")).toBeInTheDocument();
+    expect(screen.getAllByText("Анна Смирнова").length).toBeGreaterThan(0);
   });
 });

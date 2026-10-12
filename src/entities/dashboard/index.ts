@@ -1,6 +1,2 @@
-export {
-  dashboardQueries,
-  getTeacherDashboard,
-  type TeacherDashboard,
-  type TeacherDashboardAttentionItem,
-} from "./api/dashboard-queries";
+export * from "./api/dashboard-queries";
+export * from "./model/attention-presentation";

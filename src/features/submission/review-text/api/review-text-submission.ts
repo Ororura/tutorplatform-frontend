@@ -37,21 +37,26 @@ export async function reviewTextSubmission({
   return data;
 }
 
-export function useReviewTextSubmissionMutation(studentId: string, homeworkId: string) {
+export function useReviewTextSubmissionMutation(studentId: string, homeworkId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: reviewTextSubmission,
 
-    onSuccess: async () => {
+    onSuccess: async (updated) => {
+      queryClient.setQueryData(teacherSubmissionQueries.detail(studentId, updated.id).queryKey, updated);
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: teacherSubmissionQueries.studentLists(studentId),
         }),
 
-        queryClient.invalidateQueries({
-          queryKey: homeworkQueries.detail(studentId, homeworkId).queryKey,
-        }),
+        ...(homeworkId
+          ? [
+              queryClient.invalidateQueries({
+                queryKey: homeworkQueries.detail(studentId, homeworkId).queryKey,
+              }),
+            ]
+          : [queryClient.invalidateQueries({ queryKey: homeworkQueries.details() })]),
 
         queryClient.invalidateQueries({
           queryKey: homeworkQueries.studentLists(studentId),

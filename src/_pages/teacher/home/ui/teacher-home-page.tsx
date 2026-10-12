@@ -7,7 +7,7 @@ import { studentQueries } from "@/entities/student";
 import { useCurrentUserQuery } from "@/entities/user";
 import { PageHeader } from "@/shared/ui/page-header";
 import { LoadingState, ErrorState } from "@/shared/ui/feedback";
-import { TeacherAttention } from "@/widgets/teacher-attention";
+import { TeacherWorkQueue } from "@/widgets/teacher-attention";
 import { TeacherDashboardStats } from "@/widgets/teacher-dashboard-stats";
 import { TeacherQuickActions } from "@/widgets/teacher-quick-actions";
 import { TeacherStudentsOverview } from "@/widgets/teacher-students-overview";
@@ -54,6 +54,8 @@ export function TeacherHomePage() {
         }}
       />
 
+      <TeacherWorkQueue />
+
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
         <TeacherStudentsOverview
           data={students.data}
@@ -89,7 +91,6 @@ function TeacherDashboardContent({ data, isPending, isError, onRetry }: Readonly
   return (
     <div className="space-y-4">
       <TeacherDashboardStats data={data} />
-      <TeacherAttention items={data.attentionItems} />
     </div>
   );
 }
