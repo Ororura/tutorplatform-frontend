@@ -45,6 +45,7 @@ export function TeacherAttention({
   totalElements,
   onPageChange,
 }: Readonly<Props>) {
+  const emptyPage = page > 0 && (totalElements ?? 0) > 0;
   const visibleItems = sortAttentionItems(items).filter((item) => filter === undefined || item.type === filter);
   return (
     <section
@@ -76,8 +77,19 @@ export function TeacherAttention({
           <ErrorState title="Не удалось загрузить рабочую очередь" onRetry={onRetry} />
         ) : visibleItems.length === 0 ? (
           <EmptyState
-            title={filter ? "В этой категории нет задач" : "Всё спокойно"}
-            description="Сейчас нет действий в выбранной очереди."
+            title={
+              emptyPage ? "На этой странице больше нет задач" : filter ? "В этой категории нет задач" : "Всё спокойно"
+            }
+            description={
+              emptyPage ? "Очередь обновилась. Откройте первую страницу." : "Сейчас нет действий в выбранной очереди."
+            }
+            action={
+              emptyPage ? (
+                <Button type="button" variant="secondary" onClick={() => onPageChange?.(0)}>
+                  К началу очереди
+                </Button>
+              ) : undefined
+            }
           />
         ) : (
           <ul className="divide-y divide-border">

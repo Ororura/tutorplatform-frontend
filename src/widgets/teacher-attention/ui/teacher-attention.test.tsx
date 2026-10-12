@@ -79,6 +79,17 @@ describe("TeacherAttention", () => {
     );
   });
 
+  it("opens the correct program and completed period when there is no report", () => {
+    render(
+      <TeacherAttention
+        items={[{ ...items[2], navigation: { studentProgramId: "program-2", learningPeriodId: "period-2" } }]}
+      />,
+    );
+    expect(screen.getByRole("link")).toHaveAttribute(
+      "href",
+      "/teacher/students/student-3/reports?studentProgramId=program-2&learningPeriodId=period-2#learning-period-period-2",
+    );
+  });
   it("filters categories and dispatches the server filter", () => {
     const change = vi.fn();
     render(<TeacherAttention items={items} filter="HOMEWORK_OVERDUE" onFilterChange={change} />);
@@ -96,6 +107,14 @@ describe("TeacherAttention", () => {
     expect(rows[1]).toHaveTextContent("Новая работа");
     expect(rows[2]).toHaveTextContent("Борис Петров");
     expect(unordered[0]).toBe(items[2]);
+  });
+  it("lets the teacher recover when the last page empties after a queue refresh", () => {
+    const change = vi.fn();
+    render(<TeacherAttention items={[]} page={1} totalPages={1} totalElements={20} onPageChange={change} />);
+    expect(screen.getByText("На этой странице больше нет задач")).toBeInTheDocument();
+    expect(screen.queryByText("Всё спокойно")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "К началу очереди" }));
+    expect(change).toHaveBeenCalledWith(0);
   });
   it("shows loading, error and retry without stale actions", () => {
     const retry = vi.fn();
