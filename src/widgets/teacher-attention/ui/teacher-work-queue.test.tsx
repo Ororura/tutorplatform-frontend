@@ -20,7 +20,9 @@ vi.mock("@/entities/dashboard", async (original) => {
 });
 
 describe("TeacherWorkQueue", () => {
-  beforeEach(() => vi.mocked(getTeacherAttention).mockReset());
+  beforeEach(() => {
+    vi.mocked(getTeacherAttention).mockReset();
+  });
   it("loads server pages and resets pagination when changing category", async () => {
     vi.mocked(getTeacherAttention).mockResolvedValue({
       items: [],

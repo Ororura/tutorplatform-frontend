@@ -14,6 +14,8 @@ export type SessionListParams = {
   page: number;
   size?: number;
   sort?: string;
+  attendanceStatus?: AttendanceStatus;
+  startedBefore?: string;
 };
 
 export async function getStudentSessions(studentId: string, params: SessionListParams): Promise<LessonSessionPage> {
@@ -39,6 +41,18 @@ export const sessionQueries = {
     queryOptions({
       queryKey: [...sessionQueries.studentLists(studentId), params] as const,
       queryFn: () => getStudentSessions(studentId, params),
+    }),
+  latestConducted: (studentId: string) =>
+    queryOptions({
+      queryKey: [...sessionQueries.studentLists(studentId), "latest-conducted"] as const,
+      queryFn: () =>
+        getStudentSessions(studentId, {
+          page: 0,
+          size: 1,
+          sort: "startedAt,desc",
+          attendanceStatus: "ATTENDED",
+          startedBefore: new Date().toISOString(),
+        }),
     }),
   details: () => [...sessionQueries.all(), "detail"] as const,
   detail: (studentId: string, sessionId: string) =>

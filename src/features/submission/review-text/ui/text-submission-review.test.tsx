@@ -36,7 +36,9 @@ function setup() {
 }
 
 describe("TextSubmissionReview", () => {
-  beforeEach(() => vi.mocked(apiClient.PATCH).mockReset());
+  beforeEach(() => {
+    vi.mocked(apiClient.PATCH).mockReset();
+  });
   it("disables both actions while saving and only confirms the server result", async () => {
     let resolve!: (value: never) => void;
     vi.mocked(apiClient.PATCH).mockReturnValue(

@@ -3,6 +3,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { TeacherStudentView } from "./teacher-student-view";
 
+vi.mock("@/widgets/teacher-student-context", () => ({
+  TeacherStudentContext: () => <section>Учебная ситуация</section>,
+}));
+
 const mocks = vi.hoisted(() => ({
   useQuery: vi.fn(),
   revoke: {

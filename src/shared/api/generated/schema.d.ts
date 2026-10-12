@@ -4014,6 +4014,8 @@ export interface operations {
          * @example startedAt,desc
          */
         sort?: string;
+        attendanceStatus?: "ATTENDED" | "MISSED" | "CANCELLED";
+        startedBefore?: string;
       };
       header?: never;
       path: {

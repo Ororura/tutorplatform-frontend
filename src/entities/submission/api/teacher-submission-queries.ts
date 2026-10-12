@@ -1,19 +1,21 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { apiClient, ApiClientError } from "@/shared/api/client";
-import type { components } from "@/shared/api/generated/schema";
+import type { components, operations } from "@/shared/api/generated/schema";
 
 export type TeacherSubmission = components["schemas"]["TeacherSubmissionResponse"];
 export type TeacherSubmissionPage = components["schemas"]["TeacherSubmissionPageResponse"];
 
-export async function getTeacherStudentSubmissions(studentId: string): Promise<TeacherSubmissionPage> {
+export type TeacherSubmissionParams = NonNullable<operations["listTeacherStudentSubmissions"]["parameters"]["query"]>;
+
+export async function getTeacherStudentSubmissions(
+  studentId: string,
+  params: TeacherSubmissionParams = { page: 0, size: 100 },
+): Promise<TeacherSubmissionPage> {
   const { data, error, response } = await apiClient.GET("/api/v1/teacher/students/{studentId}/submissions", {
     params: {
       path: { studentId },
-      query: {
-        page: 0,
-        size: 100,
-      },
+      query: params,
     },
   });
 
@@ -48,9 +50,9 @@ export const teacherSubmissionQueries = {
 
   studentLists: (studentId: string) => [...teacherSubmissionQueries.lists(), studentId] as const,
 
-  list: (studentId: string) =>
+  list: (studentId: string, params?: TeacherSubmissionParams) =>
     queryOptions({
-      queryKey: teacherSubmissionQueries.studentLists(studentId),
-      queryFn: () => getTeacherStudentSubmissions(studentId),
+      queryKey: [...teacherSubmissionQueries.studentLists(studentId), ...(params ? [params] : [])] as const,
+      queryFn: () => getTeacherStudentSubmissions(studentId, params),
     }),
 };
