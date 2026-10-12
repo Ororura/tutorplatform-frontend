@@ -47,7 +47,7 @@ describe("TextSubmissionReview", () => {
     const client = setup();
     const invalidate = vi.spyOn(client, "invalidateQueries");
     expect(screen.getByText("Попытка 2")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Принять", exact: true }));
+    fireEvent.click(screen.getByRole("button", { name: "Принять" }));
     expect(await screen.findByRole("button", { name: "Принимаем…" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Не принять" })).toBeDisabled();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
@@ -63,12 +63,15 @@ describe("TextSubmissionReview", () => {
     expect(invalidate).toHaveBeenCalledWith({ queryKey: progressQueries.student("student-1") });
   });
   it("keeps the pending answer and permits retry when saving fails", async () => {
-    vi.mocked(apiClient.PATCH).mockResolvedValue({ error: { code: "INTERNAL_ERROR", message: "Save failed" }, response: new Response(null, { status: 500 }) } as never);
+    vi.mocked(apiClient.PATCH).mockResolvedValue({
+      error: { code: "INTERNAL_ERROR", message: "Save failed" },
+      response: new Response(null, { status: 500 }),
+    } as never);
     const client = setup();
     const invalidate = vi.spyOn(client, "invalidateQueries");
     fireEvent.click(screen.getByRole("button", { name: "Не принять" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Не удалось проверить решение");
-    expect(screen.getByRole("button", { name: "Принять", exact: true })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Принять" })).toBeEnabled();
     expect(screen.getByText("Проверяемый текст ответа")).toBeInTheDocument();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
     expect(invalidate).not.toHaveBeenCalled();
