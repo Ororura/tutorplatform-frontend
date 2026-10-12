@@ -9,7 +9,11 @@ import { useReviewTextSubmissionMutation } from "../api/review-text-submission";
 import { TextSubmissionReview } from "./text-submission-review";
 
 vi.mock("@/shared/api/client", () => ({
-  ApiClientError: class extends Error {},
+  ApiClientError: class extends Error {
+    constructor(public status: number) {
+      super();
+    }
+  },
   apiClient: { PATCH: vi.fn() },
 }));
 const submission: TeacherSubmission = {
@@ -57,6 +61,7 @@ describe("TextSubmissionReview", () => {
       resolve({ data: { ...submission, status: "PASSED" }, response: new Response(null, { status: 200 }) } as never),
     );
     expect(await screen.findByRole("status")).toHaveTextContent("Решение принято. Изменения сохранены.");
+    expect(screen.getByText("Принято", { exact: true })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Принять" })).not.toBeInTheDocument();
     expect(client.getQueryData(teacherSubmissionQueries.detail("student-1", "submission-1").queryKey)).toMatchObject({
       status: "PASSED",
@@ -77,6 +82,21 @@ describe("TextSubmissionReview", () => {
     expect(screen.getByText("Проверяемый текст ответа")).toBeInTheDocument();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
     expect(invalidate).not.toHaveBeenCalled();
+  });
+  it("refreshes final server state after a concurrent review conflict", async () => {
+    vi.mocked(apiClient.PATCH).mockResolvedValue({
+      error: { code: "SUBMISSION_NOT_REVIEWABLE" },
+      response: new Response(null, { status: 409 }),
+    } as never);
+    const client = setup();
+    const invalidate = vi.spyOn(client, "invalidateQueries");
+    fireEvent.click(screen.getByRole("button", { name: "Принять" }));
+    await screen.findByRole("alert");
+    expect(invalidate).toHaveBeenCalledWith({
+      queryKey: teacherSubmissionQueries.detail("student-1", "submission-1").queryKey,
+    });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: dashboardQueries.all() });
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
   it("does not offer review for a server-finalized submission", () => {
     const client = new QueryClient();

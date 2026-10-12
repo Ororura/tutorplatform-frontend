@@ -5,6 +5,7 @@ import config from "./playwright.config";
 export default defineConfig(config, {
   testMatch: [
     "auth-session.spec.ts",
+    "teacher-daily-workflow.spec.ts",
     "accept-student-invite.spec.ts",
     "teacher-students-demo.spec.ts",
     "teacher-program-editor-demo.spec.ts",
