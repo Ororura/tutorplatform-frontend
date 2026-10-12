@@ -62,9 +62,10 @@ export const reportQueries = {
       queryKey: [...reportQueries.all(), "detail", reportId] as const,
       queryFn: () => getProgressReport(reportId),
     }),
+  studentLearningPeriods: (studentId: string) => [...reportQueries.all(), "learning-periods", studentId] as const,
   learningPeriods: (studentId: string, studentProgramId: string) =>
     queryOptions({
-      queryKey: [...reportQueries.all(), "learning-periods", studentId, studentProgramId] as const,
+      queryKey: [...reportQueries.studentLearningPeriods(studentId), studentProgramId] as const,
       queryFn: () => getLearningPeriods(studentId, studentProgramId),
     }),
   publicDetail: (token: string) =>

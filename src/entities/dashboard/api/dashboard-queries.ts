@@ -35,6 +35,8 @@ export const dashboardQueries = {
     queryOptions({
       queryKey: [...dashboardQueries.attentionLists(), params] as const,
       queryFn: () => getTeacherAttention(params),
+      staleTime: 0,
+      refetchOnWindowFocus: true,
     }),
   teacher: () =>
     queryOptions({

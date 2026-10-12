@@ -1,6 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { type HomeworkDetails, homeworkQueries } from "@/entities/homework";
+import { dashboardQueries } from "@/entities/dashboard";
+import { progressQueries } from "@/entities/progress";
+import { studentProgramQueries } from "@/entities/student-program";
 import { apiClient, ApiClientError } from "@/shared/api/client";
 
 async function cancelHomework(studentId: string, homeworkId: string): Promise<HomeworkDetails> {
@@ -25,7 +28,12 @@ export function useCancelHomeworkMutation(studentId: string, homeworkId: string)
     mutationFn: () => cancelHomework(studentId, homeworkId),
     onSuccess: async (updated) => {
       queryClient.setQueryData(homeworkQueries.detail(studentId, homeworkId).queryKey, updated);
-      await queryClient.invalidateQueries({ queryKey: homeworkQueries.studentLists(studentId) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: homeworkQueries.studentLists(studentId) }),
+        queryClient.invalidateQueries({ queryKey: dashboardQueries.all() }),
+        queryClient.invalidateQueries({ queryKey: progressQueries.student(studentId) }),
+        queryClient.invalidateQueries({ queryKey: studentProgramQueries.studentDetails(studentId) }),
+      ]);
     },
   });
 }

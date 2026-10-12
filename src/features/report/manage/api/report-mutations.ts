@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { dashboardQueries } from "@/entities/dashboard";
 import { reportQueries, type ProgressReportDetails } from "@/entities/report";
 import { apiClient, ApiClientError } from "@/shared/api/client";
 import type { components } from "@/shared/api/generated/schema";
@@ -43,7 +44,10 @@ function useRefreshReportQueries() {
 
   return async (report: ProgressReportDetails) => {
     queryClient.setQueryData(reportQueries.detail(report.id).queryKey, report);
-    await queryClient.invalidateQueries({ queryKey: reportQueries.all() });
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: reportQueries.all() }),
+      queryClient.invalidateQueries({ queryKey: dashboardQueries.all() }),
+    ]);
   };
 }
 

@@ -6,6 +6,10 @@ import {
   sessionQueries,
   type UpdateLessonSessionRequest,
 } from "@/entities/session";
+import { dashboardQueries } from "@/entities/dashboard";
+import { progressQueries } from "@/entities/progress";
+import { studentProgramQueries } from "@/entities/student-program";
+import { reportQueries } from "@/entities/report";
 import { apiClient, ApiClientError } from "@/shared/api/client";
 
 async function createSession(studentId: string, body: CreateLessonSessionRequest): Promise<LessonSessionDetails> {
@@ -36,7 +40,14 @@ export function useCreateSessionMutation(studentId: string) {
     mutationFn: (body: CreateLessonSessionRequest) => createSession(studentId, body),
     onSuccess: async (created) => {
       queryClient.setQueryData(sessionQueries.detail(studentId, created.id).queryKey, created);
-      await queryClient.invalidateQueries({ queryKey: sessionQueries.studentLists(studentId) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: sessionQueries.studentLists(studentId) }),
+        queryClient.invalidateQueries({ queryKey: dashboardQueries.all() }),
+        queryClient.invalidateQueries({ queryKey: progressQueries.student(studentId) }),
+        queryClient.invalidateQueries({ queryKey: reportQueries.studentLearningPeriods(studentId) }),
+        queryClient.invalidateQueries({ queryKey: studentProgramQueries.list(studentId).queryKey }),
+        queryClient.invalidateQueries({ queryKey: studentProgramQueries.studentDetails(studentId) }),
+      ]);
     },
   });
 }
@@ -50,6 +61,11 @@ export function useUpdateSessionMutation(studentId: string, sessionId: string) {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: sessionQueries.studentLists(studentId) }),
         queryClient.invalidateQueries({ queryKey: sessionQueries.detail(studentId, sessionId).queryKey }),
+        queryClient.invalidateQueries({ queryKey: dashboardQueries.all() }),
+        queryClient.invalidateQueries({ queryKey: progressQueries.student(studentId) }),
+        queryClient.invalidateQueries({ queryKey: reportQueries.studentLearningPeriods(studentId) }),
+        queryClient.invalidateQueries({ queryKey: studentProgramQueries.list(studentId).queryKey }),
+        queryClient.invalidateQueries({ queryKey: studentProgramQueries.studentDetails(studentId) }),
       ]);
     },
   });

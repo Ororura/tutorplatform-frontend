@@ -4,7 +4,7 @@ import { dashboardQueries } from "@/entities/dashboard";
 import { progressQueries } from "@/entities/progress";
 import { studentProgramQueries } from "@/entities/student-program";
 import { homeworkQueries } from "@/entities/homework";
-import { teacherSubmissionQueries, type TeacherSubmission } from "@/entities/submission";
+import { teacherSubmissionQueries, type TeacherSubmission, type TeacherSubmissionPage } from "@/entities/submission";
 import { apiClient, ApiClientError } from "@/shared/api/client";
 
 export type ReviewTextSubmissionInput = {
@@ -48,6 +48,10 @@ export function useReviewTextSubmissionMutation(studentId: string, homeworkId?: 
 
     onSuccess: async (updated) => {
       queryClient.setQueryData(teacherSubmissionQueries.detail(studentId, updated.id).queryKey, updated);
+      queryClient.setQueryData<TeacherSubmissionPage>(teacherSubmissionQueries.list(studentId).queryKey, (cached) =>
+        cached ? { ...cached, items: cached.items.map((item) => (item.id === updated.id ? updated : item)) } : cached,
+      );
+
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: teacherSubmissionQueries.studentLists(studentId),

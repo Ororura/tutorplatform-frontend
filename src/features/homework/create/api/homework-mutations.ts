@@ -6,6 +6,9 @@ import {
   homeworkQueries,
   type UpdateHomeworkRequest,
 } from "@/entities/homework";
+import { dashboardQueries } from "@/entities/dashboard";
+import { progressQueries } from "@/entities/progress";
+import { studentProgramQueries } from "@/entities/student-program";
 import { apiClient, ApiClientError } from "@/shared/api/client";
 
 async function createHomework(studentId: string, body: CreateHomeworkRequest): Promise<HomeworkDetails> {
@@ -44,7 +47,12 @@ export function useCreateHomeworkMutation(studentId: string) {
     mutationFn: (body: CreateHomeworkRequest) => createHomework(studentId, body),
     onSuccess: async (created) => {
       queryClient.setQueryData(homeworkQueries.detail(studentId, created.id).queryKey, created);
-      await queryClient.invalidateQueries({ queryKey: homeworkQueries.studentLists(studentId) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: homeworkQueries.studentLists(studentId) }),
+        queryClient.invalidateQueries({ queryKey: dashboardQueries.all() }),
+        queryClient.invalidateQueries({ queryKey: progressQueries.student(studentId) }),
+        queryClient.invalidateQueries({ queryKey: studentProgramQueries.studentDetails(studentId) }),
+      ]);
     },
   });
 }
@@ -55,7 +63,12 @@ export function useUpdateHomeworkMutation(studentId: string, homeworkId: string)
     mutationFn: (body: UpdateHomeworkRequest) => updateHomework(studentId, homeworkId, body),
     onSuccess: async (updated) => {
       queryClient.setQueryData(homeworkQueries.detail(studentId, homeworkId).queryKey, updated);
-      await queryClient.invalidateQueries({ queryKey: homeworkQueries.studentLists(studentId) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: homeworkQueries.studentLists(studentId) }),
+        queryClient.invalidateQueries({ queryKey: dashboardQueries.all() }),
+        queryClient.invalidateQueries({ queryKey: progressQueries.student(studentId) }),
+        queryClient.invalidateQueries({ queryKey: studentProgramQueries.studentDetails(studentId) }),
+      ]);
     },
   });
 }

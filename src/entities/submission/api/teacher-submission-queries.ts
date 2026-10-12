@@ -45,6 +45,8 @@ export const teacherSubmissionQueries = {
     queryOptions({
       queryKey: [...teacherSubmissionQueries.details(studentId), submissionId] as const,
       queryFn: () => getTeacherSubmission(studentId, submissionId),
+      staleTime: 0,
+      refetchOnWindowFocus: true,
     }),
   lists: () => [...teacherSubmissionQueries.all(), "list"] as const,
 
