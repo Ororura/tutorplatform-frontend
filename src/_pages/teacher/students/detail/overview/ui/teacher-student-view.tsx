@@ -16,6 +16,7 @@ import { StudentInviteHistory, studentInviteQueries } from "@/entities/student-i
 import { EditStudentForm } from "@/features/student/edit";
 import { CreateStudentInviteDialog } from "@/features/student/invite/create";
 import { useRevokeStudentInviteMutation } from "@/features/student/invite/revoke";
+import { TeacherStudentActions } from "@/widgets/teacher-student-actions";
 import { TeacherStudentContext } from "@/widgets/teacher-student-context";
 import { Button } from "@/shared/ui/button";
 
@@ -111,6 +112,7 @@ export function TeacherStudentView({
       <StudentProfileNav active="overview" studentId={studentId} />
 
       <TeacherStudentContext studentId={studentId} />
+      <TeacherStudentActions studentId={studentId} active={student.data.status === "ACTIVE"} />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">

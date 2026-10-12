@@ -7,6 +7,10 @@ vi.mock("@/widgets/teacher-student-context", () => ({
   TeacherStudentContext: () => <section>Учебная ситуация</section>,
 }));
 
+vi.mock("@/widgets/teacher-student-actions", () => ({
+  TeacherStudentActions: () => <section>Быстрые действия с учеником</section>,
+}));
+
 const mocks = vi.hoisted(() => ({
   useQuery: vi.fn(),
   revoke: {
