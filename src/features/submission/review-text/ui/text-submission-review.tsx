@@ -1,6 +1,7 @@
 "use client";
 
 import { SubmissionStatusBadge, type TeacherSubmission } from "@/entities/submission";
+import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { useReviewTextSubmissionMutation } from "../api/review-text-submission";
 
@@ -28,13 +29,17 @@ export function TextSubmissionReview({
         <h3 className="font-medium">Ответ ученика</h3>
 
         <div className="flex items-center gap-2">
-          <SubmissionStatusBadge status={currentSubmission.status} />
+          {currentSubmission.status === "PASSED" ? (
+            <Badge tone="success">Принято</Badge>
+          ) : (
+            <SubmissionStatusBadge status={currentSubmission.status} />
+          )}
 
           <span className="text-xs text-foreground-muted">Попытка {submission.attemptNo}</span>
         </div>
       </div>
 
-      <p className="whitespace-pre-wrap text-sm">{submission.textAnswer}</p>
+      <p className="wrap-break-word whitespace-pre-wrap text-sm">{submission.textAnswer}</p>
 
       {saved && (
         <p className="text-sm text-success" role="status">
