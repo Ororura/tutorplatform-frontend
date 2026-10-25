@@ -10,10 +10,11 @@ import {
   homeworkQueries,
   homeworkStatusPresentation,
 } from "@/entities/homework";
-import { submissionStatusPresentation, teacherSubmissionQueries, type TeacherSubmission } from "@/entities/submission";
+import { teacherSubmissionQueries, type TeacherSubmission } from "@/entities/submission";
 import { studentProgramQueries } from "@/entities/student-program";
 import { useCancelHomeworkMutation } from "@/features/homework/cancel";
 import { useReviewTextSubmissionMutation } from "@/features/submission/review-text";
+import { SubmissionReview } from "@/features/submission/review-text/ui/submission-review";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
 
@@ -205,8 +206,8 @@ export function TeacherStudentHomeworkDetailView({
                   <span className="badge bg-surface-subtle">{item.required ? "Обязательное" : "Необязательное"}</span>
                 </div>
 
-                {submission?.textAnswer !== undefined && (
-                  <TextSubmissionReview submission={submission} review={review} studentId={studentId} />
+                {submission && (typeof submission.textAnswer === "string" || Boolean(submission.execution)) && (
+                  <SubmissionReview submission={submission} review={review} studentId={studentId} />
                 )}
               </li>
             );
@@ -215,102 +216,6 @@ export function TeacherStudentHomeworkDetailView({
       </section>
     </main>
   );
-}
-
-function TextSubmissionReview({
-  studentId,
-  submission,
-  review,
-}: Readonly<{
-  studentId: string;
-  submission: TeacherSubmission;
-  review: ReturnType<typeof useReviewTextSubmissionMutation>;
-}>) {
-  const isCurrentSubmission = review.variables?.submissionId === submission.id;
-
-  const reviewing = review.isPending && isCurrentSubmission;
-
-  return (
-    <section
-      className="ml-8 space-y-3 rounded-control border border-border bg-surface-subtle p-4"
-      aria-label="Ответ ученика"
-    >
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-medium">Ответ ученика</h3>
-
-        <div className="flex items-center gap-2">
-          <SubmissionStatus status={submission.status} />
-
-          <span className="text-xs text-foreground-muted">Попытка {submission.attemptNo}</span>
-        </div>
-      </div>
-
-      <p className="whitespace-pre-wrap text-sm">{submission.textAnswer}</p>
-
-      {submission.status === "NEEDS_REVIEW" && (
-        <div className="space-y-3 border-t pt-3 border-border">
-          <div className="flex flex-wrap gap-2">
-            <Button
-              disabled={review.isPending}
-              type="button"
-              onClick={() =>
-                review.mutate({
-                  studentId,
-                  submissionId: submission.id,
-                  status: "PASSED",
-                })
-              }
-            >
-              {reviewing && review.variables?.status === "PASSED" ? "Принимаем…" : "Принять"}
-            </Button>
-
-            <Button
-              variant="danger"
-              disabled={review.isPending}
-              type="button"
-              onClick={() =>
-                review.mutate({
-                  studentId,
-                  submissionId: submission.id,
-                  status: "FAILED",
-                })
-              }
-            >
-              {reviewing && review.variables?.status === "FAILED" ? "Отклоняем…" : "Не принять"}
-            </Button>
-          </div>
-
-          {review.isError && isCurrentSubmission && (
-            <p className="text-sm text-danger" role="alert">
-              Не удалось проверить решение. Попробуйте ещё раз.
-            </p>
-          )}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function SubmissionStatus({
-  status,
-}: Readonly<{
-  status: TeacherSubmission["status"];
-}>) {
-  const label = submissionStatusPresentation[status] ?? status;
-
-  switch (status) {
-    case "NEEDS_REVIEW":
-      return <span className="badge bg-warning-subtle text-warning">Ожидает проверки</span>;
-
-    case "PASSED":
-      return <span className="badge bg-success-subtle text-success">Принято</span>;
-
-    case "FAILED":
-      return <span className="badge bg-danger-subtle text-danger">Не принято</span>;
-
-    default:
-      return <span className="badge bg-surface-subtle">{label}</span>;
-  }
 }
 
 function getLatestSubmissionsByHomeworkItem(submissions: TeacherSubmission[]) {

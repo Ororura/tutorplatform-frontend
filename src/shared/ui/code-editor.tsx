@@ -8,7 +8,7 @@ loader.config({ paths: { vs: "/monaco/vs" } });
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
 type Props = Readonly<{
-  language: components["schemas"]["ProgrammingLanguage"];
+  language: components["schemas"]["ProgrammingLanguage"] | "html" | "css" | "javascript";
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
@@ -25,7 +25,9 @@ export function CodeEditor({ language, value, onChange, disabled }: Props) {
           };
         }}
         height="20rem"
-        language={language === "JAVA" ? "java" : "python"}
+        language={
+          language === "JAVA" ? "java" : language === "PYTHON" ? "python" : language === "WEB" ? "javascript" : language
+        }
         value={value}
         onChange={(next) => onChange(next ?? "")}
         options={{

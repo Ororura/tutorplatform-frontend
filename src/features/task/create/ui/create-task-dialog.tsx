@@ -17,6 +17,9 @@ import {
   type ProgrammingLanguage,
 } from "@/entities/task/model/programming-language";
 
+import webTemplates from "@/entities/task/model/web-exercise-templates.json";
+import { WebExerciseConfig } from "@/shared/ui/web-exercise-config";
+
 type TestCaseDraft = { inputText: string; expectedOutput: string; hidden: boolean };
 
 type Props = {
@@ -36,8 +39,20 @@ export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>
   const [difficulty, setDifficulty] = useState<TaskDifficulty>("EASY");
   const [language, setLanguage] = useState<ProgrammingLanguage>("PYTHON");
   const [starterCode, setStarterCode] = useState("");
+  const [webTemplateId, setWebTemplateId] = useState(webTemplates[0].id);
   const [tests, setTests] = useState<TestCaseDraft[]>([{ inputText: "", expectedOutput: "", hidden: false }]);
   const [error, setError] = useState("");
+
+  function selectWebTemplate(id: string) {
+    const template = webTemplates.find((item) => item.id === id) ?? webTemplates[0];
+    setWebTemplateId(template.id);
+    setTitle(template.title);
+    setDescription(template.description);
+    setStarterCode(JSON.stringify(template.starter));
+    setTests(
+      template.checks.map((check) => ({ inputText: JSON.stringify(check), expectedOutput: "PASS", hidden: false })),
+    );
+  }
 
   useEffect(() => {
     if (open && !dialogRef.current?.open) dialogRef.current?.showModal();
@@ -69,8 +84,8 @@ export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>
                 language,
                 starterCode: starterCode || undefined,
                 executionEnabled: true,
-                timeLimitMs: 5000,
-                memoryLimitMb: 128,
+                timeLimitMs: language === "WEB" ? 10000 : 5000,
+                memoryLimitMb: language === "WEB" ? 512 : 128,
               },
               testCases: tests.map((item, position) => ({
                 ...item,
@@ -189,6 +204,11 @@ export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>
                   onChange={(event) => {
                     const next = event.target.value as ProgrammingLanguage;
                     setLanguage(next);
+                    if (next === "WEB") selectWebTemplate(webTemplateId);
+                    else if (language === "WEB") {
+                      setStarterCode(next === "JAVA" ? javaStarterCode : "");
+                      setTests([{ inputText: "", expectedOutput: "", hidden: false }]);
+                    }
                     if (next === "JAVA" && !starterCode.trim()) setStarterCode(javaStarterCode);
                   }}
                 >
@@ -199,102 +219,124 @@ export function CreateTaskDialog({ triggerVariant = "primary" }: Readonly<Props>
                   ))}
                 </Select>
               </label>
-              <label className="block space-y-2">
-                <span className="text-sm">Стартовый код</span>
-                <Textarea
-                  className="min-h-28 font-mono"
-                  value={starterCode}
-                  onChange={(event) => setStarterCode(event.target.value)}
-                />
-              </label>
-              {tests.map((item, index) => (
-                <div className="grid gap-3 rounded-control bg-surface-subtle p-3 sm:grid-cols-2" key={index}>
-                  <label className="text-sm">
-                    Ввод
-                    <Textarea
-                      aria-label={`Ввод теста ${index + 1}`}
-                      className="mt-1 min-h-20 rounded font-mono"
-                      value={item.inputText}
-                      onChange={(event) =>
-                        setTests((current) =>
-                          current.map((value, position) =>
-                            position === index
-                              ? {
-                                  ...value,
-                                  inputText: event.target.value,
-                                }
-                              : value,
-                          ),
-                        )
-                      }
-                    />
-                  </label>
-                  <label className="text-sm">
-                    Ожидаемый вывод
-                    <Textarea
-                      aria-label={`Ожидаемый вывод теста ${index + 1}`}
-                      className="mt-1 min-h-20 rounded font-mono"
-                      value={item.expectedOutput}
-                      onChange={(event) =>
-                        setTests((current) =>
-                          current.map((value, position) =>
-                            position === index
-                              ? {
-                                  ...value,
-                                  expectedOutput: event.target.value,
-                                }
-                              : value,
-                          ),
-                        )
-                      }
-                    />
-                  </label>
-                  <label className="flex items-center gap-2 text-sm">
-                    <Input
-                      type="checkbox"
-                      checked={item.hidden}
-                      onChange={(event) =>
-                        setTests((current) =>
-                          current.map((value, position) =>
-                            position === index
-                              ? {
-                                  ...value,
-                                  hidden: event.target.checked,
-                                }
-                              : value,
-                          ),
-                        )
-                      }
-                    />
-                    Скрытый тест
-                  </label>
-                  {tests.length > 1 && (
-                    <button
-                      className="justify-self-end text-sm underline"
-                      type="button"
-                      onClick={() => setTests((current) => current.filter((_, position) => position !== index))}
+              {language === "WEB" ? (
+                <>
+                  <label className="block space-y-2">
+                    <span className="field-label">Шаблон упражнения</span>
+                    <Select
+                      aria-label="Шаблон упражнения"
+                      value={webTemplateId}
+                      onChange={(event) => selectWebTemplate(event.target.value)}
                     >
-                      Удалить тест
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                className="text-sm font-medium underline"
-                type="button"
-                onClick={() =>
-                  setTests((current) => [
-                    ...current,
-                    {
-                      inputText: "",
-                      expectedOutput: "",
-                      hidden: false,
-                    },
-                  ])
-                }
-              >
-                Добавить тест
-              </button>
+                      {webTemplates.map((template, index) => (
+                        <option key={template.id} value={template.id}>
+                          {index + 1}. {template.title}
+                        </option>
+                      ))}
+                    </Select>
+                  </label>
+                  <WebExerciseConfig value={starterCode} onChange={setStarterCode} />
+                </>
+              ) : (
+                <>
+                  <label className="block space-y-2">
+                    <span className="text-sm">Стартовый код</span>
+                    <Textarea
+                      className="min-h-28 font-mono"
+                      value={starterCode}
+                      onChange={(event) => setStarterCode(event.target.value)}
+                    />
+                  </label>
+                  {tests.map((item, index) => (
+                    <div className="grid gap-3 rounded-control bg-surface-subtle p-3 sm:grid-cols-2" key={index}>
+                      <label className="text-sm">
+                        Ввод
+                        <Textarea
+                          aria-label={`Ввод теста ${index + 1}`}
+                          className="mt-1 min-h-20 rounded font-mono"
+                          value={item.inputText}
+                          onChange={(event) =>
+                            setTests((current) =>
+                              current.map((value, position) =>
+                                position === index
+                                  ? {
+                                      ...value,
+                                      inputText: event.target.value,
+                                    }
+                                  : value,
+                              ),
+                            )
+                          }
+                        />
+                      </label>
+                      <label className="text-sm">
+                        Ожидаемый вывод
+                        <Textarea
+                          aria-label={`Ожидаемый вывод теста ${index + 1}`}
+                          className="mt-1 min-h-20 rounded font-mono"
+                          value={item.expectedOutput}
+                          onChange={(event) =>
+                            setTests((current) =>
+                              current.map((value, position) =>
+                                position === index
+                                  ? {
+                                      ...value,
+                                      expectedOutput: event.target.value,
+                                    }
+                                  : value,
+                              ),
+                            )
+                          }
+                        />
+                      </label>
+                      <label className="flex items-center gap-2 text-sm">
+                        <Input
+                          type="checkbox"
+                          checked={item.hidden}
+                          onChange={(event) =>
+                            setTests((current) =>
+                              current.map((value, position) =>
+                                position === index
+                                  ? {
+                                      ...value,
+                                      hidden: event.target.checked,
+                                    }
+                                  : value,
+                              ),
+                            )
+                          }
+                        />
+                        Скрытый тест
+                      </label>
+                      {tests.length > 1 && (
+                        <button
+                          className="justify-self-end text-sm underline"
+                          type="button"
+                          onClick={() => setTests((current) => current.filter((_, position) => position !== index))}
+                        >
+                          Удалить тест
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    className="text-sm font-medium underline"
+                    type="button"
+                    onClick={() =>
+                      setTests((current) => [
+                        ...current,
+                        {
+                          inputText: "",
+                          expectedOutput: "",
+                          hidden: false,
+                        },
+                      ])
+                    }
+                  >
+                    Добавить тест
+                  </button>
+                </>
+              )}
             </fieldset>
           )}
           {error && (

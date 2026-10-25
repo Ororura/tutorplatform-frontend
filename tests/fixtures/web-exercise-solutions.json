@@ -1,0 +1,77 @@
+{
+  "html-note": {
+    "html": "<h1>Мой первый сайт</h1><p>Я изучаю веб-разработку.</p><ul><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": ""
+  },
+  "html-image": {
+    "html": "<article class=\"card\"><h2>Блокнот</h2><img src=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iODAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9InRlYWwiLz48L3N2Zz4=\" alt=\"Блокнот в зелёной обложке\"><p>350 ₽</p></article>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": ""
+  },
+  "html-form": {
+    "html": "<form><label for=\"name\">Имя</label><input id=\"name\" type=\"text\"><label for=\"email\">Email</label><input id=\"email\" type=\"email\"><label for=\"message\">Сообщение</label><textarea id=\"message\"></textarea><button type=\"submit\">Отправить</button></form>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": ""
+  },
+  "html-navigation": {
+    "html": "<nav><a href=\"#about\">О курсе</a><a href=\"#program\">Программа</a><a href=\"#contacts\">Контакты</a></nav><section id=\"about\"><h2>О курсе</h2></section><section id=\"program\"><h2>Программа</h2></section><section id=\"contacts\"><h2>Контакты</h2></section>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": ""
+  },
+  "css-card": {
+    "html": "<article class=\"card\"><h2>Изучаем CSS</h2><p>Небольшая практика каждый день.</p></article>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n.card { padding:24px; border-radius:12px; background:white; border:1px solid #bbb; }",
+    "javascript": ""
+  },
+  "css-flex": {
+    "html": "<header class=\"header\"><strong class=\"logo\">Курс</strong><nav class=\"menu\"><a href=\"#\">Программа</a></nav></header>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n.header { height:100px; padding:12px; background:#eee; display:flex; justify-content:space-between; align-items:center; }\n.logo { font-size:28px; }",
+    "javascript": ""
+  },
+  "css-grid": {
+    "html": "<div class=\"cards\"><article class=\"card\">Карточка 1</article><article class=\"card\">Карточка 2</article><article class=\"card\">Карточка 3</article><article class=\"card\">Карточка 4</article><article class=\"card\">Карточка 5</article><article class=\"card\">Карточка 6</article></div>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n.card { padding:16px; background:#eee; } .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }",
+    "javascript": ""
+  },
+  "css-button": {
+    "html": "<button class=\"action\">Продолжить</button>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n.action { padding:12px 24px; border:0; color:white; background:#2563eb; } .action:hover { background:#1d4ed8; } .action:focus-visible { outline:3px solid #111827; outline-offset:2px; }",
+    "javascript": ""
+  },
+  "css-responsive": {
+    "html": "<div class=\"cards\"><article class=\"card\">Карточка 1</article><article class=\"card\">Карточка 2</article><article class=\"card\">Карточка 3</article><article class=\"card\">Карточка 4</article><article class=\"card\">Карточка 5</article><article class=\"card\">Карточка 6</article></div>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n.card { padding:16px; background:#eee; } .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; } @media(max-width:599px) { .cards { grid-template-columns:1fr; } }",
+    "javascript": ""
+  },
+  "js-total": {
+    "html": "<p>Реализуйте функцию calculateTotal и нажмите «Проверить».</p>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": "function calculateTotal(price, quantity) { return price * quantity; }"
+  },
+  "js-discount": {
+    "html": "<p>Реализуйте функцию applyDiscount.</p>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": "function applyDiscount(total) { return total >= 1000 ? total * 0.9 : total; }"
+  },
+  "js-even": {
+    "html": "<p>Реализуйте функцию getEvenNumbers.</p>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": "function getEvenNumbers(numbers) { return numbers.filter(n => n % 2 === 0); }"
+  },
+  "dom-counter": {
+    "html": "<p id=\"count\">0</p><button id=\"increment\">+</button><button id=\"decrement\">−</button><button id=\"reset\">Сбросить</button>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": "let count=0; const output=document.querySelector('#count'); document.querySelector('#increment').addEventListener('click',()=>output.textContent=++count); document.querySelector('#decrement').addEventListener('click',()=>output.textContent=--count); document.querySelector('#reset').addEventListener('click',()=>{ count=0; output.textContent=count; });"
+  },
+  "dom-validation": {
+    "html": "<form id=\"feedback\" novalidate><label for=\"name\">Имя</label><input id=\"name\"><p id=\"name-error\"></p><label for=\"message\">Сообщение</label><textarea id=\"message\"></textarea><p id=\"message-error\"></p><button type=\"submit\">Отправить</button><p id=\"status\" role=\"status\"></p></form>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n",
+    "javascript": "document.querySelector('#feedback').addEventListener('submit', event=>{event.preventDefault();const name=document.querySelector('#name').value.trim();const message=document.querySelector('#message').value.trim(); document.querySelector('#name-error').textContent=name?'':'Введите имя';document.querySelector('#message-error').textContent=message.length>=10?'':'Минимум 10 символов';document.querySelector('#status').textContent=name&&message.length>=10?'Сообщение отправлено':'';});"
+  },
+  "web-todo": {
+    "html": "<h1>Мои дела</h1><label for=\"new-task\">Новая задача</label><input id=\"new-task\"><button id=\"add-task\">Добавить</button><ul id=\"tasks\"></ul>",
+    "css": "body { font-family: sans-serif; margin: 16px; }\n.task { display:flex; gap:12px; margin:12px 0; } .task:has(input:checked) .task-text { text-decoration:line-through; }",
+    "javascript": "document.querySelector('#add-task').addEventListener('click',()=>{ const input=document.querySelector('#new-task');const value=input.value.trim();if(!value)return;const row=document.createElement('li');row.className='task';const checkbox=document.createElement('input');checkbox.type='checkbox';const text=document.createElement('span');text.className='task-text';text.textContent=value;const remove=document.createElement('button');remove.dataset.delete='';remove.textContent='Удалить';remove.addEventListener('click',()=>row.remove());row.append(checkbox,text,remove);document.querySelector('#tasks').append(row);input.value=''; });"
+  }
+}

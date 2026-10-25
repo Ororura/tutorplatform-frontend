@@ -37,9 +37,24 @@ export function applicationCsp(nonce?: string) {
     "worker-src 'self'",
     "media-src 'none'",
     "object-src 'none'",
-    "frame-src 'none'",
+    "frame-src 'self'",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
   ].join("; ");
 }
+
+// Only the sandboxed exercise document permits inline student code; it has no origin authority or network access.
+export const webPreviewCsp = [
+  "default-src 'none'",
+  "script-src 'unsafe-inline'",
+  "style-src 'unsafe-inline'",
+  "img-src data:",
+  "connect-src 'none'",
+  "frame-src 'none'",
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'none'",
+  "frame-ancestors 'self'",
+  "sandbox allow-scripts",
+].join("; ");

@@ -103,7 +103,8 @@ test("student runs wrong and correct code in Docker, then persists a standalone 
     execution: { status: "PASSED", passedTests: 2, totalTests: 2 },
   });
   expect(submission.homeworkItemId).toBeNull();
-  await expect(page.getByRole("region", { name: "Результат отправки" })).toContainText("Решение принято");
+  await expect(page.getByRole("region", { name: "Результат отправки" })).toContainText("Выполнено");
+  await expect(page.getByRole("region", { name: "Результат отправки" })).toContainText("Все тесты пройдены");
   await page.reload();
   await task.getByRole("button", { name: "Решить", exact: true }).click();
   await expect(page.getByText("Выполнено", { exact: true }).first()).toBeVisible();

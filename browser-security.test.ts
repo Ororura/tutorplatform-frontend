@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
 import nextConfig from "./next.config";
-import { applicationCsp } from "./browser-security";
+import { applicationCsp, webPreviewCsp } from "./browser-security";
 import { proxy } from "./proxy";
 
 afterEach(() => vi.unstubAllEnvs());
@@ -39,9 +39,10 @@ describe("production browser policy", () => {
     expect(directives["img-src"]).toEqual(["'self'", "blob:"]);
     expect(directives["worker-src"]).toEqual(["'self'"]);
     expect(directives["font-src"]).toEqual(["'self'"]);
-    for (const name of ["object-src", "frame-src", "frame-ancestors", "media-src"]) {
+    for (const name of ["object-src", "frame-ancestors", "media-src"]) {
       expect(directives[name]).toEqual(["'none'"]);
     }
+    expect(directives["frame-src"]).toEqual(["'self'"]);
     expect(csp).not.toMatch(/\*|unsafe-eval|https?:/);
     expect(applicationCsp()).not.toContain("nonce-");
   });
@@ -68,4 +69,20 @@ describe("production browser policy", () => {
     expect(response.headers.get("Content-Security-Policy")).toBeNull();
     expect(response.headers.get("Strict-Transport-Security")).toBeNull();
   });
+});
+
+it("isolates the preview policy while preserving the application script policy", () => {
+  vi.stubEnv("NODE_ENV", "production");
+  const preview = proxy(new NextRequest("http://localhost/web-preview"));
+  expect(preview.headers.get("Content-Security-Policy")).toBe(webPreviewCsp);
+  expect(webPreviewCsp).toContain("sandbox allow-scripts");
+  expect(webPreviewCsp).not.toContain("allow-same-origin");
+  expect(webPreviewCsp).toContain("connect-src 'none'");
+  expect(webPreviewCsp).toContain("form-action 'none'");
+  expect(applicationCsp("nonce")).not.toContain("unsafe-inline'; script");
+  expect(
+    applicationCsp("nonce")
+      .split(";")
+      .find((s) => s.trim().startsWith("script-src ")),
+  ).not.toContain("unsafe-inline");
 });

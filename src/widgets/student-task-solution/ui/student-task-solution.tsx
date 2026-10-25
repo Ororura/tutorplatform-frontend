@@ -1,4 +1,5 @@
 "use client";
+import { WebExerciseSolution } from "@/features/web-exercise/ui/web-exercise-solution";
 import { CodeEditor } from "@/shared/ui/code-editor";
 import { Textarea } from "@/shared/ui/form-controls";
 
@@ -163,9 +164,23 @@ function TaskSolutionContent({
         </p>
       )}
 
-      {item.task.taskType === "CODE" && (
-        <CodeSolution disabled={readOnly} homeworkId={homeworkId} item={item} practice={practice} />
-      )}
+      {item.task.taskType === "CODE" &&
+        (item.task.codeExecution?.language === "WEB" ? (
+          <WebExerciseSolution
+            taskId={item.taskId}
+            starterCode={item.task.codeExecution.starterCode}
+            homeworkId={homeworkId}
+            disabled={readOnly || !item.task.codeExecution.executionEnabled}
+            latestSubmissionId={latestSubmission?.id}
+            context={
+              practice
+                ? { studentProgramId: practice.studentProgramId, topicId: practice.topicId }
+                : { homeworkItemId: item.id }
+            }
+          />
+        ) : (
+          <CodeSolution disabled={readOnly} homeworkId={homeworkId} item={item} practice={practice} />
+        ))}
 
       {item.task.taskType !== "TEXT" && item.task.taskType !== "CODE" && (
         <p className="rounded-surface bg-surface-subtle p-4 text-sm text-foreground-muted">
@@ -562,6 +577,9 @@ function SubmissionSummary({ submission }: Readonly<{ submission: StudentSubmiss
         <span className="text-sm text-foreground-subtle">Попытка {submission.attemptNo}</span>
       </div>
 
+      {submission.reviewComment && (
+        <p className="whitespace-pre-wrap text-sm">Комментарий преподавателя: {submission.reviewComment}</p>
+      )}
       {execution && (
         <>
           <ExecutionStatus status={execution.status} />
@@ -589,7 +607,7 @@ function ExecutionStatus({ status }: Readonly<{ status: ExecutionStatus }>) {
 
   switch (status) {
     case "PASSED":
-      return <p className="font-medium text-success">Решение принято</p>;
+      return <p className="font-medium text-success">Все тесты пройдены</p>;
 
     case "FAILED":
       return <p className="font-medium text-danger">Решение не прошло все тесты</p>;

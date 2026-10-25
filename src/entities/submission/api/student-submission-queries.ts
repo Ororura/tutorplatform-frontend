@@ -20,7 +20,17 @@ export async function getStudentTaskSubmissions(
   return data;
 }
 
+async function getStudentSubmission(submissionId: string): Promise<StudentSubmission> {
+  const { data, error, response } = await apiClient.GET("/api/v1/student/submissions/{submissionId}", {
+    params: { path: { submissionId } },
+  });
+  if (error) throw new ApiClientError(response.status, error);
+  return data;
+}
+
 export const studentSubmissionQueries = {
+  detail: (id: string) =>
+    queryOptions({ queryKey: ["student-submissions", "detail", id], queryFn: () => getStudentSubmission(id) }),
   all: () => ["student-submissions"] as const,
   lists: () => [...studentSubmissionQueries.all(), "list"] as const,
   list: (taskId: string, homeworkItemId?: string) =>

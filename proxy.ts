@@ -1,9 +1,15 @@
 import { randomBytes } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { applicationCsp } from "./browser-security";
+import { applicationCsp, webPreviewCsp } from "./browser-security";
 
 export function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname === "/web-preview") {
+    const response = NextResponse.next();
+    response.headers.set("Content-Security-Policy", webPreviewCsp);
+    response.headers.set("Cache-Control", "private, no-store");
+    return response;
+  }
   if (process.env.NODE_ENV !== "production") return NextResponse.next();
 
   const csp = applicationCsp(randomBytes(32).toString("base64"));

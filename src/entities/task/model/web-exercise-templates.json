@@ -1,0 +1,373 @@
+[
+  {
+    "id": "html-note",
+    "title": "HTML: оформи заметку",
+    "description": "Разметьте текст: «Мой первый сайт» — единственный h1; «Я изучаю веб-разработку.» — абзац; HTML, CSS и JavaScript — три пункта одного ненумерованного списка.",
+    "hint": "Используйте h1, p, ul и li.",
+    "starter": {
+      "html": "Мой первый сайт\nЯ изучаю веб-разработку.\nHTML\nCSS\nJavaScript",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "",
+      "editableFiles": ["html"],
+      "reviewMode": "AUTO",
+      "hint": "Используйте h1, p, ul и li.",
+      "criteria": ["Заголовок и абзац", "Три пункта списка"]
+    },
+    "checks": [
+      {
+        "label": "Заголовок и абзац",
+        "script": "assert.equal(await page.locator('h1').count(), 1); assert.equal(await page.locator('h1').innerText(), 'Мой первый сайт'); assert.equal(await page.locator('p').innerText(), 'Я изучаю веб-разработку.');"
+      },
+      {
+        "label": "Три пункта списка",
+        "script": "assert.equal(await page.locator('ul').count(), 1); assert.deepEqual(await page.locator('ul > li').allTextContents(), ['HTML','CSS','JavaScript']);"
+      }
+    ]
+  },
+  {
+    "id": "html-image",
+    "title": "HTML: изображение товара",
+    "description": "Внутри .card добавьте изображение с адресом `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iODAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9InRlYWwiLz48L3N2Zz4=` и непустым описанием alt. Сохраните название и цену.",
+    "hint": "У img есть атрибуты src и alt.",
+    "starter": {
+      "html": "<article class=\"card\"><h2>Блокнот</h2><p>350 ₽</p></article>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "",
+      "editableFiles": ["html"],
+      "reviewMode": "AUTO",
+      "hint": "У img есть атрибуты src и alt.",
+      "criteria": ["Изображение внутри карточки", "Название и цена сохранены"]
+    },
+    "checks": [
+      {
+        "label": "Изображение внутри карточки",
+        "script": "const img = page.locator('.card img'); assert.equal(await img.count(), 1); assert.equal(await img.getAttribute('src'), \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iODAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9InRlYWwiLz48L3N2Zz4=\"); assert.ok((await img.getAttribute('alt') || '').trim());"
+      },
+      {
+        "label": "Название и цена сохранены",
+        "script": "assert.equal(await page.locator('.card h2').innerText(), 'Блокнот'); assert.equal(await page.locator('.card p').innerText(), '350 ₽');"
+      }
+    ]
+  },
+  {
+    "id": "html-form",
+    "title": "HTML: форма обратной связи",
+    "description": "Внутри form создайте поля «Имя» (input type=text), «Email» (input type=email), «Сообщение» (textarea). Свяжите каждую подпись label с полем через for/id. Добавьте кнопку «Отправить» с type=submit.",
+    "hint": "Значение for у label должно совпадать с id поля.",
+    "starter": {
+      "html": "<form>\n  <!-- Добавьте поля и кнопку -->\n</form>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "",
+      "editableFiles": ["html"],
+      "reviewMode": "AUTO",
+      "hint": "Значение for у label должно совпадать с id поля.",
+      "criteria": ["Поля и связанные подписи", "Кнопка отправки"]
+    },
+    "checks": [
+      {
+        "label": "Поля и связанные подписи",
+        "script": "for (const [label, tag] of [['Имя','input[type=text]'],['Email','input[type=email]'],['Сообщение','textarea']]) { const input=page.getByLabel(label,{exact:true}); assert.equal(await input.count(),1); assert.ok(await input.evaluate((el, selector)=>el.matches(selector),tag)); assert.ok(await input.getAttribute('id')); assert.equal(await page.locator('label').filter({hasText:label}).first().getAttribute('for'),await input.getAttribute('id')); }"
+      },
+      {
+        "label": "Кнопка отправки",
+        "script": "assert.equal(await page.locator('form button[type=submit]').innerText(),'Отправить');"
+      }
+    ]
+  },
+  {
+    "id": "html-navigation",
+    "title": "HTML: навигация по странице",
+    "description": "Добавьте nav со ссылками «О курсе», «Программа», «Контакты» на соответствующие разделы. Адрес каждой ссылки должен начинаться с # и указывать на id существующего раздела.",
+    "hint": "Ссылка вида href=\"#about\" ведёт к элементу id=\"about\".",
+    "starter": {
+      "html": "<header><!-- Меню --></header>\n<section id=\"about\"><h2>О курсе</h2></section>\n<section id=\"program\"><h2>Программа</h2></section>\n<section id=\"contacts\"><h2>Контакты</h2></section>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "",
+      "editableFiles": ["html"],
+      "reviewMode": "AUTO",
+      "hint": "Ссылка вида href=\"#about\" ведёт к элементу id=\"about\".",
+      "criteria": ["Три ссылки на разделы"]
+    },
+    "checks": [
+      {
+        "label": "Три ссылки на разделы",
+        "script": "for (const [text,id] of [['О курсе','about'],['Программа','program'],['Контакты','contacts']]) { assert.equal(await page.locator('nav').getByRole('link',{name:text,exact:true}).getAttribute('href'),'#'+id); assert.equal(await page.locator('[id='+id+']').count(),1); }"
+      }
+    ]
+  },
+  {
+    "id": "css-card",
+    "title": "CSS: оформи карточку",
+    "description": "Для .card задайте padding 24px со всех сторон, border-radius 12px, белый фон и сплошную рамку толщиной 1px.",
+    "hint": "Сокращённые свойства padding и border применяются ко всем сторонам.",
+    "starter": {
+      "html": "<article class=\"card\"><h2>Изучаем CSS</h2><p>Небольшая практика каждый день.</p></article>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n.card {\n  /* Ваши стили */\n}",
+      "javascript": "",
+      "editableFiles": ["css"],
+      "reviewMode": "AUTO",
+      "hint": "Сокращённые свойства padding и border применяются ко всем сторонам.",
+      "criteria": ["Отступы и скругление", "Фон и рамка"]
+    },
+    "checks": [
+      {
+        "label": "Отступы и скругление",
+        "script": "const s=await page.locator('.card').evaluate(el=>{const s=getComputedStyle(el);return [s.paddingTop,s.paddingRight,s.paddingBottom,s.paddingLeft,s.borderTopLeftRadius,s.borderTopRightRadius,s.borderBottomRightRadius,s.borderBottomLeftRadius]}); assert.deepEqual(s,['24px','24px','24px','24px','12px','12px','12px','12px']);"
+      },
+      {
+        "label": "Фон и рамка",
+        "script": "const s=await page.locator('.card').evaluate(el=>{const s=getComputedStyle(el);return [s.backgroundColor,s.borderTopWidth,s.borderTopStyle,s.borderRightWidth,s.borderBottomWidth,s.borderLeftWidth,s.borderRightStyle,s.borderBottomStyle,s.borderLeftStyle]}); assert.deepEqual(s,['rgb(255, 255, 255)','1px','solid','1px','1px','1px','solid','solid','solid']);"
+      }
+    ]
+  },
+  {
+    "id": "css-flex",
+    "title": "CSS: строка с Flexbox",
+    "description": "Используйте Flexbox для .header: .logo слева, .menu справа; элементы выровнены по вертикальному центру.",
+    "hint": "Вспомните justify-content и align-items.",
+    "starter": {
+      "html": "<header class=\"header\"><strong class=\"logo\">Курс</strong><nav class=\"menu\"><a href=\"#\">Программа</a></nav></header>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n.header { height:100px; padding:12px; background:#eee; }\n.logo { font-size:28px; }",
+      "javascript": "",
+      "editableFiles": ["css"],
+      "reviewMode": "AUTO",
+      "hint": "Вспомните justify-content и align-items.",
+      "criteria": ["Используется Flexbox", "Положение элементов"]
+    },
+    "checks": [
+      {
+        "label": "Используется Flexbox",
+        "script": "assert.ok(['flex','inline-flex'].includes(await page.locator('.header').evaluate(el=>getComputedStyle(el).display)));"
+      },
+      {
+        "label": "Положение элементов",
+        "script": "const rects=await page.locator('.header').evaluate(el=>[el,el.querySelector('.logo'),el.querySelector('.menu')].map(x=>{const r=x.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,height:r.height}})); const [h,l,m]=rects; assert.ok(Math.abs(l.top+l.height/2-m.top-m.height/2)<2); assert.ok(l.left<h.left+20); assert.ok(m.right>h.right-20); assert.ok(l.right<m.left);"
+      }
+    ]
+  },
+  {
+    "id": "css-grid",
+    "title": "CSS: сетка карточек",
+    "description": "Разместите шесть .card в .cards через CSS Grid: три равные колонки, промежутки между рядами и колонками 16px.",
+    "hint": "Используйте grid-template-columns: repeat(3, 1fr).",
+    "starter": {
+      "html": "<div class=\"cards\"><article class=\"card\">Карточка 1</article><article class=\"card\">Карточка 2</article><article class=\"card\">Карточка 3</article><article class=\"card\">Карточка 4</article><article class=\"card\">Карточка 5</article><article class=\"card\">Карточка 6</article></div>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n.card { padding:16px; background:#eee; }\n.cards {\n}",
+      "javascript": "",
+      "editableFiles": ["css"],
+      "reviewMode": "AUTO",
+      "hint": "Используйте grid-template-columns: repeat(3, 1fr).",
+      "criteria": ["Три равные колонки", "Промежутки 16px"]
+    },
+    "checks": [
+      {
+        "label": "Три равные колонки",
+        "script": "assert.equal(await page.locator('.cards').evaluate(el=>getComputedStyle(el).display),'grid'); const r=await page.locator('.card').evaluateAll(es=>es.map(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,right:r.right}})); assert.equal(r.length,6); assert.ok(Math.abs(r[0].y-r[2].y)<1); assert.ok(r[3].y>r[0].y); assert.ok(Math.abs(r[0].x-r[3].x)<1); assert.ok(Math.abs(r[0].w-r[1].w)<1); assert.ok(Math.abs(r[1].w-r[2].w)<1); assert.ok(Math.abs(r[1].x-r[0].right-16)<1);"
+      },
+      {
+        "label": "Промежутки 16px",
+        "script": "const s=await page.locator('.cards').evaluate(el=>{const s=getComputedStyle(el);return [s.rowGap,s.columnGap]}); assert.deepEqual(s,['16px','16px']);"
+      }
+    ]
+  },
+  {
+    "id": "css-button",
+    "title": "CSS: состояния кнопки",
+    "description": "Для .action задайте фон #2563eb; при наведении — #1d4ed8. При клавиатурном фокусе используйте сплошную обводку #111827 толщиной 3px с отступом 2px.",
+    "hint": "Используйте псевдоклассы :hover и :focus-visible.",
+    "starter": {
+      "html": "<button class=\"action\">Продолжить</button>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n.action { padding:12px 24px; border:0; color:white; }",
+      "javascript": "",
+      "editableFiles": ["css"],
+      "reviewMode": "AUTO",
+      "hint": "Используйте псевдоклассы :hover и :focus-visible.",
+      "criteria": ["Наведение меняет фон", "Клавиатурный фокус заметен"]
+    },
+    "checks": [
+      {
+        "label": "Наведение меняет фон",
+        "script": "const b=page.locator('.action'); assert.equal(await b.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(37, 99, 235)'); await b.hover(); assert.equal(await b.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(29, 78, 216)');"
+      },
+      {
+        "label": "Клавиатурный фокус заметен",
+        "script": "await page.keyboard.press('Tab'); assert.ok(await page.locator('.action').evaluate(el=>el===document.activeElement)); const s=await page.locator('.action').evaluate(el=>{const s=getComputedStyle(el);return [s.outlineWidth,s.outlineStyle,s.outlineColor,s.outlineOffset]}); assert.deepEqual(s,['3px','solid','rgb(17, 24, 39)','2px']);"
+      }
+    ]
+  },
+  {
+    "id": "css-responsive",
+    "title": "CSS: адаптивная сетка",
+    "description": "Доработайте сетку .cards: при ширине окна меньше 600px нужна одна колонка, от 600px — три равные колонки. Сохраните промежутки 16px. Горизонтальной прокрутки быть не должно.",
+    "hint": "Добавьте media query для max-width: 599px.",
+    "starter": {
+      "html": "<div class=\"cards\"><article class=\"card\">Карточка 1</article><article class=\"card\">Карточка 2</article><article class=\"card\">Карточка 3</article><article class=\"card\">Карточка 4</article><article class=\"card\">Карточка 5</article><article class=\"card\">Карточка 6</article></div>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n.card { padding:16px; background:#eee; }\n.cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }",
+      "javascript": "",
+      "editableFiles": ["css"],
+      "reviewMode": "AUTO",
+      "hint": "Добавьте media query для max-width: 599px.",
+      "criteria": ["Телефон: одна колонка", "От 600px: три колонки"]
+    },
+    "checks": [
+      {
+        "label": "Телефон: одна колонка",
+        "script": "for (const width of [375,599]) { await page.setViewportSize({width,height:768}); assert.deepEqual(await page.locator('.cards').evaluate(el=>{const s=getComputedStyle(el);return [s.rowGap,s.columnGap]}),['16px','16px']); const r=await page.locator('.card').evaluateAll(es=>es.map(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width}})); assert.ok(r.every(x=>Math.abs(x.x-r[0].x)<1)); assert.ok(r[1].y>r[0].y); assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)); }"
+      },
+      {
+        "label": "От 600px: три колонки",
+        "script": "for (const width of [600,1024]) { await page.setViewportSize({width,height:768}); assert.deepEqual(await page.locator('.cards').evaluate(el=>{const s=getComputedStyle(el);return [s.rowGap,s.columnGap]}),['16px','16px']); const r=await page.locator('.card').evaluateAll(es=>es.map(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,right:r.right}})); assert.equal(r.length,6); assert.ok(Math.abs(r[0].y-r[2].y)<1); assert.ok(r[3].y>r[0].y); assert.ok(Math.abs(r[0].x-r[3].x)<1); assert.ok(Math.abs(r[0].w-r[1].w)<1); assert.ok(Math.abs(r[1].w-r[2].w)<1); assert.ok(Math.abs(r[1].x-r[0].right-16)<1); assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)); }"
+      }
+    ]
+  },
+  {
+    "id": "js-total",
+    "title": "JavaScript: стоимость покупки",
+    "description": "Реализуйте function calculateTotal(price, quantity), возвращающую price × quantity. Аргументы — неотрицательные целые числа.",
+    "hint": "Функция должна вернуть результат через return.",
+    "starter": {
+      "html": "<p>Реализуйте функцию calculateTotal и нажмите «Проверить».</p>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "function calculateTotal(price, quantity) {\n  // Верните стоимость\n}",
+      "editableFiles": ["javascript"],
+      "reviewMode": "AUTO",
+      "hint": "Функция должна вернуть результат через return.",
+      "criteria": ["Обычные покупки", "Нулевые значения"]
+    },
+    "checks": [
+      {
+        "label": "Обычные покупки",
+        "script": "for (const [p,q,v] of [[150,3,450],[25,4,100],[7,1,7]]) assert.equal(await page.evaluate(([p,q])=>calculateTotal(p,q),[p,q]),v);"
+      },
+      {
+        "label": "Нулевые значения",
+        "script": "for (const [p,q] of [[150,0],[0,5],[0,0]]) assert.equal(await page.evaluate(([p,q])=>calculateTotal(p,q),[p,q]),0);"
+      }
+    ]
+  },
+  {
+    "id": "js-discount",
+    "title": "JavaScript: скидка на покупку",
+    "description": "Реализуйте function applyDiscount(total). При total >= 1000 верните сумму со скидкой 10%, иначе исходную сумму. Вход — неотрицательное число; округление не требуется.",
+    "hint": "Условие включает сумму ровно 1000.",
+    "starter": {
+      "html": "<p>Реализуйте функцию applyDiscount.</p>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "function applyDiscount(total) {\n  // Проверьте сумму\n}",
+      "editableFiles": ["javascript"],
+      "reviewMode": "AUTO",
+      "hint": "Условие включает сумму ровно 1000.",
+      "criteria": ["Покупка без скидки", "Скидка и граничное значение"]
+    },
+    "checks": [
+      {
+        "label": "Покупка без скидки",
+        "script": "for(const v of [0,500,999]) assert.equal(await page.evaluate(v=>applyDiscount(v),v),v);"
+      },
+      {
+        "label": "Скидка и граничное значение",
+        "script": "for(const [v,r] of [[1000,900],[1500,1350],[2000,1800]]) assert.ok(Math.abs(await page.evaluate(v=>applyDiscount(v),v)-r)<0.00001);"
+      }
+    ]
+  },
+  {
+    "id": "js-even",
+    "title": "JavaScript: чётные числа",
+    "description": "Реализуйте function getEvenNumbers(numbers). Верните новый массив чётных целых чисел в исходном порядке, сохранив повторения. Исходный массив менять нельзя.",
+    "hint": "Метод filter создаёт новый массив, а оператор % вычисляет остаток.",
+    "starter": {
+      "html": "<p>Реализуйте функцию getEvenNumbers.</p>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "function getEvenNumbers(numbers) {\n  // Верните новый массив\n}",
+      "editableFiles": ["javascript"],
+      "reviewMode": "AUTO",
+      "hint": "Метод filter создаёт новый массив, а оператор % вычисляет остаток.",
+      "criteria": ["Чётные числа в исходном порядке", "Исходный массив не меняется"]
+    },
+    "checks": [
+      {
+        "label": "Чётные числа в исходном порядке",
+        "script": "for(const input of [[1,2,3,4],[4,2,4,1],[0,-3,-2,8],[]]) { const output=await page.evaluate(v=>getEvenNumbers(v),input); assert.deepEqual(output,input.filter(v=>v%2===0)); }"
+      },
+      {
+        "label": "Исходный массив не меняется",
+        "script": "assert.ok(await page.evaluate(()=>{const a=[3,2,1,4];const b=getEvenNumbers(a);return b!==a&&JSON.stringify(a)==='[3,2,1,4]';}));"
+      }
+    ]
+  },
+  {
+    "id": "dom-counter",
+    "title": "JavaScript + DOM: счётчик",
+    "description": "Оживите #count и кнопки #increment, #decrement, #reset. Начальное значение — 0. Отрицательные значения допустимы. Сброс возвращает 0.",
+    "hint": "Храните число в переменной и обновляйте textContent после каждого действия.",
+    "starter": {
+      "html": "<p id=\"count\">0</p><button id=\"increment\">+</button><button id=\"decrement\">−</button><button id=\"reset\">Сбросить</button>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "// Найдите элементы и добавьте обработчики\n",
+      "editableFiles": ["javascript"],
+      "reviewMode": "AUTO",
+      "hint": "Храните число в переменной и обновляйте textContent после каждого действия.",
+      "criteria": ["Повторные нажатия", "Сброс и отрицательные значения"]
+    },
+    "checks": [
+      {
+        "label": "Повторные нажатия",
+        "script": "await page.locator('#increment').click(); await page.locator('#increment').click(); await page.locator('#decrement').click(); assert.equal(await page.locator('#count').innerText(),'1');"
+      },
+      {
+        "label": "Сброс и отрицательные значения",
+        "script": "await page.locator('#increment').click(); await page.locator('#reset').click(); assert.equal(await page.locator('#count').innerText(),'0'); await page.locator('#decrement').click(); assert.equal(await page.locator('#count').innerText(),'-1');"
+      }
+    ]
+  },
+  {
+    "id": "dom-validation",
+    "title": "JavaScript + DOM: проверка формы",
+    "description": "Обработайте отправку #feedback без перезагрузки. После trim() имя не должно быть пустым, сообщение должно содержать минимум 10 символов. Показывайте непустые ошибки в #name-error и #message-error. После исправления очищайте ошибки при следующей отправке. При успехе покажите «Сообщение отправлено» в #status, при ошибках очищайте #status.",
+    "hint": "В обработчике submit сначала вызовите event.preventDefault().",
+    "starter": {
+      "html": "<form id=\"feedback\" novalidate><label for=\"name\">Имя</label><input id=\"name\"><p id=\"name-error\"></p><label for=\"message\">Сообщение</label><textarea id=\"message\"></textarea><p id=\"message-error\"></p><button type=\"submit\">Отправить</button><p id=\"status\" role=\"status\"></p></form>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "// Обработайте событие submit\n",
+      "editableFiles": ["javascript"],
+      "reviewMode": "AUTO",
+      "hint": "В обработчике submit сначала вызовите event.preventDefault().",
+      "criteria": ["Пустое имя и короткое сообщение", "Исправление и граница 10 символов"]
+    },
+    "checks": [
+      {
+        "label": "Пустое имя и короткое сообщение",
+        "script": "await page.evaluate(()=>document.addEventListener('submit',event=>document.body.dataset.submitPrevented=String(event.defaultPrevented))); await page.locator('#name').fill('   '); await page.locator('#message').fill('123456789'); await page.getByRole('button',{name:'Отправить'}).click(); assert.ok((await page.locator('#name-error').innerText()).trim()); assert.ok((await page.locator('#message-error').innerText()).trim()); assert.equal(await page.locator('#status').innerText(),''); assert.equal(await page.locator('body').getAttribute('data-submit-prevented'),'true');"
+      },
+      {
+        "label": "Исправление и граница 10 символов",
+        "script": "await page.evaluate(()=>document.addEventListener('submit',event=>document.body.dataset.submitPrevented=String(event.defaultPrevented))); await page.getByRole('button',{name:'Отправить'}).click(); await page.locator('#name').fill(' Анна '); await page.locator('#message').fill(' 1234567890 '); await page.getByRole('button',{name:'Отправить'}).click(); assert.equal(await page.locator('#name-error').innerText(),''); assert.equal(await page.locator('#message-error').innerText(),''); assert.equal(await page.locator('#status').innerText(),'Сообщение отправлено'); await page.locator('#message').fill('   123456789   '); await page.getByRole('button',{name:'Отправить'}).click(); assert.ok((await page.locator('#message-error').innerText()).trim()); assert.equal(await page.locator('#status').innerText(),''); assert.equal(await page.locator('body').getAttribute('data-submit-prevented'),'true');"
+      }
+    ]
+  },
+  {
+    "id": "web-todo",
+    "title": "Мини-проект: список дел",
+    "description": "Реализуйте добавление, отметку выполнения и удаление задач. Поле — #new-task, кнопка — #add-task, список — #tasks. Каждая задача — li.task с текстом в .task-text, checkbox и кнопкой с атрибутом data-delete. Не добавляйте пустые строки; обрезайте пробелы по краям; очищайте поле после добавления. Одинаковые названия допустимы. Оформите страницу самостоятельно.",
+    "hint": "Создавайте элементы через document.createElement и присваивайте текст через textContent.",
+    "starter": {
+      "html": "<h1>Мои дела</h1><label for=\"new-task\">Новая задача</label><input id=\"new-task\"><button id=\"add-task\">Добавить</button><ul id=\"tasks\"></ul>",
+      "css": "body { font-family: sans-serif; margin: 16px; }\n",
+      "javascript": "// Реализуйте список дел\n",
+      "editableFiles": ["html", "css", "javascript"],
+      "reviewMode": "HYBRID",
+      "hint": "Создавайте элементы через document.createElement и присваивайте текст через textContent.",
+      "criteria": ["Добавление и пустые строки", "Отметка и удаление выбранной задачи"]
+    },
+    "checks": [
+      {
+        "label": "Добавление и пустые строки",
+        "script": "await page.locator('#new-task').fill('   '); await page.locator('#add-task').click(); assert.equal(await page.locator('#tasks .task').count(),0); await page.locator('#new-task').fill('  Изучить DOM  '); await page.locator('#add-task').click(); assert.equal(await page.locator('#tasks .task-text').innerText(),'Изучить DOM'); assert.equal(await page.locator('#new-task').inputValue(),'');"
+      },
+      {
+        "label": "Отметка и удаление выбранной задачи",
+        "script": "for(const title of ['Повторить','Повторить']) { await page.locator('#new-task').fill(title); await page.locator('#add-task').click(); } const tasks=page.locator('#tasks .task'); assert.equal(await tasks.count(),2); await tasks.first().locator('input[type=checkbox]').check(); assert.ok(await tasks.first().locator('input[type=checkbox]').isChecked()); await tasks.last().locator('[data-delete]').click(); assert.equal(await tasks.count(),1); assert.ok(await tasks.first().locator('input[type=checkbox]').isChecked());"
+      }
+    ]
+  }
+]

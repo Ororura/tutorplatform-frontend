@@ -48,3 +48,25 @@ it("language switching preserves teacher code", () => {
   fireEvent.change(screen.getByLabelText("Язык"), { target: { value: "PYTHON" } });
   expect(screen.getByLabelText("Стартовый код")).toHaveValue("teacher code");
 });
+
+it("creates a web exercise from one of 15 templates with teacher-selected review mode", async () => {
+  render(<CreateTaskDialog />);
+  fireEvent.click(screen.getByRole("button", { name: "Создать задание" }));
+  fireEvent.change(screen.getByLabelText("Предмет"), { target: { value: "subject" } });
+  fireEvent.change(screen.getByLabelText("Тип"), { target: { value: "CODE" } });
+  fireEvent.change(screen.getByLabelText("Язык"), { target: { value: "WEB" } });
+  const templates = screen.getByLabelText("Шаблон упражнения") as HTMLSelectElement;
+  expect(templates.options).toHaveLength(15);
+  fireEvent.change(templates, { target: { value: "dom-counter" } });
+  fireEvent.change(screen.getByLabelText("Режим проверки"), { target: { value: "HYBRID" } });
+  fireEvent.click(screen.getByRole("button", { name: "Создать" }));
+  await waitFor(() => expect(mocks.create).toHaveBeenCalled());
+  const request = mocks.create.mock.calls[0][0];
+  expect(request.programmingConfig.language).toBe("WEB");
+  expect(JSON.parse(request.programmingConfig.starterCode)).toMatchObject({
+    reviewMode: "HYBRID",
+    editableFiles: ["javascript"],
+  });
+  expect(request.testCases).toHaveLength(2);
+  expect(request.testCases.every((test: { expectedOutput: string }) => test.expectedOutput === "PASS")).toBe(true);
+});

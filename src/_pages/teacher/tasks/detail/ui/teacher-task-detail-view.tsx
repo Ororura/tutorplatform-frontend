@@ -7,6 +7,8 @@ import { taskDifficultyPresentation, taskQueries, taskStatusPresentation, taskTy
 import { SafeMarkdown } from "@/entities/material";
 import { EditTaskDialog } from "@/features/task/edit";
 import { ApiClientError } from "@/shared/api/client";
+import { parseWebManifest, webReviewModes } from "@/shared/lib/web-exercise";
+import { WebFilesEditor } from "@/shared/ui/web-files-editor";
 import { Button } from "@/shared/ui/button";
 
 export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) {
@@ -41,6 +43,8 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
       </main>
     );
   }
+  const web =
+    task.data.programmingConfig?.language === "WEB" ? parseWebManifest(task.data.programmingConfig.starterCode) : null;
   const subject = subjects.data?.find((item) => item.id === task.data.subjectId);
   const tests = [...(task.data.testCases ?? [])].sort((a, b) => a.position - b.position);
   return (
@@ -104,14 +108,26 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
           {task.data.programmingConfig.starterCode && (
             <div>
               <h3 className="mb-2 font-medium">Стартовый код</h3>
-              <pre className="overflow-x-auto rounded-control bg-code-surface p-4 text-sm text-code-foreground">
-                <code>{task.data.programmingConfig.starterCode}</code>
-              </pre>
+              {web ? (
+                <div className="space-y-3">
+                  <p>{webReviewModes[web.reviewMode]}</p>
+                  <WebFilesEditor files={web} editableFiles={[]} disabled />
+                  <ul>
+                    {web.criteria?.map((label, i) => (
+                      <li key={i}>{label}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <pre className="overflow-x-auto rounded-control bg-code-surface p-4 text-sm text-code-foreground">
+                  <code>{task.data.programmingConfig.starterCode}</code>
+                </pre>
+              )}
             </div>
           )}
         </section>
       )}
-      {task.data.taskType === "CODE" && tests.length > 0 && (
+      {task.data.taskType === "CODE" && !web && tests.length > 0 && (
         <section className="space-y-4" aria-labelledby="tests-heading">
           <h2 id="tests-heading" className="section-title">
             Тесты

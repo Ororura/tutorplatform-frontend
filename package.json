@@ -23,7 +23,8 @@
     "e2e:security": "playwright test e2e/browser-security.spec.ts",
     "monaco:prepare": "node scripts/prepare-monaco.mjs",
     "predev": "npm run monaco:prepare",
-    "prebuild": "npm run monaco:prepare"
+    "prebuild": "npm run monaco:prepare",
+    "test:web-exercises": "node scripts/test-web-exercises.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

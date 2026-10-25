@@ -14,6 +14,7 @@ export const submissionStatusPresentation: Record<SubmissionStatus, string> = {
 };
 
 export const executionStatusPresentation: Record<ExecutionStatus, string> = {
+  SKIPPED: "Автопроверка не требуется",
   PENDING: "Ожидает запуска",
   RUNNING: "Выполняется",
   PASSED: "Все тесты пройдены",
