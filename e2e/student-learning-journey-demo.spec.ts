@@ -103,7 +103,7 @@ test("demo student completes the learning journey", async ({ page }) => {
 
   const submissionResult = page.getByRole("region", { name: "Результат отправки" });
   await expect(submissionResult.getByText("Выполнено", { exact: true })).toBeVisible({ timeout: 60_000 });
-  await expect(submissionResult.getByText("Решение принято", { exact: true })).toBeVisible();
+  await expect(submissionResult.getByText("Все тесты пройдены", { exact: true })).toBeVisible();
   await expect(submissionResult).toContainText("Тесты: 2 из 2");
 
   await page.getByRole("link", { name: "Домашние задания", exact: true }).click();

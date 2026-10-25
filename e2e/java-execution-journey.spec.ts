@@ -128,6 +128,7 @@ test("teacher creates Java task, student uses Monaco, runs and submits to PASSED
   // Monaco applies indentation to multiline keyboard input; verify every persisted code line.
   const codeLines = (source: string) => source.split("\n").map((line) => line.trim());
   expect(codeLines(submission.sourceCode)).toEqual(codeLines(solution));
-  await expect(page.getByRole("region", { name: "Результат отправки" })).toContainText("Решение принято");
+  await expect(page.getByRole("region", { name: "Результат отправки" })).toContainText("Выполнено");
+  await expect(page.getByRole("region", { name: "Результат отправки" })).toContainText("Все тесты пройдены");
   expect(errors).toEqual([]);
 });
