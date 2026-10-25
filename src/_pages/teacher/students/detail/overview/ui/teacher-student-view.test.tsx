@@ -12,6 +12,10 @@ const mocks = vi.hoisted(() => ({
   },
 }));
 
+vi.mock("@/widgets/teacher-submission-inbox/teacher-submission-inbox", () => ({
+  TeacherSubmissionInbox: () => <div>Решения на проверку</div>,
+}));
+
 vi.mock("@tanstack/react-query", () => ({
   useQuery: mocks.useQuery,
 }));

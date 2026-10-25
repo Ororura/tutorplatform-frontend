@@ -16,6 +16,7 @@ import { StudentInviteHistory, studentInviteQueries } from "@/entities/student-i
 import { EditStudentForm } from "@/features/student/edit";
 import { CreateStudentInviteDialog } from "@/features/student/invite/create";
 import { useRevokeStudentInviteMutation } from "@/features/student/invite/revoke";
+import { TeacherSubmissionInbox } from "@/widgets/teacher-submission-inbox/teacher-submission-inbox";
 import { Button } from "@/shared/ui/button";
 
 import { StudentDetailQueryState } from "./student-detail-query-state";
@@ -108,6 +109,7 @@ export function TeacherStudentView({
       </section>
 
       <StudentProfileNav active="overview" studentId={studentId} />
+      <TeacherSubmissionInbox studentId={studentId} />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">

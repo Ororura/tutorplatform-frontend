@@ -8,12 +8,14 @@ export type ReviewTextSubmissionInput = {
   studentId: string;
   submissionId: string;
   status: "PASSED" | "FAILED";
+  comment?: string;
 };
 
 export async function reviewTextSubmission({
   studentId,
   submissionId,
   status,
+  comment,
 }: ReviewTextSubmissionInput): Promise<TeacherSubmission> {
   const { data, error, response } = await apiClient.PATCH(
     "/api/v1/teacher/students/{studentId}/submissions/{submissionId}/review",
@@ -26,6 +28,7 @@ export async function reviewTextSubmission({
       },
       body: {
         status,
+        ...(comment ? { comment } : {}),
       },
     },
   );
@@ -37,7 +40,7 @@ export async function reviewTextSubmission({
   return data;
 }
 
-export function useReviewTextSubmissionMutation(studentId: string, homeworkId: string) {
+export function useReviewTextSubmissionMutation(studentId: string, homeworkId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -49,9 +52,10 @@ export function useReviewTextSubmissionMutation(studentId: string, homeworkId: s
           queryKey: teacherSubmissionQueries.studentLists(studentId),
         }),
 
-        queryClient.invalidateQueries({
-          queryKey: homeworkQueries.detail(studentId, homeworkId).queryKey,
-        }),
+        ...(homeworkId
+          ? [queryClient.invalidateQueries({ queryKey: homeworkQueries.detail(studentId, homeworkId).queryKey })]
+          : []),
+        queryClient.invalidateQueries({ queryKey: ["teacher-submissions", "detail", studentId] }),
 
         queryClient.invalidateQueries({
           queryKey: homeworkQueries.studentLists(studentId),

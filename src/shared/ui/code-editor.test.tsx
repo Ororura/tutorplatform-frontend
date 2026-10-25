@@ -30,6 +30,9 @@ vi.mock("next/dynamic", () => ({
 it.each([
   ["JAVA", "java"],
   ["PYTHON", "python"],
+  ["html", "html"],
+  ["css", "css"],
+  ["javascript", "javascript"],
 ] as const)("maps %s to Monaco %s and preserves edits", (language, monaco) => {
   const onChange = vi.fn();
   render(<CodeEditor language={language} value="starter" onChange={onChange} />);

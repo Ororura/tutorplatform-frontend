@@ -1,4 +1,5 @@
 "use client";
+import { WebExerciseConfig } from "@/shared/ui/web-exercise-config";
 import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { useEffect, useRef, useState } from "react";
@@ -131,6 +132,7 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
               <label className="block space-y-2">
                 <span className="field-label">Язык</span>
                 <Select
+                  disabled={language === "WEB"}
                   aria-label="Язык"
                   value={language}
                   onChange={(event) => {
@@ -139,21 +141,27 @@ export function EditTaskDialog({ task }: Readonly<{ task: Task }>) {
                     if (next === "JAVA" && !starterCode.trim()) setStarterCode(javaStarterCode);
                   }}
                 >
-                  {Object.entries(programmingLanguageLabels).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
+                  {Object.entries(programmingLanguageLabels)
+                    .filter(([value]) => value !== "WEB" || language === "WEB")
+                    .map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
                 </Select>
               </label>
-              <label className="block space-y-2">
-                <span className="field-label">Стартовый код</span>
-                <Textarea
-                  className="min-h-28 font-mono"
-                  value={starterCode}
-                  onChange={(event) => setStarterCode(event.target.value)}
-                />
-              </label>
+              {language === "WEB" ? (
+                <WebExerciseConfig value={starterCode} onChange={setStarterCode} />
+              ) : (
+                <label className="block space-y-2">
+                  <span className="field-label">Стартовый код</span>
+                  <Textarea
+                    className="min-h-28 font-mono"
+                    value={starterCode}
+                    onChange={(event) => setStarterCode(event.target.value)}
+                  />
+                </label>
+              )}
             </fieldset>
           )}
           {error && (
