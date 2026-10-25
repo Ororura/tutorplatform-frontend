@@ -140,3 +140,15 @@ written to `test-results/`; CI also uploads them together with the HTML report.
 
 See [production delivery](docs/production-delivery.md) for exact image selection,
 smoke verification, deployed SHA inspection and manual rollback.
+
+## Практика HTML / CSS / JavaScript
+
+В банке заданий выберите предмет **Веб-разработка**, тип **Код**, язык **HTML / CSS / JavaScript**.
+Доступны 15 шаблонов, настройка редактируемых файлов и автоматический, ручной или смешанный режим.
+У ученика есть вкладки файлов, изолированный предпросмотр, консоль, подсказки и локальный черновик.
+Решения на ручную проверку доступны в домашнем задании и профиле ученика. Полный сценарий и
+требования развёртывания описаны в backend `docs/web-exercises.md`.
+
+После сборки `execution-worker/Dockerfile.runtime-web` выполните `npm run test:web-exercises`,
+чтобы проверить все 15 эталонных решений и ошибочные стартовые варианты в настоящем Chromium.
+Браузерные тесты production-сборки: `e2e/web-exercises.spec.ts`.
