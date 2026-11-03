@@ -23,6 +23,7 @@ export function ActionMenu({ label, items }: Readonly<{ label: string; items: Ac
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const selected = useRef(false);
+  const tabbing = useRef(false);
   return (
     <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -35,13 +36,20 @@ export function ActionMenu({ label, items }: Readonly<{ label: string; items: Ac
         align="end"
         aria-label={label}
         onCloseAutoFocus={(event) => {
-          if (selected.current) {
+          if (selected.current || tabbing.current) {
             event.preventDefault();
             selected.current = false;
+            tabbing.current = false;
           }
         }}
-        onKeyDown={(event) => {
-          if (event.key === "Tab") setOpen(false);
+        onKeyDownCapture={(event) => {
+          if (event.key === "Tab") {
+            // Let the browser continue from the trigger to the next control.
+            event.stopPropagation();
+            tabbing.current = true;
+            trigger.current?.focus();
+            setOpen(false);
+          }
         }}
       >
         {items.map((item) => (

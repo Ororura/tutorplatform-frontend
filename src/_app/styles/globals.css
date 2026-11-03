@@ -241,6 +241,7 @@
     overflow-wrap: anywhere;
   }
   .page-description {
+    overflow-wrap: anywhere;
     max-width: 65ch;
     font-size: 0.875rem;
     line-height: 1.5rem;

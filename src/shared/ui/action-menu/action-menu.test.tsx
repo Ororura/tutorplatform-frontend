@@ -70,7 +70,7 @@ describe("ActionMenu", () => {
     await screen.findByRole("menu");
     const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
     fireEvent(screen.getByRole("menu"), event);
-    expect(event.defaultPrevented).toBe(true);
+    expect(event.defaultPrevented).toBe(false);
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
 });
