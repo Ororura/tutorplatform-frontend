@@ -2,6 +2,7 @@ import { ArrowRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { Skeleton } from "@/shared/ui/skeleton";
 import { ErrorState } from "@/shared/ui/feedback";
 
 export function DashboardSection({
@@ -23,11 +24,11 @@ export function DashboardSection({
     <section aria-label={title} className="min-w-0">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-inset bg-surface-hover text-foreground-muted">
-            <Icon size={19} aria-hidden="true" />
+          <span className="text-muted-foreground">
+            <Icon size={18} aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <h2 className="section-title">{title}</h2>
+            <h2 className="text-base font-semibold">{title}</h2>
             {subtitle && <p className="mt-1 text-sm text-foreground-muted">{subtitle}</p>}
           </div>
         </div>
@@ -39,7 +40,7 @@ export function DashboardSection({
           <ArrowRight size={16} className="transition group-hover:translate-x-0.5" aria-hidden="true" />
         </Link>
       </div>
-      <div className="mt-5 space-y-3">{children}</div>
+      <div className="mt-4 space-y-4">{children}</div>
     </section>
   );
 }
@@ -56,9 +57,9 @@ export function DashboardSkeleton({ label }: Readonly<{ label: string }>) {
           className="space-y-4 rounded-surface border border-border p-5 motion-safe:animate-pulse"
           aria-hidden="true"
         >
-          <div className="h-5 w-2/3 rounded bg-surface-subtle" />
-          <div className="h-3 w-1/2 rounded bg-surface-subtle" />
-          <div className="h-9 rounded-surface bg-surface-subtle" />
+          <Skeleton className="h-5 w-2/3" />
+          <Skeleton className="h-3 w-1/2" />
+          <Skeleton className="h-9" />
         </div>
       ))}
     </div>

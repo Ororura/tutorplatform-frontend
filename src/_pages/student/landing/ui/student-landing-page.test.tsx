@@ -165,7 +165,7 @@ describe("StudentLandingPage", () => {
     expect(screen.getByText("Ближайший срок")).toBeInTheDocument();
   });
 
-  it("shows real topic counts, navigable current topics and motivation", () => {
+  it("shows real topic counts and navigable current topics", () => {
     render(<StudentLandingPage />);
     const card = screen.getByRole("article", { name: "Python с нуля" });
     expect(within(card).getByText("1 из 3 тем пройдено")).toBeInTheDocument();
@@ -174,7 +174,7 @@ describe("StudentLandingPage", () => {
       "href",
       "/student/programs/program-0/topics/for",
     );
-    expect(screen.getByText(/Ты прошёл 33% программы/)).toBeInTheDocument();
+    expect(screen.queryByText("Отличный прогресс!")).not.toBeInTheDocument();
     expect(screen.queryByText("Закрытая тема")).not.toBeInTheDocument();
     expect(screen.getByRole("article", { name: "Практический проект" }).querySelector("a")).toHaveAttribute(
       "href",
