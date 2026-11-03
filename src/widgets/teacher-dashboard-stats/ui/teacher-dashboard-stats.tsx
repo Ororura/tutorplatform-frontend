@@ -51,7 +51,7 @@ export function TeacherDashboardStats({ data }: Readonly<Props>) {
   return (
     <section
       aria-label="Сводка преподавателя"
-      className="grid grid-cols-2 gap-2 border-b border-border pb-4 xl:grid-cols-4"
+      className="grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-card shadow-xs lg:grid-cols-4"
     >
       {cards.map((card) => {
         const Icon = card.icon;
@@ -59,7 +59,7 @@ export function TeacherDashboardStats({ data }: Readonly<Props>) {
         return (
           <Link
             key={card.label}
-            className="group rounded-control p-3 transition-colors hover:bg-surface-hover"
+            className="group min-w-0 p-4 transition-colors hover:bg-accent sm:p-6"
             href={card.href}
           >
             <div className="flex items-start justify-between gap-3">
@@ -72,8 +72,8 @@ export function TeacherDashboardStats({ data }: Readonly<Props>) {
                 aria-hidden="true"
               />
             </div>
-            <p className="mt-2 text-2xl font-semibold tracking-tight tabular-nums text-foreground">{card.value}</p>
-            <p className="mt-1 text-sm leading-5 text-(--text-secondary)">{card.label}</p>
+            <p className="mt-4 text-3xl font-semibold tracking-tight tabular-nums text-foreground">{card.value}</p>
+            <p className="mt-2 text-xs leading-5 text-(--text-secondary)">{card.label}</p>
           </Link>
         );
       })}

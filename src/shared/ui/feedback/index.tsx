@@ -26,7 +26,7 @@ export function LoadingState({ children }: Readonly<{ children: ReactNode }>) {
       aria-busy="true"
       className="space-y-4 rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground"
     >
-      <span>{children}</span>
+      {children}
       <div className="space-y-3" aria-hidden="true">
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-4 w-full" />

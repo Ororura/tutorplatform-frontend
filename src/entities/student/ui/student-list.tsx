@@ -1,5 +1,6 @@
 import { CalendarDays, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { Badge } from "@/shared/ui/badge";
 
 import type { StudentSummary } from "../api/student-queries";
 import { getStudentAccountStatusLabel, getStudentStatusLabel } from "../lib/student-labels";
@@ -14,11 +15,12 @@ export function StudentList({
   students: StudentSummary[];
 }>) {
   return (
-    <ul className="divide-y divide-(--border) divide-border">
+    <ul className="divide-y divide-border">
       {students.map((student) => (
         <li key={student.id}>
           <Link
-            className="group grid gap-3 px-2 py-3 transition hover:bg-surface/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus-ring sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] sm:items-center sm:px-3"
+            aria-label={`Открыть ${[student.firstName, student.lastName].filter(Boolean).join(" ")}`}
+            className="group grid min-w-0 gap-3 px-4 py-4 transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] sm:items-center sm:px-5"
             href={`/teacher/students/${student.id}`}
           >
             <span className="flex min-w-0 items-center gap-3">
@@ -27,7 +29,7 @@ export function StudentList({
               </span>
 
               <span className="min-w-0">
-                <span className="block truncate font-medium text-foreground">
+                <span className="block wrap-break-word font-medium text-foreground">
                   {student.firstName} {student.lastName ?? ""}
                 </span>
 
@@ -39,11 +41,13 @@ export function StudentList({
             </span>
 
             <span className="flex flex-wrap gap-2">
-              <span className="badge bg-success-subtle text-success">{getStudentStatusLabel(student.status)}</span>
+              <Badge tone={student.status === "ACTIVE" ? "success" : "neutral"}>
+                {getStudentStatusLabel(student.status)}
+              </Badge>
 
-              <span className="badge bg-primary-subtle text-primary">
+              <Badge tone={student.accountStatus === "REGISTERED" ? "info" : "neutral"}>
                 {getStudentAccountStatusLabel(student.accountStatus)}
-              </span>
+              </Badge>
             </span>
 
             <span className="flex items-center gap-2 text-sm font-medium text-foreground-muted group-hover:text-primary">
