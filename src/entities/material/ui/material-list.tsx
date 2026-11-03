@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { Card } from "@/shared/ui/card";
+import { EmptyState } from "@/shared/ui/feedback";
 
 import type { LessonMaterial } from "../api/material-queries";
 import { MaterialRenderer } from "./material-renderer";
@@ -9,21 +11,24 @@ export function MaterialList({
 }: Readonly<{ materials: LessonMaterial[]; renderActions?: (material: LessonMaterial, index: number) => ReactNode }>) {
   if (materials.length === 0) {
     return (
-      <p className="rounded-inset border border-dashed border-border-strong p-6 text-foreground-muted">
-        Для этой темы пока нет материалов.
-      </p>
+      <EmptyState
+        title="Для этой темы пока нет материалов."
+        description="Материалы появятся здесь после добавления преподавателем."
+      />
     );
   }
 
   return (
     <ol className="space-y-4">
       {materials.map((material, index) => (
-        <li className="min-w-0 rounded-control border border-border bg-surface p-4 sm:p-5" key={material.id}>
-          <div className="mb-3 flex items-start justify-between gap-4">
-            <h3 className="min-w-0 wrap-break-word font-semibold">{material.title}</h3>
-            {renderActions?.(material, index)}
-          </div>
-          <MaterialRenderer material={material} />
+        <li className="min-w-0" key={material.id}>
+          <Card className="p-5">
+            <div className="mb-3 flex items-start justify-between gap-4">
+              <h3 className="min-w-0 wrap-break-word font-semibold">{material.title}</h3>
+              {renderActions?.(material, index)}
+            </div>
+            <MaterialRenderer material={material} />
+          </Card>
         </li>
       ))}
     </ol>

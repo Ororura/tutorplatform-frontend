@@ -16,6 +16,8 @@ import { useReorderLessonMaterialsMutation } from "@/features/material/reorder";
 import { UploadMaterialDialog } from "@/features/material/upload";
 import { ApiClientError } from "@/shared/api/client";
 import { ActionMenu } from "@/shared/ui/action-menu";
+import { PageHeader } from "@/shared/ui/page-header";
+import { LoadingState, EmptyState } from "@/shared/ui/feedback";
 import { Button } from "@/shared/ui/button";
 
 type Props = { programId: string; topicId: string };
@@ -98,11 +100,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
         <span aria-current="page">Материалы темы</span>
       </nav>
 
-      {program.isPending && (
-        <div className="surface text-sm text-foreground-muted" aria-busy="true">
-          Загружаем тему…
-        </div>
-      )}
+      {program.isPending && <LoadingState>Загружаем тему…</LoadingState>}
       {program.isError && (
         <section className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
           <h1 className="page-title">{programNotFound ? "Программа не найдена" : "Не удалось загрузить тему."}</h1>
@@ -121,15 +119,11 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
       )}
       {topicContext && (
         <>
-          <header className="rounded-surface border border-(--border) bg-surface p-6">
-            <p className="wrap-break-word text-sm text-foreground-muted">{topicContext.module.title}</p>
-            <h1 className="page-title mt-2 wrap-break-word">{topicContext.topic.title}</h1>
-            {topicContext.topic.description && (
-              <p className="mt-4 wrap-break-word whitespace-pre-line leading-7 text-foreground-muted">
-                {topicContext.topic.description}
-              </p>
-            )}
-          </header>
+          <PageHeader
+            eyebrow={topicContext.module.title}
+            title={topicContext.topic.title}
+            description={topicContext.topic.description}
+          />
 
           <section className="space-y-4" aria-labelledby="materials-heading">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -143,14 +137,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
                 </div>
               )}
             </div>
-            {materials.isPending && (
-              <p
-                className="rounded-surface border border-(--border) bg-surface p-6 text-sm text-foreground-muted"
-                aria-busy="true"
-              >
-                Загружаем материалы…
-              </p>
-            )}
+            {materials.isPending && <LoadingState>Загружаем материалы…</LoadingState>}
             {materials.isError && (
               <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
                 <p>{materialsNotFound ? "Тема не найдена" : "Не удалось загрузить материалы."}</p>
@@ -217,14 +204,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
                 <AttachTaskToTopicDialog topicId={topicId} attachedTasks={topicTasks.data} tasks={taskBank.data} />
               )}
             </div>
-            {topicTasks.isPending && (
-              <p
-                className="rounded-surface border border-(--border) bg-surface p-6 text-sm text-foreground-muted"
-                aria-busy="true"
-              >
-                Загружаем задания…
-              </p>
-            )}
+            {topicTasks.isPending && <LoadingState>Загружаем задания…</LoadingState>}
             {topicTasks.isError && (
               <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
                 <p>{topicTasksNotFound ? "Тема недоступна." : "Не удалось загрузить практические задания."}</p>
@@ -246,7 +226,7 @@ export function TeacherProgramTopicMaterialsView({ programId: programRoute, topi
             {topicTasks.data && (
               <div className="overflow-hidden rounded-surface border border-(--border) bg-surface">
                 {topicTasks.data.length === 0 ? (
-                  <p className="p-6 text-sm text-foreground-muted">К теме пока не прикреплены задания.</p>
+                  <EmptyState title="К теме пока не прикреплены задания." />
                 ) : (
                   <ul className="divide-y divide-border">
                     {topicTasks.data.map((task) => (

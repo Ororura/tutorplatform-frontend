@@ -4,21 +4,19 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { BookOpenText, ChevronRight, Search } from "lucide-react";
 import Link from "next/link";
-import { type LearningProgramStatus, learningProgramQueries } from "@/entities/learning-program";
+import {
+  type LearningProgramStatus,
+  learningProgramQueries,
+  LearningProgramStatusBadge,
+} from "@/entities/learning-program";
 import { ActivateLearningProgramButton } from "@/features/program/activate";
 import { CreateLearningProgramDialog } from "@/features/program/create";
 import { PageHeader } from "@/shared/ui/page-header";
 import { Button } from "@/shared/ui/button";
-import { Badge, type BadgeTone } from "@/shared/ui/badge";
 import { Input } from "@/shared/ui/form-controls";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/shared/ui/card";
 import { EmptyState, ErrorState, LoadingState } from "@/shared/ui/feedback";
 
-const statuses: Record<LearningProgramStatus, { label: string; tone: BadgeTone }> = {
-  DRAFT: { label: "Черновик", tone: "warning" },
-  ACTIVE: { label: "Активна", tone: "success" },
-  ARCHIVED: { label: "В архиве", tone: "neutral" },
-};
 const filters = [
   { value: "", label: "Все" },
   { value: "ACTIVE", label: "Активные" },
@@ -147,7 +145,7 @@ export function TeacherProgramsView() {
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-3 pl-14 sm:justify-end sm:pl-0">
-                    <Badge tone={statuses[program.status].tone}>{statuses[program.status].label}</Badge>
+                    <LearningProgramStatusBadge status={program.status} />
                     {program.status === "DRAFT" && (
                       <div className="relative z-10">
                         <ActivateLearningProgramButton programId={program.id} triggerVariant="secondary" />

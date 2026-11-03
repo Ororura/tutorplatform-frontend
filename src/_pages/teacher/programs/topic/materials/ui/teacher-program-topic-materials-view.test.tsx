@@ -230,11 +230,11 @@ describe("TeacherProgramTopicMaterialsView", () => {
 
     render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Действия материала «Текст»" }));
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия материала «Текст»" }), { key: "Enter" });
     expect(screen.getByRole("menuitem", { name: "Редактировать" })).toBeInTheDocument();
     fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
     for (const title of ["Файл", "Изображение"]) {
-      fireEvent.click(screen.getByRole("button", { name: `Действия материала «${title}»` }));
+      fireEvent.keyDown(screen.getByRole("button", { name: `Действия материала «${title}»` }), { key: "Enter" });
       expect(screen.queryByRole("menuitem", { name: "Редактировать" })).not.toBeInTheDocument();
       expect(screen.getByRole("menuitem", { name: "Удалить" })).toBeInTheDocument();
       fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
@@ -274,11 +274,11 @@ describe("TeacherProgramTopicMaterialsView", () => {
 
     const { rerender } = render(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Действия материала «Второй»" }));
-    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия материала «Второй»" }), { key: "Enter" });
+    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toHaveAttribute("aria-disabled", "true");
     fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
-    fireEvent.click(screen.getByRole("button", { name: "Действия материала «Первый»" }));
-    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия материала «Первый»" }), { key: "Enter" });
+    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toHaveAttribute("aria-disabled", "true");
     fireEvent.click(screen.getByRole("menuitem", { name: "Переместить вниз" }));
     expect(mocks.reorderMutate).toHaveBeenCalledWith({ orderedIds: ["material-2", "material-1"] });
 
@@ -296,7 +296,7 @@ describe("TeacherProgramTopicMaterialsView", () => {
       .mockReturnValueOnce(queryResult())
       .mockReturnValueOnce(queryResult());
     rerender(<TeacherProgramTopicMaterialsView programId="program-1" topicId="topic-1" />);
-    fireEvent.click(screen.getByRole("button", { name: "Действия материала «Первый»" }));
-    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия материала «Первый»" }), { key: "Enter" });
+    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toHaveAttribute("aria-disabled", "true");
   });
 });

@@ -15,7 +15,8 @@ vi.mock("@tanstack/react-query", () => ({
   useQuery: mocks.useQuery,
 }));
 
-vi.mock("@/entities/learning-program", () => ({
+vi.mock("@/entities/learning-program", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/entities/learning-program")>()),
   learningProgramQueries: {
     list: mocks.list,
   },
