@@ -9,6 +9,7 @@ import { type FormEvent, useCallback, useEffect, useState } from "react";
 import { type StudentAccountStatus, type StudentListParams, studentQueries } from "@/entities/student";
 import { CreateStudentDialog } from "@/features/student/create";
 
+import { Button } from "@/shared/ui/button";
 import { PageHeader } from "@/shared/ui/page-header";
 
 import { StudentListState } from "./student-list-state";
@@ -80,8 +81,11 @@ export function TeacherStudentsContent() {
         actions={<CreateStudentDialog open={createOpen} onOpenChange={setCreateOpen} />}
       />
 
-      <section className="min-w-0" aria-labelledby="student-list-title">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <section
+        className="min-w-0 rounded-xl border border-border bg-card shadow-xs"
+        aria-labelledby="student-list-title"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
           <div>
             <h2 id="student-list-title" className="section-title">
               Список учеников{" "}
@@ -101,7 +105,7 @@ export function TeacherStudentsContent() {
           )}
         </div>
 
-        <div className="mt-3 flex flex-col gap-3 rounded-surface border border-(--border) bg-(--surface-muted) p-3 lg:flex-row">
+        <div className="flex flex-col gap-3 border-y border-border bg-muted/40 px-5 py-4 lg:flex-row">
           <StudentSearch key={search} initialSearch={search} navigate={navigate} />
 
           <label>
@@ -147,9 +151,21 @@ export function TeacherStudentsContent() {
               <option value="lastName,asc">По фамилии</option>
             </Select>
           </label>
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              onClick={() => navigate({ search: undefined, accountStatus: undefined, page: undefined })}
+            >
+              Сбросить
+            </Button>
+          )}
         </div>
-
-        <div className="mt-5">
+        <div className="hidden grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] gap-3 border-b border-border px-5 py-3 text-xs font-medium text-muted-foreground sm:grid">
+          <span>Ученик</span>
+          <span>Статус и доступ</span>
+          <span className="w-20" />
+        </div>
+        <div>
           <StudentListState
             isPending={students.isPending}
             isError={students.isError}
@@ -162,7 +178,7 @@ export function TeacherStudentsContent() {
 
         {students.data && students.data.totalPages > 1 && (
           <nav
-            className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5"
+            className="flex flex-wrap items-center justify-between gap-4 border-t border-border p-5"
             aria-label="Пагинация учеников"
           >
             <button
@@ -284,12 +300,9 @@ function StudentSearch({
         />
       </div>
 
-      <button
-        className="rounded-surface border border-border bg-surface px-4 text-sm font-medium text-foreground-muted transition hover:bg-surface-subtle"
-        type="submit"
-      >
+      <Button variant="secondary" type="submit">
         Найти
-      </button>
+      </Button>
     </form>
   );
 }

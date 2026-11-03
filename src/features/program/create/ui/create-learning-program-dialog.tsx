@@ -2,10 +2,11 @@
 import { Input, Select, Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
-import { type ComponentProps, useEffect, useRef, useState } from "react";
+import { type ComponentProps, useState } from "react";
 
 import { taskQueries } from "@/entities/task";
 import { ApiClientError } from "@/shared/api/client";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/shared/ui/dialog";
 import { Button } from "@/shared/ui/button";
 
 import { useCreateLearningProgramMutation } from "../api/create-learning-program";
@@ -15,9 +16,6 @@ type Props = {
 };
 
 export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Readonly<Props>) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-
   const [open, setOpen] = useState(false);
   const [subjectId, setSubjectId] = useState("");
   const [title, setTitle] = useState("");
@@ -31,24 +29,7 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
 
   const mutation = useCreateLearningProgramMutation();
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-
-    if (!dialog) return;
-
-    if (open && !dialog.open) {
-      dialog.showModal();
-    }
-
-    if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
-
-  const close = () => {
-    setOpen(false);
-    queueMicrotask(() => triggerRef.current?.focus());
-  };
+  const close = () => setOpen(false);
 
   const reset = () => {
     setSubjectId("");
@@ -109,43 +90,31 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
   };
 
   return (
-    <>
-      <Button
-        ref={triggerRef}
-        variant={triggerVariant}
-        type="button"
-        onClick={() => {
-          setError("");
-          setOpen(true);
-        }}
-      >
-        Создать программу
-      </Button>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!mutation.isPending) setOpen(next);
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button
+          variant={triggerVariant}
+          type="button"
+          onClick={() => {
+            setError("");
+            setOpen(true);
+          }}
+        >
+          Создать программу
+        </Button>
+      </DialogTrigger>
 
-      <dialog
-        ref={dialogRef}
-        aria-labelledby="create-learning-program-title"
-        className="dialog-surface w-[min(42rem,calc(100%-2rem))]"
-        onClose={() => setOpen(false)}
-      >
-        <form className="space-y-5 p-6" onSubmit={submit} noValidate>
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 id="create-learning-program-title" className="section-title">
-                Создать программу
-              </h2>
-
-              <p className="mt-1 text-sm text-foreground-muted">Новая программа будет создана как черновик.</p>
-            </div>
-
-            <button
-              type="button"
-              className="rounded px-2 py-1 text-sm text-foreground-muted hover:bg-surface-subtle"
-              onClick={close}
-            >
-              Закрыть
-            </button>
-          </div>
+      <DialogContent className="max-w-xl" showCloseButton={!mutation.isPending}>
+        <form className="space-y-5" onSubmit={submit} noValidate>
+          <DialogHeader>
+            <DialogTitle>Создать программу</DialogTitle>
+            <DialogDescription>Новая программа будет создана как черновик.</DialogDescription>
+          </DialogHeader>
 
           {subjects.isPending && (
             <p className="text-sm text-foreground-muted" aria-busy="true">
@@ -240,7 +209,7 @@ export function CreateLearningProgramDialog({ triggerVariant = "primary" }: Read
             </Button>
           </div>
         </form>
-      </dialog>
-    </>
+      </DialogContent>
+    </Dialog>
   );
 }

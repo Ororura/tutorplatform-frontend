@@ -1,5 +1,6 @@
 import { CalendarDays, Mail, UserRound, UserRoundCheck } from "lucide-react";
 
+import { Card, CardHeader, CardTitle, CardContent } from "@/shared/ui/card";
 import type { StudentDetails } from "../api/student-queries";
 import { getStudentAccountStatusLabel, getStudentStatusLabel } from "../lib/student-labels";
 
@@ -19,73 +20,72 @@ export function StudentDetailsCard({
         : "bg-surface-subtle text-foreground-muted";
 
   return (
-    <section className="surface">
-      <div>
-        <p className="text-sm font-medium text-primary">Карточка ученика</p>
+    <Card>
+      <CardHeader className="border-b border-border px-5 py-4">
+        <CardTitle>Основная информация</CardTitle>
+      </CardHeader>
+      <CardContent className="p-5">
+        <dl className="grid gap-5 sm:grid-cols-2">
+          <div className="border-b border-border pb-4 last:border-0">
+            <dt className="flex items-center gap-2 text-sm text-foreground-muted">
+              <UserRound size={16} />
+              Имя
+            </dt>
 
-        <h2 className="section-title mt-1">Основная информация</h2>
-      </div>
+            <dd className="mt-2 font-semibold text-foreground">{student.firstName}</dd>
+          </div>
 
-      <dl className="mt-6 grid gap-3 sm:grid-cols-2">
-        <div className="border-b border-border pb-4 last:border-0">
-          <dt className="flex items-center gap-2 text-sm text-foreground-muted">
-            <UserRound size={16} />
-            Имя
-          </dt>
+          <div className="border-b border-border pb-4 last:border-0">
+            <dt className="flex items-center gap-2 text-sm text-foreground-muted">
+              <UserRound size={16} />
+              Фамилия
+            </dt>
 
-          <dd className="mt-2 font-semibold text-foreground">{student.firstName}</dd>
-        </div>
+            <dd className="mt-2 font-semibold text-foreground">{student.lastName ?? "Не указана"}</dd>
+          </div>
 
-        <div className="border-b border-border pb-4 last:border-0">
-          <dt className="flex items-center gap-2 text-sm text-foreground-muted">
-            <UserRound size={16} />
-            Фамилия
-          </dt>
+          <div className="border-b border-border pb-4 last:border-0">
+            <dt className="text-sm text-foreground-muted">Статус ученика</dt>
 
-          <dd className="mt-2 font-semibold text-foreground">{student.lastName ?? "Не указана"}</dd>
-        </div>
+            <dd className="mt-2">
+              <span className={`badge  ${studentStatusClassName}`}>{getStudentStatusLabel(student.status)}</span>
+            </dd>
+          </div>
 
-        <div className="border-b border-border pb-4 last:border-0">
-          <dt className="text-sm text-foreground-muted">Статус ученика</dt>
+          <div className="border-b border-border pb-4 last:border-0">
+            <dt className="flex items-center gap-2 text-sm text-foreground-muted">
+              <UserRoundCheck size={16} />
+              Статус аккаунта
+            </dt>
 
-          <dd className="mt-2">
-            <span className={`badge  ${studentStatusClassName}`}>{getStudentStatusLabel(student.status)}</span>
-          </dd>
-        </div>
+            <dd className="mt-2">
+              <span className={`badge  ${accountStatusClassName}`}>
+                {getStudentAccountStatusLabel(student.account.status)}
+              </span>
+            </dd>
+          </div>
 
-        <div className="border-b border-border pb-4 last:border-0">
-          <dt className="flex items-center gap-2 text-sm text-foreground-muted">
-            <UserRoundCheck size={16} />
-            Статус аккаунта
-          </dt>
+          <div className="border-b border-border pb-4 last:border-0">
+            <dt className="flex items-center gap-2 text-sm text-foreground-muted">
+              <Mail size={16} />
+              Email аккаунта
+            </dt>
 
-          <dd className="mt-2">
-            <span className={`badge  ${accountStatusClassName}`}>
-              {getStudentAccountStatusLabel(student.account.status)}
-            </span>
-          </dd>
-        </div>
+            <dd className="mt-2 break-all font-medium text-foreground">{student.account.email ?? "Не указан"}</dd>
+          </div>
 
-        <div className="border-b border-border pb-4 last:border-0">
-          <dt className="flex items-center gap-2 text-sm text-foreground-muted">
-            <Mail size={16} />
-            Email аккаунта
-          </dt>
+          <div className="border-b border-border pb-4 last:border-0">
+            <dt className="flex items-center gap-2 text-sm text-foreground-muted">
+              <CalendarDays size={16} />
+              Связь
+            </dt>
 
-          <dd className="mt-2 break-all font-medium text-foreground">{student.account.email ?? "Не указан"}</dd>
-        </div>
-
-        <div className="border-b border-border pb-4 last:border-0">
-          <dt className="flex items-center gap-2 text-sm text-foreground-muted">
-            <CalendarDays size={16} />
-            Связь
-          </dt>
-
-          <dd className="mt-2 text-sm font-medium leading-6 text-foreground">
-            Основной преподаватель с {new Date(student.relation.startedAt).toLocaleDateString("ru-RU")}
-          </dd>
-        </div>
-      </dl>
-    </section>
+            <dd className="mt-2 text-sm font-medium leading-6 text-foreground">
+              Основной преподаватель с {new Date(student.relation.startedAt).toLocaleDateString("ru-RU")}
+            </dd>
+          </div>
+        </dl>
+      </CardContent>
+    </Card>
   );
 }
