@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +7,7 @@ import Link from "next/link";
 import { publicRegistrationSettingsQueries } from "@/entities/platform-settings";
 import { GuestGuard } from "@/entities/user";
 import { RegisterTeacherForm } from "@/features/auth/register-teacher";
+import { AuthShell } from "@/shared/ui/auth-shell";
 import { Button } from "@/shared/ui/button";
 
 export function TeacherRegisterPage() {
@@ -23,20 +23,20 @@ function RegistrationContent() {
 
   if (settings.isPending) {
     return (
-      <RegistrationShell>
-        <section className="surface" aria-busy="true">
+      <AuthShell>
+        <section className="space-y-4" aria-busy="true">
           <p className="text-sm font-medium text-primary">Умнее Вместе</p>
           <h1 className="page-title mt-1">Проверяем доступность регистрации</h1>
           <p className="page-description mt-2">Это займёт всего несколько секунд.</p>
         </section>
-      </RegistrationShell>
+      </AuthShell>
     );
   }
 
   if (settings.isError) {
     return (
-      <RegistrationShell>
-        <section className="surface">
+      <AuthShell>
+        <section className="space-y-4">
           <p className="text-sm font-medium text-primary">Умнее Вместе</p>
           <h1 className="page-title mt-1">Не удалось проверить регистрацию</h1>
 
@@ -56,14 +56,14 @@ function RegistrationContent() {
             </Link>
           </div>
         </section>
-      </RegistrationShell>
+      </AuthShell>
     );
   }
 
   if (settings.data.registrationMode === "INVITE_ONLY") {
     return (
-      <RegistrationShell>
-        <section className="surface">
+      <AuthShell>
+        <section className="space-y-4">
           <span className="grid size-11 place-items-center rounded-surface bg-primary-subtle text-primary">
             <BookOpen className="size-5" strokeWidth={1.8} aria-hidden="true" />
           </span>
@@ -88,41 +88,18 @@ function RegistrationContent() {
             </Link>
           </div>
         </section>
-      </RegistrationShell>
+      </AuthShell>
     );
   }
 
   return (
-    <RegistrationShell>
-      <section className="surface">
+    <AuthShell>
+      <section className="space-y-4">
         <h1 className="page-title">Регистрация преподавателя</h1>
         <p className="page-description mt-2">Создайте аккаунт и начните работу с учениками.</p>
 
         <RegisterTeacherForm />
       </section>
-    </RegistrationShell>
-  );
-}
-
-function RegistrationShell({ children }: Readonly<{ children: ReactNode }>) {
-  return (
-    <main className="flex min-h-svh flex-col bg-background text-foreground">
-      <header className="mx-auto flex w-full max-w-(--auth-width) items-center px-4 py-6 sm:px-0">
-        <Link href="/login" className="flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-surface bg-primary text-primary-foreground">
-            <BookOpen className="size-5" strokeWidth={2} aria-hidden="true" />
-          </span>
-          <span>
-            <span className="block text-base font-semibold tracking-tight">Умнее Вместе</span>
-            <span className="block text-xs text-foreground-muted">Учиться. Развиваться. Вместе.</span>
-          </span>
-        </Link>
-      </header>
-      <div className="mx-auto flex w-full max-w-(--auth-width) flex-1 items-center px-4 py-8 sm:px-0">{children}</div>
-
-      <footer className="mx-auto w-full max-w-(--auth-width) px-4 pb-6 text-center text-xs text-foreground-muted sm:px-0">
-        © {new Date().getFullYear()} Умнее Вместе
-      </footer>
-    </main>
+    </AuthShell>
   );
 }

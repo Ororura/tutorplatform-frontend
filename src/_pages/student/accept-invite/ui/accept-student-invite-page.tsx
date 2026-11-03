@@ -8,45 +8,37 @@ import {
   studentInviteQueries,
 } from "@/entities/student-invite";
 import { AcceptStudentInviteForm } from "@/features/student/invite/accept";
-import { Button } from "@/shared/ui/button";
-import { PageHeader } from "@/shared/ui/page-header";
+import { AuthShell } from "@/shared/ui/auth-shell";
+import { LoadingState, ErrorState } from "@/shared/ui/feedback";
 
 export function AcceptStudentInvitePage({ token }: Readonly<{ token: string }>) {
   const invitation = useQuery(studentInviteQueries.publicDetails(token));
 
-  if (invitation.isPending) {
+  if (invitation.isPending)
     return (
-      <main className="grid min-h-svh place-items-center px-(--page-gutter)" aria-busy="true">
-        <p className="feedback">Загружаем приглашение…</p>
-      </main>
+      <AuthShell>
+        <LoadingState>Загружаем приглашение…</LoadingState>
+      </AuthShell>
     );
-  }
-
-  if (invitation.isError) {
+  if (invitation.isError)
     return (
-      <main className="grid min-h-svh place-items-center px-(--page-gutter)">
-        <div className="page-form surface space-y-4 text-center" role="alert">
-          <h1 className="page-title">Приглашение недоступно</h1>
-          <p className="text-foreground-muted">{getStudentInviteErrorMessage(invitation.error)}</p>
-          <Button type="button" onClick={() => invitation.refetch()}>
-            Проверить ещё раз
-          </Button>
-        </div>
-      </main>
+      <AuthShell>
+        <h1 className="page-title mb-4">Приглашение недоступно</h1>
+        <ErrorState
+          title={getStudentInviteErrorMessage(invitation.error)}
+          onRetry={() => void invitation.refetch()}
+          retryLabel="Проверить ещё раз"
+        />
+      </AuthShell>
     );
-  }
-
   return (
-    <main className="page-form page-stack px-(--page-gutter) py-8 sm:py-12">
-      <PageHeader
-        eyebrow="Умнее Вместе"
-        title="Принять приглашение"
-        description="Проверьте данные и создайте пароль для аккаунта ученика."
-      />
-      <div className="space-y-6">
+    <AuthShell wide>
+      <h1 className="page-title">Принять приглашение</h1>
+      <p className="page-description mt-2">Проверьте данные и создайте пароль для аккаунта ученика.</p>
+      <div className="mt-6 space-y-6">
         <PublicStudentInviteDetails invite={invitation.data} />
         <AcceptStudentInviteForm token={token} />
       </div>
-    </main>
+    </AuthShell>
   );
 }
