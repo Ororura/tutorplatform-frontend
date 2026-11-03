@@ -1,5 +1,7 @@
 # Умнее Вместе — UI refactor plan
 
+> This documents the earlier CSS-only refactor. The current shadcn migration is tracked in [shadcn-redesign.md](shadcn-redesign.md).
+
 ## Audit
 
 The App Router routes are thin bridges into the existing Feature-Sliced layers. Keep query/mutation logic, routes, API schemas, session guards, CSP, demo behavior and native dialog behavior intact.

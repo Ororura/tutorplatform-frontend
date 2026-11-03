@@ -66,7 +66,7 @@ test("demo teacher creates, edits, reorders, activates and archives a program", 
   await createModule(page, secondModuleTitle, "Второй модуль");
 
   const modulesSection = page.getByRole("region", { name: "Модули программы" });
-  const moduleItems = modulesSection.locator(":scope > ol > li");
+  const moduleItems = modulesSection.getByRole("listitem").filter({ has: page.locator("details") });
   const firstModule = moduleItems.filter({
     has: page.getByRole("heading", { name: firstModuleTitle, exact: true }),
   });
@@ -77,18 +77,18 @@ test("demo teacher creates, edits, reorders, activates and archives a program", 
 
   const firstTopic = firstModule.locator("ol > li").filter({ hasText: firstTopicTitle });
   await firstTopic.getByRole("button", { name: `Действия темы «${firstTopicTitle}»` }).click();
-  await firstTopic.getByRole("menuitem", { name: "Редактировать" }).click();
+  await page.getByRole("menuitem", { name: "Редактировать" }).click();
   const editTopicDialog = page.locator("dialog[open]");
   await editTopicDialog.locator("select").selectOption("ACTIVE");
   await editTopicDialog.getByRole("button", { name: "Сохранить" }).click();
   await expect(firstTopic.locator("span").filter({ hasText: /^Активна$/ })).toBeVisible();
 
   await firstModule.getByRole("button", { name: `Действия модуля «${firstModuleTitle}»` }).click();
-  await firstModule.getByRole("menuitem", { name: "Переместить вниз" }).click();
+  await page.getByRole("menuitem", { name: "Переместить вниз" }).click();
   await expect(moduleItems.locator(":scope > details > summary h3")).toHaveText([secondModuleTitle, firstModuleTitle]);
 
   await firstTopic.getByRole("button", { name: `Действия темы «${firstTopicTitle}»` }).click();
-  await firstTopic.getByRole("menuitem", { name: "Переместить вниз" }).click();
+  await page.getByRole("menuitem", { name: "Переместить вниз" }).click();
   const topicItems = firstModule.locator("ol > li");
   await expect(topicItems.nth(0)).toContainText(secondTopicTitle);
   await expect(topicItems.nth(1)).toContainText(firstTopicTitle);
@@ -114,7 +114,7 @@ test("demo teacher creates, edits, reorders, activates and archives a program", 
   await expect(page.getByText("Активна", { exact: true }).first()).toBeVisible();
 
   await page.getByRole("button", { name: "Архивировать" }).click();
-  const archiveDialog = page.getByRole("dialog", { name: "Архивировать программу?" });
+  const archiveDialog = page.getByRole("alertdialog", { name: "Архивировать программу?" });
   await archiveDialog.getByRole("button", { name: "Архивировать" }).click();
   await expect(page.getByText("В архиве", { exact: true }).first()).toBeVisible();
 

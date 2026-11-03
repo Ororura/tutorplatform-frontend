@@ -117,9 +117,12 @@ test("teacher creates and persists every editable material type", async ({ page 
   await createModule(page, moduleTitle);
 
   const modules = page.getByRole("region", { name: "Модули программы" });
-  const programModule = modules.locator(":scope > ol > li").filter({
-    has: page.getByRole("heading", { name: moduleTitle, exact: true }),
-  });
+  const programModule = modules
+    .getByRole("listitem")
+    .filter({ has: page.locator("details") })
+    .filter({
+      has: page.getByRole("heading", { name: moduleTitle, exact: true }),
+    });
   await programModule.getByRole("heading", { name: moduleTitle, exact: true }).click();
   await createTopic(programModule, topicTitle);
   await programModule.getByRole("link", { name: topicTitle, exact: true }).click();
@@ -159,7 +162,7 @@ test("teacher creates and persists every editable material type", async ({ page 
     has: page.getByRole("heading", { name: textTitle, exact: true }),
   });
   await textMaterial.getByRole("button", { name: `Действия материала «${textTitle}»` }).click();
-  await textMaterial.getByRole("menuitem", { name: "Редактировать" }).click();
+  await page.getByRole("menuitem", { name: "Редактировать" }).click();
   const editDialog = page.getByRole("dialog", { name: "Редактировать материал" });
   await editDialog.getByLabel("Название", { exact: true }).fill(editedTextTitle);
   await editDialog.getByLabel("Содержимое", { exact: true }).fill(editedTextContent);
@@ -171,8 +174,8 @@ test("teacher creates and persists every editable material type", async ({ page 
   await expect(editedTextMaterial.getByRole("paragraph").filter({ hasText: editedTextContent })).toBeVisible();
 
   await editedTextMaterial.getByRole("button", { name: `Действия материала «${editedTextTitle}»` }).click();
-  await editedTextMaterial.getByRole("menuitem", { name: "Переместить вниз" }).click();
-  await expect(materialItems(page).locator(":scope > div:first-child > h3")).toHaveText([
+  await page.getByRole("menuitem", { name: "Переместить вниз" }).click();
+  await expect(materialItems(page).getByRole("heading", { level: 3 })).toHaveText([
     markdownTitle,
     editedTextTitle,
     codeTitle,
@@ -189,7 +192,7 @@ test("teacher creates and persists every editable material type", async ({ page 
   await page.reload();
 
   await expect(page.getByRole("heading", { name: topicTitle, exact: true })).toBeVisible();
-  await expect(materialItems(page).locator(":scope > div:first-child > h3")).toHaveText([
+  await expect(materialItems(page).getByRole("heading", { level: 3 })).toHaveText([
     markdownTitle,
     editedTextTitle,
     codeTitle,
@@ -209,13 +212,13 @@ test("teacher creates and persists every editable material type", async ({ page 
   await expect(linkMaterial.getByRole("link", { name: "Открыть материал" })).toHaveAttribute("href", linkUrl);
   await expect(page.getByRole("region", { name: "Практические задания" }).getByText(existingTaskTitle)).toBeVisible();
   await linkMaterial.getByRole("button", { name: `Действия материала «${linkTitle}»` }).click();
-  await linkMaterial.getByRole("menuitem", { name: "Удалить" }).click();
-  const deleteDialog = page.getByRole("dialog", { name: "Удалить материал" });
+  await page.getByRole("menuitem", { name: "Удалить" }).click();
+  const deleteDialog = page.getByRole("alertdialog", { name: "Удалить материал" });
   await deleteDialog.getByRole("button", { name: "Отмена" }).click();
   await expect(linkMaterial).toBeVisible();
   await expect(linkMaterial.getByRole("button", { name: `Действия материала «${linkTitle}»` })).toBeFocused();
   await linkMaterial.getByRole("button", { name: `Действия материала «${linkTitle}»` }).click();
-  await linkMaterial.getByRole("menuitem", { name: "Удалить" }).click();
+  await page.getByRole("menuitem", { name: "Удалить" }).click();
   await deleteDialog.getByRole("button", { name: "Удалить материал" }).click();
   await expect(linkMaterial).toHaveCount(0);
 });

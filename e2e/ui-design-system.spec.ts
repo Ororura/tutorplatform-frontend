@@ -26,10 +26,15 @@ async function capture(page: Page, name: string, path: (name: string) => string)
   await page.screenshot({ path: path(`${name}.png`), fullPage: true });
 }
 
-for (const width of [375, 768, 1280, 1440]) {
+for (const { width, height } of [
+  { width: 1440, height: 900 },
+  { width: 1280, height: 800 },
+  { width: 768, height: 1024 },
+  { width: 390, height: 844 },
+]) {
   test(`demo role workflows share the design system at ${width}px`, async ({ page }, testInfo) => {
     test.setTimeout(90_000);
-    await page.setViewportSize({ width, height: 900 });
+    await page.setViewportSize({ width, height });
     await page.goto("/login");
     await expect(page.getByRole("heading", { name: "Вход", exact: true })).toBeVisible();
     await capture(page, "login", testInfo.outputPath.bind(testInfo));
@@ -114,7 +119,7 @@ for (const width of [375, 768, 1280, 1440]) {
 
   test(`admin controls and public content fit ${width}px`, async ({ page }, testInfo) => {
     test.setTimeout(90_000);
-    await page.setViewportSize({ width, height: 900 });
+    await page.setViewportSize({ width, height });
     // Admin access fixture exercises only rendering; authorization remains server-owned.
     await page.route("**/api/v1/auth/me", (route) =>
       route.fulfill({

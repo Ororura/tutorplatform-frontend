@@ -75,7 +75,7 @@ test("student runs wrong and correct code in Docker, then persists a standalone 
         const { stdout } = await execute("docker", [
           "compose",
           "-f",
-          ".github/e2e/compose.yml",
+          process.env.EXECUTION_E2E_COMPOSE_FILE ?? ".github/e2e/compose.yml",
           "logs",
           "--no-color",
           "--since",

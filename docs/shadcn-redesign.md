@@ -56,7 +56,7 @@ Uncommitted user changes in code editor, typing/web-practice and student navigat
 | `/teacher/tasks`                                                             | export { TeacherTasksPage as default } from "@/_pages/teacher/tasks/list";                                       |
 | `/`                                                                          | Root route                                                                                                       |
 
-Public report components also exist in `_pages/public/report`; verify their route exposure before changing them. Materials are embedded in program topics; lesson sessions, reports and homework live under a student's profile. There is no global calendar route.
+Public progress and report routes are also covered by the browser visual suite. Materials are embedded in program topics; lesson sessions, reports and homework live under a student's profile. There is no global calendar route.
 
 ## Data available for the teacher home
 
@@ -85,4 +85,8 @@ References: [shadcn Next.js integration](https://ui.shadcn.com/docs/installation
 
 ## Status
 
-- Audit complete; implementation and verification recorded below as stages finish.
+This run completes a working migration stage, not the entire screen-by-screen redesign. See [verification and remaining work](ui-qa/shadcn-redesign-2026-11-03.md).
+
+Completed: shadcn foundations; all three role shells; teacher dashboard; teacher student directory/profile; program catalog/outline and topic materials; student dashboard/program cards; shared code execution controls; login, registration and both invitation layouts.
+
+Pending: dedicated redesign of remaining homework, lesson/session, progress/report, task-bank/detail and admin layouts; remaining native create/edit/import dialogs; student program/topic page layouts and web practice/typing screens. These screens inherit the tokens, controls and shell, but have not all been independently redesigned.

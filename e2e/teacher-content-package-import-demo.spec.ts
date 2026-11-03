@@ -89,7 +89,7 @@ modules:
   await expect(importDialog.getByRole("status")).toContainText("Создано модулей: 2, тем: 3, материалов: 3");
   await importDialog.getByRole("button", { name: "Вернуться к программе" }).click();
 
-  const moduleItems = modules.locator(":scope > ol > li");
+  const moduleItems = modules.getByRole("listitem").filter({ has: page.locator("details") });
   await expect(moduleItems.locator(":scope > details > summary h3")).toHaveText([moduleTitle, secondModuleTitle]);
   const importedModules = [
     { title: moduleTitle, topics: [topicTitle, unselectedTopicTitle] },
@@ -165,14 +165,14 @@ modules:
   const firstModule = moduleItems.first();
   await firstModule.getByRole("heading", { name: moduleTitle }).click();
   await firstModule.getByRole("button", { name: `Действия модуля «${moduleTitle}»` }).click();
-  await firstModule.getByRole("menuitem", { name: "Редактировать" }).click();
+  await page.getByRole("menuitem", { name: "Редактировать" }).click();
   const editModuleDialog = page.getByRole("dialog", { name: "Изменить модуль" });
   await editModuleDialog.getByLabel("Название", { exact: true }).fill(editedModuleTitle);
   await editModuleDialog.getByRole("button", { name: "Сохранить" }).click();
   await expect(firstModule.getByRole("heading", { name: editedModuleTitle })).toBeVisible();
 
   await firstModule.getByRole("button", { name: `Действия темы «${topicTitle}»` }).click();
-  await firstModule.getByRole("menuitem", { name: "Редактировать" }).click();
+  await page.getByRole("menuitem", { name: "Редактировать" }).click();
   const editTopicDialog = page.getByRole("dialog", { name: "Изменить тему" });
   await editTopicDialog.getByLabel("Название", { exact: true }).fill(editedTopicTitle);
   await editTopicDialog.getByRole("button", { name: "Сохранить" }).click();

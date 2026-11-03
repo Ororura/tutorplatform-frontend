@@ -107,12 +107,15 @@ test("teacher can use readable program URLs and legacy UUID links", async ({ pag
     name: "Модули программы",
   });
 
-  const moduleItem = modulesSection.locator(":scope > ol > li").filter({
-    has: page.getByRole("heading", {
-      name: learningModule.title,
-      exact: true,
-    }),
-  });
+  const moduleItem = modulesSection
+    .getByRole("listitem")
+    .filter({ has: page.locator("details") })
+    .filter({
+      has: page.getByRole("heading", {
+        name: learningModule.title,
+        exact: true,
+      }),
+    });
 
   await moduleItem
     .getByRole("heading", {

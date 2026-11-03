@@ -89,8 +89,11 @@ for (const viewport of [
     await page.route("**/api/v1/teacher/tasks?*", (route) => route.fulfill({ json: { items: [], totalPages: 0 } }));
     await page.goto("/teacher/programs/layout-program");
     const modules = page.getByRole("region", { name: "Модули программы" });
-    const firstModule = modules.locator(":scope > ol > li").first();
-    await expect(modules.locator(":scope > ol > li")).toHaveCount(15);
+    const firstModule = modules
+      .getByRole("listitem")
+      .filter({ has: page.locator("details") })
+      .first();
+    await expect(modules.getByRole("listitem").filter({ has: page.locator("details") })).toHaveCount(15);
     await firstModule.locator("summary").focus();
     await page.keyboard.press("Enter");
     await expect(firstModule.getByRole("link", { name: longTitle })).toBeVisible();
@@ -111,7 +114,7 @@ for (const viewport of [
     await expect(toolbar.getByText("Выбрано: 120")).toBeVisible();
     await page.evaluate(() => window.scrollTo(0, 1100));
     await fitsViewport(page, toolbar);
-    const header = await page.locator("header").boundingBox();
+    const header = await page.getByRole("banner").boundingBox();
     const toolbarBox = await toolbar.boundingBox();
     expect(toolbarBox!.y).toBeGreaterThanOrEqual(header!.y + header!.height);
     expect(toolbarBox!.y + toolbarBox!.height).toBeLessThan(viewport.height);
