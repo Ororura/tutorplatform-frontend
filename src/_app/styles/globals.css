@@ -360,19 +360,6 @@
     line-height: 1rem;
     font-weight: 500;
   }
-  .app-header {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-  .app-header-row {
-    display: flex;
-    height: 4rem;
-    align-items: center;
-    gap: 1.5rem;
-  }
   .nav-item {
     display: inline-flex;
     min-height: 2.75rem;

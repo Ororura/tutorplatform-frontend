@@ -1,8 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-for (const width of [1440, 1024, 768, 375]) {
+for (const { width, height } of [
+  { width: 1440, height: 900 },
+  { width: 1280, height: 800 },
+  { width: 768, height: 1024 },
+  { width: 390, height: 844 },
+]) {
   test(`tasks and student workspace fit ${width}px and support keyboard navigation`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
+    await page.setViewportSize({ width, height });
     let role = "TEACHER";
     await page.route("**/api/v1/auth/me", (route) =>
       route.fulfill({ json: { id: "user", email: "review@example.com", displayName: "Анна Смирнова", roles: [role] } }),
@@ -32,7 +37,9 @@ for (const width of [1440, 1024, 768, 375]) {
     );
     await page.goto("/teacher/tasks");
     await expect(page.getByRole("link", { name: /НазваниеЗадания/ })).toBeVisible();
-    await expect(page.getByRole("complementary")).toHaveCount(0);
+    const sidebar = page.locator('aside[aria-label="Боковая панель"]');
+    if (width >= 1280) await expect(sidebar).toBeVisible();
+    else await expect(sidebar).toBeHidden();
     await page.getByLabel("Статус", { exact: true }).selectOption("DRAFT");
     await expect(page).toHaveURL(/status=DRAFT/);
     await page.getByRole("button", { name: "Вперёд" }).focus();
@@ -76,15 +83,20 @@ for (const width of [1440, 1024, 768, 375]) {
     await expect(page.getByText("Невыполненных заданий нет")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     const brand = page.getByRole("link", { name: "Умнее Вместе — главная" });
-    await brand.focus();
-    await page.keyboard.press("Tab");
+    if (width < 1280) {
+      const menu = page.getByRole("button", { name: "Открыть меню" });
+      await menu.focus();
+      await page.keyboard.press("Enter");
+    } else {
+      await brand.focus();
+      await page.keyboard.press("Tab");
+    }
     const mainNavigation = page.getByRole("navigation", {
       name: width >= 1280 ? "Навигация ученика" : "Мобильная навигация ученика",
       exact: true,
     });
     const home = mainNavigation.getByRole("link", { name: "Главная", exact: true });
-    // On tablet/mobile the logout action precedes the second navigation row.
-    if (width < 1280) await page.keyboard.press("Tab");
+
     await expect(home).toBeFocused();
     expect(await home.evaluate((element) => getComputedStyle(element).outlineStyle)).toBe("solid");
     await page.keyboard.press("Tab");

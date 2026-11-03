@@ -1,5 +1,5 @@
 import { StudentGuard } from "@/entities/user";
-import { StudentShell } from "@/widgets/student-shell";
+import { AppShell } from "@/widgets/app-shell";
 
 export default function StudentLayout({
   children,
@@ -8,7 +8,7 @@ export default function StudentLayout({
 }>) {
   return (
     <StudentGuard>
-      <StudentShell>{children}</StudentShell>
+      <AppShell role="student">{children}</AppShell>
     </StudentGuard>
   );
 }

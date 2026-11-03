@@ -1,5 +1,5 @@
 import { AdminGuard } from "@/entities/user";
-import { AdminShell } from "@/widgets/admin-shell";
+import { AppShell } from "@/widgets/app-shell";
 
 export default function AdminLayout({
   children,
@@ -8,7 +8,7 @@ export default function AdminLayout({
 }>) {
   return (
     <AdminGuard>
-      <AdminShell>{children}</AdminShell>
+      <AppShell role="admin">{children}</AppShell>
     </AdminGuard>
   );
 }
