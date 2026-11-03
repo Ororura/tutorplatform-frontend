@@ -302,7 +302,7 @@ describe("StudentTaskSolution widget", () => {
     expect(screen.queryByText("Не принято")).not.toBeInTheDocument();
   });
 
-  it("shows the expanded Python execution guide only for CODE tasks", () => {
+  it("keeps the Python guide collapsed and lets the student expand it for CODE tasks", () => {
     const { rerender } = render(
       <StudentTaskSolution
         homeworkId="homework-1"
@@ -320,6 +320,8 @@ describe("StudentTaskSolution widget", () => {
 
     const guide = screen.getByText("Как выполнить задание").closest("details");
     expect(guide).not.toBeNull();
+    expect(guide).not.toHaveAttribute("open");
+    fireEvent.click(screen.getByText("Как выполнить задание"));
     expect(guide).toHaveAttribute("open");
     expect(screen.getByText(/Для чтения входных данных используйте input\(\)/)).toBeInTheDocument();
     expect(

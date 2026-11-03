@@ -5,7 +5,7 @@ import { Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Info } from "lucide-react";
+import { Info, Play, Send } from "lucide-react";
 
 import { formatHomeworkDate, StudentHomeworkTaskBadges, type StudentHomeworkItem } from "@/entities/homework";
 import type { StudentTopicTask } from "@/entities/task";
@@ -22,6 +22,7 @@ import {
 import { useRunStudentCodeMutation } from "@/features/execution/run-code";
 import { useSubmitCodeAnswerMutation } from "@/features/submission/submit-code";
 import { useSubmitTextAnswerMutation } from "@/features/submission/submit-text";
+import { Card } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
 
 type HomeworkStatus = "ASSIGNED" | "COMPLETED" | "CANCELLED";
@@ -386,7 +387,7 @@ function CodeSolution({
           система сравнивает вывод программы с ожидаемым результатом тестов.
         </p>
       ) : (
-        <details className="rounded-surface border border-border bg-surface-subtle/60 px-3 py-2 text-sm" open>
+        <details className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm">
           <summary className="cursor-pointer font-medium text-foreground-muted">Как выполнить задание</summary>
           <div className="mt-3 space-y-3 text-foreground-muted">
             <p>
@@ -456,27 +457,35 @@ function CodeSolution({
         </details>
       )}
 
-      <div className="block space-y-2">
-        <span className="font-medium">Код решения</span>
+      <Card className="overflow-hidden">
+        <div className="border-b border-border px-4 py-3 text-sm font-medium">Код решения</div>
+        <div className="p-3 [&>div]:border-0">
+          <CodeEditor
+            language={config.language}
+            value={sourceCode}
+            onChange={setSourceCode}
+            disabled={executionDisabled || busy}
+          />
+        </div>
 
-        <CodeEditor
-          language={config.language}
-          value={sourceCode}
-          onChange={setSourceCode}
-          disabled={executionDisabled || busy}
-        />
-      </div>
+        <div className="flex flex-wrap justify-end gap-2 border-t border-border bg-muted/30 p-3">
+          <Button
+            variant="secondary"
+            loading={run.isPending}
+            disabled={actionsDisabled}
+            onClick={handleRun}
+            type="button"
+          >
+            <Play size={16} aria-hidden="true" />
+            {run.isPending ? "Запускаем…" : "Запустить"}
+          </Button>
 
-      <div className="flex flex-wrap gap-3">
-        <Button variant="secondary" disabled={actionsDisabled} onClick={handleRun} type="button">
-          {run.isPending ? "Запускаем…" : "Запустить"}
-        </Button>
-
-        <Button disabled={actionsDisabled} onClick={handleSubmit} type="button">
-          {submit.isPending ? "Проверяем решение…" : "Отправить решение"}
-        </Button>
-      </div>
-
+          <Button loading={submit.isPending} disabled={actionsDisabled} onClick={handleSubmit} type="button">
+            <Send size={16} aria-hidden="true" />
+            {submit.isPending ? "Проверяем решение…" : "Отправить решение"}
+          </Button>
+        </div>
+      </Card>
       <MutationError visible={run.isError} message="Не удалось запустить код. Попробуйте ещё раз." />
 
       <MutationError visible={submit.isError} message="Не удалось отправить решение. Попробуйте ещё раз." />
