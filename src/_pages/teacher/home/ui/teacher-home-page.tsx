@@ -55,6 +55,7 @@ export function TeacherHomePage() {
       />
 
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
+        <TeacherQuickActions />
         <div className="min-w-0 space-y-6">
           {dashboard.data && !dashboard.isError && <TeacherAttention items={dashboard.data.attentionItems} />}
           <TeacherStudentsOverview
@@ -66,7 +67,6 @@ export function TeacherHomePage() {
             }}
           />
         </div>
-        <TeacherQuickActions />
       </div>
     </main>
   );

@@ -5,7 +5,7 @@ import { CreateTaskDialog } from "@/features/task/create";
 
 export function TeacherQuickActions() {
   return (
-    <Card className="xl:sticky xl:top-24">
+    <Card className="xl:order-last xl:sticky xl:top-24">
       <CardHeader className="p-5">
         <CardTitle>Быстрые действия</CardTitle>
       </CardHeader>

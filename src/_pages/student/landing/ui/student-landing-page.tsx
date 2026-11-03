@@ -50,7 +50,7 @@ export function StudentLandingPage() {
         }
       />
 
-      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
         <DashboardSection
           title="Домашние задания"
           subtitle="Твои текущие и ближайшие задания"

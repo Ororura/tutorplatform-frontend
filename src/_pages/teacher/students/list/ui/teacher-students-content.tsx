@@ -4,7 +4,7 @@ import { Input, Select } from "@/shared/ui/form-controls";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { type FormEvent, useCallback, useEffect, useState } from "react";
+import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 
 import { type StudentAccountStatus, type StudentListParams, studentQueries } from "@/entities/student";
 import { CreateStudentDialog } from "@/features/student/create";
@@ -249,20 +249,21 @@ function StudentSearch({
   navigate: (updates: Record<string, string | undefined>) => void;
 }>) {
   const [value, setValue] = useState(initialSearch);
+  const searchTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const normalized = value.trim().slice(0, 100);
 
     if (normalized === initialSearch) return;
 
-    const timer = window.setTimeout(() => {
+    searchTimer.current = window.setTimeout(() => {
       navigate({
         search: normalized || undefined,
         page: undefined,
       });
     }, 400);
 
-    return () => window.clearTimeout(timer);
+    return () => window.clearTimeout(searchTimer.current);
   }, [initialSearch, navigate, value]);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -290,6 +291,7 @@ function StudentSearch({
         />
 
         <Input
+          onBlur={() => window.clearTimeout(searchTimer.current)}
           id="student-search"
           name="search"
           className="pl-10 pr-3 placeholder:text-foreground-subtle"

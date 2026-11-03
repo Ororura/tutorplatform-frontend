@@ -1,7 +1,7 @@
 "use client";
 
 import { Ellipsis } from "lucide-react";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { Button } from "@/shared/ui/button";
 import {
   DropdownMenu,
@@ -21,10 +21,12 @@ export type ActionMenuItem = {
 
 export function ActionMenu({ label, items }: Readonly<{ label: string; items: ActionMenuItem[] }>) {
   const [open, setOpen] = useState(false);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const selected = useRef(false);
   return (
     <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button type="button" variant="ghost" size="icon" aria-label={label}>
+        <Button ref={trigger} type="button" variant="ghost" size="icon" aria-label={label}>
           <Ellipsis size={20} aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
@@ -32,6 +34,12 @@ export function ActionMenu({ label, items }: Readonly<{ label: string; items: Ac
         loop
         align="end"
         aria-label={label}
+        onCloseAutoFocus={(event) => {
+          if (selected.current) {
+            event.preventDefault();
+            selected.current = false;
+          }
+        }}
         onKeyDown={(event) => {
           if (event.key === "Tab") setOpen(false);
         }}
@@ -42,7 +50,11 @@ export function ActionMenu({ label, items }: Readonly<{ label: string; items: Ac
             <DropdownMenuItem
               disabled={item.disabled}
               className={item.destructive ? "text-danger focus:bg-danger-subtle focus:text-danger" : undefined}
-              onSelect={item.onSelect}
+              onSelect={() => {
+                selected.current = true;
+                trigger.current?.focus();
+                item.onSelect();
+              }}
             >
               {item.label}
             </DropdownMenuItem>
