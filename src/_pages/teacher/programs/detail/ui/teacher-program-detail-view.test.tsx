@@ -40,7 +40,8 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-vi.mock("@/entities/learning-program", () => ({
+vi.mock("@/entities/learning-program", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/entities/learning-program")>()),
   learningProgramQueries: {
     detail: mocks.detail,
     bySlug: mocks.bySlug,
@@ -220,28 +221,28 @@ describe("TeacherProgramDetailView", () => {
   it("reorders modules and topics with complete ordered IDs", () => {
     render(<TeacherProgramDetailView programId="algebra" />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Числа»" }));
-    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия модуля «Числа»" }), { key: "Enter" });
+    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toHaveAttribute("aria-disabled", "true");
     fireEvent.click(screen.getByRole("menuitem", { name: "Переместить вниз" }));
     expect(mocks.reorderModules).toHaveBeenCalledWith({ orderedIds: ["module-2", "module-1"] });
-    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Уравнения»" }));
-    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия модуля «Уравнения»" }), { key: "Enter" });
+    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toHaveAttribute("aria-disabled", "true");
     fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
 
-    fireEvent.click(screen.getByRole("button", { name: "Действия темы «Натуральные числа»" }));
-    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия темы «Натуральные числа»" }), { key: "Enter" });
+    expect(screen.getByRole("menuitem", { name: "Переместить вверх" })).toHaveAttribute("aria-disabled", "true");
     fireEvent.click(screen.getByRole("menuitem", { name: "Переместить вниз" }));
     expect(mocks.reorderTopics).toHaveBeenCalledWith({ orderedIds: ["topic-2", "topic-1"] });
-    fireEvent.click(screen.getByRole("button", { name: "Действия темы «Целые числа»" }));
-    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toBeDisabled();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия темы «Целые числа»" }), { key: "Enter" });
+    expect(screen.getByRole("menuitem", { name: "Переместить вниз" })).toHaveAttribute("aria-disabled", "true");
   });
 
   it("blocks all order controls while a reorder request is pending", () => {
     mocks.reorderPending = true;
     render(<TeacherProgramDetailView programId="algebra" />);
     for (const trigger of screen.getAllByRole("button", { name: /^Действия (модуля|темы)/ })) {
-      fireEvent.click(trigger);
-      screen.getAllByRole("menuitem").forEach((item) => expect(item).toBeDisabled());
+      fireEvent.keyDown(trigger, { key: "Enter" });
+      screen.getAllByRole("menuitem").forEach((item) => expect(item).toHaveAttribute("aria-disabled", "true"));
       fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
     }
   });

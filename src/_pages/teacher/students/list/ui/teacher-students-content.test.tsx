@@ -102,6 +102,17 @@ describe("TeacherStudentsContent", () => {
     vi.useRealTimers();
   });
 
+  it("cancels pending search when focus moves to a student link", () => {
+    vi.useFakeTimers();
+    render(<TeacherStudentsContent />);
+    const input = screen.getByLabelText("Поиск ученика");
+    fireEvent.change(input, { target: { value: "Алекс" } });
+    fireEvent.blur(input);
+    act(() => vi.advanceTimersByTime(400));
+    expect(mocks.replace).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
   it("changes the backend page through URL state", () => {
     render(<TeacherStudentsContent />);
     fireEvent.click(screen.getByRole("button", { name: "Вперёд" }));

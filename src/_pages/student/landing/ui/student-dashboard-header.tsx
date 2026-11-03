@@ -19,7 +19,7 @@ export function StudentDashboardHeader({
   const user = useCurrentUserQuery();
   const firstName = user.data?.displayName.trim().split(/\s+/)[0];
   return (
-    <header className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
+    <header className="flex flex-col justify-between gap-4 border-b border-border pb-6 lg:flex-row lg:items-start">
       <div className="min-w-0 flex-1">
         {user.isPending && (
           <p className="text-2xl font-semibold text-foreground" aria-busy="true">
@@ -37,7 +37,7 @@ export function StudentDashboardHeader({
       {nearest?.dueAt && (
         <Link
           href={`/student/homework/${nearest.id}`}
-          className="flex min-w-0 items-center gap-4 rounded-surface border border-primary-border bg-primary-subtle/30 p-4 transition hover:border-primary-border hover:bg-primary-subtle lg:w-64 lg:shrink-0"
+          className="flex min-w-0 items-center gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-primary-border hover:bg-primary-subtle lg:w-72 lg:shrink-0"
         >
           <span
             className={`flex size-11 shrink-0 items-center justify-center rounded-surface ${isHomeworkOverdue(nearest, now) ? "bg-danger-subtle text-danger" : "bg-primary-subtle text-primary"}`}

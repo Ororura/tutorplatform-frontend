@@ -42,7 +42,7 @@ export function TeacherHomePage() {
       <PageHeader
         eyebrow="Рабочее пространство"
         title={`Добрый день, ${currentUser.data.displayName}!`}
-        description="Здесь собраны ученики и быстрые действия для ежедневной работы."
+        description="Проверяйте работы и следите за обучением — всё важное в одном месте."
       />
 
       <TeacherDashboardContent
@@ -55,16 +55,18 @@ export function TeacherHomePage() {
       />
 
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
-        <TeacherStudentsOverview
-          data={students.data}
-          isPending={students.isPending}
-          isError={students.isError}
-          onRetry={() => {
-            void students.refetch();
-          }}
-        />
-
         <TeacherQuickActions />
+        <div className="min-w-0 space-y-6">
+          {dashboard.data && !dashboard.isError && <TeacherAttention items={dashboard.data.attentionItems} />}
+          <TeacherStudentsOverview
+            data={students.data}
+            isPending={students.isPending}
+            isError={students.isError}
+            onRetry={() => {
+              void students.refetch();
+            }}
+          />
+        </div>
       </div>
     </main>
   );
@@ -86,12 +88,7 @@ function TeacherDashboardContent({ data, isPending, isError, onRetry }: Readonly
     return <ErrorState title="Не удалось загрузить сводку" onRetry={onRetry} retryLabel="Повторить загрузку сводки" />;
   }
 
-  return (
-    <div className="space-y-4">
-      <TeacherDashboardStats data={data} />
-      <TeacherAttention items={data.attentionItems} />
-    </div>
-  );
+  return <TeacherDashboardStats data={data} />;
 }
 
 function TeacherHomeLoading() {

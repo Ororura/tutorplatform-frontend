@@ -15,7 +15,8 @@ vi.mock("@tanstack/react-query", () => ({
   useQuery: mocks.useQuery,
 }));
 
-vi.mock("@/entities/learning-program", () => ({
+vi.mock("@/entities/learning-program", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/entities/learning-program")>()),
   learningProgramQueries: {
     list: mocks.list,
   },
@@ -88,6 +89,20 @@ describe("TeacherProgramsView", () => {
     });
   });
 
+  it("filters the loaded catalog by status and search and supports reset", () => {
+    render(<TeacherProgramsView />);
+    fireEvent.click(screen.getByRole("button", { name: /Активные/ }));
+    expect(screen.queryByText("Python с нуля")).not.toBeInTheDocument();
+    expect(screen.getByText("Python Advanced")).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("textbox", { name: "Поиск программы" }), {
+      target: { value: "неизвестная программа" },
+    });
+    expect(screen.getByText("Программы не найдены")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Сбросить фильтры" }));
+    expect(screen.getByText("Python с нуля")).toBeInTheDocument();
+    expect(screen.getByText("Python Advanced")).toBeInTheDocument();
+  });
+
   it("requests all teacher programs", () => {
     render(<TeacherProgramsView />);
 
@@ -149,7 +164,7 @@ describe("TeacherProgramsView", () => {
       ["Черновики", "1"],
       ["Архив", "0"],
     ]) {
-      expect(within(within(summary).getByText(label).parentElement!).getByText(count)).toBeInTheDocument();
+      expect(within(summary).getByRole("button", { name: new RegExp(`^${label}\\s*${count}$`) })).toBeInTheDocument();
     }
     expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
     expect(screen.queryByText("Рабочий процесс")).not.toBeInTheDocument();

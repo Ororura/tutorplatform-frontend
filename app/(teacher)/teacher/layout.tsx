@@ -1,5 +1,5 @@
 import { TeacherGuard } from "@/entities/user";
-import { TeacherShell } from "@/widgets/teacher-shell";
+import { AppShell } from "@/widgets/app-shell";
 
 export default function TeacherLayout({
   children,
@@ -8,7 +8,7 @@ export default function TeacherLayout({
 }>) {
   return (
     <TeacherGuard>
-      <TeacherShell>{children}</TeacherShell>
+      <AppShell role="teacher">{children}</AppShell>
     </TeacherGuard>
   );
 }

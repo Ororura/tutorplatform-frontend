@@ -58,7 +58,8 @@ test("teacher evolves an assigned program through an independent draft copy", as
   await moduleDialog.getByRole("button", { name: "Добавить", exact: true }).click();
   const programModule = page
     .getByRole("region", { name: "Модули программы" })
-    .locator(":scope > ol > li")
+    .getByRole("listitem")
+    .filter({ has: page.locator("details") })
     .filter({
       has: page.getByRole("heading", { name: moduleTitle, exact: true }),
     });
@@ -72,7 +73,7 @@ test("teacher evolves an assigned program through an independent draft copy", as
     has: page.getByRole("link", { name: topicTitle, exact: true }),
   });
   await sourceTopic.getByRole("button", { name: `Действия темы «${topicTitle}»` }).click();
-  await sourceTopic.getByRole("menuitem", { name: "Редактировать" }).click();
+  await page.getByRole("menuitem", { name: "Редактировать" }).click();
   const editTopicDialog = page.getByRole("dialog", { name: "Изменить тему" });
   await editTopicDialog.getByRole("combobox", { name: /^Статус/ }).selectOption("ACTIVE");
   await editTopicDialog.getByRole("button", { name: "Сохранить" }).click();
@@ -121,7 +122,7 @@ test("teacher evolves an assigned program through an independent draft copy", as
   await editProgramDialog.getByRole("button", { name: "Сохранить" }).click();
   await expect(page.getByRole("heading", { name: evolvedTitle, exact: true })).toBeVisible();
   await sourceTopic.getByRole("button", { name: `Действия темы «${topicTitle}»` }).click();
-  await sourceTopic.getByRole("menuitem", { name: "Редактировать" }).click();
+  await page.getByRole("menuitem", { name: "Редактировать" }).click();
   await editTopicDialog.getByLabel("Название", { exact: true }).fill(evolvedTopicTitle);
   await editTopicDialog.getByRole("button", { name: "Сохранить" }).click();
   await expect(programModule.getByRole("link", { name: evolvedTopicTitle, exact: true })).toBeVisible();

@@ -22,7 +22,7 @@ describe("ArchiveLearningProgramButton", () => {
     expect(screen.getByRole("heading", { name: "Архивировать программу?" })).toBeInTheDocument();
     expect(mocks.mutateAsync).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Архивировать" })[1]);
+    fireEvent.click(screen.getByRole("button", { name: "Архивировать" }));
     await waitFor(() => expect(mocks.mutateAsync).toHaveBeenCalledWith("program-1"));
   });
 });

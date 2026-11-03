@@ -38,7 +38,7 @@ describe("learning program module actions", () => {
 
   it("edits an empty module only after opening the form", async () => {
     render(<LearningProgramModuleActions programId="program-1" module={programModule} editable />);
-    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Основы»" }));
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия модуля «Основы»" }), { key: "Enter" });
     fireEvent.click(screen.getByRole("menuitem", { name: "Редактировать" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Название" }), { target: { value: " Обновлённый " } });
     fireEvent.click(screen.getByRole("button", { name: "Сохранить" }));
@@ -48,7 +48,7 @@ describe("learning program module actions", () => {
 
   it("asks for confirmation before deleting an empty module", async () => {
     render(<LearningProgramModuleActions programId="program-1" module={programModule} editable />);
-    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Основы»" }));
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия модуля «Основы»" }), { key: "Enter" });
     fireEvent.click(screen.getByRole("menuitem", { name: "Удалить" }));
     expect(mocks.remove).not.toHaveBeenCalled();
     expect(screen.getByRole("heading", { name: "Удалить модуль?" })).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe("learning program module actions", () => {
         editable
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Действия модуля «Основы»" }));
+    fireEvent.keyDown(screen.getByRole("button", { name: "Действия модуля «Основы»" }), { key: "Enter" });
     expect(screen.getByRole("menuitem", { name: "Редактировать" })).toBeInTheDocument();
     expect(screen.queryByRole("menuitem", { name: "Удалить" })).not.toBeInTheDocument();
   });

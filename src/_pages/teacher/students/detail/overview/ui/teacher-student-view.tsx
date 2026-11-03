@@ -17,6 +17,10 @@ import { EditStudentForm } from "@/features/student/edit";
 import { CreateStudentInviteDialog } from "@/features/student/invite/create";
 import { useRevokeStudentInviteMutation } from "@/features/student/invite/revoke";
 import { TeacherSubmissionInbox } from "@/widgets/teacher-submission-inbox/teacher-submission-inbox";
+import { PageHeader } from "@/shared/ui/page-header";
+import { Badge } from "@/shared/ui/badge";
+import { Card, CardHeader, CardTitle, CardContent } from "@/shared/ui/card";
+import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
 import { Button } from "@/shared/ui/button";
 
 import { StudentDetailQueryState } from "./student-detail-query-state";
@@ -27,6 +31,7 @@ export function TeacherStudentView({
   studentId: string;
 }>) {
   const [editing, setEditing] = useState(false);
+  const [revokingId, setRevokingId] = useState<string>();
 
   const student = useQuery(studentQueries.detail(studentId));
 
@@ -62,8 +67,6 @@ export function TeacherStudentView({
 
   const canCreateInvite = student.data.account.status !== "REGISTERED" && invites.isSuccess && !hasActiveInvite;
 
-  const initials = `${student.data.firstName[0] ?? ""}${student.data.lastName?.[0] ?? ""}`.toUpperCase();
-
   return (
     <main className="page-stack">
       <section className="pb-2">
@@ -75,43 +78,31 @@ export function TeacherStudentView({
           Все ученики
         </Link>
 
-        <div className="mt-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
-          <div className="flex min-w-0 items-center gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-surface-subtle text-lg font-semibold text-foreground-muted">
-              {initials}
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-primary">Профиль ученика</p>
-
-              <h1 className="page-title mt-1 wrap-break-word">
-                {student.data.firstName} {student.data.lastName ?? ""}
-              </h1>
-
-              <div className="mt-2 flex flex-wrap gap-2">
-                <span className="badge bg-success-subtle text-success">
-                  {getStudentStatusLabel(student.data.status)}
-                </span>
-
-                <span className="badge bg-primary-subtle text-primary">
-                  {getStudentAccountStatusLabel(student.data.account.status)}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <Button type="button" variant="secondary" onClick={() => setEditing((value) => !value)}>
-            <Pencil size={16} className="mr-2" />
-
-            {editing ? "Закрыть редактирование" : "Редактировать"}
-          </Button>
-        </div>
+        <PageHeader
+          className="mt-4"
+          eyebrow="Профиль ученика"
+          title={`${student.data.firstName} ${student.data.lastName ?? ""}`}
+          description={
+            <span className="flex flex-wrap gap-2">
+              <Badge tone={student.data.status === "ACTIVE" ? "success" : "neutral"}>
+                {getStudentStatusLabel(student.data.status)}
+              </Badge>
+              <Badge tone="info">{getStudentAccountStatusLabel(student.data.account.status)}</Badge>
+            </span>
+          }
+          actions={
+            <Button variant="secondary" onClick={() => setEditing((value) => !value)}>
+              <Pencil size={16} aria-hidden="true" />
+              {editing ? "Закрыть редактирование" : "Редактировать"}
+            </Button>
+          }
+        />
       </section>
 
       <StudentProfileNav active="overview" studentId={studentId} />
       <TeacherSubmissionInbox studentId={studentId} />
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-4">
           {editing ? (
             <EditStudentForm student={student.data} onDone={() => setEditing(false)} />
@@ -119,16 +110,11 @@ export function TeacherStudentView({
             <StudentDetailsCard student={student.data} />
           )}
 
-          <section className="surface" aria-labelledby="invite-history-heading">
-            <div>
-              <p className="text-sm font-medium text-primary">Доступ</p>
-
-              <h2 id="invite-history-heading" className="section-title mt-1">
-                История приглашений
-              </h2>
-            </div>
-
-            <div className="mt-5">
+          <Card aria-labelledby="invite-history-heading">
+            <CardHeader className="border-b border-border p-5">
+              <CardTitle id="invite-history-heading">История приглашений</CardTitle>
+            </CardHeader>
+            <CardContent className="p-5">
               {invites.isPending && (
                 <p className="rounded-surface bg-surface-subtle p-5 text-sm text-foreground-muted" aria-busy="true">
                   Загружаем приглашения…
@@ -152,11 +138,7 @@ export function TeacherStudentView({
                 <StudentInviteHistory
                   invites={invites.data.items}
                   revokingInviteId={revokeInvite.isPending ? revokeInvite.variables : undefined}
-                  onRevoke={(inviteId) => {
-                    if (window.confirm("Отозвать это приглашение?")) {
-                      revokeInvite.mutate(inviteId);
-                    }
-                  }}
+                  onRevoke={setRevokingId}
                 />
               )}
 
@@ -165,12 +147,12 @@ export function TeacherStudentView({
                   Не удалось отозвать приглашение.
                 </p>
               )}
-            </div>
-          </section>
+            </CardContent>
+          </Card>
         </div>
 
-        <aside className="xl:sticky xl:top-28 xl:self-start">
-          <section className="rounded-surface border border-primary-border bg-surface-subtle p-6">
+        <aside className="xl:sticky xl:top-24 xl:self-start">
+          <Card className="p-5">
             <span className="flex size-11 items-center justify-center rounded-surface bg-surface text-primary">
               {student.data.account.status === "REGISTERED" ? <ShieldCheck size={20} /> : <UserRound size={20} />}
             </span>
@@ -206,8 +188,22 @@ export function TeacherStudentView({
                 )}
               </>
             )}
-          </section>
+          </Card>
         </aside>
+        <ConfirmDialog
+          open={Boolean(revokingId)}
+          onOpenChange={(next) => {
+            if (!next) setRevokingId(undefined);
+          }}
+          title="Отозвать приглашение?"
+          description="Ученик больше не сможет зарегистрироваться по этой ссылке. Вы сможете создать новое приглашение."
+          confirmLabel="Отозвать"
+          pending={revokeInvite.isPending}
+          error={revokeInvite.isError ? "Не удалось отозвать приглашение." : undefined}
+          onConfirm={() => {
+            if (revokingId) revokeInvite.mutate(revokingId, { onSuccess: () => setRevokingId(undefined) });
+          }}
+        />
       </div>
     </main>
   );

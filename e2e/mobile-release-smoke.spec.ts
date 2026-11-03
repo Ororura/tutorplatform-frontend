@@ -13,7 +13,11 @@ test("mobile student login, dashboard, program, homework detail and topic are us
     page,
     page.getByRole("region", { name: "Домашние задания", exact: true }).getByRole("link", { name: "Все задания" }),
   );
-  await page.getByRole("link", { name: "Мои программы", exact: true }).click();
+  await page.getByRole("button", { name: "Открыть меню" }).click();
+  await page
+    .getByRole("navigation", { name: "Мобильная навигация ученика" })
+    .getByRole("link", { name: "Мои программы", exact: true })
+    .click();
   const program = page
     .getByRole("article")
     .filter({ has: page.getByRole("heading", { name: "Python с нуля", exact: true }) });
@@ -38,7 +42,11 @@ test("mobile student login, dashboard, program, homework detail and topic are us
   await practice.click();
   await expectMobileLayout(page, page.getByRole("button", { name: "Запустить", exact: true }));
 
-  await page.getByRole("link", { name: "Домашние задания", exact: true }).click();
+  await page.getByRole("button", { name: "Открыть меню" }).click();
+  await page
+    .getByRole("navigation", { name: "Мобильная навигация ученика" })
+    .getByRole("link", { name: "Домашние задания", exact: true })
+    .click();
   await expect(page.getByRole("heading", { name: "Домашние задания", level: 1 })).toBeVisible();
   const homework = page.getByRole("link", { name: "Открыть: Циклы", exact: true });
   await expectMobileLayout(page, homework);

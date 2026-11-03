@@ -1,160 +1,164 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Archive, BookOpenText, CheckCircle2, ChevronRight, FilePenLine } from "lucide-react";
+import { useState } from "react";
+import { BookOpenText, ChevronRight, Search } from "lucide-react";
 import Link from "next/link";
-
-import { type LearningProgramStatus, learningProgramQueries } from "@/entities/learning-program";
+import {
+  type LearningProgramStatus,
+  learningProgramQueries,
+  LearningProgramStatusBadge,
+} from "@/entities/learning-program";
 import { ActivateLearningProgramButton } from "@/features/program/activate";
 import { CreateLearningProgramDialog } from "@/features/program/create";
 import { PageHeader } from "@/shared/ui/page-header";
 import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/form-controls";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/shared/ui/card";
+import { EmptyState, ErrorState, LoadingState } from "@/shared/ui/feedback";
 
-const statusPresentation: Record<LearningProgramStatus, string> = {
-  DRAFT: "Черновик",
-  ACTIVE: "Активна",
-  ARCHIVED: "В архиве",
-};
-
-const statusClassName: Record<LearningProgramStatus, string> = {
-  DRAFT: "bg-warning-subtle text-warning",
-  ACTIVE: "bg-success-subtle text-success",
-  ARCHIVED: "bg-surface-subtle text-foreground-muted",
-};
-
-const statusIcon = {
-  DRAFT: FilePenLine,
-  ACTIVE: CheckCircle2,
-  ARCHIVED: Archive,
-} satisfies Record<LearningProgramStatus, typeof FilePenLine>;
+const filters = [
+  { value: "", label: "Все" },
+  { value: "ACTIVE", label: "Активные" },
+  { value: "DRAFT", label: "Черновики" },
+  { value: "ARCHIVED", label: "Архив" },
+] as const;
 
 export function TeacherProgramsView() {
   const programs = useQuery(learningProgramQueries.list());
-
-  const draftCount = programs.data?.filter((program) => program.status === "DRAFT").length ?? 0;
-
-  const activeCount = programs.data?.filter((program) => program.status === "ACTIVE").length ?? 0;
-
-  const archivedCount = programs.data?.filter((program) => program.status === "ARCHIVED").length ?? 0;
-
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<LearningProgramStatus | "">("");
+  const visible = programs.data?.filter(
+    (program) =>
+      (!status || program.status === status) &&
+      `${program.title} ${program.subject.name}`
+        .toLocaleLowerCase("ru")
+        .includes(search.trim().toLocaleLowerCase("ru")),
+  );
   return (
     <main className="page-stack">
       <PageHeader
         title="Программы обучения"
-        description="Создавайте шаблоны обучения и назначайте активные программы ученикам."
+        description="Постройте учебный маршрут: модули, темы, материалы и практика."
         actions={<CreateLearningProgramDialog />}
       />
-
-      <section className="min-w-0" aria-labelledby="program-list-title">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h2 id="program-list-title" className="section-title">
-              Ваши программы
-            </h2>
-
-            <p className="mt-1 text-sm text-foreground-muted">Черновик нужно активировать перед назначением ученику.</p>
+      <Card>
+        <CardHeader className="gap-4 border-b border-border p-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <CardTitle>Ваши программы</CardTitle>
+              <CardDescription className="mt-1">Черновик нужно активировать перед назначением ученику.</CardDescription>
+            </div>
+            {programs.isFetching && !programs.isPending && (
+              <span role="status" className="text-xs text-muted-foreground">
+                Обновляем…
+              </span>
+            )}
           </div>
-
-          {programs.isFetching && (
-            <span className="text-sm text-primary" role="status">
-              Обновляем…
-            </span>
-          )}
-        </div>
-
-        <dl aria-label="Состояние программ" className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-          {[
-            ["Все", programs.data?.length],
-            ["Активные", programs.data ? activeCount : undefined],
-            ["Черновики", programs.data ? draftCount : undefined],
-            ["Архив", programs.data ? archivedCount : undefined],
-          ].map(([label, count]) => (
-            <div key={label} className="flex items-center gap-2">
-              <dt className="text-foreground-muted">{label}</dt>
-              <dd className="font-medium tabular-nums text-foreground">{count ?? "—"}</dd>
+          <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+            <div aria-label="Состояние программ" className="flex flex-wrap gap-1">
+              {filters.map((filter) => (
+                <Button
+                  key={filter.value}
+                  variant={filter.value === status ? "secondary" : "ghost"}
+                  size="sm"
+                  aria-pressed={filter.value === status}
+                  onClick={() => setStatus(filter.value)}
+                >
+                  {filter.label}
+                  <span className="tabular-nums text-muted-foreground">
+                    {programs.data
+                      ? programs.data.filter((item) => !filter.value || item.status === filter.value).length
+                      : "—"}
+                  </span>
+                </Button>
+              ))}
             </div>
-          ))}
-        </dl>
-
-        <div className="mt-5">
-          {programs.isPending && (
-            <div className="rounded-surface bg-surface-subtle p-6 text-sm text-foreground-muted" aria-busy="true">
-              Загружаем программы…
+            <div className="relative min-w-0 lg:w-64">
+              <Search
+                size={16}
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+              <Input
+                aria-label="Поиск программы"
+                placeholder="Название или предмет"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                className="pl-9"
+              />
             </div>
-          )}
-
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          {programs.isPending && <LoadingState>Загружаем программы…</LoadingState>}
           {programs.isError && (
-            <div className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-5" role="alert">
-              <p className="text-sm text-danger">Не удалось загрузить программы.</p>
-
-              <Button type="button" variant="secondary" onClick={() => void programs.refetch()}>
-                Повторить
-              </Button>
-            </div>
+            <ErrorState title="Не удалось загрузить программы." onRetry={() => void programs.refetch()} />
           )}
-
-          {programs.data?.length === 0 && (
-            <div className="rounded-surface bg-(--surface-muted) px-4 py-6 text-center">
-              <BookOpenText size={28} className="mx-auto text-primary" />
-
-              <h2 className="section-title mt-4">Программ пока нет</h2>
-
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-foreground-muted">
-                Создайте первую программу. После активации её можно будет назначить ученику.
-              </p>
-            </div>
-          )}
-
-          {programs.data && programs.data.length > 0 && (
-            <div className="divide-y divide-(--border) border-y border-border divide-border">
-              {programs.data.map((program) => {
-                const StatusIcon = statusIcon[program.status];
-
-                return (
-                  <article
-                    key={program.id}
-                    className="group relative grid gap-3 px-3 py-4 transition hover:bg-surface/80 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-5"
+          {!programs.isError && visible?.length === 0 && (
+            <EmptyState
+              title={programs.data?.length ? "Программы не найдены" : "Программ пока нет"}
+              description={
+                programs.data?.length
+                  ? "Измените поисковый запрос или выберите другой статус."
+                  : "Создайте первую программу. После активации её можно будет назначить ученику."
+              }
+              action={
+                search || status ? (
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setSearch("");
+                      setStatus("");
+                    }}
                   >
-                    <Link
-                      className="absolute inset-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus-ring"
-                      href={`/teacher/programs/${program.slug}`}
-                      aria-label={`Открыть программу: ${program.title}`}
-                    />
-
-                    <div className="flex min-w-0 items-start gap-3">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-surface bg-surface-subtle text-foreground-muted">
-                        <BookOpenText size={19} aria-hidden="true" />
-                      </span>
-                      <div className="min-w-0">
-                        <h3 className="wrap-break-word font-semibold text-foreground">{program.title}</h3>
-                        <p className="mt-1 text-sm text-foreground-muted">
-                          <span className="font-medium">{program.subject.name}</span>
-                          {program.description && (
-                            <span className="line-clamp-2 wrap-break-word">{program.description}</span>
-                          )}
+                    Сбросить фильтры
+                  </Button>
+                ) : undefined
+              }
+            />
+          )}
+          {!programs.isError && visible && visible.length > 0 && (
+            <div className="divide-y divide-border">
+              {visible.map((program) => (
+                <article
+                  key={program.id}
+                  className="relative grid gap-4 p-5 transition-colors hover:bg-accent sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
+                >
+                  <Link
+                    href={`/teacher/programs/${program.slug}`}
+                    aria-label={`Открыть программу: ${program.title}`}
+                    className="absolute inset-0 rounded-md focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                  />
+                  <div className="pointer-events-none flex min-w-0 items-start gap-4">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-lg border border-border bg-card text-primary">
+                      <BookOpenText size={20} aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="wrap-break-word text-sm font-semibold">{program.title}</h3>
+                      <p className="mt-1 text-xs text-muted-foreground">{program.subject.name}</p>
+                      {program.description && (
+                        <p className="mt-2 line-clamp-2 wrap-break-word text-sm text-muted-foreground">
+                          {program.description}
                         </p>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-3 pl-13 sm:justify-end sm:pl-0">
-                      <span className={`badge  ${statusClassName[program.status]}`}>
-                        <StatusIcon size={13} aria-hidden="true" />
-                        {statusPresentation[program.status]}
-                      </span>
-                      {program.status === "DRAFT" && (
-                        <div className="relative z-10 max-w-60">
-                          <ActivateLearningProgramButton programId={program.id} triggerVariant="secondary" />
-                        </div>
                       )}
-                      <ChevronRight size={17} aria-hidden="true" className="text-foreground-subtle" />
                     </div>
-                  </article>
-                );
-              })}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 pl-14 sm:justify-end sm:pl-0">
+                    <LearningProgramStatusBadge status={program.status} />
+                    {program.status === "DRAFT" && (
+                      <div className="relative z-10">
+                        <ActivateLearningProgramButton programId={program.id} triggerVariant="secondary" />
+                      </div>
+                    )}
+                    <ChevronRight size={16} aria-hidden="true" className="text-muted-foreground" />
+                  </div>
+                </article>
+              ))}
             </div>
           )}
-        </div>
-      </section>
+        </CardContent>
+      </Card>
     </main>
   );
 }

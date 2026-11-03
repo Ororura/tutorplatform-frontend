@@ -2,14 +2,14 @@
 import { Input } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
-import { Archive, CheckCircle2, ChevronRight, FilePenLine, Layers3 } from "lucide-react";
+import { ChevronRight, Layers3 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import {
   type LearningProgramDetails,
-  type LearningProgramStatus,
+  LearningProgramStatusBadge,
   getLearningProgram,
   getLearningProgramBySlug,
   learningProgramQueries,
@@ -35,37 +35,10 @@ import {
   type BulkTopicStatusRequest,
 } from "@/features/program/topic/bulk-status";
 import { ApiClientError } from "@/shared/api/client";
+import { Card, CardHeader, CardContent } from "@/shared/ui/card";
+import { PageHeader } from "@/shared/ui/page-header";
+import { LoadingState } from "@/shared/ui/feedback";
 import { Button } from "@/shared/ui/button";
-
-const statusPresentation: Record<LearningProgramStatus, string> = {
-  DRAFT: "Черновик",
-  ACTIVE: "Активна",
-  ARCHIVED: "В архиве",
-};
-
-const statusClassName: Record<LearningProgramStatus, string> = {
-  DRAFT: "bg-warning-subtle text-warning",
-  ACTIVE: "bg-success-subtle text-success",
-  ARCHIVED: "bg-surface-subtle text-foreground-muted",
-};
-
-const statusIcon = {
-  DRAFT: FilePenLine,
-  ACTIVE: CheckCircle2,
-  ARCHIVED: Archive,
-} satisfies Record<LearningProgramStatus, typeof FilePenLine>;
-
-const topicStatusPresentation = {
-  DRAFT: "Черновик",
-  ACTIVE: "Активна",
-  ARCHIVED: "В архиве",
-} as const;
-
-const topicStatusClassName = {
-  DRAFT: "bg-warning-subtle text-warning",
-  ACTIVE: "bg-success-subtle text-success",
-  ARCHIVED: "bg-surface-subtle text-foreground-muted",
-} as const;
 
 function reorderedIds(ids: string[], index: number, direction: -1 | 1) {
   const nextIds = [...ids];
@@ -163,11 +136,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
         ← Программы обучения
       </Link>
 
-      {program.isPending && (
-        <div className="surface text-sm text-foreground-muted" aria-busy="true">
-          Загружаем программу…
-        </div>
-      )}
+      {program.isPending && <LoadingState>Загружаем программу…</LoadingState>}
 
       {program.isError && (
         <section className="space-y-3 rounded-surface border border-danger-border bg-danger-subtle p-6" role="alert">
@@ -187,22 +156,16 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
 
       {program.data &&
         (() => {
-          const StatusIcon = statusIcon[program.data.status];
           const modules = [...program.data.modules].sort((a, b) => a.position - b.position);
 
           return (
             <>
-              <section className="pb-2">
-                <div className="flex items-start justify-between gap-4">
-                  <p className="min-w-0 wrap-break-word text-sm font-medium text-primary">
-                    {program.data.subject.name}
-                  </p>
-                  <span className={`badge shrink-0  ${statusClassName[program.data.status]}`}>
-                    <StatusIcon size={13} />
-                    {statusPresentation[program.data.status]}
-                  </span>
-                </div>
-                <h1 className="page-title mt-2 wrap-break-word">{program.data.title}</h1>
+              <section>
+                <PageHeader
+                  title={program.data.title}
+                  eyebrow={program.data.subject.name}
+                  actions={<LearningProgramStatusBadge status={program.data.status} />}
+                />
                 <section className="mt-2" aria-labelledby="program-description-heading">
                   <h2 id="program-description-heading" className="sr-only">
                     Описание
@@ -223,170 +186,178 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
                 </div>
               </section>
 
-              <section className="surface" aria-labelledby="program-modules-heading">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-10 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-                      <Layers3 size={19} />
-                    </span>
-                    <div>
-                      <h2 id="program-modules-heading" className="section-title">
-                        Модули программы
-                      </h2>
-                      <p className="mt-1 text-sm text-foreground-muted">
-                        {modules.length} {modules.length === 1 ? "модуль" : "модулей"}
-                      </p>
+              <Card role="region" aria-labelledby="program-modules-heading">
+                <CardHeader className="border-b border-border p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="flex size-10 items-center justify-center rounded-surface bg-primary-subtle text-primary">
+                        <Layers3 size={19} />
+                      </span>
+                      <div>
+                        <h2 id="program-modules-heading" className="section-title">
+                          Модули программы
+                        </h2>
+                        <p className="mt-1 text-sm text-foreground-muted">
+                          {modules.length} {modules.length === 1 ? "модуль" : "модулей"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {program.data.editable && !selecting && (
+                        <Button type="button" variant="secondary" onClick={() => setSelectionMode(true)}>
+                          Выбрать темы
+                        </Button>
+                      )}
+                      <ImportContentPackageDialog
+                        programId={program.data.id}
+                        editable={
+                          program.data.editable &&
+                          !selecting &&
+                          program.data.status !== "ARCHIVED" &&
+                          !program.data.hasAssignments
+                        }
+                      />
+                      <CreateLearningProgramModuleDialog
+                        programId={program.data.id}
+                        editable={program.data.editable && !selecting}
+                        onCreated={setExpandedModuleId}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {program.data.editable && !selecting && (
-                      <Button type="button" variant="secondary" onClick={() => setSelectionMode(true)}>
-                        Выбрать темы
-                      </Button>
-                    )}
-                    <ImportContentPackageDialog
-                      programId={program.data.id}
-                      editable={
-                        program.data.editable &&
-                        !selecting &&
-                        program.data.status !== "ARCHIVED" &&
-                        !program.data.hasAssignments
+                </CardHeader>
+                <CardContent className="p-5">
+                  {selecting && (
+                    <BulkTopicStatusToolbar
+                      count={selectedIds.size}
+                      allSelected={allTopics.length > 0 && selectedIds.size === allTopics.length}
+                      empty={allTopics.length === 0}
+                      pending={bulkStatus.isPending}
+                      error={bulkError}
+                      onToggleAll={() =>
+                        setSelectedIds(
+                          selectedIds.size === allTopics.length
+                            ? new Set()
+                            : new Set(allTopics.map((topic) => topic.id)),
+                        )
                       }
+                      onCancel={cancelSelection}
+                      onSubmit={submitBulkStatus}
                     />
-                    <CreateLearningProgramModuleDialog
-                      programId={program.data.id}
-                      editable={program.data.editable && !selecting}
-                      onCreated={setExpandedModuleId}
-                    />
-                  </div>
-                </div>
+                  )}
 
-                {selecting && (
-                  <BulkTopicStatusToolbar
-                    count={selectedIds.size}
-                    allSelected={allTopics.length > 0 && selectedIds.size === allTopics.length}
-                    empty={allTopics.length === 0}
-                    pending={bulkStatus.isPending}
-                    error={bulkError}
-                    onToggleAll={() =>
-                      setSelectedIds(
-                        selectedIds.size === allTopics.length ? new Set() : new Set(allTopics.map((topic) => topic.id)),
-                      )
-                    }
-                    onCancel={cancelSelection}
-                    onSubmit={submitBulkStatus}
-                  />
-                )}
-
-                {modules.length === 0 ? (
-                  <div className="mt-6 rounded-surface border border-dashed border-border bg-surface-subtle/60 p-8 text-center">
-                    <h3 className="font-semibold text-foreground">Модулей пока нет</h3>
-                    <p className="mt-2 text-sm text-foreground-muted">Структура программы ещё не заполнена.</p>
-                  </div>
-                ) : (
-                  <ol className="mt-4 divide-y divide-border border-y border-border">
-                    {modules.map((module, moduleIndex) => {
-                      const topics = [...module.topics].sort((a, b) => a.position - b.position);
-                      return (
-                        <li key={module.id} className="relative">
-                          <details
-                            className="group"
-                            open={expandedModuleId === module.id}
-                            onToggle={(event) => setExpandedModuleId(event.currentTarget.open ? module.id : null)}
-                          >
-                            <summary
-                              className={`cursor-pointer list-none rounded-control py-4 focus-visible:outline-2 focus-visible:outline-focus-ring ${program.data.editable && !selecting ? "pr-12" : ""}`}
+                  {modules.length === 0 ? (
+                    <div className="mt-6 rounded-surface border border-dashed border-border bg-surface-subtle/60 p-8 text-center">
+                      <h3 className="font-semibold text-foreground">Модулей пока нет</h3>
+                      <p className="mt-2 text-sm text-foreground-muted">Структура программы ещё не заполнена.</p>
+                    </div>
+                  ) : (
+                    <ol className="mt-4 space-y-4">
+                      {modules.map((module, moduleIndex) => {
+                        const topics = [...module.topics].sort((a, b) => a.position - b.position);
+                        return (
+                          <li key={module.id} className="relative rounded-lg border border-border">
+                            <details
+                              className="group px-4"
+                              open={expandedModuleId === module.id}
+                              onToggle={(event) => setExpandedModuleId(event.currentTarget.open ? module.id : null)}
                             >
-                              <div className="flex items-start gap-2 sm:gap-3">
-                                <ChevronRight
-                                  size={16}
-                                  aria-hidden="true"
-                                  className="mt-1 shrink-0 text-foreground-subtle transition-transform group-open:rotate-90"
-                                />
-                                <span aria-hidden="true" className="mt-0.5 text-sm tabular-nums text-foreground-subtle">
-                                  {String(module.position + 1).padStart(2, "0")}.
-                                </span>
-                                <div className="min-w-0 flex-1">
-                                  <h3 className="wrap-break-word font-semibold text-foreground">{module.title}</h3>
-                                  {module.description && (
-                                    <p className="mt-1 wrap-break-word text-sm leading-5 text-foreground-muted">
-                                      {module.description}
-                                    </p>
-                                  )}
-                                  <p className="mt-1 text-xs text-foreground-muted sm:hidden">{topics.length} тем</p>
+                              <summary
+                                className={`cursor-pointer list-none rounded-control py-4 focus-visible:outline-2 focus-visible:outline-focus-ring ${program.data.editable && !selecting ? "pr-12" : ""}`}
+                              >
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <ChevronRight
+                                    size={16}
+                                    aria-hidden="true"
+                                    className="mt-1 shrink-0 text-foreground-subtle transition-transform group-open:rotate-90"
+                                  />
+                                  <span
+                                    aria-hidden="true"
+                                    className="mt-0.5 text-sm tabular-nums text-foreground-subtle"
+                                  >
+                                    {String(module.position + 1).padStart(2, "0")}.
+                                  </span>
+                                  <div className="min-w-0 flex-1">
+                                    <h3 className="wrap-break-word font-semibold text-foreground">{module.title}</h3>
+                                    {module.description && (
+                                      <p className="mt-1 wrap-break-word text-sm leading-5 text-foreground-muted">
+                                        {module.description}
+                                      </p>
+                                    )}
+                                    <p className="mt-1 text-xs text-foreground-muted sm:hidden">{topics.length} тем</p>
+                                  </div>
+                                  <span className="mt-0.5 hidden shrink-0 text-xs text-foreground-muted sm:block">
+                                    {topics.length} тем
+                                  </span>
                                 </div>
-                                <span className="mt-0.5 hidden shrink-0 text-xs text-foreground-muted sm:block">
-                                  {topics.length} тем
-                                </span>
+                              </summary>
+                              <div className="ml-2 border-l border-border pb-3 pl-3 sm:ml-5 sm:pl-5">
+                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                  <h4 className="text-sm font-semibold text-foreground">Темы</h4>
+                                  <CreateLearningProgramTopicDialog
+                                    programId={program.data.id}
+                                    moduleId={module.id}
+                                    editable={program.data.editable && !selecting}
+                                  />
+                                </div>
+                                {topics.length === 0 ? (
+                                  <p className="mt-2 text-sm text-foreground-muted">В этом модуле пока нет тем.</p>
+                                ) : (
+                                  <TopicList
+                                    programId={program.data.id}
+                                    programSlug={program.data.slug}
+                                    moduleId={module.id}
+                                    topics={topics}
+                                    selecting={selecting}
+                                    selectedIds={selectedIds}
+                                    selectionPending={bulkStatus.isPending}
+                                    onToggleTopic={toggleTopic}
+                                    editable={program.data.editable && !selecting}
+                                  />
+                                )}
                               </div>
-                            </summary>
-                            <div className="ml-2 border-l border-border pb-3 pl-3 sm:ml-5 sm:pl-5">
-                              <div className="flex flex-wrap items-center justify-between gap-3">
-                                <h4 className="text-sm font-semibold text-foreground">Темы</h4>
-                                <CreateLearningProgramTopicDialog
+                            </details>
+                            {program.data.editable && !selecting && (
+                              <div className="absolute right-2 top-2">
+                                <LearningProgramModuleActions
                                   programId={program.data.id}
-                                  moduleId={module.id}
-                                  editable={program.data.editable && !selecting}
+                                  module={module}
+                                  editable={program.data.editable}
+                                  reorderActions={[
+                                    {
+                                      label: "Переместить вверх",
+                                      disabled: reorderModules.isPending || moduleIndex === 0,
+                                      onSelect: () =>
+                                        reorderModules.mutate({
+                                          orderedIds: reorderedIds(
+                                            modules.map((item) => item.id),
+                                            moduleIndex,
+                                            -1,
+                                          ),
+                                        }),
+                                    },
+                                    {
+                                      label: "Переместить вниз",
+                                      disabled: reorderModules.isPending || moduleIndex === modules.length - 1,
+                                      onSelect: () =>
+                                        reorderModules.mutate({
+                                          orderedIds: reorderedIds(
+                                            modules.map((item) => item.id),
+                                            moduleIndex,
+                                            1,
+                                          ),
+                                        }),
+                                    },
+                                  ]}
                                 />
                               </div>
-                              {topics.length === 0 ? (
-                                <p className="mt-2 text-sm text-foreground-muted">В этом модуле пока нет тем.</p>
-                              ) : (
-                                <TopicList
-                                  programId={program.data.id}
-                                  programSlug={program.data.slug}
-                                  moduleId={module.id}
-                                  topics={topics}
-                                  selecting={selecting}
-                                  selectedIds={selectedIds}
-                                  selectionPending={bulkStatus.isPending}
-                                  onToggleTopic={toggleTopic}
-                                  editable={program.data.editable && !selecting}
-                                />
-                              )}
-                            </div>
-                          </details>
-                          {program.data.editable && !selecting && (
-                            <div className="absolute right-0 top-2">
-                              <LearningProgramModuleActions
-                                programId={program.data.id}
-                                module={module}
-                                editable={program.data.editable}
-                                reorderActions={[
-                                  {
-                                    label: "Переместить вверх",
-                                    disabled: reorderModules.isPending || moduleIndex === 0,
-                                    onSelect: () =>
-                                      reorderModules.mutate({
-                                        orderedIds: reorderedIds(
-                                          modules.map((item) => item.id),
-                                          moduleIndex,
-                                          -1,
-                                        ),
-                                      }),
-                                  },
-                                  {
-                                    label: "Переместить вниз",
-                                    disabled: reorderModules.isPending || moduleIndex === modules.length - 1,
-                                    onSelect: () =>
-                                      reorderModules.mutate({
-                                        orderedIds: reorderedIds(
-                                          modules.map((item) => item.id),
-                                          moduleIndex,
-                                          1,
-                                        ),
-                                      }),
-                                  },
-                                ]}
-                              />
-                            </div>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ol>
-                )}
-              </section>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  )}
+                </CardContent>
+              </Card>
             </>
           );
         })()}
@@ -421,7 +392,7 @@ function TopicList({
   return (
     <ol className="mt-2 divide-y divide-border">
       {topics.map((topic, topicIndex) => (
-        <li key={topic.id} className="flex items-start gap-2 py-3 text-sm text-foreground-muted">
+        <li key={topic.id} className="flex items-start gap-3 py-3 text-sm text-muted-foreground">
           {selecting ? (
             <Input
               type="checkbox"
@@ -442,9 +413,7 @@ function TopicList({
               >
                 {topic.title}
               </Link>
-              <span className={`badge shrink-0  ${topicStatusClassName[topic.status]}`}>
-                {topicStatusPresentation[topic.status]}
-              </span>
+              <LearningProgramStatusBadge status={topic.status} />
             </div>
             {topic.description && (
               <p className="mt-1 wrap-break-word leading-5 text-foreground-muted">{topic.description}</p>

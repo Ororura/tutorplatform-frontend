@@ -1,7 +1,30 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 /* One semantic palette, shared by Tailwind utilities and component metrics. */
 @theme inline {
+  --color-card: var(--card);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--foreground-muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--foreground);
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: var(--primary-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--focus-ring);
+  --color-sidebar: var(--card);
+  --color-sidebar-foreground: var(--foreground);
+  --color-sidebar-accent: var(--primary-subtle);
+  --color-sidebar-accent-foreground: var(--primary);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-subtle: var(--surface-subtle);
@@ -42,17 +65,23 @@
 @layer base {
   :root {
     color-scheme: light;
-    --background: #f6f7f9;
-    --surface: #ffffff;
-    --surface-subtle: #f3f5f7;
-    --surface-hover: #e9edf2;
-    --foreground: #202630;
-    --foreground-muted: #546171;
+    --radius: 0.5rem;
+    --background: #f8fafc;
+    --card: #ffffff;
+    --secondary: #f1f5f9;
+    --muted: #f1f5f9;
+    --accent: #f1f5f9;
+    --input: #8794a6;
+    --surface: var(--card);
+    --surface-subtle: var(--muted);
+    --surface-hover: #e2e8f0;
+    --foreground: #0f172a;
+    --foreground-muted: #526174;
     --foreground-subtle: #5c697c;
-    --border: #e0e5eb;
-    --border-strong: #8794a6;
-    --primary: #245bd6;
-    --primary-hover: #1d49b0;
+    --border: #e2e8f0;
+    --border-strong: var(--input);
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
     --primary-subtle: #edf3ff;
     --primary-border: #b5c9f4;
     --primary-foreground: #ffffff;
@@ -73,14 +102,14 @@
     --shadow-floating: 0 8px 28px rgb(32 38 48 / 14%);
     --shadow-header: none;
     --page-gutter: 1rem;
-    --page-width: 80rem;
+    --page-width: 100rem;
     --content-width: 64rem;
     --reading-width: 48rem;
     --form-width: 40rem;
     --auth-width: 28rem;
     --control-height: 2.75rem;
     --surface-padding: 1rem;
-    --app-header-height: 7.75rem;
+    --app-header-height: 4rem;
     /* Compatibility aliases for existing consumers. */
     --app-background: var(--background);
     --surface-muted: var(--surface-subtle);
@@ -100,6 +129,8 @@
   }
   body {
     margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
     min-height: 100dvh;
     background: var(--background);
     color: var(--foreground);
@@ -210,6 +241,7 @@
     overflow-wrap: anywhere;
   }
   .page-description {
+    overflow-wrap: anywhere;
     max-width: 65ch;
     font-size: 0.875rem;
     line-height: 1.5rem;
@@ -329,19 +361,6 @@
     line-height: 1rem;
     font-weight: 500;
   }
-  .app-header {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-  .app-header-row {
-    display: flex;
-    height: 4rem;
-    align-items: center;
-    gap: 1.5rem;
-  }
   .nav-item {
     display: inline-flex;
     min-height: 2.75rem;
@@ -365,7 +384,7 @@
   .nav-item[aria-current="page"] {
     color: var(--primary);
     background: var(--primary-subtle);
-    box-shadow: inset 0 -2px var(--primary);
+    font-weight: 600;
   }
   .nav-mobile {
     display: flex;

@@ -51,12 +51,12 @@ beforeEach(() => {
 describe("DeleteMaterialDialog", () => {
   it("requires explicit confirmation and can be cancelled", () => {
     render(<DeleteMaterialDialog material={material} />);
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Удалить «Проверочный PDF»" }));
-    expect(screen.getByRole("dialog", { name: "Удалить материал" })).toBeInTheDocument();
+    expect(screen.getByRole("alertdialog", { name: "Удалить материал" })).toBeInTheDocument();
     expect(screen.getByText(/Это действие нельзя отменить/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Отмена" }));
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
     expect(mocks.mutateAsync).not.toHaveBeenCalled();
   });
 
@@ -67,7 +67,7 @@ describe("DeleteMaterialDialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "Удалить «Проверочный PDF»" }));
     fireEvent.click(screen.getByRole("button", { name: "Удалить материал" }));
     await waitFor(() => expect(mocks.mutateAsync).toHaveBeenCalledWith("material-id"));
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument());
   });
 
   it("keeps dialog open and displays an error after failure", async () => {
@@ -76,6 +76,6 @@ describe("DeleteMaterialDialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "Удалить «Проверочный PDF»" }));
     fireEvent.click(screen.getByRole("button", { name: "Удалить материал" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Не удалось удалить материал");
-    expect(screen.getByRole("dialog", { name: "Удалить материал" })).toBeInTheDocument();
+    expect(screen.getByRole("alertdialog", { name: "Удалить материал" })).toBeInTheDocument();
   });
 });

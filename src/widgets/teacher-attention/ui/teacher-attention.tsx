@@ -1,5 +1,7 @@
 import { ArrowRight, Check, CircleAlert } from "lucide-react";
 import Link from "next/link";
+import { Card, CardHeader, CardTitle, CardContent } from "@/shared/ui/card";
+import { Badge } from "@/shared/ui/badge";
 
 import type { TeacherDashboardAttentionItem } from "@/entities/dashboard";
 
@@ -13,7 +15,7 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
     return (
       <section
         id="teacher-attention"
-        className="flex scroll-mt-[calc(var(--app-header-height)+1rem)] items-start gap-3 py-3"
+        className="flex scroll-mt-20 items-start gap-3 rounded-xl border border-border bg-card p-6"
       >
         <Check aria-hidden="true" className="mt-0.5 shrink-0 text-foreground-muted" size={20} />
         <div>
@@ -25,41 +27,45 @@ export function TeacherAttention({ items }: Readonly<{ items: TeacherDashboardAt
   }
 
   return (
-    <section id="teacher-attention" className="surface scroll-mt-[calc(var(--app-header-height)+1rem)]">
-      <div className="flex items-start gap-4">
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-surface bg-warning-subtle text-warning">
-          <CircleAlert size={20} />
-        </span>
-
-        <div className="min-w-0 flex-1">
-          <h2 className="section-title">Требует внимания</h2>
-          <ul className="mt-4 divide-y divide-border">
+    <section id="teacher-attention" className="scroll-mt-20" aria-labelledby="attention-heading">
+      <Card>
+        <CardHeader className="flex-row items-center justify-between border-b border-border px-5 py-4">
+          <CardTitle id="attention-heading">Требует внимания</CardTitle>
+          <Badge tone="warning">{items.length}</Badge>
+        </CardHeader>
+        <CardContent className="p-0">
+          <ul className="divide-y divide-border">
             {items.map((item) => {
               const presentation = getAttentionPresentation(item);
-
               return (
-                <li key={`${item.type}-${item.resourceId}`} className="py-2 first:pt-1 last:pb-0">
+                <li key={`${item.type}-${item.resourceId}`}>
                   <Link
-                    className="group flex items-center justify-between gap-4 rounded-control py-2 transition-colors hover:bg-surface-subtle sm:px-3"
+                    className="group flex items-start gap-3 px-5 py-4 transition-colors hover:bg-accent"
                     href={presentation.href}
                   >
-                    <span className="min-w-0">
-                      <span className="block font-medium text-foreground">{presentation.title}</span>
-                      <span className="mt-1 block wrap-break-word text-sm text-(--text-secondary)">
+                    <CircleAlert
+                      size={18}
+                      aria-hidden="true"
+                      className={`mt-0.5 shrink-0 ${item.type === "HOMEWORK_OVERDUE" ? "text-danger" : "text-warning"}`}
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-medium">{presentation.title}</span>
+                      <span className="mt-1 block wrap-break-word text-xs leading-5 text-muted-foreground">
                         {item.displayName} · {presentation.dateLabel} {dateFormatter.format(new Date(item.eventAt))}
                       </span>
                     </span>
                     <ArrowRight
-                      className="shrink-0 text-foreground-subtle transition group-hover:text-primary"
-                      size={17}
+                      size={16}
+                      aria-hidden="true"
+                      className="mt-1 shrink-0 text-muted-foreground group-hover:text-primary"
                     />
                   </Link>
                 </li>
               );
             })}
           </ul>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </section>
   );
 }

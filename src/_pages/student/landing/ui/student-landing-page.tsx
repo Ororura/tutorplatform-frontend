@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import { StudentDashboardHeader } from "./student-dashboard-header";
 import { StudentHomeworkCard } from "./student-homework-card";
-import { StudentProgramCard, StudentProgramMotivation } from "./student-program-card";
+import { StudentProgramCard } from "./student-program-card";
 import { DashboardSection, DashboardSkeleton, DashboardError } from "./dashboard-primitives";
 
 import { EmptyState } from "@/shared/ui/feedback";
@@ -50,7 +50,7 @@ export function StudentLandingPage() {
         }
       />
 
-      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.8fr)_minmax(320px,1fr)]">
+      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
         <DashboardSection
           title="Домашние задания"
           subtitle="Твои текущие и ближайшие задания"
@@ -92,9 +92,6 @@ export function StudentLandingPage() {
             visiblePrograms.map((program, index) => (
               <StudentProgramCard key={program.id} program={program} primary={index === 0} />
             ))}
-          {!programs.isError && visiblePrograms[0]?.status === "ACTIVE" && (
-            <StudentProgramMotivation program={visiblePrograms[0]} />
-          )}
         </DashboardSection>
       </div>
     </main>
