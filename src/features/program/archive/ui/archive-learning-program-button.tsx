@@ -1,22 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { ApiClientError } from "@/shared/api/client";
+import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
 import { Button } from "@/shared/ui/button";
 
 import { useArchiveLearningProgramMutation } from "../api/archive-learning-program";
 
 export function ArchiveLearningProgramButton({ programId }: Readonly<{ programId: string }>) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const mutation = useArchiveLearningProgramMutation();
-
-  useEffect(() => {
-    if (open && !dialogRef.current?.open) dialogRef.current?.showModal();
-    if (!open && dialogRef.current?.open) dialogRef.current.close();
-  }, [open]);
 
   const archive = async () => {
     if (mutation.isPending) return;
@@ -46,34 +41,16 @@ export function ArchiveLearningProgramButton({ programId }: Readonly<{ programId
       >
         Архивировать
       </Button>
-      <dialog
-        ref={dialogRef}
-        aria-labelledby="archive-learning-program-title"
-        className="dialog-surface w-[min(30rem,calc(100%-2rem))]"
-        onClose={() => setOpen(false)}
-      >
-        <section className="space-y-5 p-6">
-          <div>
-            <h2 id="archive-learning-program-title" className="section-title">
-              Архивировать программу?
-            </h2>
-            <p className="mt-2 text-sm text-foreground-muted">Программа останется доступной только для чтения.</p>
-          </div>
-          {error && (
-            <p className="text-sm text-danger" role="alert">
-              {error}
-            </p>
-          )}
-          <div className="flex justify-end gap-3">
-            <Button type="button" variant="secondary" disabled={mutation.isPending} onClick={() => setOpen(false)}>
-              Отмена
-            </Button>
-            <Button type="button" variant="danger" disabled={mutation.isPending} onClick={() => void archive()}>
-              {mutation.isPending ? "Архивируем…" : "Архивировать"}
-            </Button>
-          </div>
-        </section>
-      </dialog>
+      <ConfirmDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Архивировать программу?"
+        description="Программа останется доступной только для чтения."
+        confirmLabel="Архивировать"
+        pending={mutation.isPending}
+        error={error}
+        onConfirm={() => void archive()}
+      />
     </>
   );
 }

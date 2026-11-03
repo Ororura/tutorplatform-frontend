@@ -1,9 +1,10 @@
 "use client";
 
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import type { LessonMaterial } from "@/entities/material";
 import { ApiClientError } from "@/shared/api/client";
+import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
 import { Button } from "@/shared/ui/button";
 
 import { useDeleteMaterialMutation } from "../api/delete-material";
@@ -12,15 +13,9 @@ export function DeleteMaterialDialog({
   material,
   renderTrigger,
 }: Readonly<{ material: LessonMaterial; renderTrigger?: (open: () => void) => ReactNode }>) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const mutation = useDeleteMaterialMutation(material.topicId);
-
-  useEffect(() => {
-    if (open && !dialogRef.current?.open) dialogRef.current?.showModal();
-    if (!open && dialogRef.current?.open) dialogRef.current.close();
-  }, [open]);
 
   const confirmDeletion = async () => {
     if (mutation.isPending) return;
@@ -57,41 +52,16 @@ export function DeleteMaterialDialog({
           Удалить
         </Button>
       )}
-      <dialog
-        ref={dialogRef}
-        aria-labelledby={`delete-material-title-${material.id}`}
-        aria-describedby={`delete-material-description-${material.id}`}
-        className="dialog-surface w-[min(32rem,calc(100%-2rem))]"
-        onCancel={(event) => {
-          if (mutation.isPending) event.preventDefault();
-        }}
-        onClose={() => setOpen(false)}
-      >
-        <div className="space-y-5 p-6">
-          <h2 id={`delete-material-title-${material.id}`} className="section-title">
-            Удалить материал
-          </h2>
-          <p
-            id={`delete-material-description-${material.id}`}
-            className="wrap-break-word text-sm text-foreground-muted"
-          >
-            Вы действительно хотите удалить «{material.title}»? Это действие нельзя отменить.
-          </p>
-          {error && (
-            <p role="alert" className="text-sm text-danger">
-              {error}
-            </p>
-          )}
-          <div className="flex justify-end gap-3">
-            <Button type="button" variant="secondary" disabled={mutation.isPending} onClick={() => setOpen(false)}>
-              Отмена
-            </Button>
-            <Button type="button" variant="danger" disabled={mutation.isPending} onClick={() => void confirmDeletion()}>
-              {mutation.isPending ? "Удаляем…" : "Удалить материал"}
-            </Button>
-          </div>
-        </div>
-      </dialog>
+      <ConfirmDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Удалить материал"
+        description={<>Вы действительно хотите удалить «{material.title}»? Это действие нельзя отменить.</>}
+        confirmLabel="Удалить материал"
+        pending={mutation.isPending}
+        error={error}
+        onConfirm={() => void confirmDeletion()}
+      />
     </>
   );
 }

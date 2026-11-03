@@ -13,5 +13,5 @@ export function Badge({
   className,
   ...props
 }: HTMLAttributes<HTMLSpanElement> & { tone?: BadgeTone }) {
-  return <span className={cn("badge", badgeToneClassNames[tone], className)} {...props} />;
+  return <span data-slot="badge" className={cn("badge", badgeToneClassNames[tone], className)} {...props} />;
 }

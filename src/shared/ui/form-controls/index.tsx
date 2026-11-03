@@ -8,6 +8,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
   return (
     <input
       ref={ref}
+      data-slot="input"
       type={type}
       className={cn(type === "checkbox" || type === "radio" ? "field-choice" : "field-control", className)}
       {...props}
@@ -18,11 +19,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
   { className, ...props },
   ref,
 ) {
-  return <textarea ref={ref} className={cn("field-control", className)} {...props} />;
+  return <textarea ref={ref} data-slot="textarea" className={cn("field-control", className)} {...props} />;
 });
 export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSelectElement>>(function Select(
   { className, ...props },
   ref,
 ) {
-  return <select ref={ref} className={cn("field-control", className)} {...props} />;
+  return <select data-slot="native-select" ref={ref} className={cn("field-control", className)} {...props} />;
 });

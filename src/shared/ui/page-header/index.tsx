@@ -14,9 +14,16 @@ export function PageHeader({
   className?: string;
 }>) {
   return (
-    <header className={cn("flex flex-col items-start justify-between gap-4 sm:flex-row", className)}>
+    <header
+      className={cn(
+        "flex flex-col items-start justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-start",
+        className,
+      )}
+    >
       <div className="min-w-0">
-        {eyebrow && <p className="mb-1 text-sm text-foreground-muted">{eyebrow}</p>}
+        {eyebrow && (
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">{eyebrow}</p>
+        )}
         <h1 className="page-title">{title}</h1>
         {description && <p className="page-description mt-2">{description}</p>}
       </div>
