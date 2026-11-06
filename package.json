@@ -66,7 +66,7 @@
     "openapi-typescript": "7.13.0",
     "prettier": "^3.9.9",
     "tailwind-lint": "^0.12.1",
-    "tailwindcss": "^4.1.0",
+    "tailwindcss": "^4.3.4",
     "typescript": "^5.9.0",
     "vitest": "^5.0.2"
   },
