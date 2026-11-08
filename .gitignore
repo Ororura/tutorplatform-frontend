@@ -13,6 +13,7 @@ e2e-artifacts
 *.log
 *.tsbuildinfo
 .env.local
+.agents
 
 # Operational Python checks
 __pycache__/
