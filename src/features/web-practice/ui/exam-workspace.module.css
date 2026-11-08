@@ -1,0 +1,127 @@
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.workspace {
+  --editor-background: #1e1e1e;
+  --editor-panel: #252526;
+  --editor-border: #454545;
+  --editor-text: #d4d4d4;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--editor-border);
+  border-radius: var(--radius-surface);
+  background: var(--editor-background);
+  color: var(--editor-text);
+  color-scheme: dark;
+}
+
+.titlebar {
+  padding: 0.75rem 1rem;
+  background: #323233;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: 2.5rem 9rem minmax(0, 1fr);
+}
+
+.activity {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  background: #333333;
+  border-right: 1px solid var(--editor-border);
+}
+
+.explorer {
+  background: var(--editor-panel);
+  border-right: 1px solid var(--editor-border);
+  padding: 1rem 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  text-align: left;
+  border-radius: 0.25rem;
+}
+
+.file:hover,
+.file[aria-current="true"] {
+  background: #37373d;
+}
+.workspace button:focus-visible {
+  outline: 2px solid #75beff;
+  outline-offset: -2px;
+}
+
+.editor {
+  min-width: 0;
+}
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  background: var(--editor-panel);
+}
+.tab {
+  flex: 0 0 auto;
+  padding: 0.75rem;
+  font-size: 0.8125rem;
+  border-right: 1px solid var(--editor-border);
+  border-top: 2px solid transparent;
+}
+.tab[aria-selected="true"] {
+  border-top-color: #75beff;
+  background: var(--editor-background);
+}
+.breadcrumb {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  color: #bdbdbd;
+}
+.statusbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  background: #005a9e;
+  color: white;
+  font-size: 0.75rem;
+}
+
+@media (min-width: 1150px) {
+  .workbench {
+    grid-template-columns: minmax(0, 1.65fr) minmax(20rem, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .activity,
+  .explorer {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .workspace {
+    border-color: CanvasText;
+  }
+  .tab[aria-selected="true"] {
+    border-top-color: Highlight;
+  }
+}
