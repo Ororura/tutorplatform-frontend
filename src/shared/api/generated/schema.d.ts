@@ -508,7 +508,7 @@ export interface paths {
     /** List the current student's task submissions */
     get: operations["listStudentTaskSubmissions"];
     put?: never;
-    /** Submit a TEXT answer for a homework task */
+    /** Submit a TEXT answer for a homework or topic practice task */
     post: operations["submitTextAnswer"];
     delete?: never;
     options?: never;
@@ -2098,10 +2098,14 @@ export interface components {
       valid?: boolean;
       errors?: components["schemas"]["ContentPackagePreviewError"][];
     };
-    /** @description Student answer for a TEXT homework task */
+    /** @description Student answer for a TEXT homework or topic practice task */
     SubmitTextAnswerRequest: {
       /** Format: uuid */
-      homeworkItemId: string;
+      homeworkItemId?: string;
+      /** Format: uuid */
+      studentProgramId?: string;
+      /** Format: uuid */
+      topicId?: string;
       textAnswer: string;
     };
     CodeSubmissionExecutionResponse: {
@@ -5492,6 +5496,10 @@ export interface operations {
       query?: {
         /** @description Optional homework item context */
         homeworkItemId?: string;
+        /** @description Practice student program context */
+        studentProgramId?: string;
+        /** @description Practice topic context */
+        topicId?: string;
         /**
          * @description Zero-based page index
          * @example 0

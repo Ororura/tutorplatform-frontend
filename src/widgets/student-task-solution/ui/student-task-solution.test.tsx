@@ -207,6 +207,38 @@ describe("StudentTaskSolution widget", () => {
     });
   });
 
+  it("submits standalone TEXT with topic context and prevents blank or duplicate pending sends", () => {
+    const props = {
+      practice: {
+        studentProgramId: "program-1",
+        topicId: "topic-1",
+        task: {
+          id: "task-1",
+          title: "Условие if",
+          descriptionMarkdown: "Объясните",
+          taskType: "TEXT" as const,
+          difficulty: "EASY" as const,
+          position: 0,
+          required: true,
+        },
+      },
+    };
+    const { rerender } = render(<StudentTaskSolution {...props} />);
+    expect(screen.getByRole("button", { name: "Отправить" })).toBeDisabled();
+    fireEvent.change(screen.getByLabelText("Ваш ответ"), { target: { value: "  Выбирает ветку  " } });
+    fireEvent.click(screen.getByRole("button", { name: "Отправить" }));
+    expect(mocks.submitText.mutate).toHaveBeenCalledWith({
+      taskId: "task-1",
+      studentProgramId: "program-1",
+      topicId: "topic-1",
+      textAnswer: "Выбирает ветку",
+    });
+    mocks.submitText.isPending = true;
+    rerender(<StudentTaskSolution {...props} />);
+    expect(screen.getByRole("button", { name: "Отправляем…" })).toBeDisabled();
+    expect(screen.getByLabelText("Ваш ответ")).toBeDisabled();
+  });
+
   it("uses the standalone topic context without a homework item", () => {
     render(
       <StudentTaskSolution

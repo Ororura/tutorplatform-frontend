@@ -258,7 +258,9 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
             <h2 className="section-title mt-1" id="topic-practice-heading">
               Практические задания
             </h2>
-            <p className="mt-1 text-sm text-(--text-secondary)">Выберите задание и проверьте решение по тестам.</p>
+            <p className="mt-1 text-sm text-(--text-secondary)">
+              Отправляйте ответы преподавателю или проверяйте код по тестам.
+            </p>
           </div>
         </div>
 
