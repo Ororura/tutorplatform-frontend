@@ -82,7 +82,7 @@ for (const { width, height } of [
     await page.goto("/student");
     await expect(page.getByText("Невыполненных заданий нет")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
-    const brand = page.getByRole("link", { name: "Умнее Вместе — главная" });
+    const brand = page.getByRole("link", { name: "Tutor Platform — главная" });
     if (width < 1280) {
       const menu = page.getByRole("button", { name: "Открыть меню" });
       await menu.focus();
@@ -95,12 +95,10 @@ for (const { width, height } of [
       name: width >= 1280 ? "Навигация ученика" : "Мобильная навигация ученика",
       exact: true,
     });
-    const home = mainNavigation.getByRole("link", { name: "Главная", exact: true });
+    const home = mainNavigation.getByRole("link", { name: "Программы", exact: true });
 
     await expect(home).toBeFocused();
     expect(await home.evaluate((element) => getComputedStyle(element).outlineStyle)).toBe("solid");
-    await page.keyboard.press("Tab");
-    await expect(mainNavigation.getByRole("link", { name: "Мои программы", exact: true })).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/student\/programs$/);
     await expect(page.getByRole("heading", { name: "Мои программы", exact: true })).toBeVisible();

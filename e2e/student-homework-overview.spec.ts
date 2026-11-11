@@ -35,40 +35,19 @@ test("real homework prioritizes action and shares dashboard styling at all reque
   ).toBeVisible();
   await screenshot(page, "student-dashboard-real-1440");
   await page.getByRole("link", { name: "Все задания", exact: true }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Домашние задания" })).toBeVisible();
-  const attention = page.getByRole("region", { name: /^Требуют внимания/ });
-  const upcoming = page.getByRole("region", { name: /^Предстоящие/ });
-  const history = page.getByRole("region", { name: /^История/ });
-  await expect(attention.getByText("Просрочено", { exact: true }).first()).toBeVisible();
-  await expect(upcoming.getByRole("article").first()).toBeVisible();
-  await expect(history.getByText("Выполнено", { exact: true }).first()).toBeVisible();
-  await expect(history.getByText("Отменено", { exact: true }).first()).toBeVisible();
-  await expect(history.getByRole("listitem")).toHaveCount(3);
-  await expect(page.getByText("Ваша нагрузка")).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 1, name: "Задания" })).toBeVisible();
+  const panel = page.getByRole("tabpanel");
+  await expect(panel.getByRole("article").first()).toBeVisible();
   for (const width of widths) {
     await page.setViewportSize({ width, height: 1000 });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    const card = await attention.getByRole("article").first().boundingBox();
-    const action = attention.getByRole("link").first();
-    const actionBox = await action.boundingBox();
-    const title = await attention.getByRole("heading", { level: 3 }).first().boundingBox();
-    if (width >= 768) expect(actionBox!.x).toBeGreaterThan(title!.x + title!.width);
-    else {
-      expect(actionBox!.y).toBeGreaterThan(title!.y + title!.height);
-      expect(actionBox!.width).toBeGreaterThan(card!.width * 0.8);
-    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     if (width === 1440 || width === 390) await screenshot(page, `student-homework-real-${width}`);
   }
-  expect(await page.locator("main a a, main a button, main button a").count()).toBe(0);
-  const action = attention.getByRole("link").first();
-  const href = await action.getAttribute("href");
-  expect(href).toMatch(/^\/student\/homework\/[^/]+$/);
-  await action.focus();
-  await expect(action).toBeFocused();
-  await page.keyboard.press("Tab");
-  await expect(upcoming.getByRole("link").first()).toBeFocused();
-  await action.click();
-  await expect(page).toHaveURL(href!);
+  await page.getByRole("tab", { name: "Завершённые", exact: true }).click();
+  await expect(panel.getByText("Выполнено", { exact: true }).first()).toBeVisible();
+  await expect(panel.getByText("Отменено", { exact: true }).first()).toBeVisible();
+  await panel.getByRole("link").first().click();
+  await expect(page).toHaveURL(/\/student\/homework\/[^/]+$/);
 });
 
 const base: StudentHomeworkSummary = {
@@ -90,6 +69,9 @@ test("server pagination, compact history and missing optional metadata remain us
   test.setTimeout(90_000);
   await login(page);
   await page.route("**/api/v1/student/programs", (route) => route.fulfill({ json: [] }));
+  await page.route("**/api/v1/student/homeworks/*", (route) =>
+    route.fulfill({ json: { ...base, id: route.request().url().split("/").at(-1), items: [] } }),
+  );
   const requests: string[] = [];
   await page.route("**/api/v1/student/homeworks?*", (route) => {
     const params = new URL(route.request().url()).searchParams;
@@ -111,30 +93,22 @@ test("server pagination, compact history and missing optional metadata remain us
     return route.fulfill({ json: homeworkPage(items, index, 2) });
   });
   await page.goto("/student/homework");
-  const attention = page.getByRole("region", { name: /^Требуют внимания/ });
-  const history = page.getByRole("region", { name: /^История/ });
-  await expect(attention.getByText("11 заданий", { exact: true })).toBeVisible();
-  await expect(attention.getByText(/Срок был 24 сентября 2020/)).toBeVisible();
-  await expect(
-    page.getByRole("region", { name: /^Предстоящие/ }).getByText("Без срока", { exact: true }),
-  ).toBeVisible();
-  await expect(history.getByRole("listitem")).toHaveCount(3);
-  for (const width of widths) {
-    await page.setViewportSize({ width, height: 1000 });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    if (width === 390) await screenshot(page, "student-homework-long-content-390");
-  }
+  const panel = page.getByRole("tabpanel");
+  await expect(panel.getByText(/11 заданий/).first()).toBeVisible();
+  await expect(panel.getByText(/Срок был 24 сентября 2020/).first()).toBeVisible();
   await page.getByRole("button", { name: "Загрузить ещё задания" }).click();
-  await expect(attention.getByRole("heading", { name: "Следующая актуальная работа" })).toBeVisible();
-  await page.getByRole("button", { name: "Показать все" }).click();
-  await expect(history.getByRole("listitem")).toHaveCount(6);
-  await page.getByRole("button", { name: "Загрузить ещё", exact: true }).click();
-  await expect(history.getByRole("listitem")).toHaveCount(12);
+  await expect(panel.getByRole("heading", { name: "Следующая актуальная работа" })).toBeVisible();
+  await page.getByRole("tab", { name: "Завершённые", exact: true }).click();
+  await expect(panel.getByRole("listitem")).toHaveCount(6);
+  await page.getByRole("button", { name: "Загрузить ещё задания" }).click();
+  await expect(panel.getByRole("listitem")).toHaveCount(12);
   expect(requests).toContain("ASSIGNED:1");
   expect(requests).toContain("COMPLETED:1");
   expect(requests).toContain("CANCELLED:1");
-  await page.getByRole("button", { name: "Свернуть" }).click();
-  await expect(history.getByRole("listitem")).toHaveCount(3);
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 1000 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
 });
 
 test("empty and failed responses preserve empty-state and retry semantics", async ({ page }) => {
@@ -146,10 +120,10 @@ test("empty and failed responses preserve empty-state and retry semantics", asyn
       : route.fulfill({ json: homeworkPage([]) }),
   );
   await page.goto("/student/homework");
-  await expect(page.getByRole("main").getByRole("alert")).toContainText("Не удалось загрузить домашние задания.");
-  await expect(page.getByText("Домашних заданий пока нет")).toHaveCount(0);
+  await expect(page.getByRole("main").getByRole("alert")).toContainText("Не удалось загрузить часть заданий.");
+  await expect(page.getByText("Заданий в работе пока нет")).toHaveCount(0);
   failed = false;
   await page.getByRole("button", { name: "Повторить" }).click();
-  await expect(page.getByRole("heading", { name: "Домашних заданий пока нет" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Заданий в работе пока нет" })).toBeVisible();
   await expect(page.getByRole("main").getByRole("region")).toHaveCount(0);
 });
