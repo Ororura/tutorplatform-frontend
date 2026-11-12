@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@/shared/ui/button";
+import Link from "next/link";
+import { Button, buttonClassName } from "@/shared/ui/button";
 import { WebPreview } from "@/shared/ui/web-preview";
 import { webFileNames } from "@/shared/lib/web-exercise";
 import {
@@ -26,9 +27,12 @@ export function CodeTyping() {
           Скорость набора кода
         </h1>
         <p className="mt-2 text-foreground-muted">Набирайте код по шагам и наблюдайте, как оживает интерфейс.</p>
+        <Link href="/student/web-practice" className={buttonClassName("secondary", "mt-4")}>
+          Бесконечная практика и редактор
+        </Link>
       </header>
       {exercise ? (
-        <Training
+        <CodeTypingTraining
           key={exercise.id}
           exercise={exercise}
           onExit={() => {
@@ -56,7 +60,11 @@ export function CodeTyping() {
   );
 }
 
-function Training({ exercise, onExit }: Readonly<{ exercise: TypingExercise; onExit: () => void }>) {
+export function CodeTypingTraining({
+  exercise,
+  onExit,
+  onNext,
+}: Readonly<{ exercise: TypingExercise; onExit: () => void; onNext?: () => void }>) {
   const [attempt, setAttempt] = useState(createAttempt);
   const [now, setNow] = useState(0);
   const [repeat, setRepeat] = useState(0);
@@ -149,16 +157,23 @@ function Training({ exercise, onExit }: Readonly<{ exercise: TypingExercise; onE
             Завершено шагов: {attempt.completedSteps} из {exercise.steps.length}. Попробуйте готовый результат в
             предпросмотре.
           </p>
-          <Button
-            type="button"
-            onClick={() => {
-              setAttempt(createAttempt());
-              setNow(0);
-              setRepeat((value) => value + 1);
-            }}
-          >
-            Повторить
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            {onNext && (
+              <Button type="button" onClick={onNext}>
+                Следующее задание
+              </Button>
+            )}
+            <Button
+              type="button"
+              onClick={() => {
+                setAttempt(createAttempt());
+                setNow(0);
+                setRepeat((value) => value + 1);
+              }}
+            >
+              Повторить
+            </Button>
+          </div>
         </section>
       )}
       <div className="grid min-w-0 items-start gap-5 lg:grid-cols-2">

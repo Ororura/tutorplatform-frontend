@@ -21,8 +21,8 @@ const navigation = [
     icon: ClipboardCheck,
   },
   {
-    href: "/student/code-typing",
-    label: "Набор кода",
+    href: "/student/web-practice",
+    label: "Веб-практика",
     icon: Keyboard,
   },
   {
@@ -34,6 +34,7 @@ const navigation = [
 
 function isActivePath(pathname: string, href: string) {
   if (href === "/student") return pathname === href;
+  if (href === "/student/web-practice" && pathname === "/student/code-typing") return true;
 
   return pathname === href || pathname.startsWith(`${href}/`);
 }

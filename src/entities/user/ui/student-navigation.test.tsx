@@ -23,7 +23,7 @@ describe("StudentNavigation", () => {
     expect(screen.getByRole("link", { name: "Мои программы" })).toHaveAttribute("href", "/student/programs");
     expect(screen.getByRole("link", { name: "Домашние задания" })).toHaveAttribute("href", "/student/homework");
     expect(screen.getByRole("link", { name: "Прогресс" })).toHaveAttribute("href", "/student/progress");
-    expect(screen.getByRole("link", { name: "Набор кода" })).toHaveAttribute("href", "/student/code-typing");
+    expect(screen.getByRole("link", { name: "Веб-практика" })).toHaveAttribute("href", "/student/web-practice");
   });
 
   it("marks a nested workspace route as active", () => {

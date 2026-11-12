@@ -12,9 +12,18 @@ type Props = Readonly<{
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  appearance?: "default" | "workspace";
+  label?: string;
 }>;
 
-export function CodeEditor({ language, value, onChange, disabled }: Props) {
+export function CodeEditor({
+  language,
+  value,
+  onChange,
+  disabled,
+  appearance = "default",
+  label = "Код решения",
+}: Props) {
   return (
     <div className="overflow-hidden rounded-control border border-border" data-language={language.toLowerCase()}>
       <Editor
@@ -24,20 +33,24 @@ export function CodeEditor({ language, value, onChange, disabled }: Props) {
             getWorker: () => new Worker("/monaco/editor.worker.js", { type: "module" }),
           };
         }}
-        height="20rem"
+        height={appearance === "workspace" ? "max(24rem, 58vh)" : "20rem"}
+        theme={appearance === "workspace" ? "vs-dark" : "vs"}
         language={
           language === "JAVA" ? "java" : language === "PYTHON" ? "python" : language === "WEB" ? "javascript" : language
         }
         value={value}
         onChange={(next) => onChange(next ?? "")}
         options={{
-          ariaLabel: "Код решения",
+          ariaLabel: label,
           readOnly: disabled,
           automaticLayout: true,
           minimap: { enabled: false },
           scrollBeyondLastLine: false,
           fontSize: 14,
-          tabSize: 4,
+          tabSize: appearance === "workspace" ? 2 : 4,
+          ...(appearance === "workspace"
+            ? ({ insertSpaces: true, wordWrap: "on", padding: { top: 16, bottom: 16 }, lineNumbers: "on" } as const)
+            : {}),
         }}
         loading={
           <p className="p-4 text-sm text-foreground-muted" aria-busy="true">
