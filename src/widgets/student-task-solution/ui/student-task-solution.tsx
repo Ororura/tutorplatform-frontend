@@ -52,7 +52,13 @@ export function StudentTaskSolution(props: SolutionProps) {
   const homeworkItem = props.item;
   const taskId = practice?.task.id ?? homeworkItem?.taskId ?? "";
   const homeworkItemId = homeworkItem?.id;
-  const submissions = useQuery(studentSubmissionQueries.list(taskId, homeworkItemId));
+  const submissions = useQuery(
+    studentSubmissionQueries.list(
+      taskId,
+      homeworkItemId,
+      practice ? { studentProgramId: practice.studentProgramId, topicId: practice.topicId } : undefined,
+    ),
+  );
   const standaloneSubmissions =
     submissions.data?.items.filter(
       (submission) => submission.homeworkItemId === null || submission.homeworkItemId === undefined,
@@ -148,21 +154,16 @@ function TaskSolutionContent({
         </div>
       )}
 
-      {item.task.taskType === "TEXT" && homeworkId && (
+      {item.task.taskType === "TEXT" && (homeworkId || practice) && (
         <TextSolution
           disabled={readOnly}
           homeworkId={homeworkId}
+          practice={practice}
           item={item}
           submittedAnswer={latestSubmission?.textAnswer}
           submissionsPending={submissionsPending}
           submissionsError={submissionsError}
         />
-      )}
-
-      {item.task.taskType === "TEXT" && practice && (
-        <p className="rounded-surface bg-surface-subtle p-4 text-sm text-foreground-muted">
-          Самостоятельная отправка текстовых решений пока недоступна.
-        </p>
       )}
 
       {item.task.taskType === "CODE" &&
@@ -215,13 +216,15 @@ function TaskHeader({ item }: Readonly<{ item: StudentHomeworkItem }>) {
 
 function TextSolution({
   homeworkId,
+  practice,
   item,
   disabled,
   submittedAnswer,
   submissionsPending,
   submissionsError,
 }: Readonly<{
-  homeworkId: string;
+  homeworkId?: string;
+  practice?: PracticeSolutionProps["practice"];
   item: StudentHomeworkItem;
   disabled: boolean;
   submittedAnswer?: string | null;
@@ -271,7 +274,9 @@ function TextSolution({
 
         submit.mutate({
           taskId: item.taskId,
-          homeworkItemId: item.id,
+          ...(practice
+            ? { studentProgramId: practice.studentProgramId, topicId: practice.topicId }
+            : { homeworkItemId: item.id }),
           textAnswer: textAnswer.trim(),
         });
       }}
@@ -645,7 +650,7 @@ function SubmissionHistory({ submissions }: Readonly<{ submissions: StudentSubmi
       <ul className="mt-2 space-y-1 text-sm text-foreground-muted">
         {submissions.map((submission) => (
           <li
-            className="flex min-w-0 flex-col gap-2 rounded-surface border border-border px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
+            className="flex min-w-0 flex-col gap-2 rounded-surface border border-border px-3 py-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between"
             key={submission.id}
           >
             <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
@@ -661,6 +666,17 @@ function SubmissionHistory({ submissions }: Readonly<{ submissions: StudentSubmi
               )}
             </div>
             <SubmissionStatusBadge status={submission.status} />
+            {submission.textAnswer && (
+              <details className="w-full">
+                <summary className="cursor-pointer py-2 text-primary">Ответ и комментарий</summary>
+                <p className="mt-2 wrap-anywhere whitespace-pre-wrap text-foreground">{submission.textAnswer}</p>
+                {submission.reviewComment && (
+                  <p className="mt-3 wrap-anywhere whitespace-pre-wrap">
+                    Комментарий преподавателя: {submission.reviewComment}
+                  </p>
+                )}
+              </details>
+            )}
           </li>
         ))}
       </ul>

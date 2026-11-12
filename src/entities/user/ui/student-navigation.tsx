@@ -1,28 +1,23 @@
 "use client";
 
-import { BookOpenText, ChartNoAxesCombined, ClipboardCheck, Home, Keyboard } from "lucide-react";
+import { BookOpenText, ChartNoAxesCombined, ClipboardCheck, Keyboard } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navigation = [
   {
-    href: "/student",
-    label: "Главная",
-    icon: Home,
-  },
-  {
     href: "/student/programs",
-    label: "Мои программы",
+    label: "Программы",
     icon: BookOpenText,
   },
   {
     href: "/student/homework",
-    label: "Домашние задания",
+    label: "Задания",
     icon: ClipboardCheck,
   },
   {
     href: "/student/web-practice",
-    label: "Веб-практика",
+    label: "Практика",
     icon: Keyboard,
   },
   {

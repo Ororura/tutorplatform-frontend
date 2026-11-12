@@ -43,7 +43,8 @@ describe("AppShell", () => {
       </AppShell>,
     );
     const nav = screen.getByRole("navigation", { name: "Навигация ученика" });
-    expect(within(nav).getByRole("link", { name: "Домашние задания" })).toHaveAttribute("aria-current", "page");
+    expect(within(nav).getByRole("link", { name: "Задания" })).toHaveAttribute("aria-current", "page");
+    fireEvent.click(screen.getByText("Анна Ковалева", { selector: "summary span" }));
     expect(screen.getByText("teacher@example.com")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Выйти" })).toBeInTheDocument();
   });

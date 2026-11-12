@@ -13,6 +13,7 @@ export default defineConfig(config, {
     "teacher-lesson-sessions-demo.spec.ts",
     "student-learning-journey-demo.spec.ts",
     "topic-access-journey.spec.ts",
+    "topic-text-submission.spec.ts",
     "teacher-tasks-homework-demo.spec.ts",
     "execution-journey.spec.ts",
     "java-execution-journey.spec.ts",

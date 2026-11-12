@@ -19,18 +19,17 @@ describe("StudentNavigation", () => {
   it("exposes every student workspace destination", () => {
     render(<StudentNavigation />);
 
-    expect(screen.getByRole("link", { name: "Главная" })).toHaveAttribute("href", "/student");
-    expect(screen.getByRole("link", { name: "Мои программы" })).toHaveAttribute("href", "/student/programs");
-    expect(screen.getByRole("link", { name: "Домашние задания" })).toHaveAttribute("href", "/student/homework");
+    expect(screen.getByRole("link", { name: "Программы" })).toHaveAttribute("href", "/student/programs");
+    expect(screen.getByRole("link", { name: "Задания" })).toHaveAttribute("href", "/student/homework");
     expect(screen.getByRole("link", { name: "Прогресс" })).toHaveAttribute("href", "/student/progress");
-    expect(screen.getByRole("link", { name: "Веб-практика" })).toHaveAttribute("href", "/student/web-practice");
+    expect(screen.getByRole("link", { name: "Практика" })).toHaveAttribute("href", "/student/web-practice");
   });
 
   it("marks a nested workspace route as active", () => {
     render(<StudentNavigation />);
 
-    expect(screen.getByRole("link", { name: "Мои программы" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: "Главная" })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("link", { name: "Программы" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Задания" })).not.toHaveAttribute("aria-current");
   });
 
   it("provides a dedicated accessible label for mobile navigation", () => {
