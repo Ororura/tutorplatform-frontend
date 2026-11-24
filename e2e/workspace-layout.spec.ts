@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 for (const { width, height } of [
+  { width: 2560, height: 1290 },
   { width: 1440, height: 900 },
   { width: 1280, height: 800 },
   { width: 768, height: 1024 },
@@ -102,6 +103,15 @@ for (const { width, height } of [
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/student\/programs$/);
     await expect(page.getByRole("heading", { name: "Мои программы", exact: true })).toBeVisible();
+    const sidebarWidth = (await sidebar.boundingBox())?.width ?? 0;
+    const programs = (await page.getByRole("main").boundingBox())!;
+    expect(programs.x + programs.width / 2).toBeCloseTo((width + sidebarWidth) / 2);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+
+    await page.goto("/student/web-practice");
+    const settings = page.getByRole("region", { name: "Настройка практики" });
+    await expect(settings).toBeVisible();
+    const practice = (await settings.boundingBox())!;
+    expect(practice.x + practice.width / 2).toBeCloseTo((width + sidebarWidth) / 2);
   });
 }

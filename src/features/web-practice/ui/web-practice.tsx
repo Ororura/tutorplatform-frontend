@@ -26,7 +26,7 @@ export function WebPractice() {
   }
 
   return (
-    <main className="page-stack min-w-0">
+    <main className={session ? "page-stack" : "page-reading page-stack"}>
       <header>
         <p className="text-sm font-medium text-primary">Самостоятельная практика</p>
         <h1 className="page-title mt-1">Практика вёрстки</h1>
@@ -35,7 +35,7 @@ export function WebPractice() {
         </p>
       </header>
       {!session || !task ? (
-        <section className="surface max-w-3xl space-y-5" aria-label="Настройка практики">
+        <section className="surface space-y-5" aria-label="Настройка практики">
           <div className="space-y-2 text-sm font-medium">
             <label htmlFor="practice-technology" className="block">
               Технология
