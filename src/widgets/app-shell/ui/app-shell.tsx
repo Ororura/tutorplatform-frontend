@@ -14,12 +14,15 @@ import {
   Settings2,
   ShieldCheck,
   Users,
+  UserRound,
 } from "lucide-react";
 import { StudentNavigation, useCurrentUserQuery } from "@/entities/user";
 import { LogoutButton } from "@/features/auth/logout";
 import { AppBrand } from "@/shared/ui/app-brand";
 import { Button } from "@/shared/ui/button";
 import { Sheet, SheetTrigger, SheetContent, SheetTitle, SheetDescription } from "@/shared/ui/sheet";
+
+import styles from "./student-shell.module.css";
 
 type Role = "teacher" | "student" | "admin";
 const labels: Record<Role, string> = {
@@ -111,8 +114,32 @@ export function AppShell({ role, children }: Readonly<{ role: Role; children: Re
       </div>
     </div>
   );
+  const brand =
+    role === "student" ? (
+      <Link href="/student" aria-label="Tutor Platform — главная" className={styles.brand}>
+        <span className={styles.mark} aria-hidden="true">
+          <i />
+          <i />
+        </span>
+        Tutor Platform
+      </Link>
+    ) : (
+      <AppBrand href={`/${role}`} subtitle={labels[role]} />
+    );
+  const profile =
+    role === "student" ? (
+      <details className={styles.profile}>
+        <summary>
+          <UserRound size={22} aria-hidden="true" />
+          <span>{name}</span>
+        </summary>
+        {footer}
+      </details>
+    ) : (
+      footer
+    );
   return (
-    <div className="min-h-dvh">
+    <div className={role === "student" ? styles.student : "min-h-dvh"}>
       <a
         href="#workspace-content"
         className="sr-only fixed left-4 top-4 z-60 rounded-md bg-primary px-4 py-3 text-primary-foreground focus:not-sr-only"
@@ -121,19 +148,23 @@ export function AppShell({ role, children }: Readonly<{ role: Role; children: Re
       </a>
       <aside
         aria-label="Боковая панель"
+        data-shell-sidebar
         className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-border bg-sidebar xl:flex"
       >
-        <div className="flex h-20 items-center px-5">
-          <AppBrand href={`/${role}`} subtitle={labels[role]} />
-        </div>
+        <div className="flex h-20 items-center px-5">{brand}</div>
         <div className="flex-1 overflow-y-auto p-3">
-          <p className="mb-3 px-3 text-xs font-medium text-muted-foreground">Рабочее пространство</p>
+          {role !== "student" && (
+            <p className="mb-3 px-3 text-xs font-medium text-muted-foreground">Рабочее пространство</p>
+          )}
           <RoleNavigation role={role} />
         </div>
-        {footer}
+        {profile}
       </aside>
       <div className="min-w-0 xl:pl-60">
-        <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-card px-(--page-gutter)">
+        <header
+          data-shell-header
+          className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-card px-(--page-gutter)"
+        >
           <div className="xl:hidden">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
@@ -155,7 +186,9 @@ export function AppShell({ role, children }: Readonly<{ role: Role; children: Re
                 }}
               >
                 <div className="p-5 pr-12">
-                  <SheetTitle className="text-base font-semibold">Умнее Вместе</SheetTitle>
+                  <SheetTitle className="text-base font-semibold">
+                    {role === "student" ? "Tutor Platform" : "Умнее Вместе"}
+                  </SheetTitle>
                   <SheetDescription className="mt-1 text-xs text-muted-foreground">{labels[role]}</SheetDescription>
                 </div>
                 <div className="flex-1 overflow-y-auto p-3">
@@ -165,9 +198,7 @@ export function AppShell({ role, children }: Readonly<{ role: Role; children: Re
               </SheetContent>
             </Sheet>
           </div>
-          <div className="xl:hidden">
-            <AppBrand href={`/${role}`} subtitle={labels[role]} />
-          </div>
+          <div className="xl:hidden">{brand}</div>
           <p className="hidden text-sm text-muted-foreground xl:block">{labels[role]}</p>
           <span className="ml-auto hidden max-w-60 truncate text-sm font-medium sm:block">{name}</span>
         </header>

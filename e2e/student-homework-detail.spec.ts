@@ -51,8 +51,9 @@ test("real completed homework opens from the list and preserves answers, statuse
   await screenshot(page, "student-dashboard-real-1440");
   const homework = await getHomework(page, "COMPLETED");
   await page.getByRole("link", { name: "Все задания", exact: true }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Домашние задания" })).toBeVisible();
-  const homeworkLink = page.locator(`main a[href="/student/homework/${homework.id}"]`);
+  await expect(page.getByRole("heading", { level: 1, name: "Задания" })).toBeVisible();
+  await page.getByRole("tab", { name: "Завершённые", exact: true }).click();
+  const homeworkLink = page.locator(`main a[href="/student/homework/${homework.id}"]`).first();
   await expect(homeworkLink).toBeVisible();
   await screenshot(page, "student-homework-list-real-1440");
   await homeworkLink.click();

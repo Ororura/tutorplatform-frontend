@@ -83,7 +83,7 @@ for (const { width, height } of [
     await page.goto("/student");
     await expect(page.getByText("Невыполненных заданий нет")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
-    const brand = page.getByRole("link", { name: "Умнее Вместе — главная" });
+    const brand = page.getByRole("link", { name: "Tutor Platform — главная" });
     if (width < 1280) {
       const menu = page.getByRole("button", { name: "Открыть меню" });
       await menu.focus();
@@ -96,12 +96,10 @@ for (const { width, height } of [
       name: width >= 1280 ? "Навигация ученика" : "Мобильная навигация ученика",
       exact: true,
     });
-    const home = mainNavigation.getByRole("link", { name: "Главная", exact: true });
+    const home = mainNavigation.getByRole("link", { name: "Программы", exact: true });
 
     await expect(home).toBeFocused();
     expect(await home.evaluate((element) => getComputedStyle(element).outlineStyle)).toBe("solid");
-    await page.keyboard.press("Tab");
-    await expect(mainNavigation.getByRole("link", { name: "Мои программы", exact: true })).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/student\/programs$/);
     const programsHeading = page.getByRole("heading", { name: "Мои программы", exact: true });
@@ -117,5 +115,11 @@ for (const { width, height } of [
     await expect(progressHeading).toBeVisible();
     expect((await progressHeading.boundingBox())!.x).toBe(programsBox!.x);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+
+    await page.goto("/student/web-practice");
+    const settings = page.getByRole("region", { name: "Настройка практики" });
+    await expect(settings).toBeVisible();
+    const practice = (await settings.boundingBox())!;
+    expect(practice.x + practice.width / 2).toBeCloseTo((width + sidebarWidth) / 2);
   });
 }

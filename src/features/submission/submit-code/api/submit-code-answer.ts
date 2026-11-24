@@ -47,7 +47,7 @@ export function useSubmitCodeAnswerMutation(homeworkId?: string) {
       await Promise.all([
         ...homeworkInvalidations,
         queryClient.invalidateQueries({
-          queryKey: studentSubmissionQueries.list(input.taskId, input.homeworkItemId).queryKey,
+          queryKey: [...studentSubmissionQueries.lists(), input.taskId],
         }),
       ]);
     },

@@ -1,13 +1,14 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { StudentHomeworkSummary } from "@/entities/homework";
 
 import { StudentHomeworksView } from "./student-homeworks-view";
 
-const mocks = vi.hoisted(() => ({ useQuery: vi.fn(), useInfiniteQuery: vi.fn() }));
+const mocks = vi.hoisted(() => ({ useQuery: vi.fn(), useInfiniteQuery: vi.fn(), useQueries: vi.fn() }));
 vi.mock("@tanstack/react-query", () => ({
   useQuery: mocks.useQuery,
+  useQueries: mocks.useQueries,
   useInfiniteQuery: mocks.useInfiniteQuery,
   queryOptions: (value: unknown) => value,
   infiniteQueryOptions: (value: unknown) => value,
@@ -71,148 +72,107 @@ describe("StudentHomeworksView", () => {
       const params = options.queryKey.at(-1) as { status: string };
       return results.get(params.status);
     });
+    mocks.useQueries.mockReturnValue([]);
     mocks.useQuery.mockReturnValue({ data: [{ id: "program-1", title: "Реальная программа" }], isError: false });
   });
   afterEach(() => vi.useRealTimers());
 
-  it("renders the page heading and action-first section order without workload statistics", () => {
+  it("shows active assignments in a quiet list with real program names and deadlines", () => {
     render(<StudentHomeworksView />);
-    expect(screen.getByRole("heading", { level: 1, name: "Домашние задания" })).toBeInTheDocument();
-    expect(screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent)).toEqual([
-      "Требуют внимания · 1",
-      "Предстоящие · 1",
-      "История · 2",
-    ]);
-    expect(screen.queryByText("Ваша нагрузка")).not.toBeInTheDocument();
-    expect(screen.queryByText(/Назначено/)).not.toBeInTheDocument();
-  });
-  it("derives overdue from the deadline even when the API overdue flag is false", () => {
-    render(<StudentHomeworksView />);
-    const attention = screen.getByRole("region", { name: "Требуют внимания · 1" });
-    expect(within(attention).getByRole("heading", { name: "Просроченная работа" })).toBeInTheDocument();
-    expect(within(attention).getByText("Просрочено")).toBeInTheDocument();
-    expect(within(attention).getByText(/24 сентября, \d{2}:00/).parentElement).toHaveTextContent(
-      /Срок был 24 сентября/,
-    );
-    expect(within(attention).getByRole("link", { name: "Открыть: Просроченная работа" })).toHaveAttribute(
+    expect(screen.getByRole("heading", { level: 1, name: "Задания" })).toBeVisible();
+    expect(screen.getByRole("tab", { name: "В работе" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getAllByRole("article")).toHaveLength(2);
+    expect(screen.getAllByText(/Реальная программа/)).toHaveLength(2);
+    expect(screen.getByText(/Срок был/)).toHaveTextContent(/24 сентября.*Просрочено/);
+    expect(screen.getByRole("link", { name: "Продолжить: Просроченная работа" })).toHaveAttribute(
       "href",
       "/student/homework/overdue",
     );
+    expect(screen.queryByText("Готовая работа")).not.toBeInTheDocument();
   });
-  it("places future assignments in upcoming with real program metadata and a detail CTA", () => {
+  it("shows completed and cancelled work only in the completed tab", () => {
     render(<StudentHomeworksView />);
-    const upcoming = screen.getByRole("region", { name: "Предстоящие · 1" });
-    expect(within(upcoming).getByRole("article")).toHaveTextContent("Реальная программа · 4 задания");
-    expect(within(upcoming).getByText(/3 октября, \d{2}:00/).parentElement).toHaveTextContent(/До 3 октября/);
-    expect(within(upcoming).getByRole("link", { name: "Открыть: Будущая работа" })).toHaveAttribute(
+    fireEvent.click(screen.getByRole("tab", { name: "Завершённые" }));
+    expect(screen.getByText("Готовая работа")).toBeVisible();
+    expect(screen.getByText("Отменённая работа")).toBeVisible();
+    expect(screen.getByText("Отменено")).toBeVisible();
+    expect(screen.getByText("Выполнено")).toBeVisible();
+    expect(screen.queryByText("Будущая работа")).not.toBeInTheDocument();
+  });
+  it("derives the review tab from submissions and leaves unfinished or failed work active", () => {
+    mocks.useQueries.mockReturnValue([
+      {
+        data: {
+          id: "assigned",
+          items: [
+            { required: true, latestSubmissionStatus: "NEEDS_REVIEW", passed: false },
+            { required: true, passed: true },
+          ],
+        },
+      },
+      { data: { id: "overdue", items: [{ required: true, latestSubmissionStatus: "FAILED", passed: false }] } },
+    ]);
+    render(<StudentHomeworksView />);
+    expect(screen.queryByText("Будущая работа")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "На проверке" }));
+    expect(screen.getByRole("article")).toHaveAccessibleName("Будущая работа");
+    expect(screen.queryByText("Просроченная работа")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Открыть: Будущая работа" })).toHaveAttribute(
       "href",
       "/student/homework/assigned",
     );
-    expect(within(upcoming).queryByText("Просрочено")).not.toBeInTheDocument();
   });
-  it("places completed and cancelled assignments in history with text statuses and detail routes", () => {
+  it("supports arrow key tab navigation and keeps the panel associated with its tab", () => {
     render(<StudentHomeworksView />);
-    const history = screen.getByRole("region", { name: "История · 2" });
-    expect(within(history).getByRole("link", { name: /Готовая работа/ })).toHaveAttribute(
-      "href",
-      "/student/homework/completed",
-    );
-    expect(within(history).getByRole("link", { name: /Отменённая работа/ })).toHaveAttribute(
-      "href",
-      "/student/homework/cancelled",
-    );
-    expect(within(history).getByText("Выполнено")).toBeInTheDocument();
-    expect(within(history).getByText("Отменено")).toBeInTheDocument();
-    expect(within(history).queryByText("Открыть")).not.toBeInTheDocument();
+    fireEvent.keyDown(screen.getByRole("tab", { name: "В работе" }), { key: "ArrowRight" });
+    expect(screen.getByRole("tab", { name: "На проверке" })).toHaveFocus();
+    expect(screen.getByRole("tabpanel")).toHaveAccessibleName("На проверке");
+    expect(screen.getByText("Нет заданий на проверке")).toBeVisible();
   });
-  it.each([
-    ["Требуют внимания", items.filter((item) => item.id !== "overdue")],
-    ["Предстоящие", items.filter((item) => item.id !== "assigned")],
-    ["История", items.filter((item) => item.status === "ASSIGNED")],
-  ])("omits an empty %s section", (title, remaining) => {
-    setItems(remaining);
+  it("keeps undated work after dated assignments", () => {
+    setItems([{ ...base, id: "undated", title: "Без даты", dueAt: null }, base]);
     render(<StudentHomeworksView />);
-    expect(screen.queryByRole("region", { name: new RegExp(title) })).not.toBeInTheDocument();
+    expect(screen.getAllByRole("article").map((item) => item.getAttribute("aria-label"))).toEqual([
+      "Будущая работа",
+      "Без даты",
+    ]);
   });
-  it("renders one calm empty state only when every homework query succeeded and returned no items", () => {
-    setItems([]);
-    render(<StudentHomeworksView />);
-    expect(screen.getByRole("heading", { name: "Домашних заданий пока нет" })).toBeInTheDocument();
-    expect(screen.getByText("Когда преподаватель назначит новое задание, оно появится здесь.")).toBeInTheDocument();
-    expect(screen.queryByRole("region")).not.toBeInTheDocument();
-  });
-  it.each([null, undefined])("places an assignment with dueAt=%s after dated upcoming work", (dueAt) => {
-    setItems([{ ...base, id: "undated", title: "Без даты", dueAt, overdue: true }, base]);
-    render(<StudentHomeworksView />);
-    const upcoming = screen.getByRole("region", { name: "Предстоящие · 2" });
-    expect(
-      within(upcoming)
-        .getAllByRole("heading", { level: 3 })
-        .map((heading) => heading.textContent),
-    ).toEqual(["Будущая работа", "Без даты"]);
-    expect(within(upcoming).getByText("Без срока")).toBeInTheDocument();
-    expect(screen.queryByText("Просрочено")).not.toBeInTheDocument();
-  });
-  it("falls back to item counts when optional programs cannot be loaded", () => {
-    mocks.useQuery.mockReturnValue({ data: undefined, isError: true });
-    render(<StudentHomeworksView />);
-    expect(screen.getAllByText("4 задания")).toHaveLength(2);
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-  });
-  it("previews only three history rows, expands and collapses with truthful visible counts", () => {
-    setItems(
-      Array.from({ length: 6 }, (_, i) => ({
-        ...base,
-        id: String(i),
-        title: `История ${i}`,
-        status: "COMPLETED",
-        assignedAt: `2026-09-${20 + i}T10:00:00Z`,
-      })),
-    );
-    render(<StudentHomeworksView />);
-    expect(screen.getByRole("region", { name: "История · 3" }).querySelectorAll("li")).toHaveLength(3);
-    expect(screen.getByRole("link", { name: /История 5/ })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /История 0/ })).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Показать все" }));
-    expect(screen.getByRole("region", { name: "История · 6" }).querySelectorAll("li")).toHaveLength(6);
-    expect(screen.getByRole("button", { name: "Свернуть" })).toHaveAttribute("aria-expanded", "true");
-    fireEvent.click(screen.getByRole("button", { name: "Свернуть" }));
-    expect(screen.getByRole("region", { name: "История · 3" })).toBeInTheDocument();
-  });
-  it("loads further active and historical server pages without replacing current rows", () => {
+  it("loads more assignments in both active and review tabs even when no matching rows are loaded", () => {
     results.get("ASSIGNED")!.hasNextPage = true;
+    render(<StudentHomeworksView />);
+    fireEvent.click(screen.getByRole("tab", { name: "На проверке" }));
+    fireEvent.click(screen.getByRole("button", { name: "Загрузить ещё задания" }));
+    expect(results.get("ASSIGNED")!.fetchNextPage).toHaveBeenCalledOnce();
+  });
+  it("loads both history streams without dropping previously loaded work", () => {
     results.get("COMPLETED")!.hasNextPage = true;
     results.get("CANCELLED")!.hasNextPage = true;
     render(<StudentHomeworksView />);
+    fireEvent.click(screen.getByRole("tab", { name: "Завершённые" }));
     fireEvent.click(screen.getByRole("button", { name: "Загрузить ещё задания" }));
-    expect(results.get("ASSIGNED")!.fetchNextPage).toHaveBeenCalledOnce();
-    fireEvent.click(screen.getByRole("button", { name: "Показать все" }));
-    fireEvent.click(screen.getByRole("button", { name: "Загрузить ещё" }));
     expect(results.get("COMPLETED")!.fetchNextPage).toHaveBeenCalledOnce();
     expect(results.get("CANCELLED")!.fetchNextPage).toHaveBeenCalledOnce();
-    expect(screen.getByText("Готовая работа")).toBeInTheDocument();
+    expect(screen.getByText("Готовая работа")).toBeVisible();
   });
-  it("retains loaded assignments and retries only failed homework queries", () => {
-    const cancelled = results.get("CANCELLED")!;
-    cancelled.isError = true;
+  it("keeps partial data and retries only the failed selected query", () => {
+    results.get("ASSIGNED")!.isError = true;
     render(<StudentHomeworksView />);
     fireEvent.click(screen.getByRole("button", { name: "Повторить" }));
-    expect(cancelled.refetch).toHaveBeenCalledOnce();
-    expect(results.get("ASSIGNED")!.refetch).not.toHaveBeenCalled();
-    expect(screen.getByText("Просроченная работа")).toBeInTheDocument();
-    expect(screen.queryByText("Домашних заданий пока нет")).not.toBeInTheDocument();
+    expect(results.get("ASSIGNED")!.refetch).toHaveBeenCalledOnce();
+    expect(results.get("CANCELLED")!.refetch).not.toHaveBeenCalled();
+    expect(screen.getByText("Просроченная работа")).toBeVisible();
   });
-  it("shows an accessible skeleton while loading and does not announce an empty list", () => {
+  it("shows a loading announcement instead of an empty state", () => {
     setItems([]);
     results.get("ASSIGNED")!.isPending = true;
     render(<StudentHomeworksView />);
     expect(screen.getByRole("status")).toHaveAttribute("aria-busy", "true");
-    expect(screen.getByText("Загружаем домашние задания…")).toBeInTheDocument();
-    expect(screen.queryByText("Домашних заданий пока нет")).not.toBeInTheDocument();
+    expect(screen.queryByText("Заданий в работе пока нет")).not.toBeInTheDocument();
   });
-  it("uses links for navigation with no nested interactive controls", () => {
-    const { container } = render(<StudentHomeworksView />);
-    expect(container.querySelector("a button, a a, button a")).toBeNull();
-    expect(screen.getByRole("link", { name: "Открыть: Просроченная работа" })).toHaveTextContent("Открыть");
+  it("falls back to real item counts when programs fail", () => {
+    mocks.useQuery.mockReturnValue({ isError: true });
+    render(<StudentHomeworksView />);
+    expect(screen.getAllByText(/4 задания/)).toHaveLength(2);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 });

@@ -30,6 +30,24 @@ describe("student solution API", () => {
     });
   });
 
+  it("submits standalone TEXT with an exclusive topic context", async () => {
+    postMock.mockResolvedValue({
+      data: { id: "submission-1", status: "NEEDS_REVIEW" } as never,
+      error: undefined,
+      response: new Response(),
+    });
+    await submitTextAnswer({
+      taskId: "task-text",
+      studentProgramId: "program-1",
+      topicId: "topic-1",
+      textAnswer: "Ответ",
+    });
+    expect(postMock).toHaveBeenCalledWith("/api/v1/student/tasks/{taskId}/submissions", {
+      params: { path: { taskId: "task-text" } },
+      body: { studentProgramId: "program-1", topicId: "topic-1", textAnswer: "Ответ" },
+    });
+  });
+
   it("keeps CODE run and persisted CODE submit as distinct generated operations", async () => {
     postMock.mockResolvedValue({ data: { status: "PASSED" } as never, error: undefined, response: new Response() });
 

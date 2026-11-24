@@ -9,11 +9,12 @@ export type StudentSubmissionPage = components["schemas"]["StudentSubmissionPage
 export async function getStudentTaskSubmissions(
   taskId: string,
   homeworkItemId?: string,
+  practice?: { studentProgramId: string; topicId: string },
 ): Promise<StudentSubmissionPage> {
   const { data, error, response } = await apiClient.GET("/api/v1/student/tasks/{taskId}/submissions", {
     params: {
       path: { taskId },
-      query: { ...(homeworkItemId ? { homeworkItemId } : {}), page: 0, size: 20 },
+      query: { ...(homeworkItemId ? { homeworkItemId } : (practice ?? {})), page: 0, size: 20 },
     },
   });
   if (error) throw new ApiClientError(response.status, error);
@@ -33,9 +34,14 @@ export const studentSubmissionQueries = {
     queryOptions({ queryKey: ["student-submissions", "detail", id], queryFn: () => getStudentSubmission(id) }),
   all: () => ["student-submissions"] as const,
   lists: () => [...studentSubmissionQueries.all(), "list"] as const,
-  list: (taskId: string, homeworkItemId?: string) =>
+  list: (taskId: string, homeworkItemId?: string, practice?: { studentProgramId: string; topicId: string }) =>
     queryOptions({
-      queryKey: [...studentSubmissionQueries.lists(), taskId, homeworkItemId ?? "standalone"] as const,
-      queryFn: () => getStudentTaskSubmissions(taskId, homeworkItemId),
+      queryKey: [
+        ...studentSubmissionQueries.lists(),
+        taskId,
+        homeworkItemId ?? "standalone",
+        ...(practice ? [practice.studentProgramId, practice.topicId] : []),
+      ] as const,
+      queryFn: () => getStudentTaskSubmissions(taskId, homeworkItemId, practice),
     }),
 };
