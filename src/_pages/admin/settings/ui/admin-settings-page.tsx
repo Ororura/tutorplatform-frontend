@@ -1,23 +1,19 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 
 import { platformSettingsQueries } from "@/entities/platform-settings";
 import { RegistrationModeForm } from "@/features/platform/change-registration-mode";
 import { Button } from "@/shared/ui/button";
-import { PageHeader } from "@/shared/ui/page-header";
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 
 export function AdminSettingsPage() {
   const settings = useQuery(platformSettingsQueries.admin());
 
   return (
     <main className="page-form page-stack">
-      <Link href="/admin" className="w-fit text-sm font-medium text-foreground-muted transition hover:text-foreground">
-        ← Администрирование
-      </Link>
       <PageHeader
-        eyebrow="Умнее Вместе / Администрирование"
+        navigation={<PageBackLink href="/admin">Администрирование</PageBackLink>}
         title="Настройки платформы"
         description="Управление доступом к регистрации преподавателей."
       />

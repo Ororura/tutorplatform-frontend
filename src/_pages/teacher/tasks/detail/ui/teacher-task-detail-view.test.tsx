@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TeacherTaskDetailView } from "./teacher-task-detail-view";
 
@@ -77,6 +77,7 @@ describe("TeacherTaskDetailView", () => {
     expect(screen.queryByRole("link", { name: "опасная ссылка" })).not.toBeInTheDocument();
     expect(screen.getByText("a = int(input())")).toBeInTheDocument();
     expect(screen.getByText("Скрытый · NORMALIZED")).toBeInTheDocument();
-    expect(screen.getAllByRole("listitem")[0]).toHaveTextContent("Открытый · EXACT");
+    const tests = screen.getByRole("region", { name: "Тесты" });
+    expect(within(tests).getAllByRole("listitem")[0]).toHaveTextContent("Открытый · EXACT");
   });
 });

@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeader } from "@/shared/ui/page-header";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { CircleAlert, ClipboardCheck, Clock3 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -46,20 +47,7 @@ export function StudentHomeworksView() {
 
   return (
     <main className="page-stack">
-      <header className="py-2">
-        <div className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-surface-subtle text-(--text-secondary)">
-            <ClipboardCheck size={24} aria-hidden="true" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-(--text-secondary)">Учебный кабинет</p>
-            <h1 className="page-title mt-1 wrap-break-word">Домашние задания</h1>
-            <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
-              Задания преподавателя и результаты их проверки.
-            </p>
-          </div>
-        </div>
-      </header>
+      <PageHeader title="Домашние задания" description="Задания преподавателя и результаты их проверки." />
 
       {pending && <StudentHomeworkSkeleton />}
       {failed && (

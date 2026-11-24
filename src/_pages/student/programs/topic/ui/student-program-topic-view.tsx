@@ -1,7 +1,8 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, ArrowRight, BookOpenText, ChevronRight, Code2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight, Code2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -141,13 +142,7 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
             </Button>
           )}
         </section>
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-primary"
-          href={`/student/programs/${studentProgramId}`}
-        >
-          <ArrowLeft size={16} aria-hidden="true" />
-          Вернуться к программе
-        </Link>
+        <PageBackLink href={`/student/programs/${studentProgramId}`}>Вернуться к программе</PageBackLink>
       </main>
     );
   }
@@ -166,46 +161,41 @@ export function StudentProgramTopicView({ studentProgramId, topicId }: Readonly<
 
   return (
     <main className="page-content page-stack min-w-0">
-      <section className="py-2">
-        <nav aria-label="Хлебные крошки">
-          <ol className="flex flex-wrap items-center wrap-break-word gap-x-2 gap-y-1 text-sm text-(--text-secondary)">
-            <li className="min-w-0">
-              <Link className="transition hover:text-primary" href="/student/programs">
-                Мои программы
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li className="min-w-0">
-              <Link className="transition hover:text-primary" href={`/student/programs/${studentProgramId}`}>
-                {program.data.title}
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>{topic.data.moduleTitle}</li>
-            <li aria-hidden="true">/</li>
-            <li className="font-medium text-foreground-muted" aria-current="page">
-              {topic.data.title}
-            </li>
-          </ol>
-        </nav>
-
-        <div className="mt-6 flex items-start gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-            <BookOpenText size={22} aria-hidden="true" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-primary">{topic.data.moduleTitle}</p>
-            <h1 className="page-title mt-1 wrap-break-word">{topic.data.title}</h1>
-            <div className="mt-4 text-sm text-foreground-muted">
-              {topic.data.description ? (
-                <SafeMarkdown>{topic.data.description}</SafeMarkdown>
-              ) : (
-                <p>Описание темы пока не добавлено.</p>
-              )}
-            </div>
+      <PageHeader
+        title={topic.data.title}
+        navigation={
+          <nav aria-label="Хлебные крошки">
+            <ol className="flex flex-wrap items-center wrap-break-word gap-x-2 gap-y-1 text-sm text-(--text-secondary)">
+              <li className="min-w-0">
+                <Link className="transition hover:text-primary" href="/student/programs">
+                  Мои программы
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li className="min-w-0">
+                <Link className="transition hover:text-primary" href={`/student/programs/${studentProgramId}`}>
+                  {program.data.title}
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li>{topic.data.moduleTitle}</li>
+              <li aria-hidden="true">/</li>
+              <li className="font-medium text-foreground-muted" aria-current="page">
+                {topic.data.title}
+              </li>
+            </ol>
+          </nav>
+        }
+        details={
+          <div className="text-sm text-foreground-muted">
+            {topic.data.description ? (
+              <SafeMarkdown>{topic.data.description}</SafeMarkdown>
+            ) : (
+              <p>Описание темы пока не добавлено.</p>
+            )}
           </div>
-        </div>
-      </section>
+        }
+      />
 
       <section className="surface" aria-labelledby="topic-materials-heading">
         <h2 className="section-title" id="topic-materials-heading">

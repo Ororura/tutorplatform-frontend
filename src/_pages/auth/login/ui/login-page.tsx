@@ -1,3 +1,4 @@
+import { PageHeader } from "@/shared/ui/page-header";
 import { Suspense } from "react";
 import { GuestGuard } from "@/entities/user";
 import { LoginForm } from "@/features/auth/login";
@@ -8,8 +9,7 @@ export function LoginPage() {
   return (
     <GuestGuard>
       <AuthShell>
-        <h1 className="page-title">Вход</h1>
-        <p className="page-description mt-2">Войдите в аккаунт преподавателя или ученика.</p>
+        <PageHeader title="Вход" description="Войдите в аккаунт преподавателя или ученика." />
         <Suspense
           fallback={
             <div className="mt-6">

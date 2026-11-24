@@ -2,7 +2,7 @@ import { Input } from "@/shared/ui/form-controls";
 import Link from "next/link";
 
 import type { ProgramTopic, StudentProgramDetails } from "../api/student-program-queries";
-import { formatProgramDate, programStatusLabels } from "../model/student-program-labels";
+import { formatProgramDate } from "../model/student-program-labels";
 import { TopicProgressBadge } from "./topic-progress-badge";
 
 type TopicSelection = {
@@ -23,22 +23,8 @@ export function StudentProgramDetail({
 }>) {
   return (
     <>
-      <header className="rounded-inset border border-border bg-surface p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium text-foreground-muted">{program.subject.name}</p>
-
-            <h1 className="page-title mt-1">{program.title}</h1>
-
-            {program.description && (
-              <p className="mt-3 max-w-3xl whitespace-pre-line text-foreground-muted">{program.description}</p>
-            )}
-          </div>
-
-          <span className="badge bg-surface-subtle">{programStatusLabels[program.status]}</span>
-        </div>
-
-        <dl className="mt-5 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+      <section className="surface">
+        <dl className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
           <div>
             <dt className="text-foreground-muted">Начата</dt>
 
@@ -59,7 +45,7 @@ export function StudentProgramDetail({
             <dd className="font-medium">{program.reportIntervalMinutes} мин</dd>
           </div>
         </dl>
-      </header>
+      </section>
 
       <section className="space-y-5" aria-labelledby="program-structure-heading">
         <h2 id="program-structure-heading" className="section-title">

@@ -1,5 +1,6 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
@@ -36,15 +37,12 @@ export function TeacherStudentSessionEditView({
     );
   return (
     <main className="page-form page-stack">
-      <div>
-        <Link
-          className="text-sm text-foreground-muted underline underline-offset-4"
-          href={`/teacher/students/${studentId}/sessions/${sessionId}`}
-        >
-          ← К занятию
-        </Link>
-        <h1 className="page-title mt-4">Редактировать занятие</h1>
-      </div>
+      <PageHeader
+        title="Редактировать занятие"
+        navigation={
+          <PageBackLink href={`/teacher/students/${studentId}/sessions/${sessionId}`}>К занятию</PageBackLink>
+        }
+      />
       <SessionForm studentId={studentId} session={session.data} />
     </main>
   );

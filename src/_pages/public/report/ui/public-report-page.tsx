@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Clock3, FileText, Link2Off } from "lucide-react";
+import { Clock3 } from "lucide-react";
 
 import {
   formatReportAssessment,
@@ -15,6 +15,9 @@ import {
 import { ReportPdfDownloadButton } from "@/features/report/download";
 import { ApiClientError } from "@/shared/api/client";
 import { Button } from "@/shared/ui/button";
+import { LoadingState } from "@/shared/ui/feedback";
+import { PageHeader } from "@/shared/ui/page-header";
+import { PublicPageShell } from "../../ui/public-page-shell";
 
 const assessmentItems = [
   ["Понимание", "understandingAverage"],
@@ -26,33 +29,25 @@ const assessmentItems = [
 export function PublicReportPage({ token }: Readonly<{ token: string }>) {
   const report = useQuery(reportQueries.publicDetail(token));
 
-  if (report.isPending) return <LoadingState />;
-  if (report.isError) return <ErrorState error={report.error} onRetry={() => void report.refetch()} />;
-
-  return <ReportContent report={report.data} token={token} />;
+  return (
+    <PublicPageShell>
+      {report.isPending && <LoadingState label="Загружаем отчёт">Загружаем отчёт…</LoadingState>}
+      {report.isError && <ReportError error={report.error} onRetry={() => void report.refetch()} />}
+      {report.data && !report.isError && <ReportContent report={report.data} token={token} />}
+    </PublicPageShell>
+  );
 }
 
 function ReportContent({ report, token }: Readonly<{ report: PublicProgressReport; token: string }>) {
   const metrics = report.snapshot.metrics;
   return (
-    <main className="app-container app-content page-content page-stack">
-      <header className="pb-2">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-start gap-3 sm:gap-4">
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary sm:size-12">
-              <FileText size={21} aria-hidden="true" />
-            </span>
-            <div>
-              <p className="text-sm font-medium text-primary">Отчёт об успеваемости</p>
-              <h1 className="page-title mt-1">{formatReportPeriod(report.periodStartedAt, report.periodEndedAt)}</h1>
-              <p className="mt-2 text-sm leading-6 text-foreground-muted">
-                Исторический отчёт: данные зафиксированы при публикации и не пересчитываются.
-              </p>
-            </div>
-          </div>
-          <ReportPdfDownloadButton audience="parent" token={token} />
-        </div>
-      </header>
+    <>
+      <PageHeader
+        title={formatReportPeriod(report.periodStartedAt, report.periodEndedAt)}
+        eyebrow="Отчёт об успеваемости"
+        description="Исторический отчёт: данные зафиксированы при публикации и не пересчитываются."
+        actions={<ReportPdfDownloadButton audience="parent" token={token} />}
+      />
 
       <section className="surface">
         <h2 className="section-title">Результаты периода</h2>
@@ -117,46 +112,27 @@ function ReportContent({ report, token }: Readonly<{ report: PublicProgressRepor
           <ReadonlyText label="План на следующий период" value={report.nextPeriodPlan} />
         </dl>
       </section>
-    </main>
+    </>
   );
 }
 
-function LoadingState() {
-  return (
-    <main
-      className="mx-auto min-h-screen w-full max-w-5xl space-y-4 px-4 py-5 sm:px-6 sm:py-10"
-      aria-busy="true"
-      aria-label="Загружаем отчёт"
-    >
-      <div className="h-44 animate-pulse rounded-surface bg-surface sm:h-48" />
-      <div className="grid gap-3 min-[420px]:grid-cols-2 lg:grid-cols-5">
-        {[0, 1, 2, 3, 4].map((item) => (
-          <div className="h-28 animate-pulse rounded-surface bg-surface" key={item} />
-        ))}
-      </div>
-      <p className="text-sm text-foreground-muted">Загружаем отчёт…</p>
-    </main>
-  );
-}
-
-function ErrorState({ error, onRetry }: Readonly<{ error: Error; onRetry: () => void }>) {
+function ReportError({ error, onRetry }: Readonly<{ error: Error; onRetry: () => void }>) {
   const status = error instanceof ApiClientError ? error.status : undefined;
   const terminal = status === 404 || status === 410;
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-2xl items-center px-4 py-8 sm:px-6">
-      <div
-        className={`w-full rounded-surface border p-6 text-center sm:p-8 ${terminal ? "border-border bg-surface-subtle" : "border-danger-border bg-danger-subtle"}`}
-        role="alert"
-      >
-        <Link2Off className="mx-auto text-foreground-subtle" size={32} aria-hidden="true" />
-        <h1 className="page-title mt-4">
-          {status === 404
+    <div className="page-stack" role="alert">
+      <PageHeader
+        title={
+          status === 404
             ? "Отчёт не найден"
             : status === 410
               ? "Ссылка больше не действует"
-              : "Не удалось загрузить отчёт"}
-        </h1>
-        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-foreground-muted">
+              : "Не удалось загрузить отчёт"
+        }
+        eyebrow="Отчёт об успеваемости"
+      />
+      <div className="surface space-y-3">
+        <p className="page-description">
           {status === 404
             ? "Проверьте адрес или запросите новую ссылку у преподавателя."
             : status === 410
@@ -164,12 +140,12 @@ function ErrorState({ error, onRetry }: Readonly<{ error: Error; onRetry: () => 
               : "Произошла ошибка сервера. Попробуйте ещё раз."}
         </p>
         {!terminal && (
-          <Button className="mt-5" type="button" variant="secondary" onClick={onRetry}>
+          <Button type="button" variant="secondary" onClick={onRetry}>
             Повторить
           </Button>
         )}
       </div>
-    </main>
+    </div>
   );
 }
 

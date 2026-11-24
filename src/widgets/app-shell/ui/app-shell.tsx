@@ -171,7 +171,11 @@ export function AppShell({ role, children }: Readonly<{ role: Role; children: Re
           <p className="hidden text-sm text-muted-foreground xl:block">{labels[role]}</p>
           <span className="ml-auto hidden max-w-60 truncate text-sm font-medium sm:block">{name}</span>
         </header>
-        <div id="workspace-content" tabIndex={-1} className="app-container app-content outline-none">
+        <div
+          id="workspace-content"
+          tabIndex={-1}
+          className="app-container app-content grid grid-cols-1 justify-items-center outline-none *:w-full"
+        >
           {children}
         </div>
       </div>

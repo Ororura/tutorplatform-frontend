@@ -240,6 +240,12 @@
     color: var(--foreground);
     overflow-wrap: anywhere;
   }
+  @media (min-width: 640px) {
+    .page-title {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+  }
   .page-description {
     overflow-wrap: anywhere;
     max-width: 65ch;

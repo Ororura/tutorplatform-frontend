@@ -9,7 +9,7 @@ export function EmptyState({
   action,
 }: Readonly<{ title: string; description?: string; action?: ReactNode }>) {
   return (
-    <div className="flex flex-col items-center rounded-xl border border-dashed border-border bg-card px-6 py-10 text-center">
+    <div className="flex flex-col items-center rounded-surface border border-dashed border-border bg-card px-6 py-10 text-center">
       <Inbox size={20} className="mb-4 shrink-0 text-muted-foreground" aria-hidden="true" />
       <div className="min-w-0">
         <p className="card-title">{title}</p>
@@ -19,13 +19,9 @@ export function EmptyState({
     </div>
   );
 }
-export function LoadingState({ children }: Readonly<{ children: ReactNode }>) {
+export function LoadingState({ children, label }: Readonly<{ children: ReactNode; label?: string }>) {
   return (
-    <div
-      role="status"
-      aria-busy="true"
-      className="space-y-4 rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground"
-    >
+    <div role="status" aria-busy="true" aria-label={label} className="surface space-y-4 text-sm text-muted-foreground">
       {children}
       <div className="space-y-3" aria-hidden="true">
         <Skeleton className="h-4 w-2/3" />

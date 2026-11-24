@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 
 import { HomeworkForm } from "@/features/homework/create";
 
@@ -6,12 +6,10 @@ export async function TeacherStudentHomeworkNewPage({ params }: Readonly<{ param
   const { studentId } = await params;
   return (
     <main className="page-form page-stack">
-      <div>
-        <Link className="text-sm text-foreground-muted underline" href={`/teacher/students/${studentId}/homework`}>
-          ← Домашние задания
-        </Link>
-        <h1 className="page-title mt-4">Назначить домашнее задание</h1>
-      </div>
+      <PageHeader
+        title="Назначить домашнее задание"
+        navigation={<PageBackLink href={`/teacher/students/${studentId}/homework`}>Домашние задания</PageBackLink>}
+      />
       <HomeworkForm studentId={studentId} />
     </main>
   );

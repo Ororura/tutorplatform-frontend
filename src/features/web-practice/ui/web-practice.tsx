@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeader } from "@/shared/ui/page-header";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { CodeTypingTraining } from "@/features/code-typing/ui/code-typing";
@@ -26,16 +27,14 @@ export function WebPractice() {
   }
 
   return (
-    <main className="page-stack min-w-0">
-      <header>
-        <p className="text-sm font-medium text-primary">Самостоятельная практика</p>
-        <h1 className="page-title mt-1">Практика вёрстки</h1>
-        <p className="mt-2 text-foreground-muted">
-          Новые варианты страниц по HTML, CSS и JavaScript — столько, сколько нужно для тренировки.
-        </p>
-      </header>
+    <main className={session ? "page-stack" : "page-reading page-stack"}>
+      <PageHeader
+        eyebrow="Самостоятельная практика"
+        title="Практика вёрстки"
+        description="Новые варианты страниц по HTML, CSS и JavaScript для тренировки."
+      />
       {!session || !task ? (
-        <section className="surface max-w-3xl space-y-5" aria-label="Настройка практики">
+        <section className="surface space-y-5" aria-label="Настройка практики">
           <div className="space-y-2 text-sm font-medium">
             <label htmlFor="practice-technology" className="block">
               Технология

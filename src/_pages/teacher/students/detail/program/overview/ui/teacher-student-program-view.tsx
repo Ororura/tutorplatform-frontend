@@ -1,8 +1,8 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, BookOpenText, Layers3 } from "lucide-react";
-import Link from "next/link";
+import { BookOpenText, Layers3 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { StudentProfileNav } from "@/entities/student";
@@ -22,29 +22,11 @@ export function TeacherStudentProgramView({
 
   return (
     <main className="page-stack">
-      <section className="surface sm:p-7">
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
-          href={`/teacher/students/${studentId}`}
-        >
-          <ArrowLeft size={16} />
-          Профиль ученика
-        </Link>
-
-        <div className="mt-5 flex items-center gap-4">
-          <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-            <BookOpenText size={21} />
-          </span>
-
-          <div>
-            <p className="text-sm font-medium text-primary">Учебный процесс</p>
-
-            <h1 className="page-title mt-1">Программа обучения</h1>
-
-            <p className="mt-2 text-sm text-foreground-muted">Назначенные ученику учебные программы.</p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        title="Программа обучения"
+        description="Назначенные ученику учебные программы."
+        navigation={<PageBackLink href={`/teacher/students/${studentId}`}>Профиль ученика</PageBackLink>}
+      />
 
       <StudentProfileNav active="program" studentId={studentId} />
 

@@ -1,7 +1,8 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, BookOpenText, ChevronRight, Layers3, LockKeyhole } from "lucide-react";
+import { ChevronRight, Layers3, LockKeyhole } from "lucide-react";
 import Link from "next/link";
 
 import { programStatusLabels, studentProgramQueries, TopicProgressBadge } from "@/entities/student-program";
@@ -59,13 +60,7 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
           )}
         </div>
 
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-primary"
-          href="/student/programs"
-        >
-          <ArrowLeft size={16} aria-hidden="true" />
-          Вернуться к программам
-        </Link>
+        <PageBackLink href="/student/programs">Вернуться к программам</PageBackLink>
       </main>
     );
   }
@@ -74,35 +69,17 @@ export function StudentProgramDetailView({ studentProgramId }: Readonly<{ studen
 
   return (
     <main className="page-content page-stack min-w-0">
-      <section className="py-2">
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-primary"
-          href="/student/programs"
-        >
-          <ArrowLeft size={16} aria-hidden="true" />
-          Мои программы
-        </Link>
-
-        <div className="mt-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-          <div className="flex min-w-0 items-start gap-4">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-              <BookOpenText size={22} aria-hidden="true" />
-            </span>
-
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-primary">{data.subject.name}</p>
-
-              <h1 className="page-title mt-1 wrap-break-word">{data.title}</h1>
-
-              <p className="mt-3 max-w-3xl whitespace-pre-line text-sm leading-7 text-foreground-muted">
-                {data.description || "Описание программы пока не добавлено."}
-              </p>
-            </div>
-          </div>
-
-          <span className="badge shrink-0 bg-primary-subtle text-primary">{programStatusLabels[data.status]}</span>
-        </div>
-      </section>
+      <PageHeader
+        title={data.title}
+        eyebrow={data.subject.name}
+        navigation={<PageBackLink href="/student/programs">Мои программы</PageBackLink>}
+        details={
+          <p className="page-description whitespace-pre-line">
+            {data.description || "Описание программы пока не добавлено."}
+          </p>
+        }
+        actions={<span className="badge bg-primary-subtle text-primary">{programStatusLabels[data.status]}</span>}
+      />
 
       <section className="surface">
         <div className="flex items-start gap-3">

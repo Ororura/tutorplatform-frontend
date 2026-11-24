@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
@@ -9,7 +10,7 @@ import { GuestGuard } from "@/entities/user";
 
 import { AcceptTeacherInvitationForm } from "@/features/teacher-invitation/accept";
 
-import { Button } from "@/shared/ui/button";
+import { Button, buttonClassName } from "@/shared/ui/button";
 import { AuthShell } from "@/shared/ui/auth-shell";
 import { LoadingState } from "@/shared/ui/feedback";
 import { Surface } from "@/shared/ui/surface";
@@ -48,8 +49,8 @@ function InvitationContent({ token }: Readonly<Props>) {
   if (invitation.isError) {
     return (
       <AuthShell>
-        <div className="space-y-5">
-          <h1 className="page-title">Приглашение недоступно</h1>
+        <div className="space-y-6">
+          <PageHeader title="Приглашение недоступно" />
 
           <p role="alert" className="text-foreground-muted">
             {getTeacherInvitationErrorMessage(invitation.error)}
@@ -66,15 +67,10 @@ function InvitationContent({ token }: Readonly<Props>) {
   if (invitation.data.status !== "ACTIVE") {
     return (
       <AuthShell>
-        <div className="space-y-5">
-          <h1 className="page-title">Приглашение недействительно</h1>
-
-          <p className="text-foreground-muted">{unavailableMessages[invitation.data.status]}</p>
-
-          <Link href="/login" className="inline-block text-sm font-medium underline underline-offset-4">
-            Перейти ко входу
-          </Link>
-        </div>
+        <PageHeader title="Приглашение недействительно" description={unavailableMessages[invitation.data.status]} />
+        <Link href="/login" className={buttonClassName("secondary", "mt-6")}>
+          Перейти ко входу
+        </Link>
       </AuthShell>
     );
   }
@@ -84,10 +80,10 @@ function InvitationContent({ token }: Readonly<Props>) {
   return (
     <AuthShell wide>
       <div className="space-y-6">
-        <div>
-          <h1 className="page-title">Присоединиться к платформе</h1>
-          <p className="page-description mt-2">Вас пригласили зарегистрироваться в качестве преподавателя.</p>
-        </div>
+        <PageHeader
+          title="Присоединиться к платформе"
+          description="Вас пригласили зарегистрироваться в качестве преподавателя."
+        />
         <Surface inset>
           <p className="text-sm text-foreground-muted">Email аккаунта</p>
 
