@@ -42,14 +42,14 @@ test("demo teacher assigns two real programs to Ilya", async ({ page }) => {
     await secondDialog.getByRole("button", { name: "Назначить", exact: true }).click();
   } else {
     await secondDialog.getByRole("button", { name: "Закрыть" }).click();
-    await page.getByRole("link", { name: "← Программы ученика" }).click();
+    await page.getByRole("link", { name: "Программы ученика" }).click();
     await page.getByRole("link", { name: /Python — начало обучения/ }).click();
   }
 
   await expect(page.getByRole("heading", { name: "Python — начало обучения" })).toBeVisible();
   await page.reload();
   await expect(page.getByRole("heading", { name: "Python — начало обучения" })).toBeVisible();
-  await page.getByRole("link", { name: "← Программы ученика" }).click();
+  await page.getByRole("link", { name: "Программы ученика" }).click();
   await expect(page.getByRole("link", { name: /Python с нуля/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Python — начало обучения/ })).toBeVisible();
 

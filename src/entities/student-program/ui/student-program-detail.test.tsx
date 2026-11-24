@@ -56,8 +56,8 @@ describe("StudentProgramDetail", () => {
   it("renders program metadata, modules and topics in server order", () => {
     const { container } = render(<StudentProgramDetail program={details} studentId="student-1" />);
 
-    expect(screen.getByRole("heading", { name: "Python с нуля" })).toBeInTheDocument();
-    expect(screen.getByText("Программирование")).toBeInTheDocument();
+    expect(screen.getByText("Начата")).toBeInTheDocument();
+    expect(screen.getByText("Отчётный интервал")).toBeInTheDocument();
     const text = container.textContent ?? "";
     expect(text.indexOf("Второй по API")).toBeLessThan(text.indexOf("Первый по API"));
     expect(text.indexOf("Вторая тема по API")).toBeLessThan(text.indexOf("Первая тема по API"));

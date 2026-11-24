@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -23,18 +24,19 @@ export function AcceptStudentInvitePage({ token }: Readonly<{ token: string }>) 
   if (invitation.isError)
     return (
       <AuthShell>
-        <h1 className="page-title mb-4">Приглашение недоступно</h1>
-        <ErrorState
-          title={getStudentInviteErrorMessage(invitation.error)}
-          onRetry={() => void invitation.refetch()}
-          retryLabel="Проверить ещё раз"
-        />
+        <div className="space-y-6">
+          <PageHeader title="Приглашение недоступно" />
+          <ErrorState
+            title={getStudentInviteErrorMessage(invitation.error)}
+            onRetry={() => void invitation.refetch()}
+            retryLabel="Проверить ещё раз"
+          />
+        </div>
       </AuthShell>
     );
   return (
     <AuthShell wide>
-      <h1 className="page-title">Принять приглашение</h1>
-      <p className="page-description mt-2">Проверьте данные и создайте пароль для аккаунта ученика.</p>
+      <PageHeader title="Принять приглашение" description="Проверьте данные и создайте пароль для аккаунта ученика." />
       <div className="mt-6 space-y-6">
         <PublicStudentInviteDetails invite={invitation.data} />
         <AcceptStudentInviteForm token={token} />

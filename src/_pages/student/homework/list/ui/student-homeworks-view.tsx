@@ -1,156 +1,225 @@
 "use client";
 
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { CircleAlert, ClipboardCheck, Clock3 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useInfiniteQuery, useQueries, useQuery } from "@tanstack/react-query";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useId, useState } from "react";
 
-import { isHomeworkOverdue, StudentHomeworkList, studentHomeworkQueries } from "@/entities/homework";
+import {
+  formatHomeworkItemsCount,
+  formatStudentHomeworkDeadline,
+  isHomeworkOverdue,
+  studentHomeworkQueries,
+  type StudentHomeworkSummary,
+} from "@/entities/homework";
 import { studentProgramQueries } from "@/entities/student-program";
 import { Button } from "@/shared/ui/button";
+import styles from "./student-homeworks.module.css";
 
-import { StudentHomeworkHistory } from "./student-homework-history";
+const tabs = { active: "В работе", review: "На проверке", completed: "Завершённые" } as const;
+type Tab = keyof typeof tabs;
 
 export function StudentHomeworksView() {
+  const [tab, setTab] = useState<Tab>("active");
+  const id = useId();
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 60_000);
     return () => window.clearInterval(timer);
   }, []);
-
   const active = useInfiniteQuery(
     studentHomeworkQueries.infiniteList({ status: "ASSIGNED", size: 20, sort: "dueAt,asc" }),
   );
   const completed = useInfiniteQuery(
-    studentHomeworkQueries.infiniteList({ status: "COMPLETED", size: 3, sort: "assignedAt,desc" }),
+    studentHomeworkQueries.infiniteList({ status: "COMPLETED", size: 20, sort: "assignedAt,desc" }),
   );
   const cancelled = useInfiniteQuery(
-    studentHomeworkQueries.infiniteList({ status: "CANCELLED", size: 3, sort: "assignedAt,desc" }),
+    studentHomeworkQueries.infiniteList({ status: "CANCELLED", size: 20, sort: "assignedAt,desc" }),
   );
   const programs = useQuery(studentProgramQueries.currentList());
-  const queries = [active, completed, cancelled];
-  const pending = queries.some((query) => query.isPending);
-  const failed = queries.some((query) => query.isError);
   const activeItems = active.data?.pages.flatMap((page) => page.items) ?? [];
-  const attention = activeItems.filter((homework) => isHomeworkOverdue(homework, now));
-  // The API orders deadlines ascending; keep that order, placing undated work last.
-  const upcoming = activeItems.filter((homework) => !isHomeworkOverdue(homework, now));
-  const datedUpcoming = upcoming.filter((homework) => homework.dueAt);
-  const undatedUpcoming = upcoming.filter((homework) => !homework.dueAt);
+  // Summaries do not include submission states. Reuse cached detail queries for
+  // the loaded page instead of inventing a review status from the deadline.
+  const details = useQueries({
+    queries: activeItems.map((item) => ({ ...studentHomeworkQueries.detail(item.id), staleTime: 60_000 })),
+  });
+  const reviewIds = new Set(
+    details.flatMap(({ data }) => {
+      if (!data) return [];
+      const required = data.items.filter((item) => item.required);
+      const waiting = (status: string | null | undefined) => status === "SUBMITTED" || status === "NEEDS_REVIEW";
+      return required.length > 0 &&
+        required.every((item) => item.passed || waiting(item.latestSubmissionStatus)) &&
+        required.some((item) => !item.passed && waiting(item.latestSubmissionStatus))
+        ? [data.id]
+        : [];
+    }),
+  );
   const history = [completed, cancelled]
     .flatMap((query) => query.data?.pages.flatMap((page) => page.items) ?? [])
     .sort((a, b) => Date.parse(b.assignedAt) - Date.parse(a.assignedAt) || b.id.localeCompare(a.id));
+  const items =
+    tab === "completed"
+      ? history
+      : activeItems.filter((item) => (tab === "review" ? reviewIds.has(item.id) : !reviewIds.has(item.id)));
+  const ordered =
+    tab === "completed"
+      ? items
+      : [...items].sort(
+          (a, b) => (a.dueAt ? Date.parse(a.dueAt) : Infinity) - (b.dueAt ? Date.parse(b.dueAt) : Infinity),
+        );
+  const selected = tab === "completed" ? [completed, cancelled] : [active, ...details];
+  const pending = selected.some((query) => query.isPending);
+  const failed = selected.some((query) => query.isError);
+  const pageQueries = tab === "completed" ? [completed, cancelled] : [active];
   const programTitles = new Map(
     (programs.isError ? [] : (programs.data ?? [])).map((program) => [program.id, program.title]),
   );
-  const empty = !pending && !failed && activeItems.length === 0 && history.length === 0;
+  const firstActiveId = ordered[0]?.id;
 
   return (
-    <main className="page-stack">
-      <header className="py-2">
-        <div className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-surface-subtle text-(--text-secondary)">
-            <ClipboardCheck size={24} aria-hidden="true" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-(--text-secondary)">Учебный кабинет</p>
-            <h1 className="page-title mt-1 wrap-break-word">Домашние задания</h1>
-            <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
-              Задания преподавателя и результаты их проверки.
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <h1>Задания</h1>
+        <p>Всё, над чем вы сейчас работаете.</p>
+      </header>
+      <div role="tablist" aria-label="Статус заданий" className={styles.tabs}>
+        {(Object.keys(tabs) as Tab[]).map((key, index, keys) => (
+          <button
+            key={key}
+            type="button"
+            role="tab"
+            id={`${id}-${key}`}
+            aria-selected={tab === key}
+            aria-controls={`${id}-panel`}
+            tabIndex={tab === key ? 0 : -1}
+            onClick={() => setTab(key)}
+            onKeyDown={(event) => {
+              const next =
+                event.key === "ArrowRight"
+                  ? (index + 1) % keys.length
+                  : event.key === "ArrowLeft"
+                    ? (index + keys.length - 1) % keys.length
+                    : event.key === "Home"
+                      ? 0
+                      : event.key === "End"
+                        ? keys.length - 1
+                        : null;
+              if (next !== null) {
+                event.preventDefault();
+                setTab(keys[next]);
+                document.getElementById(`${id}-${keys[next]}`)?.focus();
+              }
+            }}
+          >
+            {tabs[key]}
+          </button>
+        ))}
+      </div>
+      <section
+        role="tabpanel"
+        id={`${id}-panel`}
+        aria-labelledby={`${id}-${tab}`}
+        tabIndex={0}
+        className={styles.panel}
+      >
+        {pending && (
+          <div role="status" aria-busy="true" className={styles.loading}>
+            <span className="sr-only">Загружаем задания…</span>
+            {[0, 1, 2].map((key) => (
+              <div key={key} aria-hidden="true" />
+            ))}
+          </div>
+        )}
+        {failed && (
+          <div role="alert" className={styles.error}>
+            <p>Не удалось загрузить часть заданий. Уже загруженные работы доступны ниже.</p>
+            <Button
+              variant="secondary"
+              onClick={() => selected.filter((query) => query.isError).forEach((query) => void query.refetch())}
+            >
+              Повторить
+            </Button>
+          </div>
+        )}
+        {!pending && !failed && ordered.length === 0 && (
+          <div className={styles.empty}>
+            <h2>
+              {tab === "review"
+                ? "Нет заданий на проверке"
+                : tab === "completed"
+                  ? "Завершённых заданий пока нет"
+                  : "Заданий в работе пока нет"}
+            </h2>
+            <p>
+              {tab === "active"
+                ? "Когда преподаватель назначит новое задание, оно появится здесь."
+                : tab === "review"
+                  ? "Здесь появятся работы, которые ожидают проверки преподавателя."
+                  : "Здесь будут выполненные и отменённые работы."}
             </p>
           </div>
-        </div>
-      </header>
-
-      {pending && <StudentHomeworkSkeleton />}
-      {failed && (
-        <div className="space-y-3 rounded-surface border border-danger-border bg-surface p-5" role="alert">
-          <p className="text-sm text-danger">Не удалось загрузить домашние задания.</p>
+        )}
+        <ul className={styles.list}>
+          {ordered.map((homework: StudentHomeworkSummary) => {
+            const overdue = isHomeworkOverdue(homework, now);
+            const primary = tab === "active" && homework.id === firstActiveId;
+            const program = programTitles.get(homework.studentProgramId);
+            return (
+              <li key={homework.id}>
+                <article aria-label={homework.title} className={styles.row}>
+                  <div className={styles.info}>
+                    <h2>
+                      <Link href={`/student/homework/${homework.id}`}>{homework.title}</Link>
+                    </h2>
+                    <p>
+                      {program || formatHomeworkItemsCount(homework.itemsCount)}
+                      {homework.dueAt && tab !== "completed" && (
+                        <>
+                          {" "}
+                          ·{" "}
+                          <span className={overdue ? styles.overdue : undefined}>
+                            {overdue ? "Срок был " : "До "}
+                            <time dateTime={homework.dueAt}>{formatStudentHomeworkDeadline(homework.dueAt, now)}</time>
+                            {overdue && " · Просрочено"}
+                          </span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                  <div className={styles.action}>
+                    {tab !== "active" && (
+                      <span className={styles.status}>
+                        {tab === "review" ? "На проверке" : homework.status === "CANCELLED" ? "Отменено" : "Выполнено"}
+                      </span>
+                    )}
+                    <Link
+                      href={`/student/homework/${homework.id}`}
+                      aria-label={`${primary ? "Продолжить" : "Открыть"}: ${homework.title}`}
+                      className={primary ? styles.primary : styles.link}
+                    >
+                      {primary ? "Продолжить" : "Открыть"}
+                      {!primary && <ArrowRight size={19} aria-hidden="true" />}
+                    </Link>
+                  </div>
+                </article>
+              </li>
+            );
+          })}
+        </ul>
+        {pageQueries.some((query) => query.hasNextPage) && (
           <Button
-            variant="secondary"
-            type="button"
-            onClick={() => queries.filter((query) => query.isError).forEach((query) => void query.refetch())}
+            variant="ghost"
+            className="mt-6"
+            disabled={pageQueries.some((query) => query.isFetchingNextPage)}
+            onClick={() =>
+              pageQueries.filter((query) => query.hasNextPage).forEach((query) => void query.fetchNextPage())
+            }
           >
-            Повторить
+            {pageQueries.some((query) => query.isFetchingNextPage) ? "Загружаем…" : "Загрузить ещё задания"}
           </Button>
-        </div>
-      )}
-      {empty && (
-        <section className="rounded-surface border border-(--border) bg-surface px-4 py-10 text-center">
-          <ClipboardCheck size={30} className="mx-auto text-primary" aria-hidden="true" />
-          <h2 className="section-title mt-4">Домашних заданий пока нет</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-(--text-secondary)">
-            Когда преподаватель назначит новое задание, оно появится здесь.
-          </p>
-        </section>
-      )}
-      {attention.length > 0 && (
-        <section
-          aria-labelledby="homework-attention-heading"
-          className="rounded-surface border border-danger-border bg-danger-subtle/40 p-4"
-        >
-          <h2 id="homework-attention-heading" className="section-title mb-3 flex items-center gap-3">
-            <CircleAlert size={28} className="shrink-0 text-danger" aria-hidden="true" />
-            Требуют внимания <span className="text-danger">· {attention.length}</span>
-          </h2>
-          <StudentHomeworkList homeworks={attention} now={now} programTitles={programTitles} />
-        </section>
-      )}
-      {upcoming.length > 0 && (
-        <section aria-labelledby="homework-upcoming-heading" className="surface">
-          <h2 id="homework-upcoming-heading" className="section-title mb-3 flex items-center gap-3">
-            <Clock3 size={28} className="shrink-0 text-primary" aria-hidden="true" />
-            Предстоящие <span className="text-primary">· {upcoming.length}</span>
-          </h2>
-          <StudentHomeworkList
-            homeworks={[...datedUpcoming, ...undatedUpcoming]}
-            now={now}
-            programTitles={programTitles}
-          />
-        </section>
-      )}
-      {active.hasNextPage && (
-        <Button variant="secondary" disabled={active.isFetchingNextPage} onClick={() => void active.fetchNextPage()}>
-          {active.isFetchingNextPage ? "Загружаем…" : "Загрузить ещё задания"}
-        </Button>
-      )}
-      {history.length > 0 && (
-        <StudentHomeworkHistory
-          homeworks={history}
-          hasMore={completed.hasNextPage || cancelled.hasNextPage}
-          loading={completed.isFetchingNextPage || cancelled.isFetchingNextPage}
-          loadMore={() => {
-            if (completed.hasNextPage) void completed.fetchNextPage();
-            if (cancelled.hasNextPage) void cancelled.fetchNextPage();
-          }}
-        />
-      )}
+        )}
+      </section>
     </main>
-  );
-}
-
-function StudentHomeworkSkeleton() {
-  return (
-    <div role="status" aria-busy="true" className="space-y-5">
-      <span className="sr-only">Загружаем домашние задания…</span>
-      {[2, 1].map((count) => (
-        <div key={count} aria-hidden="true" className="surface space-y-3 motion-safe:animate-pulse">
-          <div className="h-6 w-48 rounded bg-surface-subtle" />
-          {Array.from({ length: count }, (_, i) => (
-            <div
-              key={i}
-              className="flex flex-col gap-4 rounded-surface border border-border p-5 sm:flex-row sm:items-center"
-            >
-              <div className="hidden size-14 shrink-0 rounded-surface bg-primary-subtle sm:block" />
-              <div className="flex-1 space-y-3">
-                <div className="h-5 w-2/3 rounded bg-surface-subtle" />
-                <div className="h-3 w-1/2 rounded bg-surface-subtle" />
-                <div className="h-3 w-3/4 rounded bg-surface-subtle" />
-              </div>
-              <div className="h-10 rounded-surface bg-primary-subtle sm:w-32" />
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
   );
 }

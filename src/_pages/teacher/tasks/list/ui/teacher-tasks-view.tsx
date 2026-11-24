@@ -1,4 +1,5 @@
 "use client";
+import { PageHeader } from "@/shared/ui/page-header";
 import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
@@ -53,17 +54,11 @@ export function TeacherTasksView() {
 
   return (
     <main className="page-stack">
-      <header className="flex flex-col items-start justify-between gap-4 py-2 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="page-title">Банк заданий</h1>
-
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-(--text-secondary)">
-            Создавайте практику и используйте задания в домашних работах учеников.
-          </p>
-        </div>
-
-        <CreateTaskDialog />
-      </header>
+      <PageHeader
+        title="Банк заданий"
+        description="Создавайте практику и используйте задания в домашних работах учеников."
+        actions={<CreateTaskDialog />}
+      />
 
       <section className="min-w-0" aria-labelledby="task-list-title">
         <div className="flex flex-wrap items-center justify-between gap-4">

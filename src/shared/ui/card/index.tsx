@@ -5,7 +5,7 @@ function Card({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
-      className={cn("min-w-0 rounded-xl border border-border bg-card text-card-foreground shadow-xs", className)}
+      className={cn("min-w-0 rounded-surface border border-border bg-card text-card-foreground", className)}
       {...props}
     />
   );

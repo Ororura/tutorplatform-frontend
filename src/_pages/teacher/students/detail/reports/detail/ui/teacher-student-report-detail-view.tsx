@@ -1,8 +1,9 @@
 "use client";
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { Textarea } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Clock3, FileText } from "lucide-react";
+import { Clock3 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -157,34 +158,17 @@ function ReportDetails({
 
   return (
     <main className="page-content page-stack">
-      <Link
-        className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted hover:text-primary"
-        href={`/teacher/students/${studentId}/reports`}
-      >
-        <ArrowLeft size={16} /> Все отчёты
-      </Link>
-
-      <section className="surface">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-              <FileText size={21} />
-            </span>
-            <div>
-              <p className="text-sm font-medium text-primary">Отчёт об успеваемости</p>
-              <h1 className="page-title mt-1">{formatReportPeriod(report.periodStartedAt, report.periodEndedAt)}</h1>
-            </div>
-          </div>
-          <span className={`badge  ${progressReportStatusClassNames[report.status]}`}>
+      <PageHeader
+        title={formatReportPeriod(report.periodStartedAt, report.periodEndedAt)}
+        eyebrow="Отчёт об успеваемости"
+        navigation={<PageBackLink href={`/teacher/students/${studentId}/reports`}>Все отчёты</PageBackLink>}
+        description={!editable && "Данные зафиксированы при публикации. Отчёт доступен только для чтения."}
+        actions={
+          <span className={`badge ${progressReportStatusClassNames[report.status]}`}>
             {progressReportStatusLabels[report.status]}
           </span>
-        </div>
-        {!editable && (
-          <p className="mt-5 rounded-surface bg-surface-subtle p-4 text-sm text-foreground-muted">
-            Этот отчёт хранит исторический snapshot и доступен только для чтения.
-          </p>
-        )}
-      </section>
+        }
+      />
 
       <ReportPublicationManagement reportId={report.id} status={report.status} />
 

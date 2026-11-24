@@ -1,5 +1,6 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
@@ -61,30 +62,16 @@ export function TeacherStudentSessionDetailView({
     assessment.isError && assessment.error instanceof ApiClientError && assessment.error.status === 404;
   return (
     <main className="page-stack">
-      <div>
-        <Link
-          className="text-sm text-foreground-muted underline underline-offset-4"
-          href={`/teacher/students/${studentId}/sessions`}
-        >
-          ← Все занятия
-        </Link>
-        <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-sm text-foreground-muted">
-              {program.data?.subject.name}
-              {program.data ? " · " : ""}
-              {program.data?.title}
-            </p>
-            <h1 className="page-title mt-1">{formatSessionDateTime(session.data.startedAt)}</h1>
-          </div>
-          <Link
-            className={buttonClassName("primary", "")}
-            href={`/teacher/students/${studentId}/sessions/${sessionId}/edit`}
-          >
+      <PageHeader
+        title={formatSessionDateTime(session.data.startedAt)}
+        eyebrow={program.data && `${program.data.subject.name} · ${program.data.title}`}
+        navigation={<PageBackLink href={`/teacher/students/${studentId}/sessions`}>Все занятия</PageBackLink>}
+        actions={
+          <Link className={buttonClassName()} href={`/teacher/students/${studentId}/sessions/${sessionId}/edit`}>
             Редактировать
           </Link>
-        </div>
-      </div>
+        }
+      />
       <section className="space-y-6 rounded-inset border border-border bg-surface p-6">
         <dl className="grid gap-5 sm:grid-cols-2">
           <div>

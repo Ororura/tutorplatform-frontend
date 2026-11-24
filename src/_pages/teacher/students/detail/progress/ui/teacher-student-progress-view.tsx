@@ -1,8 +1,9 @@
 "use client";
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ChartNoAxesCombined } from "lucide-react";
+import { ChartNoAxesCombined } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -26,28 +27,12 @@ export function TeacherStudentProgressView({ studentId }: Readonly<{ studentId: 
   });
 
   return (
-    <main className="page-content page-stack">
-      <section className="surface sm:p-7">
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
-          href={`/teacher/students/${studentId}`}
-        >
-          <ArrowLeft size={16} />
-          Профиль ученика
-        </Link>
-
-        <div className="mt-5 flex items-center gap-4">
-          <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-            <ChartNoAxesCombined size={21} />
-          </span>
-
-          <div>
-            <p className="text-sm font-medium text-primary">Учебный процесс</p>
-            <h1 className="page-title mt-1">Прогресс ученика</h1>
-            <p className="mt-2 text-sm text-foreground-muted">Показатели обучения по назначенной программе.</p>
-          </div>
-        </div>
-      </section>
+    <main className="page-stack">
+      <PageHeader
+        title="Прогресс ученика"
+        description="Показатели обучения по назначенной программе."
+        navigation={<PageBackLink href={`/teacher/students/${studentId}`}>Профиль ученика</PageBackLink>}
+      />
 
       <StudentProfileNav active="progress" studentId={studentId} />
 

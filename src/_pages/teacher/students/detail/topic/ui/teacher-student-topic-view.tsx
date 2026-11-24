@@ -1,7 +1,7 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 
 import { MaterialList, topicMaterialQueries } from "@/entities/material";
 import { studentProgramQueries, TopicProgressBadge } from "@/entities/student-program";
@@ -24,12 +24,7 @@ export function TeacherStudentTopicView({ studentId, studentProgramId, topicId }
 
   return (
     <main className="page-stack">
-      <Link
-        className="text-sm text-foreground-muted underline underline-offset-4"
-        href={`/teacher/students/${studentId}/programs/${studentProgramId}`}
-      >
-        ← К программе
-      </Link>
+      <PageBackLink href={`/teacher/students/${studentId}/programs/${studentProgramId}`}>К программе</PageBackLink>
 
       {program.isPending && <p aria-busy="true">Загружаем тему…</p>}
       {program.isError && (
@@ -49,21 +44,16 @@ export function TeacherStudentTopicView({ studentId, studentProgramId, topicId }
       )}
       {topicContext && (
         <>
-          <header className="rounded-inset border border-border bg-surface p-6">
-            <p className="text-sm text-foreground-muted">
-              {program.data?.title} · {topicContext.module.title}
-            </p>
-            <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
-              <h1 className="page-title">{topicContext.topic.title}</h1>
-              <TopicProgressBadge status={topicContext.topic.progressStatus} />
-            </div>
-            {topicContext.topic.description && (
-              <p className="mt-4 whitespace-pre-line leading-7 text-foreground-muted">
-                {topicContext.topic.description}
-              </p>
-            )}
-          </header>
-
+          <PageHeader
+            eyebrow={`${program.data?.title} · ${topicContext.module.title}`}
+            title={topicContext.topic.title}
+            details={
+              topicContext.topic.description && (
+                <p className="page-description whitespace-pre-line">{topicContext.topic.description}</p>
+              )
+            }
+            actions={<TopicProgressBadge status={topicContext.topic.progressStatus} />}
+          />
           <section className="space-y-4" aria-labelledby="materials-heading">
             <h2 className="section-title" id="materials-heading">
               Материалы

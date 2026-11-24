@@ -198,7 +198,7 @@ describe("TeacherProgramDetailView", () => {
     );
     expect(screen.getAllByRole("button", { name: "Добавить тему" })).toHaveLength(2);
     expect(screen.getByText("В этом модуле пока нет тем.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "← Программы обучения" })).toHaveAttribute("href", "/teacher/programs");
+    expect(screen.getByRole("link", { name: "Программы обучения" })).toHaveAttribute("href", "/teacher/programs");
 
     const modules = screen.getAllByRole("listitem").filter((item) => item.querySelector("details"));
     expect(modules[0]).toHaveTextContent("Числа");

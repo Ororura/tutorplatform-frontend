@@ -1,8 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Pencil, ShieldCheck, UserRound } from "lucide-react";
-import Link from "next/link";
+import { Pencil, ShieldCheck, UserRound } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -17,7 +16,7 @@ import { EditStudentForm } from "@/features/student/edit";
 import { CreateStudentInviteDialog } from "@/features/student/invite/create";
 import { useRevokeStudentInviteMutation } from "@/features/student/invite/revoke";
 import { TeacherSubmissionInbox } from "@/widgets/teacher-submission-inbox/teacher-submission-inbox";
-import { PageHeader } from "@/shared/ui/page-header";
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/shared/ui/card";
 import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
@@ -52,13 +51,7 @@ export function TeacherStudentView({
           onRetry={() => student.refetch()}
         />
 
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
-          href="/teacher/students"
-        >
-          <ArrowLeft size={16} />
-          Вернуться к списку
-        </Link>
+        <PageBackLink href="/teacher/students">Вернуться к списку</PageBackLink>
       </main>
     );
   }
@@ -69,35 +62,25 @@ export function TeacherStudentView({
 
   return (
     <main className="page-stack">
-      <section className="pb-2">
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
-          href="/teacher/students"
-        >
-          <ArrowLeft size={16} />
-          Все ученики
-        </Link>
-
-        <PageHeader
-          className="mt-4"
-          eyebrow="Профиль ученика"
-          title={`${student.data.firstName} ${student.data.lastName ?? ""}`}
-          description={
-            <span className="flex flex-wrap gap-2">
-              <Badge tone={student.data.status === "ACTIVE" ? "success" : "neutral"}>
-                {getStudentStatusLabel(student.data.status)}
-              </Badge>
-              <Badge tone="info">{getStudentAccountStatusLabel(student.data.account.status)}</Badge>
-            </span>
-          }
-          actions={
-            <Button variant="secondary" onClick={() => setEditing((value) => !value)}>
-              <Pencil size={16} aria-hidden="true" />
-              {editing ? "Закрыть редактирование" : "Редактировать"}
-            </Button>
-          }
-        />
-      </section>
+      <PageHeader
+        navigation={<PageBackLink href="/teacher/students">Все ученики</PageBackLink>}
+        eyebrow="Профиль ученика"
+        title={`${student.data.firstName} ${student.data.lastName ?? ""}`}
+        description={
+          <span className="flex flex-wrap gap-2">
+            <Badge tone={student.data.status === "ACTIVE" ? "success" : "neutral"}>
+              {getStudentStatusLabel(student.data.status)}
+            </Badge>
+            <Badge tone="info">{getStudentAccountStatusLabel(student.data.account.status)}</Badge>
+          </span>
+        }
+        actions={
+          <Button variant="secondary" onClick={() => setEditing((value) => !value)}>
+            <Pencil size={16} aria-hidden="true" />
+            {editing ? "Закрыть редактирование" : "Редактировать"}
+          </Button>
+        }
+      />
 
       <StudentProfileNav active="overview" studentId={studentId} />
       <TeacherSubmissionInbox studentId={studentId} />

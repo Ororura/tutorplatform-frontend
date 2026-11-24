@@ -58,7 +58,7 @@ test("demo student completes the learning journey", async ({ page }) => {
   }
   await page.setViewportSize({ width: 1440, height: 1000 });
 
-  await page.getByRole("link", { name: "Мои программы", exact: true }).click();
+  await page.getByRole("link", { name: "Программы", exact: true }).click();
   await expect(page).toHaveURL(/\/student\/programs$/);
   await expect(page.getByRole("heading", { name: /^Текущ(ая программа|ие программы)$/ })).toBeVisible();
 
@@ -108,18 +108,14 @@ test("demo student completes the learning journey", async ({ page }) => {
 
   await page.getByRole("link", { name: "Домашние задания", exact: true }).click();
   await expect(page).toHaveURL(/\/student\/homework$/);
-  await expect(page.getByRole("heading", { name: "Домашние задания", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Задания", level: 1 })).toBeVisible();
   await expect(
     page
-      .getByRole("region", { name: /^Требуют внимания/ })
-      .getByText("Просрочено")
+      .getByRole("tabpanel")
+      .getByText(/Просрочено/)
       .first(),
   ).toBeVisible();
-  await expect(
-    page
-      .getByRole("region", { name: /^История/ })
-      .getByRole("listitem")
-      .first(),
-  ).toBeVisible();
+  await page.getByRole("tab", { name: "Завершённые", exact: true }).click();
+  await expect(page.getByRole("tabpanel").getByRole("listitem").first()).toBeVisible();
   await expect(page.getByText("Ваша нагрузка")).toHaveCount(0);
 });

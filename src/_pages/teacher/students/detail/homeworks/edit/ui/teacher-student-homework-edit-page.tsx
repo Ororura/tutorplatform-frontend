@@ -1,5 +1,6 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
@@ -34,15 +35,12 @@ export function TeacherStudentHomeworkEditPage({
   }
   return (
     <main className="page-form page-stack">
-      <div>
-        <Link
-          className="text-sm text-foreground-muted underline"
-          href={`/teacher/students/${studentId}/homework/${homeworkId}`}
-        >
-          ← Домашнее задание
-        </Link>
-        <h1 className="page-title mt-4">Редактировать домашнее задание</h1>
-      </div>
+      <PageHeader
+        title="Редактировать домашнее задание"
+        navigation={
+          <PageBackLink href={`/teacher/students/${studentId}/homework/${homeworkId}`}>Домашнее задание</PageBackLink>
+        }
+      />
       <HomeworkForm studentId={studentId} homework={homework.data} />
     </main>
   );

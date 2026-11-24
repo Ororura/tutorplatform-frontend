@@ -1,5 +1,6 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
@@ -49,30 +50,19 @@ export function TeacherTaskDetailView({ taskId }: Readonly<{ taskId: string }>) 
   const tests = [...(task.data.testCases ?? [])].sort((a, b) => a.position - b.position);
   return (
     <main className="page-stack min-w-0">
-      <div>
-        <Link className="text-sm text-foreground-muted underline" href="/teacher/tasks">
-          ← Банк заданий
-        </Link>
-        <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
-          <div className="min-w-0">
-            <h1 className="page-title wrap-break-word">{task.data.title}</h1>
-            <div className="mt-3 flex flex-wrap gap-2 text-sm">
-              <span>{taskTypePresentation[task.data.taskType]}</span>
-              <span>·</span>
-              <span>{taskDifficultyPresentation[task.data.difficulty]}</span>
-              <span>·</span>
-              <span>{taskStatusPresentation[task.data.status]}</span>
-              {subject && (
-                <>
-                  <span>·</span>
-                  <span>{subject.name}</span>
-                </>
-              )}
-            </div>
-          </div>
-          <EditTaskDialog task={task.data} />
-        </div>
-      </div>
+      <PageHeader
+        title={task.data.title}
+        navigation={<PageBackLink href="/teacher/tasks">Банк заданий</PageBackLink>}
+        details={
+          <ul className="flex flex-wrap gap-2" aria-label="Характеристики задания">
+            <li className="badge bg-surface-subtle">{taskTypePresentation[task.data.taskType]}</li>
+            <li className="badge bg-surface-subtle">{taskDifficultyPresentation[task.data.difficulty]}</li>
+            <li className="badge bg-surface-subtle">{taskStatusPresentation[task.data.status]}</li>
+            {subject && <li className="badge bg-surface-subtle">{subject.name}</li>}
+          </ul>
+        }
+        actions={<EditTaskDialog task={task.data} />}
+      />
       <section className="rounded-inset border border-border bg-surface p-6" aria-labelledby="description-heading">
         <h2 id="description-heading" className="section-title mb-4">
           Описание

@@ -1,8 +1,9 @@
 "use client";
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, FileText, Flag } from "lucide-react";
+import { FileText, Flag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -55,26 +56,12 @@ export function TeacherStudentReportsView({ studentId }: Readonly<{ studentId: s
   };
 
   return (
-    <main className="page-content page-stack">
-      <section className="surface sm:p-7">
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
-          href={`/teacher/students/${studentId}`}
-        >
-          <ArrowLeft size={16} />
-          Профиль ученика
-        </Link>
-        <div className="mt-5 flex items-center gap-4">
-          <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-            <FileText size={21} />
-          </span>
-          <div>
-            <p className="text-sm font-medium text-primary">Учебный процесс</p>
-            <h1 className="page-title mt-1">Отчёты об успеваемости</h1>
-            <p className="mt-2 text-sm text-foreground-muted">История отчётов по завершённым учебным периодам.</p>
-          </div>
-        </div>
-      </section>
+    <main className="page-stack">
+      <PageHeader
+        title="Отчёты об успеваемости"
+        description="История отчётов по завершённым учебным периодам."
+        navigation={<PageBackLink href={`/teacher/students/${studentId}`}>Профиль ученика</PageBackLink>}
+      />
 
       <StudentProfileNav active="reports" studentId={studentId} />
 

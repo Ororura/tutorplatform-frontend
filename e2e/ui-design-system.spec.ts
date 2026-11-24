@@ -17,16 +17,23 @@ test.beforeAll(async ({ browser }) => {
 });
 
 async function capture(page: Page, name: string, path: (name: string) => string) {
-  await expect(page.locator("main")).toBeVisible();
-  await expect(page.locator("main").getByRole("heading").first()).toBeVisible();
+  const main = page.getByRole("main");
+  await expect(main).toBeVisible();
+  await expect(main.getByRole("heading").first()).toBeVisible();
   await expect
     .poll(() => page.evaluate(() => document.documentElement.scrollWidth))
     .toBeLessThanOrEqual(page.viewportSize()!.width);
   await expect(page.locator('main [aria-busy="true"]:visible')).toHaveCount(0);
+  const content = (await main.boundingBox())!;
+  const sidebarWidth = await page
+    .getByRole("complementary", { name: "Боковая панель", includeHidden: true })
+    .evaluateAll(([sidebar]) => sidebar?.getBoundingClientRect().width ?? 0);
+  expect(content.x + content.width / 2).toBeCloseTo((page.viewportSize()!.width + sidebarWidth) / 2);
   await page.screenshot({ path: path(`${name}.png`), fullPage: true });
 }
 
 for (const { width, height } of [
+  { width: 2560, height: 1290 },
   { width: 1440, height: 900 },
   { width: 1280, height: 800 },
   { width: 768, height: 1024 },
@@ -115,6 +122,9 @@ for (const { width, height } of [
     await page.goto("/student/progress");
     await expect(page.getByRole("heading", { name: "Мой прогресс", exact: true })).toBeVisible();
     await capture(page, "student-progress", testInfo.outputPath.bind(testInfo));
+    await page.goto("/student/web-practice");
+    await expect(page.getByRole("region", { name: "Настройка практики" })).toBeVisible();
+    await capture(page, "student-practice", testInfo.outputPath.bind(testInfo));
   });
 
   test(`admin controls and public content fit ${width}px`, async ({ page }, testInfo) => {

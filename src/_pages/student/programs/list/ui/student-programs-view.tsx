@@ -16,7 +16,7 @@ export function StudentProgramsView() {
   const other = programs.data?.filter((program) => program.status !== "ACTIVE") ?? [];
 
   return (
-    <main className="page-stack">
+    <main className="page-content page-stack">
       <PageHeader
         eyebrow="Учебный кабинет"
         title="Мои программы"

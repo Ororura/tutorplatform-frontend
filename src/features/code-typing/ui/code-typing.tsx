@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeader } from "@/shared/ui/page-header";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Button, buttonClassName } from "@/shared/ui/button";
@@ -21,16 +22,17 @@ export function CodeTyping() {
   const catalogHeading = useRef<HTMLHeadingElement>(null);
   return (
     <main className="page-content page-stack">
-      <header>
-        <p className="text-sm font-medium text-primary">Самостоятельная практика</p>
-        <h1 className="page-title mt-1" tabIndex={-1} ref={catalogHeading}>
-          Скорость набора кода
-        </h1>
-        <p className="mt-2 text-foreground-muted">Набирайте код по шагам и наблюдайте, как оживает интерфейс.</p>
-        <Link href="/student/web-practice" className={buttonClassName("secondary", "mt-4")}>
-          Бесконечная практика и редактор
-        </Link>
-      </header>
+      <PageHeader
+        eyebrow="Самостоятельная практика"
+        title="Скорость набора кода"
+        headingRef={catalogHeading}
+        description="Набирайте код по шагам и наблюдайте, как оживает интерфейс."
+        actions={
+          <Link href="/student/web-practice" className={buttonClassName("secondary")}>
+            Бесконечная практика и редактор
+          </Link>
+        }
+      />
       {exercise ? (
         <CodeTypingTraining
           key={exercise.id}

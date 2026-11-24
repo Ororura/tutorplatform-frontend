@@ -1,8 +1,9 @@
 "use client";
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ClipboardCheck, Filter, Plus } from "lucide-react";
+import { ClipboardCheck, Filter, Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -58,38 +59,20 @@ export function TeacherStudentHomeworksView({
 
   return (
     <main className="page-stack">
-      <section className="surface sm:p-7">
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted transition hover:text-primary"
-          href={`/teacher/students/${studentId}`}
-        >
-          <ArrowLeft size={16} />
-          Профиль ученика
-        </Link>
-
-        <div className="mt-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
-          <div className="flex items-center gap-4">
-            <span className="flex size-12 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-              <ClipboardCheck size={21} />
-            </span>
-
-            <div>
-              <p className="text-sm font-medium text-primary">Учебный процесс</p>
-
-              <h1 className="page-title mt-1">Домашние задания</h1>
-
-              <p className="mt-2 text-sm text-foreground-muted">Назначенные задания и состояние их выполнения.</p>
-            </div>
-          </div>
-
-          {programs.data && programs.data.length > 0 && (
+      <PageHeader
+        title="Домашние задания"
+        description="Назначенные задания и состояние их выполнения."
+        navigation={<PageBackLink href={`/teacher/students/${studentId}`}>Профиль ученика</PageBackLink>}
+        actions={
+          programs.data &&
+          programs.data.length > 0 && (
             <Link className={primaryLinkClassName} href={`/teacher/students/${studentId}/homework/new`}>
-              <Plus size={16} className="mr-2" />
+              <Plus size={16} aria-hidden="true" />
               Назначить домашнее задание
             </Link>
-          )}
-        </div>
-      </section>
+          )
+        }
+      />
 
       <StudentProfileNav active="homework" studentId={studentId} />
 

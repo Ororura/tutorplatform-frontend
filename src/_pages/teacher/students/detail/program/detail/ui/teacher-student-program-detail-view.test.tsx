@@ -154,7 +154,7 @@ describe("TeacherStudentProgramDetailView", () => {
 
     expect(
       screen.getByRole("link", {
-        name: "← Программы ученика",
+        name: "Программы ученика",
       }),
     ).toHaveAttribute("href", "/teacher/students/student-1/program");
   });
@@ -169,6 +169,9 @@ describe("TeacherStudentProgramDetailView", () => {
     });
 
     render(<TeacherStudentProgramDetailView studentId="student-1" studentProgramId="program-1" />);
+
+    expect(screen.getByRole("heading", { name: program.title, level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(program.subject.name, { exact: true })).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", {

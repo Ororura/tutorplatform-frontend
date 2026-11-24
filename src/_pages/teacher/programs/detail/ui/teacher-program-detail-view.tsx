@@ -36,7 +36,7 @@ import {
 } from "@/features/program/topic/bulk-status";
 import { ApiClientError } from "@/shared/api/client";
 import { Card, CardHeader, CardContent } from "@/shared/ui/card";
-import { PageHeader } from "@/shared/ui/page-header";
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { LoadingState } from "@/shared/ui/feedback";
 import { Button } from "@/shared/ui/button";
 
@@ -129,12 +129,7 @@ export function TeacherProgramDetailView({ programId }: Readonly<{ programId: st
 
   return (
     <main className="page-content page-stack min-w-0">
-      <Link
-        className="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted hover:text-primary"
-        href="/teacher/programs"
-      >
-        ← Программы обучения
-      </Link>
+      <PageBackLink href="/teacher/programs">Программы обучения</PageBackLink>
 
       {program.isPending && <LoadingState>Загружаем программу…</LoadingState>}
 

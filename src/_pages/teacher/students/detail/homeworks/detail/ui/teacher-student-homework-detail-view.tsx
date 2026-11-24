@@ -1,5 +1,6 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,7 +17,7 @@ import { useCancelHomeworkMutation } from "@/features/homework/cancel";
 import { useReviewTextSubmissionMutation } from "@/features/submission/review-text";
 import { SubmissionReview } from "@/features/submission/review-text/ui/submission-review";
 import { ApiClientError } from "@/shared/api/client";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonClassName } from "@/shared/ui/button";
 
 export function TeacherStudentHomeworkDetailView({
   studentId,
@@ -91,40 +92,31 @@ export function TeacherStudentHomeworkDetailView({
 
   return (
     <main className="page-stack">
-      <div>
-        <Link className="text-sm text-foreground-muted underline" href={`/teacher/students/${studentId}/homework`}>
-          ← Домашние задания
-        </Link>
-
-        <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h1 className="page-title">{homework.data.title}</h1>
-
-            <span
-              className={`badge mt-3 inline-block  ${
-                state === "OVERDUE" ? "bg-danger-subtle text-danger" : "bg-surface-subtle"
-              }`}
-            >
-              {homeworkStatusPresentation[state]}
-            </span>
-          </div>
-
-          {homework.data.status === "ASSIGNED" && (
-            <div className="flex gap-3">
+      <PageHeader
+        title={homework.data.title}
+        eyebrow="Домашняя работа"
+        navigation={<PageBackLink href={`/teacher/students/${studentId}/homework`}>Домашние задания</PageBackLink>}
+        details={
+          <span className={`badge ${state === "OVERDUE" ? "bg-danger-subtle text-danger" : "bg-surface-subtle"}`}>
+            {homeworkStatusPresentation[state]}
+          </span>
+        }
+        actions={
+          homework.data.status === "ASSIGNED" && (
+            <>
               <Link
-                className="inline-flex h-10 items-center rounded-surface border border-border-strong bg-surface px-4 text-sm font-medium text-foreground-muted transition hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-focus-ring"
+                className={buttonClassName("secondary")}
                 href={`/teacher/students/${studentId}/homework/${homeworkId}/edit`}
               >
                 Редактировать
               </Link>
-
               <Button variant="danger" disabled={cancel.isPending} type="button" onClick={onCancel}>
                 {cancel.isPending ? "Отменяем…" : "Отменить домашнее задание"}
               </Button>
-            </div>
-          )}
-        </div>
-      </div>
+            </>
+          )
+        }
+      />
 
       {cancelError && (
         <p className="text-danger" role="alert">

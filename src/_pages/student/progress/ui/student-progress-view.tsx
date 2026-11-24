@@ -1,4 +1,5 @@
 "use client";
+import { PageHeader } from "@/shared/ui/page-header";
 import { Select } from "@/shared/ui/form-controls";
 
 import { useQuery } from "@tanstack/react-query";
@@ -22,20 +23,10 @@ export function StudentProgressView() {
 
   return (
     <main className="page-content page-stack">
-      <section className="py-2">
-        <div className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-surface bg-primary-subtle text-primary">
-            <ChartNoAxesCombined size={22} aria-hidden="true" />
-          </span>
-          <div>
-            <p className="text-sm font-medium text-primary">Учебный кабинет</p>
-            <h1 className="page-title mt-1 wrap-break-word">Мой прогресс</h1>
-            <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
-              Следите за результатами обучения и продолжайте заниматься в своей программе.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        title="Мой прогресс"
+        description="Следите за результатами обучения и продолжайте заниматься в своей программе."
+      />
 
       <section className="surface">
         {programs.isPending && <Loading label="Загружаем программы…" />}

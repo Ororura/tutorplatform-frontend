@@ -1,11 +1,16 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { StudentProgramDetail, studentProgramQueries, type ProgramTopic } from "@/entities/student-program";
+import {
+  StudentProgramDetail,
+  programStatusLabels,
+  studentProgramQueries,
+  type ProgramTopic,
+} from "@/entities/student-program";
 import { AssignLearningProgramDialog } from "@/features/program/assign";
 import { useStudentTopicAccessMutation, type StudentTopicAccessStatus } from "@/features/program/student-topic-access";
 import { ApiClientError } from "@/shared/api/client";
@@ -123,12 +128,7 @@ export function TeacherStudentProgramDetailView({
 
   return (
     <main className="page-stack">
-      <Link
-        className="text-sm text-foreground-muted underline underline-offset-4"
-        href={`/teacher/students/${studentId}/program`}
-      >
-        ← Программы ученика
-      </Link>
+      <PageBackLink href={`/teacher/students/${studentId}/program`}>Программы ученика</PageBackLink>
 
       {program.isPending && (
         <p className="rounded-inset border border-border bg-surface p-5 text-foreground-muted" aria-busy="true">
@@ -154,17 +154,32 @@ export function TeacherStudentProgramDetailView({
 
       {program.data && (
         <>
-          <div className="flex flex-wrap items-center justify-end gap-3">
-            <Button type="button" variant={accessMode ? "ghost" : "secondary"} onClick={toggleAccessMode}>
-              {accessMode ? "Завершить управление доступом" : "Управлять доступом к темам"}
-            </Button>
-
-            <AssignLearningProgramDialog
-              studentId={studentId}
-              triggerLabel="Назначить ещё программу"
-              onAssigned={(created) => router.push(`/teacher/students/${studentId}/programs/${created.id}`)}
-            />
-          </div>
+          <PageHeader
+            title={program.data.title}
+            eyebrow={program.data.subject.name}
+            details={
+              <>
+                {program.data.description && (
+                  <p className="page-description whitespace-pre-line">{program.data.description}</p>
+                )}
+                <span className="badge mt-2 bg-primary-subtle text-primary">
+                  {programStatusLabels[program.data.status]}
+                </span>
+              </>
+            }
+            actions={
+              <>
+                <Button type="button" variant={accessMode ? "ghost" : "secondary"} onClick={toggleAccessMode}>
+                  {accessMode ? "Завершить управление доступом" : "Управлять доступом к темам"}
+                </Button>
+                <AssignLearningProgramDialog
+                  studentId={studentId}
+                  triggerLabel="Назначить ещё программу"
+                  onAssigned={(created) => router.push(`/teacher/students/${studentId}/programs/${created.id}`)}
+                />
+              </>
+            }
+          />
 
           {accessMode && (
             <section

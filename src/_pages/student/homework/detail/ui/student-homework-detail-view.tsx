@@ -1,15 +1,14 @@
 "use client";
 
+import { PageBackLink, PageHeader } from "@/shared/ui/page-header";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, CalendarDays, CheckCircle2, ChevronRight, ClipboardList, ListChecks } from "lucide-react";
-import Link from "next/link";
+import { CalendarDays, CheckCircle2, ChevronRight, ClipboardList, ListChecks } from "lucide-react";
 import { useState } from "react";
 
 import {
   formatHomeworkDate,
   getStudentHomeworkPresentationState,
   studentHomeworkQueries,
-  StudentHomeworkIcon,
   StudentHomeworkStatusBadge,
   StudentHomeworkTaskBadges,
 } from "@/entities/homework";
@@ -52,13 +51,7 @@ export function StudentHomeworkDetailView({
           )}
         </div>
 
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring"
-          href="/student/homework"
-        >
-          <ArrowLeft size={16} />
-          Вернуться к домашним заданиям
-        </Link>
+        <PageBackLink href="/student/homework">Вернуться к домашним заданиям</PageBackLink>
       </main>
     );
   }
@@ -78,31 +71,12 @@ export function StudentHomeworkDetailView({
 
   return (
     <main className="page-stack min-w-0">
-      <section className="py-2">
-        <Link
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-secondary) transition hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring"
-          href="/student/homework"
-        >
-          <ArrowLeft size={16} />
-          Домашние задания
-        </Link>
-
-        <div className="mt-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-          <div className="flex min-w-0 items-start gap-4">
-            <StudentHomeworkIcon />
-
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-primary">Домашняя работа</p>
-
-              <h1 className="page-title mt-1 wrap-break-word">{data.title}</h1>
-            </div>
-          </div>
-
-          <div className="w-fit shrink-0">
-            <StudentHomeworkStatusBadge state={state} />
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        title={data.title}
+        eyebrow="Домашняя работа"
+        navigation={<PageBackLink href="/student/homework">Домашние задания</PageBackLink>}
+        actions={<StudentHomeworkStatusBadge state={state} />}
+      />
 
       <section className="surface">
         <dl className="grid gap-5 sm:grid-cols-3">

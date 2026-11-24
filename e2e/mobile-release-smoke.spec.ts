@@ -16,7 +16,7 @@ test("mobile student login, dashboard, program, homework detail and topic are us
   await page.getByRole("button", { name: "Открыть меню" }).click();
   await page
     .getByRole("navigation", { name: "Мобильная навигация ученика" })
-    .getByRole("link", { name: "Мои программы", exact: true })
+    .getByRole("link", { name: "Программы", exact: true })
     .click();
   const program = page
     .getByRole("article")
@@ -45,10 +45,10 @@ test("mobile student login, dashboard, program, homework detail and topic are us
   await page.getByRole("button", { name: "Открыть меню" }).click();
   await page
     .getByRole("navigation", { name: "Мобильная навигация ученика" })
-    .getByRole("link", { name: "Домашние задания", exact: true })
+    .getByRole("link", { name: "Задания", exact: true })
     .click();
-  await expect(page.getByRole("heading", { name: "Домашние задания", level: 1 })).toBeVisible();
-  const homework = page.getByRole("link", { name: "Открыть: Циклы", exact: true });
+  await expect(page.getByRole("heading", { name: "Задания", level: 1 })).toBeVisible();
+  const homework = page.getByRole("link", { name: /^(Открыть|Продолжить): Циклы$/ });
   await expectMobileLayout(page, homework);
   await homework.click();
   await expect(page.getByRole("heading", { name: "Циклы", exact: true })).toBeVisible();
